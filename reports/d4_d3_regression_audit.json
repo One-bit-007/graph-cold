@@ -1,0 +1,12 @@
+{
+  "stage": "D4-D3-regression-audit",
+  "d_pred_uses_ground_truth_label": true,
+  "d_neigh_label_kl_normalized": true,
+  "d_view_mode_disagreement": true,
+  "embedding_distance_not_used_in_cdm": true,
+  "rho_positive_weight_min_gt_zero": true,
+  "err_main_formula_verified": true,
+  "tail_err_verified": true,
+  "all_d3_tests_passed": true,
+  "issues": []
+}

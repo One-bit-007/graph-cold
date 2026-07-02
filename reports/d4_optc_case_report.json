@@ -1,0 +1,19 @@
+{
+  "stage": "D4-OpTC-case",
+  "mode": "synthetic",
+  "num_events": 36,
+  "num_hosts": 4,
+  "num_processes": 6,
+  "num_ips": 30,
+  "five_views_non_empty": true,
+  "d_chain_enabled": true,
+  "lambda4": 0.1,
+  "graph_cdm_computed": true,
+  "ranking_topk_generated": true,
+  "enterprise_baseline_adapter_ready": true,
+  "baseline_backend_used": "sklearn_random_forest",
+  "known_limitations": [
+    "synthetic mini-case is used when real OpTC event files are not present",
+    "Flash/Argus adapters expose comparison interface but do not reimplement full papers"
+  ]
+}

@@ -55,19 +55,43 @@ def evidence_retention_rate(keep_or_weight, clean_mask, y, cfg):
     clean = np.asarray(clean_mask, dtype=bool)
     y = np.asarray(y)
     cfg_ev = cfg.get("evidence_preserving", cfg) if isinstance(cfg, dict) else {}
-    threshold = float(cfg_ev.get("retention_threshold", 0.5))
-    retained = values.astype(bool) if values.dtype == bool else values >= threshold
-    labels, counts = np.unique(y, return_counts=True)
+    evidence = cfg_ev.get("evidence_scores")
+    if evidence is None:
+        evidence = _frequency_evidence(y, mode=str(cfg_ev.get("freq_protect", "log")))
+    evidence = np.asarray(evidence, dtype=np.float64)
+    if values.shape[0] != y.shape[0] or evidence.shape[0] != y.shape[0] or clean.shape[0] != y.shape[0]:
+        raise ValueError("keep_or_weight, evidence_scores, clean_mask, and y must have the same length.")
+    weights = np.clip(values, 0.0, 1.0)
+    evidence = np.clip(evidence, 0.0, None)
+    components = evidence_retention_components(weights, evidence, clean, y)
+    return components["err_final"]
+
+
+def evidence_retention_components(weights, evidence, clean_mask, y):
+    weights = np.asarray(weights, dtype=np.float64)
+    evidence = np.asarray(evidence, dtype=np.float64)
+    clean = np.asarray(clean_mask, dtype=bool)
+    y = np.asarray(y)
+    base_mask = clean if clean.any() else np.ones_like(clean, dtype=bool)
+    err = _weighted_retention(weights, evidence, base_mask)
+
+    labels, counts = np.unique(y[base_mask], return_counts=True)
     if labels.size == 0:
-        return 0.0
-    rare_cut = np.median(counts)
-    rare_labels = labels[counts <= rare_cut]
-    informative = clean & np.isin(y, rare_labels)
-    if informative.sum() == 0:
-        informative = clean
-    if informative.sum() == 0:
-        return 0.0
-    return float(np.mean(retained[informative]))
+        tail_mask = base_mask
+    else:
+        tail_cut = np.median(counts)
+        tail_labels = labels[counts <= tail_cut]
+        tail_mask = base_mask & np.isin(y, tail_labels)
+        if not tail_mask.any():
+            tail_mask = base_mask
+    err_tail = _weighted_retention(weights, evidence, tail_mask)
+    err_final = float(np.clip(0.5 * (err + err_tail), 0.0, 1.0))
+    return {
+        "err": float(np.clip(err, 0.0, 1.0)),
+        "err_tail": float(np.clip(err_tail, 0.0, 1.0)),
+        "err_final": err_final,
+        "tail_count": int(tail_mask.sum()),
+    }
 
 
 def noise_detection_prf(flip_mask, pred_noisy_mask):
@@ -80,3 +104,26 @@ def noise_detection_prf(flip_mask, pred_noisy_mask):
     recall = tp / (tp + fn) if tp + fn > 0 else 0.0
     f1 = 2 * precision * recall / (precision + recall) if precision + recall > 0 else 0.0
     return precision, recall, f1
+
+
+def _weighted_retention(weights, evidence, mask):
+    denom = float(np.sum(evidence[mask]))
+    if denom <= 1e-12:
+        return 0.0
+    return float(np.sum(weights[mask] * evidence[mask]) / denom)
+
+
+def _frequency_evidence(y, mode="log"):
+    labels, counts = np.unique(y, return_counts=True)
+    count_map = {label: count for label, count in zip(labels, counts)}
+    class_counts = np.asarray([count_map[label] for label in y], dtype=np.float64)
+    if mode in {"inverse", "1/n"}:
+        raw = 1.0 / np.maximum(class_counts, 1.0)
+    else:
+        raw = 1.0 / np.maximum(np.log1p(class_counts), 1e-12)
+    if raw.size == 0:
+        return raw
+    span = raw.max() - raw.min()
+    if span <= 1e-12:
+        return np.ones_like(raw, dtype=np.float64)
+    return (raw - raw.min()) / span
