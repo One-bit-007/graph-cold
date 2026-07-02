@@ -6,8 +6,8 @@ venv/
 *.egg-info/
 
 # Data (do not commit raw datasets)
-data/
-datasets/
+/data/
+/datasets/
 *.pcap
 *.csv.gz
 *.parquet

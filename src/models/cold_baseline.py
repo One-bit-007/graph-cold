@@ -23,25 +23,179 @@ Reference libs: sklearn.mixture.GaussianMixture, networkx (MST), torch encoder.
 """
 from __future__ import annotations
 
+import numpy as np
+import networkx as nx
+from sklearn.decomposition import PCA
+from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.mixture import GaussianMixture
+from sklearn.preprocessing import StandardScaler
+
 
 def feature_reordering(X):
     """Correlation -> MST (networkx) -> DFS traversal order. Returns index perm."""
-    raise NotImplementedError("TODO(Codex)")
+    X = np.asarray(X, dtype=np.float64)
+    if X.ndim != 2:
+        raise ValueError("X must be a 2D feature matrix.")
+    n_features = X.shape[1]
+    if n_features == 0:
+        return np.array([], dtype=np.int64)
+    if n_features == 1:
+        return np.array([0], dtype=np.int64)
+
+    corr = np.corrcoef(X, rowvar=False)
+    corr = np.nan_to_num(np.abs(corr), nan=0.0, posinf=0.0, neginf=0.0)
+    np.fill_diagonal(corr, 0.0)
+
+    graph = nx.Graph()
+    graph.add_nodes_from(range(n_features))
+    for i in range(n_features):
+        for j in range(i + 1, n_features):
+            graph.add_edge(i, j, weight=float(corr[i, j]))
+
+    tree = nx.maximum_spanning_tree(graph, weight="weight")
+    order = list(nx.dfs_preorder_nodes(tree, source=0))
+    if len(order) < n_features:
+        order.extend(idx for idx in range(n_features) if idx not in order)
+    return np.asarray(order, dtype=np.int64)
 
 
 class CoLD:
     def __init__(self, cfg: dict):
         self.cfg = cfg
+        train_cfg = cfg.get("train", {}) if isinstance(cfg, dict) else {}
+        graph_cfg = cfg.get("graph", {}) if isinstance(cfg, dict) else {}
+        cold_cfg = cfg.get("cold", {}) if isinstance(cfg, dict) else {}
+        self.seed = int(cold_cfg.get("seed", train_cfg.get("seeds", [0])[0] if train_cfg else 0))
+        self.max_subsets = int(cold_cfg.get("max_subsets", graph_cfg.get("max_subsets", 4)))
+        self.latent_dim = int(cold_cfg.get("latent_dim", 8))
+        self.epsilon = float(cold_cfg.get("epsilon", 0.0))
+        self.gmm_max_iter = int(cold_cfg.get("gmm_max_iter", 100))
+        self.classifier_estimators = int(cold_cfg.get("classifier_estimators", 200))
+        self.feature_order_: np.ndarray | None = None
+        self.subsets_: list[np.ndarray] = []
+        self.scalers_: list[StandardScaler] = []
+        self.projectors_: list[PCA | None] = []
+        self.gmms_: list[GaussianMixture] = []
+        self.cluster_label_maps_: list[dict[int, int]] = []
+        self.num_classes_: int | None = None
+        self.classifier_: ExtraTreesClassifier | None = None
+        self.used_fallback_training_: bool = False
 
     def fit_representation(self, X):
-        raise NotImplementedError("TODO(Codex): L_la + L_gr self-supervised.")
+        X = np.asarray(X, dtype=np.float32)
+        if X.ndim != 2:
+            raise ValueError("X must be a 2D feature matrix.")
+
+        self.feature_order_ = feature_reordering(X)
+        n_features = X.shape[1]
+        n_subsets = max(1, min(self.max_subsets, n_features))
+        self.subsets_ = [
+            subset.astype(np.int64)
+            for subset in np.array_split(self.feature_order_, n_subsets)
+            if subset.size > 0
+        ]
+        self.scalers_ = []
+        self.projectors_ = []
+        for subset in self.subsets_:
+            block = X[:, subset]
+            scaler = StandardScaler()
+            scaled = scaler.fit_transform(block)
+            self.scalers_.append(scaler)
+
+            max_components = min(self.latent_dim, scaled.shape[1], max(1, scaled.shape[0] - 1))
+            if max_components < scaled.shape[1]:
+                projector = PCA(n_components=max_components, random_state=self.seed)
+                projector.fit(scaled)
+            else:
+                projector = None
+            self.projectors_.append(projector)
+        return self
 
     def purify(self, X, y):
         """Return keep_mask; CoLD removes samples with CDM > epsilon (=0)."""
-        raise NotImplementedError("TODO(Codex): GMM-CDM hard deletion.")
+        X = np.asarray(X, dtype=np.float32)
+        y = np.asarray(y, dtype=np.int64)
+        if not self.subsets_:
+            self.fit_representation(X)
+
+        self.num_classes_ = int(np.max(y)) + 1 if y.size else 0
+        reps = self._transform_subsets(X)
+        disagreements = []
+        self.gmms_ = []
+        self.cluster_label_maps_ = []
+
+        for subset_idx, rep in enumerate(reps):
+            n_components = min(self.num_classes_, rep.shape[0])
+            if n_components < 2:
+                pred_labels = np.full_like(y, fill_value=y[0] if y.size else 0)
+                self.gmms_.append(None)  # type: ignore[arg-type]
+                self.cluster_label_maps_.append({0: int(pred_labels[0]) if pred_labels.size else 0})
+            else:
+                gmm = GaussianMixture(
+                    n_components=n_components,
+                    covariance_type="diag",
+                    reg_covar=1e-6,
+                    max_iter=self.gmm_max_iter,
+                    random_state=self.seed + subset_idx,
+                )
+                clusters = gmm.fit_predict(rep)
+                label_map = _majority_label_map(clusters, y)
+                pred_labels = np.array([label_map[int(cluster)] for cluster in clusters], dtype=np.int64)
+                self.gmms_.append(gmm)
+                self.cluster_label_maps_.append(label_map)
+            disagreements.append(pred_labels != y)
+
+        cdm = np.mean(np.vstack(disagreements), axis=0) if disagreements else np.zeros_like(y, dtype=float)
+        self.cdm_ = cdm
+        keep_mask = cdm <= self.epsilon
+        self.keep_mask_ = keep_mask
+        return keep_mask
 
     def fit_classifier(self, X, y, keep_mask):
-        raise NotImplementedError("TODO(Codex)")
+        X = np.asarray(X, dtype=np.float32)
+        y = np.asarray(y, dtype=np.int64)
+        keep_mask = np.asarray(keep_mask, dtype=bool)
+        if keep_mask.shape[0] != y.shape[0]:
+            raise ValueError("keep_mask must have the same length as y.")
+
+        train_mask = keep_mask.copy()
+        if np.unique(y[train_mask]).size < 2:
+            train_mask = np.ones_like(keep_mask, dtype=bool)
+            self.used_fallback_training_ = True
+
+        self.classifier_ = ExtraTreesClassifier(
+            n_estimators=self.classifier_estimators,
+            random_state=self.seed,
+            class_weight="balanced",
+            n_jobs=-1,
+        )
+        self.classifier_.fit(X[train_mask], y[train_mask])
+        return self
 
     def predict(self, X):
-        raise NotImplementedError("TODO(Codex)")
+        if self.classifier_ is None:
+            raise RuntimeError("CoLD classifier is not fitted. Call fit_classifier first.")
+        X = np.asarray(X, dtype=np.float32)
+        return self.classifier_.predict(X)
+
+    def _transform_subsets(self, X: np.ndarray) -> list[np.ndarray]:
+        reps = []
+        for subset, scaler, projector in zip(self.subsets_, self.scalers_, self.projectors_):
+            scaled = scaler.transform(X[:, subset])
+            if projector is not None:
+                reps.append(projector.transform(scaled).astype(np.float32))
+            else:
+                reps.append(scaled.astype(np.float32))
+        return reps
+
+
+def _majority_label_map(clusters: np.ndarray, y: np.ndarray) -> dict[int, int]:
+    mapping: dict[int, int] = {}
+    fallback = int(np.bincount(y).argmax()) if y.size else 0
+    for cluster in np.unique(clusters):
+        members = y[clusters == cluster]
+        if members.size == 0:
+            mapping[int(cluster)] = fallback
+        else:
+            mapping[int(cluster)] = int(np.bincount(members).argmax())
+    return mapping

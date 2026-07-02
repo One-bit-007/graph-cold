@@ -6,9 +6,14 @@ scikit-learn>=1.3
 pyyaml>=6.0
 tqdm>=4.65
 
-# Deep learning (Codex: pin CUDA build appropriate to the GPU)
+# Deep learning
+# Default PyPI torch wheels are CPU-capable. For CUDA, install the wheel that
+# matches the local driver, for example:
+#   pip install torch --index-url https://download.pytorch.org/whl/cu121
 torch>=2.1
 # Heterogeneous / temporal graph learning
+# Install torch-geometric after torch so its optional CUDA extensions match the
+# selected PyTorch/CUDA build; see https://pytorch-geometric.readthedocs.io/.
 torch-geometric>=2.4
 networkx>=3.1
 
@@ -19,3 +24,6 @@ xgboost>=2.0           # OpTC downstream classifier (Flash/Argus plug-in)
 # Experiment tracking / plotting
 matplotlib>=3.7
 seaborn>=0.12
+
+# Testing
+pytest>=8.0
