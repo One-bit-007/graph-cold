@@ -1,0 +1,31 @@
+{
+  "overall": {
+    "test": "paired_t_test_greater_graph_cold_vs_cold",
+    "t_stat": 35.765808672877526,
+    "p_value": 9.036446687804797e-93,
+    "significant_p_lt_0_05": true
+  },
+  "by_dataset": {
+    "cicids2017": {
+      "t_stat": 23.402275547771843,
+      "p_value": 2.1009514849278566e-35,
+      "graph_cold_mean": 0.9605645353280062,
+      "cold_mean": 0.7807189338052234,
+      "significant_p_lt_0_05": true
+    },
+    "maltls22": {
+      "t_stat": 24.630035015887184,
+      "p_value": 8.247629469932906e-37,
+      "graph_cold_mean": 0.9671739398602797,
+      "cold_mean": 0.7856469899203593,
+      "significant_p_lt_0_05": true
+    },
+    "optc_synthetic": {
+      "t_stat": 16.70991352016396,
+      "p_value": 1.3090708708021805e-26,
+      "graph_cold_mean": 0.9893790849673203,
+      "cold_mean": 0.8054838336185086,
+      "significant_p_lt_0_05": true
+    }
+  }
+}
