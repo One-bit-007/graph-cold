@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# Data (do not commit raw datasets)
+data/
+datasets/
+*.pcap
+*.csv.gz
+*.parquet
+
+# Experiment artifacts
+experiments/results/**/*.png
+experiments/results/**/*.csv
+!experiments/results/.gitkeep
+runs/
+*.ckpt
+*.pt
+wandb/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

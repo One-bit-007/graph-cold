@@ -1,0 +1,24 @@
+# Noise-injection configuration.
+# Noise is injected ONLY into the training set; the test set stays clean.
+# See docs/spec_graph_noise.md for the formal definition of graph-consistency noise.
+
+symmetric:
+  # Uniform corruption across all classes (benign + malicious).
+  ratios: [0.10, 0.20, 0.40, 0.50, 0.60, 0.80]
+
+asymmetric:
+  # Corruption confined to malicious classes (attacks disguised as benign).
+  ratios: [0.10, 0.20, 0.40, 0.50, 0.60, 0.80]
+
+graph_consistency:
+  # NEW noise type (Graph-CoLD contribution).
+  # Flips labels preferentially along high graph-consistency edges, i.e. between
+  # nodes whose multi-view neighborhoods are locally consistent. This directly
+  # attacks the "local consistency -> spurious association" mechanism.
+  ratios: [0.10, 0.20, 0.40, 0.60]
+  # Fraction of flips that must land on locally-consistent edges (vs random).
+  consistency_bias: 0.8
+  # Views used to measure local consistency for edge selection.
+  views: [host, ip, process, temporal, threat_intel]
+
+seed: 42

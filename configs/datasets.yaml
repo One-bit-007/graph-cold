@@ -1,0 +1,28 @@
+# Dataset configuration for Graph-CoLD
+# Codex: fill paths after downloading datasets into ./data (git-ignored).
+
+cicids2017:
+  name: CICIDS-2017
+  path: data/cicids2017/            # refined version (errors/inconsistencies removed)
+  num_classes: 9
+  # Downsample dominant classes, drop classes with < 1000 instances (as in CoLD).
+  min_class_count: 1000
+  train_test_split: 0.8
+  label_col: Label
+  # Feature columns are inferred; drop identifiers (flow id, timestamps used only for temporal view).
+  drop_cols: [Flow ID, Src IP, Dst IP, Timestamp]
+
+maltls22:
+  name: MALTLS-22
+  path: data/maltls22/
+  num_classes: 23
+  train_test_split: 0.8
+  label_col: label
+  drop_cols: []
+
+optc:
+  name: OpTC
+  path: data/optc/
+  # Enterprise case study only. Reuse Flash/Argus provenance-graph features.
+  provenance_feature_source: flash   # {flash, argus}
+  downstream_classifier: xgboost

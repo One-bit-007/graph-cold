@@ -1,0 +1,47 @@
+# Model + training configuration for Graph-CoLD.
+
+graph:
+  views: [host, ip, process, temporal, threat_intel]
+  temporal_window: 3600        # seconds per temporal snapshot
+  overlap: 0.75                # subset/view overlap (CoLD parameter study best)
+  max_subsets: 4               # M (CoLD recommends 4)
+
+encoder:
+  type: hgt                    # {hgt, rgcn}
+  hidden_dim: 128
+  num_layers: 2
+  heads: 4
+  dropout: 0.2
+
+representation:               # stage-1 self-supervised objective
+  tau: 0.5                     # contrastive temperature
+  alpha_temporal: 0.5          # weight of temporal alignment loss
+  beta_recon: 1.0              # weight of global reconstruction loss
+  mask_prob: 0.3               # Bernoulli feature-obfuscation probability (delta)
+
+graph_cdm:                    # stage-2 divergence
+  lambda_pred: 0.4             # D_pred weight (inherits CoLD CDM)
+  lambda_neigh: 0.3            # D_neigh: graph neighborhood consistency
+  lambda_view: 0.3             # D_view: multi-view embedding consistency
+  lambda_chain: 0.0            # D_chain: attack-chain context (OpTC only; 0 on flow data)
+  gmm_components: null         # null -> use num_classes
+
+evidence_preserving:          # KEY contribution: soft reweighting, NOT deletion
+  kappa: 4.0                   # steepness of sigmoid on (CDM - theta)
+  theta: 0.5                   # CDM soft threshold
+  rho: 0.2                     # weight floor scaled by evidence score (never zero)
+  gamma_anomaly: 1.0           # anomaly boost in evidence score
+  freq_protect: log            # {log, inverse} low-frequency-class protection
+
+ranking:                      # SOC priority Top-K
+  top_k: 100
+  eta_fn: 0.5                  # weight of FN risk term
+
+train:
+  optimizer: adam
+  lr: 0.001
+  batch_size: 128
+  epochs_stage1: 100
+  epochs_stage2: 50
+  seeds: [0, 1, 2]             # report mean/std over 3 seeds (as in CoLD)
+  device: cuda
