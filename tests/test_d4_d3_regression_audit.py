@@ -39,7 +39,7 @@ def test_d_pred_uses_observed_labels_not_fused_prediction():
     assert not np.array_equal(result.d_pred, (fused_label_that_disagrees != y).astype(float))
 
 
-def test_d_neigh_empty_neighbors_are_finite_normalized_fallback():
+def test_d_neigh_empty_neighbors_are_finite_normalized_default():
     y = np.array([0, 1, 1])
     soft = np.array([[0.8, 0.2], [0.3, 0.7], [0.4, 0.6]])
     empty_edge = EdgeIndex(
@@ -94,18 +94,22 @@ def test_evidence_supports_log_and_inverse_and_minmax_normalizes():
 def test_err_main_tail_and_final_formula_with_zero_denominator_guard():
     weights = np.array([1.0, 0.2, 0.8, 0.1, 0.4, 0.9])
     evidence = np.array([0.1, 0.1, 0.8, 0.7, 0.6, 0.6])
-    clean = np.ones(6, dtype=bool)
+    flip = np.array([False, True, False, False, False, True])
+    clean = ~flip
     y = np.array([0, 0, 1, 2, 2, 2])
 
-    components = evidence_retention_components(weights, evidence, clean, y)
-    cfg = {"evidence_preserving": {"evidence_scores": evidence}}
+    components = evidence_retention_components(weights, evidence, clean, y, retention_threshold=0.5)
+    cfg = {"evidence_preserving": {"evidence_scores": evidence, "flip_mask": flip, "retention_threshold": 0.5}}
     err = evidence_retention_rate(weights, clean, y, cfg)
 
-    main = np.sum(weights * evidence) / np.sum(evidence)
-    tail_mask = np.isin(y, [0, 1])
-    tail = np.sum(weights[tail_mask] * evidence[tail_mask]) / np.sum(evidence[tail_mask])
+    retained = weights >= 0.5
+    tail_mask = clean & np.isin(y, [0, 1])
+    anomaly_mask = clean & (evidence >= np.quantile(evidence[clean], 0.75))
+    informative = clean & (tail_mask | anomaly_mask)
+    main = np.sum(retained[informative] * evidence[informative]) / np.sum(evidence[informative])
+    tail = np.sum(retained[tail_mask] * evidence[tail_mask]) / np.sum(evidence[tail_mask])
     np.testing.assert_allclose(components["err"], main)
     np.testing.assert_allclose(components["err_tail"], tail)
     np.testing.assert_allclose(err, 0.5 * (main + tail))
-    assert components["err_tail"] != components["err"]
-    assert evidence_retention_rate(weights, clean, y, {"evidence_preserving": {"evidence_scores": np.zeros(6)}}) == 0.0
+    assert components["informative_count"] >= components["tail_count"]
+    assert evidence_retention_rate(weights, clean, y, {"evidence_preserving": {"evidence_scores": np.zeros(6), "flip_mask": flip}}) == 0.0

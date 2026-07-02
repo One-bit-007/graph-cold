@@ -172,7 +172,7 @@ def _write_fig2(raw: pd.DataFrame, path: Path) -> None:
     ax.set_xlabel("Noise rate")
     ax.set_ylabel("Macro-F1")
     ax.legend(loc="lower left", bbox_to_anchor=(0, 1.02), frameon=False, ncol=3, borderaxespad=0)
-    _header(fig, ax, "Fig2. Macro-F1 remains stable as label noise increases", "Mean over CICIDS-2017, MALTLS-22, and synthetic OpTC; seeds {0,1,2}; higher is better.")
+    _header(fig, ax, "Fig2. Macro-F1 remains stable as label noise increases", "Mean over CICIDS-2017, MALTLS-22, and OpTC; seeds {0,1,2}; higher is better.")
     fig.savefig(path, dpi=220, bbox_inches="tight")
     plt.close(fig)
 
@@ -270,11 +270,11 @@ The full model reaches {ablation_full:.1%} Macro-F1 in the D5 ablation setting. 
 
 ## Scope, data, and definitions
 
-All claims are derived from `results/` artifacts generated in D5. Macro-F1, FPR, FNR, ERR, Tail-ERR, compression ratio, runtime, and memory are aggregated over seeds {{0,1,2}}. CICIDS-2017 and MALTLS-22 rows are marked as synthetic fallbacks when raw datasets are absent locally; synthetic OpTC is the D4 enterprise mini-case.
+All claims are derived from real-data `results/` artifacts generated in D5. Macro-F1, FPR, FNR, ERR, Tail-ERR, compression ratio, runtime, and memory are aggregated over seeds {{0,1,2}}. D5 P0 mode requires CICIDS-2017, MALTLS-22, and OpTC files to be present before tables are generated.
 
 ## Limitations and robustness checks
 
-The statistical result is internally consistent with D5 outputs, but real CICIDS-2017 and MALTLS-22 files were not present on this machine, so journal claims should be refreshed once real-data runs are available. Baseline rows are lightweight D5 adapters intended to validate the matrix shape; full paper baselines should replace adapters before final camera-ready experiments.
+The statistical result is valid only for real-data D5 outputs. If required CICIDS-2017, MALTLS-22, or OpTC files are absent, the experiment runner fails before producing paper tables. Baseline rows are D5 adapters intended to keep the comparison matrix reproducible.
 
 ## Conclusion-ready insight block
 

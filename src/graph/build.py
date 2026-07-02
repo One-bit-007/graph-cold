@@ -197,14 +197,14 @@ def _select_feature_mask(view: str, feature_names: list[str], X: np.ndarray) -> 
     variances = np.var(X, axis=0)
     ranked = np.argsort(variances)[::-1]
     block = max(1, int(np.ceil(n_features * 0.35)))
-    fallback_offsets = {
+    default_offsets = {
         "host": 0,
         "ip": max(0, block // 2),
         "process": block,
         "temporal": max(0, n_features - block),
         "threat_intel": max(0, n_features - max(1, block // 2)),
     }
-    start = min(fallback_offsets[view], max(0, n_features - 1))
+    start = min(default_offsets[view], max(0, n_features - 1))
     selected = ranked[start : start + block]
     if selected.size == 0:
         selected = ranked[:1]

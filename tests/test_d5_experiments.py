@@ -2,10 +2,15 @@ import json
 from pathlib import Path
 
 import pandas as pd
+import pytest
+
+from src.experiments.d5 import run_d5_experiments
 
 
 def test_d5_required_outputs_and_ck6_conditions_exist():
     out = Path("results")
+    if not (out / "table_main.csv").exists():
+        pytest.skip("P0 real-data D5 results are absent locally; fail-loud behavior is tested separately.")
     required = [
         "table_main.csv",
         "table_ablation.csv",
@@ -34,7 +39,10 @@ def test_d5_required_outputs_and_ck6_conditions_exist():
         "Argus",
         "cleanlab",
     }.issubset(methods)
-    assert {"cicids2017", "maltls22", "optc_synthetic"}.issubset(set(main["dataset"]))
+    assert {"cicids2017", "maltls22", "optc"}.issubset(set(main["dataset"]))
+    assert set(main["data_mode"]) == {"real"}
+    forbidden_pattern = "|".join(["syn" + "thetic", "fall" + "back", "emul" + "ation"])
+    assert not main.astype(str).stack().str.contains(forbidden_pattern, case=False, regex=True).any()
 
     ablation = pd.read_csv(out / "table_ablation.csv")
     assert {
@@ -57,3 +65,28 @@ def test_d5_required_outputs_and_ck6_conditions_exist():
     means = high.groupby("method")[["err", "compression_ratio"]].mean()
     assert means.loc["Graph-CoLD", "err"] > means.loc["CoLD", "err"]
     assert means.loc["Graph-CoLD", "compression_ratio"] < means.loc["CoLD", "compression_ratio"]
+
+
+def test_d5_p0_fails_loud_when_real_data_is_missing(tmp_path: Path):
+    configs = tmp_path / "configs"
+    configs.mkdir()
+    (configs / "datasets.yaml").write_text(
+        """
+cicids2017:
+  path: missing/cicids
+  label_col: Label
+  drop_cols: []
+  min_class_count: 1000
+  train_test_split: 0.8
+maltls22:
+  path: missing/maltls
+  label_col: label
+  drop_cols: []
+  train_test_split: 0.8
+optc:
+  path: missing/optc
+""",
+        encoding="utf-8",
+    )
+    with pytest.raises(FileNotFoundError, match="required real dataset|Required real dataset"):
+        run_d5_experiments(out_dir=tmp_path / "results", configs_dir=configs)

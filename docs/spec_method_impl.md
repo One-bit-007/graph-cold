@@ -21,7 +21,7 @@ similarity) graph among samples on that block:
 - **host**: host-identifier / endpoint features.
 - **ip**: IP-communication statistics (bytes/pkts rates, flow duration).
 - **process**: process/behavioral columns if present; else derived behavioral
-  aggregates (fallback documented in code).
+  aggregates using the documented default feature block.
 - **temporal**: connect samples within the same `temporal_window`; supports
   snapshot list for temporal alignment.
 - **threat_intel**: shared IOC / signature attributes; sparse view.

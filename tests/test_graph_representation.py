@@ -11,7 +11,7 @@ from src.graph.build import VIEW_NAMES, build_multiview_graph
 from src.models.encoders import MultiViewEncoder, train_representation
 
 
-def _synthetic_dataset(n_per_class: int = 20, seed: int = 42):
+def _toy_dataset(n_per_class: int = 20, seed: int = 42):
     rng = np.random.default_rng(seed)
     rows = []
     labels = []
@@ -59,7 +59,7 @@ def _cfg(seed: int = 42, epochs: int = 5):
 
 
 def test_build_multiview_graph_has_five_nonempty_sparse_views():
-    dataset = _synthetic_dataset()
+    dataset = _toy_dataset()
     graph = build_multiview_graph(dataset, _cfg())
 
     assert set(graph.views) == set(VIEW_NAMES)
@@ -75,7 +75,7 @@ def test_build_multiview_graph_has_five_nonempty_sparse_views():
 
 
 def test_representation_training_outputs_shape_loss_curve_and_reproducible_embeddings(tmp_path: Path):
-    dataset = _synthetic_dataset()
+    dataset = _toy_dataset()
     graph = build_multiview_graph(dataset, _cfg())
     curve_a = tmp_path / "loss_a.csv"
     curve_b = tmp_path / "loss_b.csv"
@@ -101,7 +101,7 @@ def test_representation_training_outputs_shape_loss_curve_and_reproducible_embed
 
 
 def test_representation_knn_probe_beats_random_baseline():
-    dataset = _synthetic_dataset(n_per_class=24)
+    dataset = _toy_dataset(n_per_class=24)
     graph = build_multiview_graph(dataset, _cfg(epochs=5))
 
     _, output, _ = train_representation(graph, _cfg(seed=42, epochs=5))
@@ -122,7 +122,7 @@ def test_representation_knn_probe_beats_random_baseline():
 
 
 def test_forward_returns_per_view_embeddings_without_classifier():
-    dataset = _synthetic_dataset()
+    dataset = _toy_dataset()
     graph = build_multiview_graph(dataset, _cfg())
     torch.manual_seed(42)
     model = MultiViewEncoder(_cfg())

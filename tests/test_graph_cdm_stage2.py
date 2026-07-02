@@ -107,8 +107,13 @@ def test_ck6_ranking_is_stable_and_err_tracks_evidence_retention():
 
     np.testing.assert_array_equal(topk(scores, 2), np.array([1, 2]))
     np.testing.assert_array_equal(topk(scores, 2), topk(scores.copy(), 2))
-    err_low = evidence_retention_rate(np.array([1.0, 0.0, 0.0, 1.0]), np.ones(4, dtype=bool), np.array([0, 1, 1, 0]), _cfg())
-    err_high = evidence_retention_rate(np.array([1.0, 1.0, 1.0, 1.0]), np.ones(4, dtype=bool), np.array([0, 1, 1, 0]), _cfg())
+    flip = np.array([False, True, False, False])
+    clean = ~flip
+    cfg = _cfg()
+    cfg["evidence_preserving"]["flip_mask"] = flip
+    cfg["evidence_preserving"]["evidence_scores"] = np.array([0.1, 0.9, 0.9, 0.2])
+    err_low = evidence_retention_rate(np.array([1.0, 0.0, 0.0, 1.0]), clean, np.array([0, 1, 1, 0]), cfg)
+    err_high = evidence_retention_rate(np.array([1.0, 1.0, 1.0, 1.0]), clean, np.array([0, 1, 1, 0]), cfg)
     assert err_high > err_low
 
 

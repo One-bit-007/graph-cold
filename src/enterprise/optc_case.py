@@ -1,8 +1,7 @@
-"""OpTC-style enterprise mini-case for D4.
+"""OpTC enterprise case.
 
-This module intentionally avoids full OpTC ingestion. When real enterprise
-feature files are absent, it builds a deterministic SOC/provenance-style event
-table with host, process, IP, temporal, and threat-intel semantics.
+P0 submission rule: this module requires real provenance events and never
+generates replacement events when files are absent.
 """
 from __future__ import annotations
 
@@ -12,7 +11,6 @@ import json
 
 import numpy as np
 import pandas as pd
-from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import LabelEncoder
 
 from src.graph.build import EdgeIndex, MultiViewGraph
@@ -44,7 +42,7 @@ class OpTCCaseResult:
 
 
 class EnterpriseBaselineAdapter:
-    """Flash/Argus-compatible baseline adapter with lightweight fallback."""
+    """Flash/Argus-compatible baseline adapter backed by XGBoost or sklearn."""
 
     def __init__(self, baseline: str = "flash", backend: str = "xgboost", seed: int = 42):
         if baseline not in {"flash", "argus"}:
@@ -57,21 +55,19 @@ class EnterpriseBaselineAdapter:
 
     def fit(self, X, y):
         if self.backend == "xgboost":
-            try:
-                from xgboost import XGBClassifier
+            from xgboost import XGBClassifier
 
-                self.model = XGBClassifier(
-                    n_estimators=20,
-                    max_depth=2,
-                    learning_rate=0.2,
-                    random_state=self.seed,
-                    eval_metric="logloss",
-                )
-                self.backend_used = "xgboost"
-            except Exception:
-                self.model = RandomForestClassifier(n_estimators=50, random_state=self.seed, class_weight="balanced")
-                self.backend_used = "sklearn_random_forest_fallback"
+            self.model = XGBClassifier(
+                n_estimators=20,
+                max_depth=2,
+                learning_rate=0.2,
+                random_state=self.seed,
+                eval_metric="logloss",
+            )
+            self.backend_used = "xgboost"
         else:
+            from sklearn.ensemble import RandomForestClassifier
+
             self.model = RandomForestClassifier(n_estimators=50, random_state=self.seed, class_weight="balanced")
             self.backend_used = "sklearn_random_forest"
         self.model.fit(np.asarray(X, dtype=np.float32), np.asarray(y, dtype=np.int64))
@@ -168,40 +164,11 @@ def _load_or_generate_events(cfg: dict, seed: int) -> tuple[pd.DataFrame, str]:
     event_file = path / "events.csv"
     if event_file.exists():
         return pd.read_csv(event_file), "real"
-    return _synthetic_events(seed), "synthetic"
-
-
-def _synthetic_events(seed: int) -> pd.DataFrame:
-    rng = np.random.default_rng(seed)
-    hosts = ["host-a", "host-b", "host-c", "host-d"]
-    rows = []
-    base = pd.Timestamp("2026-01-01T00:00:00")
-    for idx in range(36):
-        attack_chain = 12 <= idx < 22
-        host = hosts[(idx // 9) % len(hosts)]
-        process = f"proc-{idx % 6}"
-        parent = f"proc-{(idx - 1) % 6}" if idx % 6 else "root"
-        src_ip = f"10.0.{idx % 3}.{idx % 7 + 10}"
-        dst_ip = "203.0.113.50" if attack_chain else f"10.1.{idx % 4}.{idx % 8 + 20}"
-        event_type = ["process_start", "dns_query", "net_conn", "file_write"][idx % 4]
-        alert_type = "credential_access" if attack_chain and idx % 3 else ("c2_ioc" if attack_chain else "benign_activity")
-        risk = float(np.clip((0.25 + 0.55 * attack_chain + 0.1 * rng.random()), 0.0, 1.0))
-        label = int(attack_chain or (idx in {29, 31}))
-        rows.append(
-            {
-                "host_id": host,
-                "process_id": process,
-                "parent_process_id": parent,
-                "src_ip": src_ip,
-                "dst_ip": dst_ip,
-                "timestamp": (base + pd.Timedelta(minutes=idx * 4)).isoformat(),
-                "event_type": event_type,
-                "alert_type": alert_type,
-                "label": label,
-                "risk_score": risk,
-            }
-        )
-    return pd.DataFrame(rows)
+    raise FileNotFoundError(
+        "Real OpTC provenance events are required. Place data/optc/events.csv "
+        "with columns host_id, process_id, parent_process_id, src_ip, dst_ip, "
+        "timestamp, event_type, alert_type, label, risk_score."
+    )
 
 
 def _feature_matrix(events: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
@@ -325,8 +292,7 @@ def _report(events, graph, cdm_result, ranking, mode, adapter, cfg):
         "enterprise_baseline_adapter_ready": True,
         "baseline_backend_used": adapter.backend_used,
         "known_limitations": [
-            "synthetic mini-case is used when real OpTC event files are not present",
-            "Flash/Argus adapters expose comparison interface but do not reimplement full papers",
+            "Flash/Argus adapters expose comparison interface; real provenance features are required",
         ],
     }
 

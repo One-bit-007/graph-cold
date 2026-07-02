@@ -78,7 +78,7 @@ class CoLD:
         self.cluster_label_maps_: list[dict[int, int]] = []
         self.num_classes_: int | None = None
         self.classifier_: ExtraTreesClassifier | None = None
-        self.used_fallback_training_: bool = False
+        self.used_full_training_recovery_: bool = False
         self.rep_encoder_ = None
         self.rep_history_ = None
 
@@ -145,7 +145,7 @@ class CoLD:
         train_mask = keep_mask.copy()
         if np.unique(y[train_mask]).size < 2:
             train_mask = np.ones_like(keep_mask, dtype=bool)
-            self.used_fallback_training_ = True
+            self.used_full_training_recovery_ = True
 
         self.classifier_ = ExtraTreesClassifier(
             n_estimators=self.classifier_estimators,
@@ -177,11 +177,11 @@ class CoLD:
 
 def _majority_label_map(clusters: np.ndarray, y: np.ndarray) -> dict[int, int]:
     mapping: dict[int, int] = {}
-    fallback = int(np.bincount(y).argmax()) if y.size else 0
+    default_label = int(np.bincount(y).argmax()) if y.size else 0
     for cluster in np.unique(clusters):
         members = y[clusters == cluster]
         if members.size == 0:
-            mapping[int(cluster)] = fallback
+            mapping[int(cluster)] = default_label
         else:
             mapping[int(cluster)] = int(np.bincount(members).argmax())
     return mapping

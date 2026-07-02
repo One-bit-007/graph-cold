@@ -1,6 +1,6 @@
 seed: 42
 path: data/optc
-mode: synthetic
+mode: real
 baseline: flash
 backend: xgboost
 lambda_chain: 0.1

@@ -32,6 +32,7 @@ evidence_preserving:          # KEY contribution: soft reweighting, NOT deletion
   rho: 0.2                     # weight floor scaled by evidence score (never zero)
   gamma_anomaly: 1.0           # anomaly boost in evidence score
   freq_protect: log            # {log, inverse} low-frequency-class protection
+  retention_threshold: 0.1     # retained(v)=1[w(v) >= tau_ret] for ERR
 
 ranking:                      # SOC priority Top-K
   top_k: 100

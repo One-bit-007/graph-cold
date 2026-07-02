@@ -106,6 +106,8 @@ def load_dataset(name: str, cfg: dict) -> Dataset:
     class_counts = {class_names[idx]: int(count) for idx, count in enumerate(np.bincount(y))}
     meta = {
         "dataset": key,
+        "data_source": str(Path(ds_cfg["path"]).resolve()),
+        "data_version": str(ds_cfg.get("version", "real-local")),
         "feature_names": feature_names,
         "class_names": class_names,
         "label_mapping": label_mapping,
@@ -154,7 +156,11 @@ def _resolve_dataset_cfg(name: str, cfg: dict) -> tuple[str, dict]:
 def _read_dataset_frame(path_value: str | Path) -> pd.DataFrame:
     path = Path(path_value)
     if not path.exists():
-        raise FileNotFoundError(f"Dataset path does not exist: {path}")
+        raise FileNotFoundError(
+            f"Required real dataset path does not exist: {path}. "
+            "Download/place the dataset under data/ as configured in configs/datasets.yaml; "
+            "P0 submission mode forbids generated stand-ins."
+        )
 
     if path.is_file():
         return _read_table(path)
@@ -163,7 +169,10 @@ def _read_dataset_frame(path_value: str | Path) -> pd.DataFrame:
     for pattern in ("*.csv", "*.csv.gz", "*.parquet"):
         files.extend(sorted(path.rglob(pattern)))
     if not files:
-        raise FileNotFoundError(f"No CSV/Parquet files found under dataset path: {path}")
+        raise FileNotFoundError(
+            f"No CSV/Parquet files found under required real dataset path: {path}. "
+            "Expected CICIDS-2017/MALTLS-22 tables in data/ according to configs/datasets.yaml."
+        )
 
     frames = [_read_table(file) for file in files]
     return pd.concat(frames, axis=0, ignore_index=True)

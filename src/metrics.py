@@ -11,11 +11,8 @@ false_negative_rate(y_true, y_pred, benign_class) -> float
 Graph-CoLD specific
 -------------------
 evidence_retention_rate(keep_or_weight, clean_mask, y, cfg) -> float
-    Fraction of *clean* informative samples (esp. low-frequency / boundary /
-    early-APT) preserved after denoising. For CoLD (hard deletion) this uses the
-    keep_mask; for Graph-CoLD (soft weights) a sample counts as retained if its
-    weight exceeds a retention threshold. This is the metric that quantifies the
-    "evidence preserved, not discarded" claim.
+    Evidence retention on clean informative samples. A sample is retained by the
+    binary rule retained(v)=1[w(v) >= tau_ret], not by continuous w*e.
 
 alert_compression_ratio(scores, y_true) -> float   # re-exported from ranking
 
@@ -55,6 +52,8 @@ def evidence_retention_rate(keep_or_weight, clean_mask, y, cfg):
     clean = np.asarray(clean_mask, dtype=bool)
     y = np.asarray(y)
     cfg_ev = cfg.get("evidence_preserving", cfg) if isinstance(cfg, dict) else {}
+    flip_mask = cfg_ev.get("flip_mask")
+    _validate_clean_mask(clean, y, flip_mask)
     evidence = cfg_ev.get("evidence_scores")
     if evidence is None:
         evidence = _frequency_evidence(y, mode=str(cfg_ev.get("freq_protect", "log")))
@@ -63,34 +62,46 @@ def evidence_retention_rate(keep_or_weight, clean_mask, y, cfg):
         raise ValueError("keep_or_weight, evidence_scores, clean_mask, and y must have the same length.")
     weights = np.clip(values, 0.0, 1.0)
     evidence = np.clip(evidence, 0.0, None)
-    components = evidence_retention_components(weights, evidence, clean, y)
+    tau_ret = float(cfg_ev.get("retention_threshold", 0.1))
+    components = evidence_retention_components(weights, evidence, clean, y, retention_threshold=tau_ret)
     return components["err_final"]
 
 
-def evidence_retention_components(weights, evidence, clean_mask, y):
+def evidence_retention_components(weights, evidence, clean_mask, y, retention_threshold=0.1):
     weights = np.asarray(weights, dtype=np.float64)
     evidence = np.asarray(evidence, dtype=np.float64)
     clean = np.asarray(clean_mask, dtype=bool)
     y = np.asarray(y)
-    base_mask = clean if clean.any() else np.ones_like(clean, dtype=bool)
-    err = _weighted_retention(weights, evidence, base_mask)
+    if weights.shape[0] != y.shape[0] or evidence.shape[0] != y.shape[0] or clean.shape[0] != y.shape[0]:
+        raise ValueError("weights, evidence, clean_mask, and y must have the same length.")
+    if not clean.any():
+        return {"err": 0.0, "err_tail": 0.0, "err_final": 0.0, "tail_count": 0, "informative_count": 0}
+    retained = np.clip(weights, 0.0, 1.0) >= float(retention_threshold)
+    evidence = np.clip(evidence, 0.0, None)
 
-    labels, counts = np.unique(y[base_mask], return_counts=True)
+    labels, counts = np.unique(y[clean], return_counts=True)
     if labels.size == 0:
-        tail_mask = base_mask
+        tail_mask = clean.copy()
     else:
         tail_cut = np.median(counts)
         tail_labels = labels[counts <= tail_cut]
-        tail_mask = base_mask & np.isin(y, tail_labels)
+        tail_mask = clean & np.isin(y, tail_labels)
         if not tail_mask.any():
-            tail_mask = base_mask
-    err_tail = _weighted_retention(weights, evidence, tail_mask)
+            tail_mask = clean.copy()
+    anomaly_cut = _safe_quantile(evidence[clean], 0.75)
+    anomaly_mask = clean & (evidence >= anomaly_cut)
+    informative_mask = clean & (tail_mask | anomaly_mask)
+    if not informative_mask.any():
+        informative_mask = clean.copy()
+    err = _binary_retention(retained, evidence, informative_mask)
+    err_tail = _binary_retention(retained, evidence, tail_mask)
     err_final = float(np.clip(0.5 * (err + err_tail), 0.0, 1.0))
     return {
         "err": float(np.clip(err, 0.0, 1.0)),
         "err_tail": float(np.clip(err_tail, 0.0, 1.0)),
         "err_final": err_final,
         "tail_count": int(tail_mask.sum()),
+        "informative_count": int(informative_mask.sum()),
     }
 
 
@@ -106,11 +117,35 @@ def noise_detection_prf(flip_mask, pred_noisy_mask):
     return precision, recall, f1
 
 
-def _weighted_retention(weights, evidence, mask):
+def _binary_retention(retained, evidence, mask):
     denom = float(np.sum(evidence[mask]))
     if denom <= 1e-12:
         return 0.0
-    return float(np.sum(weights[mask] * evidence[mask]) / denom)
+    return float(np.sum(retained[mask].astype(np.float64) * evidence[mask]) / denom)
+
+
+def _safe_quantile(values, q):
+    values = np.asarray(values, dtype=np.float64)
+    if values.size == 0:
+        return 0.0
+    return float(np.quantile(values, q))
+
+
+def _validate_clean_mask(clean, y, flip_mask):
+    if clean.shape[0] != y.shape[0]:
+        raise ValueError("clean_mask and y must have the same length.")
+    if flip_mask is None:
+        if clean.all():
+            raise ValueError("clean_mask must be derived from a real flip_mask; all-True masks are not allowed for ERR.")
+        return
+    flip = np.asarray(flip_mask, dtype=bool)
+    if flip.shape[0] != y.shape[0]:
+        raise ValueError("flip_mask and y must have the same length.")
+    expected = ~flip
+    if not np.array_equal(clean, expected):
+        raise ValueError("clean_mask must be exactly the complement of flip_mask.")
+    if not flip.any():
+        raise ValueError("ERR requires an injected-noise flip_mask with at least one flipped sample.")
 
 
 def _frequency_evidence(y, mode="log"):

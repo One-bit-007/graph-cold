@@ -49,6 +49,6 @@ figures using `src.paper.d6_prep`, validates the test suite, and compiles
 ## Traceability note
 
 All numeric claims in the manuscript are taken from `results/`, `tables/`, and
-`reports/d6_statistical_narrative.md`. D5 marks CICIDS-2017 and MALTLS-22 rows
-as synthetic fallbacks when raw datasets are unavailable locally; those caveats
-are preserved in the manuscript discussion.
+`reports/d6_statistical_narrative.md`. In P0 mode, D5 requires real CICIDS-2017,
+MALTLS-22, and OpTC files and stops before writing results if any required input
+is missing.
