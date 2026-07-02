@@ -25,10 +25,11 @@ from __future__ import annotations
 
 import numpy as np
 import networkx as nx
-from sklearn.decomposition import PCA
 from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.mixture import GaussianMixture
-from sklearn.preprocessing import StandardScaler
+
+from src.graph.build import build_multiview_graph
+from src.models.encoders import train_representation
 
 
 def feature_reordering(X):
@@ -73,13 +74,13 @@ class CoLD:
         self.classifier_estimators = int(cold_cfg.get("classifier_estimators", 200))
         self.feature_order_: np.ndarray | None = None
         self.subsets_: list[np.ndarray] = []
-        self.scalers_: list[StandardScaler] = []
-        self.projectors_: list[PCA | None] = []
         self.gmms_: list[GaussianMixture] = []
         self.cluster_label_maps_: list[dict[int, int]] = []
         self.num_classes_: int | None = None
         self.classifier_: ExtraTreesClassifier | None = None
         self.used_fallback_training_: bool = False
+        self.rep_encoder_ = None
+        self.rep_history_ = None
 
     def fit_representation(self, X):
         X = np.asarray(X, dtype=np.float32)
@@ -87,28 +88,11 @@ class CoLD:
             raise ValueError("X must be a 2D feature matrix.")
 
         self.feature_order_ = feature_reordering(X)
-        n_features = X.shape[1]
-        n_subsets = max(1, min(self.max_subsets, n_features))
-        self.subsets_ = [
-            subset.astype(np.int64)
-            for subset in np.array_split(self.feature_order_, n_subsets)
-            if subset.size > 0
-        ]
-        self.scalers_ = []
-        self.projectors_ = []
-        for subset in self.subsets_:
-            block = X[:, subset]
-            scaler = StandardScaler()
-            scaled = scaler.fit_transform(block)
-            self.scalers_.append(scaler)
-
-            max_components = min(self.latent_dim, scaled.shape[1], max(1, scaled.shape[0] - 1))
-            if max_components < scaled.shape[1]:
-                projector = PCA(n_components=max_components, random_state=self.seed)
-                projector.fit(scaled)
-            else:
-                projector = None
-            self.projectors_.append(projector)
+        dataset = _ArrayDataset(X)
+        graph = build_multiview_graph(dataset, self.cfg)
+        cfg = _representation_cfg(self.cfg, self.seed)
+        self.rep_encoder_, _, self.rep_history_ = train_representation(graph, cfg)
+        self.subsets_ = [np.flatnonzero(graph.views[view].feature_mask) for view in graph.views]
         return self
 
     def purify(self, X, y):
@@ -179,14 +163,16 @@ class CoLD:
         return self.classifier_.predict(X)
 
     def _transform_subsets(self, X: np.ndarray) -> list[np.ndarray]:
-        reps = []
-        for subset, scaler, projector in zip(self.subsets_, self.scalers_, self.projectors_):
-            scaled = scaler.transform(X[:, subset])
-            if projector is not None:
-                reps.append(projector.transform(scaled).astype(np.float32))
-            else:
-                reps.append(scaled.astype(np.float32))
-        return reps
+        if self.rep_encoder_ is None:
+            raise RuntimeError("Representation encoder is not fitted.")
+        dataset = _ArrayDataset(X)
+        graph = build_multiview_graph(dataset, self.cfg)
+        self.rep_encoder_.eval()
+        import torch
+
+        with torch.no_grad():
+            output = self.rep_encoder_.encode(graph)
+        return [tensor.detach().cpu().numpy().astype(np.float32) for tensor in output.z_by_view.values()]
 
 
 def _majority_label_map(clusters: np.ndarray, y: np.ndarray) -> dict[int, int]:
@@ -199,3 +185,24 @@ def _majority_label_map(clusters: np.ndarray, y: np.ndarray) -> dict[int, int]:
         else:
             mapping[int(cluster)] = int(np.bincount(members).argmax())
     return mapping
+
+
+class _ArrayDataset:
+    def __init__(self, X: np.ndarray):
+        self.X_train = X
+        self.meta = {"feature_names": [f"f_{idx}" for idx in range(X.shape[1])]}
+
+
+def _representation_cfg(cfg: dict, seed: int) -> dict:
+    out = dict(cfg)
+    out.setdefault("encoder", {})
+    out.setdefault("representation", {})
+    out.setdefault("train", {})
+    out["encoder"] = dict(out["encoder"])
+    out["representation"] = dict(out["representation"])
+    out["train"] = dict(out["train"])
+    out["encoder"]["hidden_dim"] = 128
+    out["representation"].setdefault("epochs", cfg.get("cold", {}).get("rep_epochs", 10))
+    out["train"]["seed"] = seed
+    out["train"]["device"] = "cuda" if out["train"].get("device") == "cuda" else "cpu"
+    return out
