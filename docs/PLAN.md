@@ -34,3 +34,15 @@ noise-detection P/R/F1, time/storage overhead.
 
 ## Git workflow
 - `main` stable, `dev` daily. Tag `d1`…`d7`. Push per completed module.
+
+## Pending math corrections (must fold into D1 finalization before D3/D4)
+Coordinator flagged in GPT-pro's revised D1; do NOT bake into code until fixed:
+1. **D_pred target (pre-D3, CK-4)**: must compare per-view predicted label to the
+   *observed* label `y_v`, i.e. `D_pred(v)=(1/M)Σ_k 1[ỹ_v^(k) ≠ y_v]` — NOT to the
+   fused vote `ŷ_v` (that overlaps D_view and drops CoLD-CDM noise-transfer
+   semantics). Authoritative: `docs/spec_method_impl.md §3`.
+2. **Graph-noise β=0 property (pre-D4, CK-2)**: transition must keep the target
+   ratio `r`; total flips `= r·N`, split into `β·rN` consistency-driven and
+   `(1-β)·rN` random, so that `β=0 ⇒ symmetric(r)`. GPT-pro's
+   `(1-β)δ_ij + β·π_ij` gives zero noise at β=0 and drops `r` — reject.
+   Authoritative: `docs/spec_graph_noise.md §4`.
