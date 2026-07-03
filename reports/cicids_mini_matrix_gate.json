@@ -1,0 +1,476 @@
+{
+  "stage": "cicids-mini-matrix-gate",
+  "passed": true,
+  "checks": {
+    "same_protocol_by_scenario": {
+      "passed": true,
+      "same_split": true,
+      "same_noisy_y_train": true,
+      "same_flip_mask": true,
+      "same_clean_y_test": true,
+      "same_active_views": true,
+      "same_class_policy": true,
+      "scenario_count": 39
+    },
+    "ablation_hard_close_to_cold": {
+      "passed": true,
+      "failures": []
+    },
+    "graphcold_no_collapse": {
+      "passed": true,
+      "details": [
+        {
+          "noise_type": "symmetric",
+          "rate": 0.2,
+          "beta": null,
+          "seed": 0,
+          "cold": 0.9623007204942119,
+          "graphcold": 0.9895571068092873,
+          "passed": true
+        },
+        {
+          "noise_type": "symmetric",
+          "rate": 0.2,
+          "beta": null,
+          "seed": 1,
+          "cold": 0.9711167847935568,
+          "graphcold": 0.9906443873437147,
+          "passed": true
+        },
+        {
+          "noise_type": "symmetric",
+          "rate": 0.2,
+          "beta": null,
+          "seed": 2,
+          "cold": 0.9659529684667709,
+          "graphcold": 0.9883858536125814,
+          "passed": true
+        },
+        {
+          "noise_type": "symmetric",
+          "rate": 0.4,
+          "beta": null,
+          "seed": 0,
+          "cold": 0.9629952471801044,
+          "graphcold": 0.9880859395090852,
+          "passed": true
+        },
+        {
+          "noise_type": "symmetric",
+          "rate": 0.4,
+          "beta": null,
+          "seed": 1,
+          "cold": 0.9688215364964141,
+          "graphcold": 0.9896801616536709,
+          "passed": true
+        },
+        {
+          "noise_type": "symmetric",
+          "rate": 0.4,
+          "beta": null,
+          "seed": 2,
+          "cold": 0.9621212598383704,
+          "graphcold": 0.9880878435764582,
+          "passed": true
+        },
+        {
+          "noise_type": "graph_consistency",
+          "rate": 0.2,
+          "beta": 0.6,
+          "seed": 0,
+          "cold": 0.9602495206787847,
+          "graphcold": 0.9893556008051327,
+          "passed": true
+        },
+        {
+          "noise_type": "graph_consistency",
+          "rate": 0.2,
+          "beta": 0.6,
+          "seed": 1,
+          "cold": 0.9644482469159642,
+          "graphcold": 0.9898246045415241,
+          "passed": true
+        },
+        {
+          "noise_type": "graph_consistency",
+          "rate": 0.2,
+          "beta": 0.6,
+          "seed": 2,
+          "cold": 0.9667230458683318,
+          "graphcold": 0.9909047180874844,
+          "passed": true
+        }
+      ],
+      "failures": []
+    },
+    "err_direction": {
+      "passed": true,
+      "failures": [],
+      "ties": []
+    },
+    "numeric_anomalies": {
+      "passed": true,
+      "failures": {
+        "nonfinite_rows": 0,
+        "perfect_zero_rows": 0,
+        "macro_f1_below_0_5_rows": 0,
+        "zero_retained_clean_informative_rows": 0,
+        "n_eff_below_0_3_rows": 0
+      }
+    },
+    "graph_beta0_equiv_symmetric": {
+      "passed": true,
+      "failures": []
+    }
+  },
+  "stability": [
+    {
+      "method": "CoLD",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.1,
+      "macro_f1_mean": 0.9634657661472019,
+      "macro_f1_std": 0.0034257718427671744,
+      "err_mean": 0.838808314008464,
+      "err_std": 0.0017773913826116124,
+      "compression_ratio_mean": 0.9988705583756344,
+      "compression_ratio_std": 0.0006345389167371783
+    },
+    {
+      "method": "CoLD",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.2,
+      "macro_f1_mean": 0.9632158049836193,
+      "macro_f1_std": 0.0013942639684736426,
+      "err_mean": 0.8395500746459262,
+      "err_std": 0.0006338490237257072,
+      "compression_ratio_mean": 0.9988705583756344,
+      "compression_ratio_std": 0.0006345389167371783
+    },
+    {
+      "method": "CoLD",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.4,
+      "macro_f1_mean": 0.9504681845904077,
+      "macro_f1_std": 0.0053224788392292315,
+      "err_mean": 0.8222904652669364,
+      "err_std": 0.0014590488111376047,
+      "compression_ratio_mean": 0.9993527918781725,
+      "compression_ratio_std": 0.000614947785472175
+    },
+    {
+      "method": "CoLD",
+      "noise_type": "clean",
+      "noise_rate": 0.0,
+      "macro_f1_mean": 0.99103450791384,
+      "macro_f1_std": 0.00048648830089680474,
+      "err_mean": 1.0,
+      "err_std": 0.0,
+      "compression_ratio_mean": 0.9979441624365482,
+      "compression_ratio_std": 0.001431040379036223
+    },
+    {
+      "method": "CoLD",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.1,
+      "macro_f1_mean": 0.9650305031406239,
+      "macro_f1_std": 0.002995253169881331,
+      "err_mean": 0.8411623746165251,
+      "err_std": 0.0014329474620918368,
+      "compression_ratio_mean": 0.9989784263959391,
+      "compression_ratio_std": 0.0005821448366347656
+    },
+    {
+      "method": "CoLD",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.2,
+      "macro_f1_mean": 0.9651318812029365,
+      "macro_f1_std": 0.003448316772015964,
+      "err_mean": 0.8414181442118274,
+      "err_std": 0.001865261938739952,
+      "compression_ratio_mean": 0.9990260152284264,
+      "compression_ratio_std": 0.00039628585161066834
+    },
+    {
+      "method": "CoLD",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.4,
+      "macro_f1_mean": 0.9644808100296568,
+      "macro_f1_std": 0.002284160433460961,
+      "err_mean": 0.8411185020384347,
+      "err_std": 0.003071426681722795,
+      "compression_ratio_mean": 0.9990334179357022,
+      "compression_ratio_std": 0.00028344950199241933
+    },
+    {
+      "method": "CoLD",
+      "noise_type": "symmetric",
+      "noise_rate": 0.1,
+      "macro_f1_mean": 0.9646316220771188,
+      "macro_f1_std": 0.002777192963949426,
+      "err_mean": 0.8413772602868169,
+      "err_std": 0.0015522662537901491,
+      "compression_ratio_mean": 0.9989615059221659,
+      "compression_ratio_std": 0.0005890278547671393
+    },
+    {
+      "method": "CoLD",
+      "noise_type": "symmetric",
+      "noise_rate": 0.2,
+      "macro_f1_mean": 0.9664568245848466,
+      "macro_f1_std": 0.003616734316418387,
+      "err_mean": 0.8420735660994016,
+      "err_std": 0.0021634360742135974,
+      "compression_ratio_mean": 0.9989509306260574,
+      "compression_ratio_std": 0.00021344290713272955
+    },
+    {
+      "method": "CoLD",
+      "noise_type": "symmetric",
+      "noise_rate": 0.4,
+      "macro_f1_mean": 0.964646014504963,
+      "macro_f1_std": 0.0029740210035345423,
+      "err_mean": 0.8424997859909856,
+      "err_std": 0.003785883362674952,
+      "compression_ratio_mean": 0.9988451776649745,
+      "compression_ratio_std": 0.00015447173973357533
+    },
+    {
+      "method": "Graph-CoLD",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.1,
+      "macro_f1_mean": 0.990647324202543,
+      "macro_f1_std": 0.0004733839631815942,
+      "err_mean": 1.0,
+      "err_std": 0.0,
+      "compression_ratio_mean": 0.9980266497461928,
+      "compression_ratio_std": 0.0014273782377968748
+    },
+    {
+      "method": "Graph-CoLD",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.2,
+      "macro_f1_mean": 0.9894273698421637,
+      "macro_f1_std": 0.00022741784113637742,
+      "err_mean": 1.0,
+      "err_std": 0.0,
+      "compression_ratio_mean": 0.9980160744500846,
+      "compression_ratio_std": 0.0014273155554101087
+    },
+    {
+      "method": "Graph-CoLD",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.4,
+      "macro_f1_mean": 0.9858957692273348,
+      "macro_f1_std": 0.00044537968165903334,
+      "err_mean": 1.0,
+      "err_std": 0.0,
+      "compression_ratio_mean": 0.9980160744500846,
+      "compression_ratio_std": 0.0014273155554101087
+    },
+    {
+      "method": "Graph-CoLD",
+      "noise_type": "clean",
+      "noise_rate": 0.0,
+      "macro_f1_mean": 0.9909420607833921,
+      "macro_f1_std": 0.000124237898144186,
+      "err_mean": 1.0,
+      "err_std": 0.0,
+      "compression_ratio_mean": 0.9979441624365482,
+      "compression_ratio_std": 0.001431040379036223
+    },
+    {
+      "method": "Graph-CoLD",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.1,
+      "macro_f1_mean": 0.9902548190443561,
+      "macro_f1_std": 0.0005581465138577227,
+      "err_mean": 1.0,
+      "err_std": 0.0,
+      "compression_ratio_mean": 0.9981842216582063,
+      "compression_ratio_std": 0.0012898588563038896
+    },
+    {
+      "method": "Graph-CoLD",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.2,
+      "macro_f1_mean": 0.9897787118666207,
+      "macro_f1_std": 0.0008354216566411434,
+      "err_mean": 1.0,
+      "err_std": 0.0,
+      "compression_ratio_mean": 0.9967237732656514,
+      "compression_ratio_std": 0.002321686740516678
+    },
+    {
+      "method": "Graph-CoLD",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.4,
+      "macro_f1_mean": 0.9890053663322389,
+      "macro_f1_std": 0.0006769457124558356,
+      "err_mean": 1.0,
+      "err_std": 0.0,
+      "compression_ratio_mean": 0.9961474196277496,
+      "compression_ratio_std": 0.0019505803280526145
+    },
+    {
+      "method": "Graph-CoLD",
+      "noise_type": "symmetric",
+      "noise_rate": 0.1,
+      "macro_f1_mean": 0.9903249393464222,
+      "macro_f1_std": 0.0006378869784019645,
+      "err_mean": 1.0,
+      "err_std": 0.0,
+      "compression_ratio_mean": 0.9981472081218273,
+      "compression_ratio_std": 0.0012886283625154831
+    },
+    {
+      "method": "Graph-CoLD",
+      "noise_type": "symmetric",
+      "noise_rate": 0.2,
+      "macro_f1_mean": 0.9895291159218612,
+      "macro_f1_std": 0.0009222549434225511,
+      "err_mean": 1.0,
+      "err_std": 0.0,
+      "compression_ratio_mean": 0.9962796108291032,
+      "compression_ratio_std": 0.0015316066670081664
+    },
+    {
+      "method": "Graph-CoLD",
+      "noise_type": "symmetric",
+      "noise_rate": 0.4,
+      "macro_f1_mean": 0.988617981579738,
+      "macro_f1_std": 0.0007510751353728742,
+      "err_mean": 1.0,
+      "err_std": 0.0,
+      "compression_ratio_mean": 0.9953109137055839,
+      "compression_ratio_std": 0.0015887122014332385
+    },
+    {
+      "method": "ablation_hard",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.1,
+      "macro_f1_mean": 0.9634657661472019,
+      "macro_f1_std": 0.0034257718427671744,
+      "err_mean": 0.838808314008464,
+      "err_std": 0.0017773913826116124,
+      "compression_ratio_mean": 0.9988705583756344,
+      "compression_ratio_std": 0.0006345389167371783
+    },
+    {
+      "method": "ablation_hard",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.2,
+      "macro_f1_mean": 0.9632158049836193,
+      "macro_f1_std": 0.0013942639684736426,
+      "err_mean": 0.8395500746459262,
+      "err_std": 0.0006338490237257072,
+      "compression_ratio_mean": 0.9988705583756344,
+      "compression_ratio_std": 0.0006345389167371783
+    },
+    {
+      "method": "ablation_hard",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.4,
+      "macro_f1_mean": 0.9504681845904077,
+      "macro_f1_std": 0.0053224788392292315,
+      "err_mean": 0.8222904652669364,
+      "err_std": 0.0014590488111376047,
+      "compression_ratio_mean": 0.9993527918781725,
+      "compression_ratio_std": 0.000614947785472175
+    },
+    {
+      "method": "ablation_hard",
+      "noise_type": "clean",
+      "noise_rate": 0.0,
+      "macro_f1_mean": 0.99103450791384,
+      "macro_f1_std": 0.00048648830089680474,
+      "err_mean": 1.0,
+      "err_std": 0.0,
+      "compression_ratio_mean": 0.9979441624365482,
+      "compression_ratio_std": 0.001431040379036223
+    },
+    {
+      "method": "ablation_hard",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.1,
+      "macro_f1_mean": 0.9650305031406239,
+      "macro_f1_std": 0.002995253169881331,
+      "err_mean": 0.8411623746165251,
+      "err_std": 0.0014329474620918368,
+      "compression_ratio_mean": 0.9989784263959391,
+      "compression_ratio_std": 0.0005821448366347656
+    },
+    {
+      "method": "ablation_hard",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.2,
+      "macro_f1_mean": 0.9651318812029365,
+      "macro_f1_std": 0.003448316772015964,
+      "err_mean": 0.8414181442118274,
+      "err_std": 0.001865261938739952,
+      "compression_ratio_mean": 0.9990260152284264,
+      "compression_ratio_std": 0.00039628585161066834
+    },
+    {
+      "method": "ablation_hard",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.4,
+      "macro_f1_mean": 0.9644808100296568,
+      "macro_f1_std": 0.002284160433460961,
+      "err_mean": 0.8411185020384347,
+      "err_std": 0.003071426681722795,
+      "compression_ratio_mean": 0.9990334179357022,
+      "compression_ratio_std": 0.00028344950199241933
+    },
+    {
+      "method": "ablation_hard",
+      "noise_type": "symmetric",
+      "noise_rate": 0.1,
+      "macro_f1_mean": 0.9646316220771188,
+      "macro_f1_std": 0.002777192963949426,
+      "err_mean": 0.8413772602868169,
+      "err_std": 0.0015522662537901491,
+      "compression_ratio_mean": 0.9989615059221659,
+      "compression_ratio_std": 0.0005890278547671393
+    },
+    {
+      "method": "ablation_hard",
+      "noise_type": "symmetric",
+      "noise_rate": 0.2,
+      "macro_f1_mean": 0.9664568245848466,
+      "macro_f1_std": 0.003616734316418387,
+      "err_mean": 0.8420735660994016,
+      "err_std": 0.0021634360742135974,
+      "compression_ratio_mean": 0.9989509306260574,
+      "compression_ratio_std": 0.00021344290713272955
+    },
+    {
+      "method": "ablation_hard",
+      "noise_type": "symmetric",
+      "noise_rate": 0.4,
+      "macro_f1_mean": 0.964646014504963,
+      "macro_f1_std": 0.0029740210035345423,
+      "err_mean": 0.8424997859909856,
+      "err_std": 0.003785883362674952,
+      "compression_ratio_mean": 0.9988451776649745,
+      "compression_ratio_std": 0.00015447173973357533
+    }
+  ],
+  "rows": 117,
+  "methods": [
+    "CoLD",
+    "Graph-CoLD",
+    "ablation_hard"
+  ],
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "class_policy": "postfilter11",
+  "d5_allowed": false,
+  "blocking_reasons": [
+    "MALTLS-22 source unverified or replacement dataset not selected",
+    "OpTC events.csv unavailable"
+  ],
+  "results_csv": "results\\cicids_mini_matrix.csv"
+}

@@ -1,0 +1,22 @@
+{
+  "stage": "second-dataset-decision",
+  "maltls22": {
+    "source_verified": false,
+    "allowed_for_d5": false,
+    "reason": "MALTLS-22 has no verified local source/acquisition path in this repository."
+  },
+  "recommended_replacements": [
+    "CESNET-TLS-Year22",
+    "CESNET-TLS22",
+    "USTC-TFC2016",
+    "Malicious_TLS"
+  ],
+  "default_recommendation": "CESNET-TLS-Year22",
+  "default_condition": "Use only after the user downloads real files and audit passes under the real dataset name.",
+  "naming_rule": "A replacement must be reported by its true dataset name and must not be renamed as MALTLS-22.",
+  "optc": {
+    "main_experiment_prerequisite": false,
+    "status": "events.csv unavailable",
+    "recommendation": "Treat OpTC as a later case study or remove it from formal experiments until events.csv is available."
+  }
+}

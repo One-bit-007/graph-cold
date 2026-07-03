@@ -1,0 +1,104 @@
+{
+  "stage": "cicids-class-policy-reconciliation",
+  "dataset": "cicids2017",
+  "dataset_hash": "2585508ac445a94a3eb2244aa64778678928d201555396b4b9afc1ed6a2f1ab4",
+  "selected_policy": "postfilter11",
+  "selected_num_classes": 11,
+  "decision_reason": "No authoritative refined9 mapping exists in docs/configs; current deterministic smoke policy is postfilter11 and every retained class has >= min_class_count samples.",
+  "policies": {
+    "raw15": {
+      "class_names": [
+        "BENIGN",
+        "Bot",
+        "DDoS",
+        "DoS GoldenEye",
+        "DoS Hulk",
+        "DoS Slowhttptest",
+        "DoS slowloris",
+        "FTP-Patator",
+        "Heartbleed",
+        "Infiltration",
+        "PortScan",
+        "SSH-Patator",
+        "Web Attack \ufffd Brute Force",
+        "Web Attack \ufffd Sql Injection",
+        "Web Attack \ufffd XSS"
+      ],
+      "class_counts": {
+        "BENIGN": 2273097,
+        "Bot": 1966,
+        "DDoS": 128027,
+        "DoS GoldenEye": 10293,
+        "DoS Hulk": 231073,
+        "DoS Slowhttptest": 5499,
+        "DoS slowloris": 5796,
+        "FTP-Patator": 7938,
+        "Heartbleed": 11,
+        "Infiltration": 36,
+        "PortScan": 158930,
+        "SSH-Patator": 5897,
+        "Web Attack \ufffd Brute Force": 1507,
+        "Web Attack \ufffd Sql Injection": 21,
+        "Web Attack \ufffd XSS": 652
+      },
+      "num_classes": 15,
+      "macro_imbalance_ratio": 206645.18181818182,
+      "has_lt_1000_classes": true,
+      "suitable_for_experiment": false,
+      "reason": "Raw labels include classes below 1000 samples, conflicting with the current CICIDS loader contract."
+    },
+    "postfilter11": {
+      "class_names": [
+        "BENIGN",
+        "Bot",
+        "DDoS",
+        "DoS GoldenEye",
+        "DoS Hulk",
+        "DoS Slowhttptest",
+        "DoS slowloris",
+        "FTP-Patator",
+        "PortScan",
+        "SSH-Patator",
+        "Web Attack \ufffd Brute Force"
+      ],
+      "class_counts": {
+        "BENIGN": 231073,
+        "Bot": 1966,
+        "DDoS": 128027,
+        "DoS GoldenEye": 10293,
+        "DoS Hulk": 231073,
+        "DoS Slowhttptest": 5499,
+        "DoS slowloris": 5796,
+        "FTP-Patator": 7938,
+        "PortScan": 158930,
+        "SSH-Patator": 5897,
+        "Web Attack \ufffd Brute Force": 1507
+      },
+      "num_classes": 11,
+      "removed_classes": {
+        "Heartbleed": 11,
+        "Infiltration": 36,
+        "Web Attack \ufffd Sql Injection": 21,
+        "Web Attack \ufffd XSS": 652
+      },
+      "delete_rule": "Drop labels with count < 1000.",
+      "downsample_rule": "Downsample dominant class 'BENIGN' to 231073 samples.",
+      "macro_imbalance_ratio": 153.33311214333114,
+      "reproducible": true,
+      "consistent_with_current_smoke": true,
+      "suitable_for_experiment": true
+    },
+    "refined9": {
+      "class_names": [],
+      "num_classes": 0,
+      "merge_or_delete_rules": {},
+      "deterministic_from_cicids_labels": false,
+      "would_change_smoke_results": true,
+      "cold_paper_comparable": false,
+      "is_default_enabled": false,
+      "reason": "No strict refined9_mapping is defined in docs or configs; refined9 is therefore not used."
+    }
+  },
+  "paper_statement": "CICIDS-2017 post-filtered 11-class setting",
+  "must_not_claim": "CICIDS-2017 refined 9-class setting"
+}
