@@ -1,0 +1,47 @@
+{
+  "dataset": "tls_alternative",
+  "candidate": "cesnet_tls_year22",
+  "must_be_reported_as": "CESNET-TLS-Year22",
+  "not_maltls22": true,
+  "mode": "auto",
+  "download_attempted": true,
+  "download_success": false,
+  "large_download_confirmed": true,
+  "download_source": "https://zenodo.org/records/10608607",
+  "datazoo_source": "https://cesnet.github.io/cesnet-datazoo/",
+  "manual_action_required": true,
+  "out": "data\\tls_alternative\\cesnet_tls_year22",
+  "audit_passed": false,
+  "notes": "Year-spanning TLS flow/service dataset; large public research corpus.",
+  "zenodo_files": [
+    {
+      "key": "CESNET-TLS-Year22.zip",
+      "size": 30491259088,
+      "url": "https://zenodo.org/api/records/10608607/files/CESNET-TLS-Year22.zip/content"
+    },
+    {
+      "key": "servicemap.csv",
+      "size": 24817,
+      "url": "https://zenodo.org/api/records/10608607/files/servicemap.csv/content"
+    }
+  ],
+  "total_size_bytes": 30491283905,
+  "free_space_bytes": 2396061696,
+  "error": "Insufficient free disk space for CESNET-TLS-Year22. Need at least 35859993025 bytes including extraction margin; free space is 2396061696 bytes.",
+  "manual_instructions": [
+    "Download CESNET-TLS-Year22 from https://zenodo.org/records/10608607 or export it through https://cesnet.github.io/cesnet-datazoo/.",
+    "Place CSV/Parquet/DataZoo-exported files under data\\tls_alternative\\cesnet_tls_year22.",
+    "If using a local archive, run: python scripts/download_tls_alternative.py --candidate cesnet_tls_year22 --mode local-archive --archive path/to/archive --out data/tls_alternative/cesnet_tls_year22",
+    "Then run: python -m src.data.audit --dataset cesnet_tls_year22"
+  ],
+  "dataset_hash": null,
+  "files": [],
+  "rows": 0,
+  "classes": 0,
+  "blocking_reasons": [
+    "dataset root does not exist: data\\tls_alternative\\cesnet_tls_year22",
+    "label column missing: contract label candidate",
+    "required column groups missing: label, tls_or_flow_features, timestamp",
+    "row count 0 below min_samples 10000"
+  ]
+}

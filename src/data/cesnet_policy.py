@@ -220,10 +220,14 @@ def _imbalance_ratio(counts: dict[str, int]) -> float:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
+    parser.add_argument("--dataset", default="cesnet_tls_year22")
     parser.add_argument("--configs", default="configs")
+    parser.add_argument("--out", default=None)
     parser.add_argument("--reports", default="reports")
     args = parser.parse_args()
-    report = audit_policies(args.configs, args.reports)
+    if args.dataset != "cesnet_tls_year22":
+        raise ValueError("CESNET policy audit only supports --dataset cesnet_tls_year22.")
+    report = audit_policies(args.configs, args.out or args.reports)
     print(json.dumps(report, indent=2))
 
 

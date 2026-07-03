@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+from dataclasses import replace
 import json
 from pathlib import Path
 import shutil
@@ -14,7 +15,8 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from src.data.audit import write_readiness_reports
+from src.data.audit import audit_all_datasets, audit_dataset, write_audit_reports, write_dataset_specific_audit_report, write_readiness_reports
+from src.data.contracts import CESNET_TLS_YEAR22_CONTRACT
 
 
 CANDIDATES = {
@@ -77,18 +79,105 @@ def run(
     if mode in {"auto", "datazoo"} and info["large"] and not confirm_large_download:
         report["error"] = "Large TLS download requires --confirm-large-download."
     elif mode == "auto":
-        report["error"] = "Auto download is intentionally conservative; follow source instructions and audit local files."
-        _probe_source(info["url"])
+        report.update(_prepare_zenodo_auto(info, out_path))
     elif mode == "datazoo":
-        report["error"] = "DataZoo mode is guarded; install/use cesnet-datazoo manually, then audit exported files."
-        _probe_source(info.get("datazoo") or info["url"])
+        report.update(_prepare_datazoo(info, out_path))
     elif mode == "local-archive":
         report.update(_prepare_local_archive(archive, out_path))
     elif mode != "instructions":
         raise ValueError("TLS alternative supports modes: instructions, auto, datazoo, local-archive")
+    if candidate == "cesnet_tls_year22":
+        report.update(_audit_cesnet(out_path))
     _write_tls_reports(report)
-    write_readiness_reports()
+    audits = audit_all_datasets()
+    write_audit_reports(audits)
+    write_readiness_reports(audits)
     return report
+
+
+def _prepare_datazoo(info: dict, out_path: Path) -> dict:
+    """Record guarded DataZoo status without inventing files."""
+    try:
+        import cesnet_datazoo  # type: ignore  # noqa: F401
+    except Exception as exc:
+        return {
+            "download_success": False,
+            "manual_action_required": True,
+            "datazoo_available": False,
+            "error": f"CESNET DataZoo package is not available in this environment: {exc}",
+            "manual_instructions": _manual_instructions(info, out_path),
+        }
+    return {
+        "download_success": False,
+        "manual_action_required": True,
+        "datazoo_available": True,
+        "error": "DataZoo package is installed, but this project requires an explicit export path/schema mapping before audit.",
+        "manual_instructions": _manual_instructions(info, out_path),
+    }
+
+
+def _prepare_zenodo_auto(info: dict, out_path: Path) -> dict:
+    try:
+        manifest = _zenodo_manifest(info["url"])
+    except Exception as exc:
+        return {
+            "download_success": False,
+            "manual_action_required": True,
+            "error": f"Could not read Zenodo file manifest: {exc}",
+            "manual_instructions": _manual_instructions(info, out_path),
+        }
+    total_size = sum(int(file.get("size", 0)) for file in manifest)
+    free = shutil.disk_usage(out_path.resolve().anchor or ".").free
+    needed = total_size + 5 * 1024**3
+    if total_size and free < needed:
+        return {
+            "download_success": False,
+            "manual_action_required": True,
+            "zenodo_files": manifest,
+            "total_size_bytes": total_size,
+            "free_space_bytes": free,
+            "error": (
+                "Insufficient free disk space for CESNET-TLS-Year22. "
+                f"Need at least {needed} bytes including extraction margin; free space is {free} bytes."
+            ),
+            "manual_instructions": _manual_instructions(info, out_path),
+        }
+    out_path.mkdir(parents=True, exist_ok=True)
+    downloaded = []
+    for file in manifest:
+        target = out_path / file["key"]
+        _download_file(file["url"], target)
+        downloaded.append(str(target))
+    return {
+        "download_success": True,
+        "manual_action_required": False,
+        "zenodo_files": manifest,
+        "files_present": downloaded,
+    }
+
+
+def _zenodo_manifest(record_url: str) -> list[dict]:
+    record_id = record_url.rstrip("/").split("/")[-1]
+    api_url = f"https://zenodo.org/api/records/{record_id}"
+    request = urllib.request.Request(api_url, headers={"User-Agent": "Graph-CoLD dataset audit"})
+    with urllib.request.urlopen(request, timeout=30) as response:
+        payload = json.loads(response.read().decode("utf-8"))
+    files = []
+    for item in payload.get("files", []):
+        files.append(
+            {
+                "key": item.get("key"),
+                "size": int(item.get("size", 0)),
+                "url": item.get("links", {}).get("self"),
+            }
+        )
+    return files
+
+
+def _download_file(url: str, target: Path) -> None:
+    request = urllib.request.Request(url, headers={"User-Agent": "Graph-CoLD dataset audit"})
+    with urllib.request.urlopen(request, timeout=60) as response, target.open("wb") as handle:
+        shutil.copyfileobj(response, handle, length=1024 * 1024)
 
 
 def _prepare_local_archive(archive: str | Path | None, out_path: Path) -> dict:
@@ -114,15 +203,35 @@ def _prepare_local_archive(archive: str | Path | None, out_path: Path) -> dict:
     }
 
 
-def _probe_source(url: str) -> None:
-    request = urllib.request.Request(url, headers={"User-Agent": "Graph-CoLD dataset audit"})
-    with urllib.request.urlopen(request, timeout=20) as response:
-        response.read(1024)
+def _manual_instructions(info: dict, out_path: Path) -> list[str]:
+    return [
+        f"Download CESNET-TLS-Year22 from {info['url']} or export it through {info.get('datazoo')}.",
+        f"Place CSV/Parquet/DataZoo-exported files under {out_path}.",
+        "If using a local archive, run: python scripts/download_tls_alternative.py --candidate cesnet_tls_year22 --mode local-archive --archive path/to/archive --out data/tls_alternative/cesnet_tls_year22",
+        "Then run: python -m src.data.audit --dataset cesnet_tls_year22",
+    ]
+
+
+def _audit_cesnet(out_path: Path) -> dict:
+    audit = audit_dataset(replace(CESNET_TLS_YEAR22_CONTRACT, root=str(out_path)))
+    if out_path == Path(CESNET_TLS_YEAR22_CONTRACT.root):
+        write_dataset_specific_audit_report(audit)
+    return {
+        "audit_passed": audit.ready_for_d5,
+        "dataset_hash": audit.dataset_hash,
+        "files": audit.files_used,
+        "rows": audit.num_rows,
+        "classes": audit.class_count,
+        "blocking_reasons": audit.blocking_reasons,
+    }
 
 
 def _write_tls_reports(report: dict) -> None:
     reports = ROOT / "reports"
     reports.mkdir(parents=True, exist_ok=True)
+    if report["candidate"] == "cesnet_tls_year22":
+        (reports / "cesnet_download_report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
+        (reports / "cesnet_download_report.md").write_text(_download_markdown(report), encoding="utf-8")
     (reports / "tls_replacement_decision.json").write_text(json.dumps(_decision(report), indent=2), encoding="utf-8")
     (reports / "tls_replacement_decision.md").write_text(_decision_markdown(report), encoding="utf-8")
 
@@ -141,6 +250,9 @@ def _decision(report: dict) -> dict:
         "large_download_confirmed": report["large_download_confirmed"],
         "must_be_reported_as": report["must_be_reported_as"],
         "allowed_for_d5": False,
+        "error": report.get("error"),
+        "dataset_hash": report.get("dataset_hash"),
+        "files": report.get("files", []),
         "user_confirmation_required": True,
         "notes": [
             "The replacement is not MALTLS-22.",
@@ -163,6 +275,7 @@ def _decision_markdown(report: dict) -> str:
             "- Replacement differs from MALTLS-22 and must not be renamed.",
             f"- Download attempted: {report['download_attempted']}",
             f"- Large download confirmed: {report['large_download_confirmed']}",
+            f"- Error: {report.get('error') or 'none'}",
             "- Allowed for D5 now: false",
             "- User confirmation required: true",
             "",
@@ -171,6 +284,37 @@ def _decision_markdown(report: dict) -> str:
             "",
         ]
     )
+
+
+def _download_markdown(report: dict) -> str:
+    lines = [
+        "# CESNET-TLS-Year22 Download Report",
+        "",
+        f"- Mode: {report['mode']}",
+        f"- Download attempted: {report['download_attempted']}",
+        f"- Download success: {report['download_success']}",
+        f"- Large download confirmed: {report['large_download_confirmed']}",
+        f"- Source: {report['download_source']}",
+        f"- DataZoo source: {report.get('datazoo_source')}",
+        f"- Output path: `{report['out']}`",
+        f"- Dataset hash: `{report.get('dataset_hash')}`",
+        f"- Rows/classes: {report.get('rows')} / {report.get('classes')}",
+        f"- Error: {report.get('error') or 'none'}",
+        "",
+        "## Files",
+    ]
+    for item in report.get("zenodo_files", []):
+        lines.append(f"- {item.get('key')}: {item.get('size')} bytes")
+    for item in report.get("files", []):
+        lines.append(f"- `{item}`")
+    if not report.get("zenodo_files") and not report.get("files"):
+        lines.append("- none")
+    lines.extend(["", "## Manual Instructions"])
+    lines.extend([f"- {item}" for item in report.get("manual_instructions", [])] or ["- none"])
+    lines.extend(["", "## Blocking Reasons"])
+    lines.extend([f"- {item}" for item in report.get("blocking_reasons", [])] or ["- none"])
+    lines.append("")
+    return "\n".join(lines)
 
 
 def main(argv: list[str] | None = None) -> int:

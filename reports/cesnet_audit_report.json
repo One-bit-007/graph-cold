@@ -51,6 +51,8 @@
     "ip",
     "temporal"
   ],
+  "data_source": "data\\tls_alternative\\cesnet_tls_year22",
+  "data_version": "real-local",
   "source_verified": true,
   "replacement_for": "maltls22",
   "ready_for_mini_matrix": false,

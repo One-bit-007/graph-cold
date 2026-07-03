@@ -6,8 +6,9 @@
 - Download source: https://zenodo.org/records/10608607
 - DataZoo source: https://cesnet.github.io/cesnet-datazoo/
 - Replacement differs from MALTLS-22 and must not be renamed.
-- Download attempted: False
-- Large download confirmed: False
+- Download attempted: True
+- Large download confirmed: True
+- Error: Insufficient free disk space for CESNET-TLS-Year22. Need at least 35859993025 bytes including extraction margin; free space is 2396061696 bytes.
 - Allowed for D5 now: false
 - User confirmation required: true
 

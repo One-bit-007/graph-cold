@@ -165,6 +165,8 @@ def write_dataset_specific_audit_report(result: DatasetAuditResult, out_dir: str
             "class_imbalance_ratio": _imbalance_ratio(result.label_distribution),
             "selected_class_policy": "postfilter" if result.name == "cesnet_tls_year22" else None,
             "active_views": [view for view, active in result.expected_view_support.items() if active],
+            "data_source": result.root,
+            "data_version": "real-local",
             "source_verified": DATASET_CONTRACTS[result.name].source_verified if result.name in DATASET_CONTRACTS else None,
             "replacement_for": DATASET_CONTRACTS[result.name].replacement_for if result.name in DATASET_CONTRACTS else None,
             "ready_for_mini_matrix": bool(result.ready_for_smoke),
@@ -216,7 +218,7 @@ def build_readiness(audits: dict[str, DatasetAuditResult]) -> dict[str, Any]:
         "stage": "realdata-acquisition-audit",
         "submission_ready": False,
         "d5_allowed": d5_allowed,
-        "d6_d7_allowed": d5_allowed,
+        "d6_d7_allowed": False,
         "datasets": {
             "cicids2017": _readiness_dataset(cicids),
             "maltls22": {

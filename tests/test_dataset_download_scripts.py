@@ -44,6 +44,9 @@ def _avoid_real_dataset_global_audits(monkeypatch):
     monkeypatch.setattr(download_cicids2017, "audit_all_datasets", lambda: fake_audits)
     monkeypatch.setattr(download_optc, "audit_all_datasets", lambda: fake_audits)
     monkeypatch.setattr(prepare_datasets, "audit_all_datasets", lambda: fake_audits)
+    monkeypatch.setattr(download_tls_alternative, "audit_all_datasets", lambda: fake_audits)
+    monkeypatch.setattr(download_tls_alternative, "write_audit_reports", lambda *args, **kwargs: {})
+    monkeypatch.setattr(download_tls_alternative, "write_dataset_specific_audit_report", lambda *args, **kwargs: {})
     monkeypatch.setattr(download_tls_alternative, "write_readiness_reports", lambda *args, **kwargs: {})
 
 
@@ -110,6 +113,23 @@ def test_tls_alternative_auto_requires_large_download_confirmation(tmp_path: Pat
     assert report["download_attempted"] is False
     assert report["download_success"] is False
     assert "requires --confirm-large-download" in report["error"]
+
+
+def test_tls_alternative_auto_records_insufficient_disk_without_downloading(tmp_path: Path, monkeypatch):
+    monkeypatch.setattr(
+        download_tls_alternative,
+        "_zenodo_manifest",
+        lambda url: [{"key": "CESNET-TLS-Year22.zip", "size": 1000, "url": "https://example.invalid/file"}],
+    )
+    monkeypatch.setattr(download_tls_alternative.shutil, "disk_usage", lambda path: type("DU", (), {"free": 1})())
+
+    report = download_tls_alternative.run("cesnet_tls_year22", "auto", tmp_path / "tls", confirm_large_download=True)
+
+    assert report["download_attempted"] is True
+    assert report["download_success"] is False
+    assert "Insufficient free disk space" in report["error"]
+    assert report["zenodo_files"][0]["key"] == "CESNET-TLS-Year22.zip"
+    assert not (tmp_path / "tls" / "CESNET-TLS-Year22.zip").exists()
 
 
 def test_optc_instructions_do_not_start_full_download(tmp_path: Path):
