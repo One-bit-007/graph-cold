@@ -1,0 +1,35 @@
+{
+  "dataset": "maltls22",
+  "source_verified": false,
+  "local_repository": {
+    "cold_paper_pdf_present": false,
+    "bib_or_reference_file_present": false,
+    "explicit_local_source_found": false,
+    "license_or_access_requirement_found": false
+  },
+  "web_investigation": {
+    "attempted": true,
+    "verified_download_url_found": false,
+    "verified_license_found": false,
+    "sources_inspected": [
+      "https://www.ndss-symposium.org/wp-content/uploads/2026-s1950-paper.pdf",
+      "https://www.ndss-symposium.org/wp-content/uploads/s1950-yang-slides.pdf"
+    ],
+    "notes": [
+      "CoLD describes MALTLS-22 as 22 encrypted malicious traffic categories plus benign traffic.",
+      "CoLD reference [13] points to MCRe, but this gate did not verify a direct dataset download or access page."
+    ]
+  },
+  "gate_decision": [
+    "MALTLS-22 source not verified",
+    "MALTLS-22 must not be reported as evaluated",
+    "Do not fabricate MALTLS-22 results"
+  ],
+  "alternatives": [
+    "CESNET-TLS-Year22",
+    "USTC-TFC2016",
+    "Malicious_TLS",
+    "Other public TLS or encrypted traffic dataset with a separate contract"
+  ]
+}
+
