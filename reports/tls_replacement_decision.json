@@ -11,7 +11,7 @@
   "large_download_confirmed": true,
   "must_be_reported_as": "CESNET-TLS-Year22",
   "allowed_for_d5": false,
-  "error": "Insufficient free disk space for CESNET-TLS-Year22. Need at least 35859993025 bytes including extraction margin; free space is 2396061696 bytes.",
+  "error": "Zenodo download was reachable but throughput stayed near 110 KB/s with an estimated 70+ hours remaining; download stopped intentionally and partial file retained for resume.",
   "dataset_hash": null,
   "files": [],
   "user_confirmation_required": true,

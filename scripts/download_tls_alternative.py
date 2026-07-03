@@ -6,6 +6,7 @@ from dataclasses import replace
 import json
 from pathlib import Path
 import shutil
+import subprocess
 import sys
 import tarfile
 import urllib.request
@@ -17,6 +18,7 @@ if str(ROOT) not in sys.path:
 
 from src.data.audit import audit_all_datasets, audit_dataset, write_audit_reports, write_dataset_specific_audit_report, write_readiness_reports
 from src.data.contracts import CESNET_TLS_YEAR22_CONTRACT
+from src.data.paths import get_download_cache, resolve_dataset_path
 
 
 CANDIDATES = {
@@ -54,11 +56,15 @@ def run(
     out: str | Path,
     confirm_large_download: bool = False,
     archive: str | Path | None = None,
+    data_root: str | Path | None = None,
+    download_cache: str | Path | None = None,
+    min_free_gb: float | None = None,
 ) -> dict:
     if candidate not in CANDIDATES:
         raise ValueError(f"Unknown TLS alternative candidate: {candidate}")
     info = CANDIDATES[candidate]
-    out_path = Path(out)
+    out_path = Path(out) if out else resolve_dataset_path(candidate, data_root)
+    cache_path = get_download_cache(data_root, download_cache) / candidate
     attempted = mode in {"auto", "datazoo"} and (confirm_large_download or not info["large"])
     report = {
         "dataset": "tls_alternative",
@@ -73,13 +79,16 @@ def run(
         "datazoo_source": info.get("datazoo"),
         "manual_action_required": True,
         "out": str(out_path),
+        "data_root": str(data_root) if data_root else None,
+        "download_cache": str(cache_path),
+        "min_free_gb": min_free_gb,
         "audit_passed": False,
         "notes": info["notes"],
     }
     if mode in {"auto", "datazoo"} and info["large"] and not confirm_large_download:
         report["error"] = "Large TLS download requires --confirm-large-download."
     elif mode == "auto":
-        report.update(_prepare_zenodo_auto(info, out_path))
+        report.update(_prepare_zenodo_auto(info, out_path, cache_path, min_free_gb))
     elif mode == "datazoo":
         report.update(_prepare_datazoo(info, out_path))
     elif mode == "local-archive":
@@ -116,7 +125,7 @@ def _prepare_datazoo(info: dict, out_path: Path) -> dict:
     }
 
 
-def _prepare_zenodo_auto(info: dict, out_path: Path) -> dict:
+def _prepare_zenodo_auto(info: dict, out_path: Path, cache_path: Path, min_free_gb: float | None) -> dict:
     try:
         manifest = _zenodo_manifest(info["url"])
     except Exception as exc:
@@ -128,7 +137,8 @@ def _prepare_zenodo_auto(info: dict, out_path: Path) -> dict:
         }
     total_size = sum(int(file.get("size", 0)) for file in manifest)
     free = shutil.disk_usage(out_path.resolve().anchor or ".").free
-    needed = total_size + 5 * 1024**3
+    minimum_free = 0 if min_free_gb is None else int(min_free_gb * 1024**3)
+    needed = total_size + max(5 * 1024**3, minimum_free)
     if total_size and free < needed:
         return {
             "download_success": False,
@@ -143,16 +153,37 @@ def _prepare_zenodo_auto(info: dict, out_path: Path) -> dict:
             "manual_instructions": _manual_instructions(info, out_path),
         }
     out_path.mkdir(parents=True, exist_ok=True)
+    cache_path.mkdir(parents=True, exist_ok=True)
     downloaded = []
-    for file in manifest:
-        target = out_path / file["key"]
-        _download_file(file["url"], target)
-        downloaded.append(str(target))
+    archive_hashes = {}
+    try:
+        for file in manifest:
+            target = cache_path / file["key"]
+            _download_file(file["url"], target, expected_size=int(file.get("size", 0)))
+            archive_hashes[str(target)] = _sha256(target)
+            downloaded.append(str(target))
+            if zipfile.is_zipfile(target):
+                _extract_archive(target, out_path)
+            elif target.suffix.lower() in {".csv", ".parquet"} or "".join(target.suffixes).lower().endswith(".csv.gz"):
+                shutil.copy2(target, out_path / target.name)
+    except Exception as exc:
+        return {
+            "download_success": False,
+            "manual_action_required": True,
+            "zenodo_files": manifest,
+            "archive_files": downloaded,
+            "archive_hashes": archive_hashes,
+            "error": f"Zenodo download or extraction failed: {exc}",
+            "manual_instructions": _manual_instructions(info, out_path),
+        }
     return {
         "download_success": True,
         "manual_action_required": False,
         "zenodo_files": manifest,
-        "files_present": downloaded,
+        "archive_files": downloaded,
+        "archive_hashes": archive_hashes,
+        "files_present": [str(path) for path in sorted(out_path.rglob("*")) if path.is_file()][:200],
+        "actual_data_path": str(out_path),
     }
 
 
@@ -174,10 +205,55 @@ def _zenodo_manifest(record_url: str) -> list[dict]:
     return files
 
 
-def _download_file(url: str, target: Path) -> None:
+def _download_file(url: str, target: Path, expected_size: int = 0) -> None:
+    if target.exists() and expected_size and target.stat().st_size == expected_size:
+        return
+    partial = target.with_suffix(target.suffix + ".part")
+    curl = shutil.which("curl.exe") or shutil.which("curl")
+    if curl:
+        cmd = [
+            curl,
+            "-L",
+            "--fail",
+            "--retry",
+            "5",
+            "--retry-delay",
+            "10",
+            "--connect-timeout",
+            "60",
+            "--continue-at",
+            "-",
+            "--output",
+            str(partial),
+            url,
+        ]
+        subprocess.run(cmd, check=True)
+        if expected_size and partial.stat().st_size != expected_size:
+            raise IOError(f"downloaded size mismatch for {target.name}: {partial.stat().st_size} != {expected_size}")
+        partial.replace(target)
+        return
     request = urllib.request.Request(url, headers={"User-Agent": "Graph-CoLD dataset audit"})
-    with urllib.request.urlopen(request, timeout=60) as response, target.open("wb") as handle:
+    with urllib.request.urlopen(request, timeout=120) as response, partial.open("wb") as handle:
         shutil.copyfileobj(response, handle, length=1024 * 1024)
+    partial.replace(target)
+
+
+def _extract_archive(archive_path: Path, out_path: Path) -> None:
+    out_resolved = out_path.resolve()
+    if zipfile.is_zipfile(archive_path):
+        with zipfile.ZipFile(archive_path) as handle:
+            for member in handle.infolist():
+                target = (out_path / member.filename).resolve()
+                if not str(target).startswith(str(out_resolved)):
+                    raise ValueError(f"Unsafe archive member path: {member.filename}")
+            handle.extractall(out_path)
+    elif tarfile.is_tarfile(archive_path):
+        with tarfile.open(archive_path) as handle:
+            for member in handle.getmembers():
+                target = (out_path / member.name).resolve()
+                if not str(target).startswith(str(out_resolved)):
+                    raise ValueError(f"Unsafe archive member path: {member.name}")
+            handle.extractall(out_path)
 
 
 def _prepare_local_archive(archive: str | Path | None, out_path: Path) -> dict:
@@ -188,17 +264,17 @@ def _prepare_local_archive(archive: str | Path | None, out_path: Path) -> dict:
         return {"download_success": False, "error": f"Archive not found: {archive_path}"}
     out_path.mkdir(parents=True, exist_ok=True)
     if zipfile.is_zipfile(archive_path):
-        with zipfile.ZipFile(archive_path) as handle:
-            handle.extractall(out_path)
+        _extract_archive(archive_path, out_path)
     elif tarfile.is_tarfile(archive_path):
-        with tarfile.open(archive_path) as handle:
-            handle.extractall(out_path)
+        _extract_archive(archive_path, out_path)
     elif archive_path.is_file():
         shutil.copy2(archive_path, out_path / archive_path.name)
     return {
         "download_success": True,
         "manual_action_required": False,
         "archive": str(archive_path),
+        "archive_hashes": {str(archive_path): _sha256(archive_path)} if archive_path.is_file() else {},
+        "actual_data_path": str(out_path),
         "files_present": [str(path) for path in sorted(out_path.rglob("*")) if path.is_file()][:50],
     }
 
@@ -224,6 +300,16 @@ def _audit_cesnet(out_path: Path) -> dict:
         "classes": audit.class_count,
         "blocking_reasons": audit.blocking_reasons,
     }
+
+
+def _sha256(path: Path) -> str:
+    import hashlib
+
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def _write_tls_reports(report: dict) -> None:
@@ -323,9 +409,21 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--mode", choices=["instructions", "auto", "datazoo", "local-archive"], default="instructions")
     parser.add_argument("--out", default="data/tls_alternative/cesnet_tls_year22")
     parser.add_argument("--archive")
+    parser.add_argument("--data-root")
+    parser.add_argument("--download-cache")
+    parser.add_argument("--min-free-gb", type=float)
     parser.add_argument("--confirm-large-download", action="store_true")
     args = parser.parse_args(argv)
-    report = run(args.candidate, args.mode, args.out, args.confirm_large_download, args.archive)
+    report = run(
+        args.candidate,
+        args.mode,
+        args.out,
+        args.confirm_large_download,
+        args.archive,
+        args.data_root,
+        args.download_cache,
+        args.min_free_gb,
+    )
     print(json.dumps(report, indent=2))
     return 0 if args.mode in {"instructions", "local-archive"} and not report.get("error") else 2
 

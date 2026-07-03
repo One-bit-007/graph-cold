@@ -15,10 +15,13 @@ import pandas as pd
 import yaml
 from sklearn.ensemble import ExtraTreesClassifier
 
+from dataclasses import replace
+
 from src.data.audit import audit_dataset
 from src.data.contracts import DATASET_CONTRACTS
 from src.data.loaders import load_dataset
 from src.data.noise import inject_symmetric
+from src.data.paths import resolve_dataset_path
 from src.metrics import (
     evidence_retention_components,
     false_negative_rate,
@@ -37,11 +40,14 @@ def run_smoke_realdata(
     dataset: str = "cicids2017",
     configs: str | Path = "configs",
     out: str | Path = "reports",
+    data_root: str | Path | None = None,
 ) -> dict[str, Any]:
     dataset = _normalize_dataset(dataset)
     reports_dir = Path(out)
     reports_dir.mkdir(parents=True, exist_ok=True)
     contract = DATASET_CONTRACTS[dataset]
+    if data_root and dataset == "cesnet_tls_year22":
+        contract = replace(contract, root=str(resolve_dataset_path(dataset, data_root)))
     audit = audit_dataset(contract)
     if not audit.ready_for_smoke:
         report = _blocked_report(dataset, audit)
@@ -50,6 +56,8 @@ def run_smoke_realdata(
 
     cfg = yaml.safe_load((Path(configs) / "datasets.yaml").read_text(encoding="utf-8"))
     cfg["seed"] = 42
+    if data_root:
+        cfg["data_root"] = str(data_root)
     bundle = load_dataset(dataset, cfg)
     rows: list[dict[str, Any]] = []
     for noise_name in SMOKE_NOISES:
@@ -290,8 +298,9 @@ def main() -> None:
     parser.add_argument("--dataset", default="cicids2017")
     parser.add_argument("--configs", default="configs")
     parser.add_argument("--out", default="reports")
+    parser.add_argument("--data-root")
     args = parser.parse_args()
-    report = run_smoke_realdata(args.dataset, args.configs, args.out)
+    report = run_smoke_realdata(args.dataset, args.configs, args.out, args.data_root)
     print(json.dumps(report, indent=2))
 
 

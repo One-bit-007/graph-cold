@@ -6,7 +6,7 @@ model, or writes formal experiment tables.
 """
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 import argparse
 import hashlib
@@ -17,6 +17,7 @@ import numpy as np
 import pandas as pd
 
 from src.data.contracts import DATASET_CONTRACTS, DatasetContract
+from src.data.paths import get_download_cache, get_data_root, resolve_dataset_path
 
 
 @dataclass
@@ -165,10 +166,14 @@ def write_dataset_specific_audit_report(result: DatasetAuditResult, out_dir: str
             "class_imbalance_ratio": _imbalance_ratio(result.label_distribution),
             "selected_class_policy": "postfilter" if result.name == "cesnet_tls_year22" else None,
             "active_views": [view for view, active in result.expected_view_support.items() if active],
+            "actual_data_path": result.root,
+            "external_data_root": _external_root_for(result.name, result.root),
+            "download_cache": str(get_download_cache(_external_root_for(result.name, result.root))) if result.name == "cesnet_tls_year22" else None,
             "data_source": result.root,
             "data_version": "real-local",
+            "reported_as": "CESNET-TLS-Year22" if result.name == "cesnet_tls_year22" else result.name,
             "source_verified": DATASET_CONTRACTS[result.name].source_verified if result.name in DATASET_CONTRACTS else None,
-            "replacement_for": DATASET_CONTRACTS[result.name].replacement_for if result.name in DATASET_CONTRACTS else None,
+            "replacement_for": "MALTLS-22" if result.name == "cesnet_tls_year22" else DATASET_CONTRACTS[result.name].replacement_for if result.name in DATASET_CONTRACTS else None,
             "ready_for_mini_matrix": bool(result.ready_for_smoke),
             "ready_for_d5_component": bool(result.ready_for_d5),
         }
@@ -445,10 +450,12 @@ def _readiness_markdown(readiness: dict[str, Any]) -> str:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset", choices=sorted(DATASET_CONTRACTS), default=None)
+    parser.add_argument("--data-root")
     parser.add_argument("--out", default="reports")
     args = parser.parse_args()
     if args.dataset:
-        result = audit_dataset(DATASET_CONTRACTS[args.dataset])
+        contract = _contract_for_data_root(args.dataset, args.data_root)
+        result = audit_dataset(contract)
         audits = audit_all_datasets()
         audits[args.dataset] = result
         write_audit_reports(audits, args.out)
@@ -465,6 +472,25 @@ def _imbalance_ratio(counts: dict[str, int]) -> float:
     if values.size == 0 or values.min() <= 0:
         return 0.0
     return float(values.max() / values.min())
+
+
+def _contract_for_data_root(dataset: str, data_root: str | Path | None) -> DatasetContract:
+    contract = DATASET_CONTRACTS[dataset]
+    if data_root and dataset == "cesnet_tls_year22":
+        return replace(contract, root=str(resolve_dataset_path(dataset, data_root)))
+    return contract
+
+
+def _external_root_for(dataset: str, root: str) -> str | None:
+    if dataset != "cesnet_tls_year22":
+        return None
+    marker = Path("tls_alternative") / "cesnet_tls_year22"
+    path = Path(root)
+    parts = path.parts
+    marker_parts = marker.parts
+    if len(parts) >= len(marker_parts) and tuple(parts[-len(marker_parts):]) == marker_parts:
+        return str(Path(*parts[:-len(marker_parts)]))
+    return str(get_data_root())
 
 
 def _specific_audit_markdown(payload: dict[str, Any]) -> str:

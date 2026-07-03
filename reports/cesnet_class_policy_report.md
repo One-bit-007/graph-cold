@@ -15,7 +15,7 @@
 - Min class count: 1000
 
 ## Blocking Reasons
-- dataset root does not exist: data/tls_alternative/cesnet_tls_year22
+- no readable CSV files found
 - label column missing: contract label candidate
 - required column groups missing: label, tls_or_flow_features, timestamp
 - row count 0 below min_samples 10000

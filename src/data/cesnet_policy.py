@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+from dataclasses import replace
 import json
 from pathlib import Path
 from typing import Any
@@ -12,19 +13,27 @@ import yaml
 
 from src.data.audit import audit_dataset
 from src.data.contracts import CESNET_TLS_YEAR22_CONTRACT
+from src.data.paths import resolve_dataset_path
 
 
 SELECTED_POLICY = "postfilter"
 REPORTED_AS = "CESNET-TLS-Year22"
 
 
-def audit_policies(configs: str | Path = "configs", reports: str | Path | None = None) -> dict[str, Any]:
+def audit_policies(
+    configs: str | Path = "configs",
+    reports: str | Path | None = None,
+    data_root: str | Path | None = None,
+) -> dict[str, Any]:
     cfg = yaml.safe_load((Path(configs) / "datasets.yaml").read_text(encoding="utf-8"))
     ds_cfg = cfg.get("cesnet_tls_year22", {})
-    root = Path(ds_cfg.get("path", CESNET_TLS_YEAR22_CONTRACT.root))
+    root = resolve_dataset_path("cesnet_tls_year22", data_root) if data_root else Path(ds_cfg.get("path", CESNET_TLS_YEAR22_CONTRACT.root))
+    ds_cfg = dict(ds_cfg)
+    ds_cfg["path"] = str(root)
     label_col = ds_cfg.get("label_col")
     min_count = int(ds_cfg.get("min_class_count", 1000))
-    audit = audit_dataset(CESNET_TLS_YEAR22_CONTRACT)
+    contract = replace(CESNET_TLS_YEAR22_CONTRACT, root=str(root)) if data_root else CESNET_TLS_YEAR22_CONTRACT
+    audit = audit_dataset(contract)
     raw_counts: dict[str, int] = {}
     if root.exists() and label_col:
         try:
@@ -39,6 +48,8 @@ def audit_policies(configs: str | Path = "configs", reports: str | Path | None =
         "replacement_for": "maltls22",
         "source_verified": True,
         "dataset_hash": audit.dataset_hash,
+        "actual_data_path": str(root),
+        "external_data_root": str(data_root) if data_root else None,
         "selected_policy": SELECTED_POLICY,
         "min_class_count": min_count,
         "policies": {
@@ -222,12 +233,13 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset", default="cesnet_tls_year22")
     parser.add_argument("--configs", default="configs")
+    parser.add_argument("--data-root")
     parser.add_argument("--out", default=None)
     parser.add_argument("--reports", default="reports")
     args = parser.parse_args()
     if args.dataset != "cesnet_tls_year22":
         raise ValueError("CESNET policy audit only supports --dataset cesnet_tls_year22.")
-    report = audit_policies(args.configs, args.out or args.reports)
+    report = audit_policies(args.configs, args.out or args.reports, args.data_root)
     print(json.dumps(report, indent=2))
 
 

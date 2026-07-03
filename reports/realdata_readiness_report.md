@@ -32,7 +32,7 @@
 - Ready for smoke: False
 - Ready for D5/case: False
 - Blocking reasons:
-  - dataset root does not exist: data/tls_alternative/cesnet_tls_year22
+  - no readable CSV files found
   - label column missing: contract label candidate
   - required column groups missing: label, tls_or_flow_features, timestamp
   - row count 0 below min_samples 10000
@@ -51,6 +51,6 @@
 
 ## Next Actions
 - MALTLS-22 remains unevaluated unless source verification changes.
-- Resolve cesnet_tls_year22: dataset root does not exist: data/tls_alternative/cesnet_tls_year22; label column missing: contract label candidate; required column groups missing: label, tls_or_flow_features, timestamp; row count 0 below min_samples 10000
+- Resolve cesnet_tls_year22: no readable CSV files found; label column missing: contract label candidate; required column groups missing: label, tls_or_flow_features, timestamp; row count 0 below min_samples 10000
 - OpTC unavailable; keep it out of formal experiments or provide real events.csv.
 - Do not run D5 until CICIDS and CESNET-TLS-Year22 components pass.

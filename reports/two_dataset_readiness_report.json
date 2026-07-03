@@ -10,7 +10,8 @@
     "class_policy": "postfilter",
     "mini_matrix_passed": false,
     "reported_as": "CESNET-TLS-Year22",
-    "replacement_for": "MALTLS-22"
+    "replacement_for": "MALTLS-22",
+    "actual_data_path": "E:\\graphcold-data\\tls_alternative\\cesnet_tls_year22"
   },
   "maltls22": {
     "source_verified": false,

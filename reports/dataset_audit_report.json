@@ -129,8 +129,8 @@
   },
   "cesnet_tls_year22": {
     "name": "cesnet_tls_year22",
-    "root": "data\\tls_alternative\\cesnet_tls_year22",
-    "exists": false,
+    "root": "E:\\graphcold-data\\tls_alternative\\cesnet_tls_year22",
+    "exists": true,
     "expected_files_present": true,
     "missing_files": [],
     "files_used": [],
@@ -169,7 +169,7 @@
     "ready_for_smoke": false,
     "ready_for_d5": false,
     "blocking_reasons": [
-      "dataset root does not exist: data/tls_alternative/cesnet_tls_year22",
+      "no readable CSV files found",
       "label column missing: contract label candidate",
       "required column groups missing: label, tls_or_flow_features, timestamp",
       "row count 0 below min_samples 10000"

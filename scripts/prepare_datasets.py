@@ -28,6 +28,9 @@ def run(args) -> dict:
             args.out or f"data/tls_alternative/{args.candidate}",
             args.confirm_large_download,
             getattr(args, "archive", None),
+            getattr(args, "data_root", None),
+            getattr(args, "download_cache", None),
+            getattr(args, "min_free_gb", None),
         )
     elif args.dataset == "optc":
         result = download_optc.run(args.mode, args.out or "data/optc", args.events, args.confirm_large_download)
@@ -49,6 +52,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--out")
     parser.add_argument("--zip", dest="zip_path")
     parser.add_argument("--archive")
+    parser.add_argument("--data-root")
+    parser.add_argument("--download-cache")
+    parser.add_argument("--min-free-gb", type=float)
     parser.add_argument("--candidate", default="cesnet_tls_year22")
     parser.add_argument("--events")
     parser.add_argument("--confirm-large-download", action="store_true")

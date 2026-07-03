@@ -8,7 +8,7 @@
 - Replacement differs from MALTLS-22 and must not be renamed.
 - Download attempted: True
 - Large download confirmed: True
-- Error: Insufficient free disk space for CESNET-TLS-Year22. Need at least 35859993025 bytes including extraction margin; free space is 2396061696 bytes.
+- Error: Zenodo download was reachable but throughput stayed near 110 KB/s with an estimated 70+ hours remaining; download stopped intentionally and partial file retained for resume.
 - Allowed for D5 now: false
 - User confirmation required: true
 

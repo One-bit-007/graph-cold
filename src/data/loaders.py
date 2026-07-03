@@ -31,6 +31,8 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
+from src.data.paths import apply_data_root_to_config
+
 
 @dataclass
 class Dataset:
@@ -44,6 +46,8 @@ class Dataset:
 
 def load_dataset(name: str, cfg: dict) -> Dataset:
     """Load one of {cicids2017, maltls22, cesnet_tls_year22, optc}."""
+    if isinstance(cfg, dict) and cfg.get("data_root"):
+        cfg = apply_data_root_to_config(cfg, _normalize_dataset_key(name), cfg.get("data_root"))
     key, ds_cfg = _resolve_dataset_cfg(name, cfg)
     if key == "optc":
         raise NotImplementedError("OpTC is reserved for the D4 enterprise case study.")
@@ -149,6 +153,18 @@ def load_dataset(name: str, cfg: dict) -> Dataset:
 
 
 def _resolve_dataset_cfg(name: str, cfg: dict) -> tuple[str, dict]:
+    key = _normalize_dataset_key(name)
+    if key in cfg:
+        ds_cfg = dict(cfg[key])
+        if "seed" in cfg and "seed" not in ds_cfg:
+            ds_cfg["seed"] = cfg["seed"]
+        return key, ds_cfg
+
+    ds_cfg = dict(cfg)
+    return key, ds_cfg
+
+
+def _normalize_dataset_key(name: str) -> str:
     aliases = {
         "cicids": "cicids2017",
         "cicids-2017": "cicids2017",
@@ -165,15 +181,7 @@ def _resolve_dataset_cfg(name: str, cfg: dict) -> tuple[str, dict]:
     key = aliases.get(name.lower())
     if key is None:
         raise ValueError(f"Unknown dataset '{name}'. Expected one of {sorted(set(aliases.values()))}.")
-
-    if key in cfg:
-        ds_cfg = dict(cfg[key])
-        if "seed" in cfg and "seed" not in ds_cfg:
-            ds_cfg["seed"] = cfg["seed"]
-        return key, ds_cfg
-
-    ds_cfg = dict(cfg)
-    return key, ds_cfg
+    return key
 
 
 def _read_dataset_frame(path_value: str | Path) -> pd.DataFrame:

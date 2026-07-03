@@ -5,6 +5,8 @@
   "replacement_for": "maltls22",
   "source_verified": true,
   "dataset_hash": null,
+  "actual_data_path": "E:\\graphcold-data\\tls_alternative\\cesnet_tls_year22",
+  "external_data_root": "E:\\graphcold-data",
   "selected_policy": "postfilter",
   "min_class_count": 1000,
   "policies": {
@@ -28,7 +30,7 @@
   },
   "ready_for_smoke": false,
   "blocking_reasons": [
-    "dataset root does not exist: data/tls_alternative/cesnet_tls_year22",
+    "no readable CSV files found",
     "label column missing: contract label candidate",
     "required column groups missing: label, tls_or_flow_features, timestamp",
     "row count 0 below min_samples 10000"

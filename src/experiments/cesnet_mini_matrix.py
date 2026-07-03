@@ -6,6 +6,7 @@ reports and does not create `results/cesnet_mini_matrix.csv`.
 from __future__ import annotations
 
 import argparse
+from dataclasses import replace
 import json
 from pathlib import Path
 import time
@@ -20,6 +21,7 @@ from src.data.cesnet_policy import SELECTED_POLICY, audit_policies, write_view_p
 from src.data.contracts import CESNET_TLS_YEAR22_CONTRACT
 from src.data.loaders import load_dataset
 from src.data.noise import inject_asymmetric, inject_graph_consistency, inject_symmetric
+from src.data.paths import resolve_dataset_path
 from src.experiments import cicids_mini_matrix, smoke_realdata
 from src.metrics import false_negative_rate, false_positive_rate, macro_f1
 from src.models.evidence import compute as compute_evidence
@@ -36,22 +38,30 @@ def run_mini_matrix(
     configs: str | Path = "configs",
     out: str | Path = "results",
     reports: str | Path = "reports",
+    data_root: str | Path | None = None,
 ) -> dict[str, Any]:
     if dataset != "cesnet_tls_year22":
         raise ValueError("CESNET mini-matrix only supports --dataset cesnet_tls_year22.")
     reports_path = Path(reports)
     smoke_report = _load_smoke_report(reports_path)
-    audit = audit_dataset(CESNET_TLS_YEAR22_CONTRACT)
-    audit_policies(configs, reports)
-    write_view_policy_report(audit, yaml.safe_load((Path(configs) / "datasets.yaml").read_text(encoding="utf-8")).get("cesnet_tls_year22", {}), reports)
+    actual_path = resolve_dataset_path("cesnet_tls_year22", data_root) if data_root else Path(CESNET_TLS_YEAR22_CONTRACT.root)
+    contract = replace(CESNET_TLS_YEAR22_CONTRACT, root=str(actual_path)) if data_root else CESNET_TLS_YEAR22_CONTRACT
+    audit = audit_dataset(contract)
+    audit_policies(configs, reports, data_root)
+    view_cfg = yaml.safe_load((Path(configs) / "datasets.yaml").read_text(encoding="utf-8")).get("cesnet_tls_year22", {})
+    view_cfg = dict(view_cfg)
+    view_cfg["path"] = str(actual_path)
+    write_view_policy_report(audit, view_cfg, reports)
     if not audit.ready_for_smoke or not smoke_report.get("passed", False):
         gate = _blocked_gate(audit, smoke_report)
         write_mini_reports(pd.DataFrame(), gate, reports)
-        update_two_dataset_readiness(gate, reports)
+        update_two_dataset_readiness(gate, reports, data_root)
         write_d5_scope_decision(gate, reports)
         return gate
 
     cfg = yaml.safe_load((Path(configs) / "datasets.yaml").read_text(encoding="utf-8"))
+    if data_root:
+        cfg["data_root"] = str(data_root)
     rows: list[dict[str, Any]] = []
     scenario_hashes: dict[str, dict[str, str]] = {}
     for seed in SEEDS:
@@ -99,6 +109,10 @@ def run_mini_matrix(
                     {
                         "dataset": "cesnet_tls_year22",
                         "dataset_hash": audit.dataset_hash,
+                        "actual_data_path": str(actual_path),
+                        "external_data_root": str(data_root) if data_root else None,
+                        "reported_as": "CESNET-TLS-Year22",
+                        "replacement_for": "MALTLS-22",
                         "class_policy": SELECTED_POLICY,
                         "num_classes": bundle.num_classes,
                         "removed_classes": json.dumps(bundle.meta.get("removed_classes", {}), sort_keys=True),
@@ -132,7 +146,7 @@ def run_mini_matrix(
     gate = evaluate_gate(frame, scenario_hashes)
     gate["results_csv"] = str(csv_path)
     write_mini_reports(frame, gate, reports)
-    update_two_dataset_readiness(gate, reports)
+    update_two_dataset_readiness(gate, reports, data_root)
     write_d5_scope_decision(gate, reports)
     return gate
 
@@ -165,7 +179,7 @@ def write_mini_reports(frame: pd.DataFrame, gate: dict[str, Any], reports: str |
     (out / "cesnet_mini_matrix_gate.md").write_text(_gate_md(gate), encoding="utf-8")
 
 
-def update_two_dataset_readiness(gate: dict[str, Any], reports: str | Path = "reports") -> dict[str, Any]:
+def update_two_dataset_readiness(gate: dict[str, Any], reports: str | Path = "reports", data_root: str | Path | None = None) -> dict[str, Any]:
     out = Path(reports)
     readiness_path = out / "realdata_readiness_report.json"
     readiness = json.loads(readiness_path.read_text(encoding="utf-8")) if readiness_path.exists() else {"datasets": {}}
@@ -182,6 +196,7 @@ def update_two_dataset_readiness(gate: dict[str, Any], reports: str | Path = "re
             "class_policy": SELECTED_POLICY,
             "reported_as": "CESNET-TLS-Year22",
             "replacement_for": "MALTLS-22",
+            "actual_data_path": str(resolve_dataset_path("cesnet_tls_year22", data_root)) if data_root else cesnet.get("actual_data_path"),
         }
     )
     maltls.update({"source_verified": False, "evaluated": False})
@@ -204,6 +219,7 @@ def update_two_dataset_readiness(gate: dict[str, Any], reports: str | Path = "re
             "mini_matrix_passed": cesnet_ready,
             "reported_as": "CESNET-TLS-Year22",
             "replacement_for": "MALTLS-22",
+            "actual_data_path": str(resolve_dataset_path("cesnet_tls_year22", data_root)) if data_root else cesnet.get("actual_data_path"),
         },
         "maltls22": {"source_verified": False, "evaluated": False},
         "optc": {"available": False, "formal_experiment": False, "future_case_study_only": True},
@@ -340,8 +356,9 @@ def main() -> None:
     parser.add_argument("--configs", default="configs")
     parser.add_argument("--out", default="results")
     parser.add_argument("--reports", default="reports")
+    parser.add_argument("--data-root")
     args = parser.parse_args()
-    report = run_mini_matrix(args.dataset, args.configs, args.out, args.reports)
+    report = run_mini_matrix(args.dataset, args.configs, args.out, args.reports, args.data_root)
     print(json.dumps(report, indent=2))
 
 

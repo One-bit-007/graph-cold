@@ -1,6 +1,7 @@
 """Print the current real-data readiness gate state."""
 from __future__ import annotations
 
+import argparse
 import json
 from pathlib import Path
 
@@ -14,7 +15,10 @@ def _load_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--data-root")
+    parser.parse_known_args(argv)
     reports = ROOT / "reports"
     readiness = _load_json(reports / "realdata_readiness_report.json")
     audit = _load_json(reports / "dataset_audit_report.json")
@@ -35,7 +39,7 @@ def main() -> int:
         f"TLS alternative: {tls_ready}",
         f"OpTC: {'case-ready' if optc.get('ready_for_case_study') else 'future case / unavailable'}",
         f"D5 allowed: {str(readiness.get('d5_allowed', False)).lower()}",
-        f"Smoke allowed: {str(bool(cicids.get('ready_for_smoke') or maltls.get('ready_for_smoke'))).lower()}",
+        f"Smoke allowed: {str(bool(cicids.get('ready_for_smoke') or maltls.get('ready_for_smoke') or cesnet.get('ready_for_smoke'))).lower()}",
         "Submission ready: false",
     ]
     print("\n".join(lines))

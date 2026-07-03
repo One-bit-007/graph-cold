@@ -10,7 +10,18 @@
   "download_source": "https://zenodo.org/records/10608607",
   "datazoo_source": "https://cesnet.github.io/cesnet-datazoo/",
   "manual_action_required": true,
-  "out": "data\\tls_alternative\\cesnet_tls_year22",
+  "out": "E:\\graphcold-data\\tls_alternative\\cesnet_tls_year22",
+  "data_root": "E:\\graphcold-data",
+  "download_cache": "E:\\graphcold-data\\_downloads\\cesnet_tls_year22",
+  "min_free_gb": 80.0,
+  "storage_audit": {
+    "requested_data_root": "E:\\graphcold-data",
+    "volume": "E:",
+    "free_gb": 470.7911682128906,
+    "required_gb": 80.0,
+    "download_allowed": true,
+    "blocking_reason": null
+  },
   "audit_passed": false,
   "notes": "Year-spanning TLS flow/service dataset; large public research corpus.",
   "zenodo_files": [
@@ -26,22 +37,25 @@
     }
   ],
   "total_size_bytes": 30491283905,
-  "free_space_bytes": 2396061696,
-  "error": "Insufficient free disk space for CESNET-TLS-Year22. Need at least 35859993025 bytes including extraction margin; free space is 2396061696 bytes.",
-  "manual_instructions": [
-    "Download CESNET-TLS-Year22 from https://zenodo.org/records/10608607 or export it through https://cesnet.github.io/cesnet-datazoo/.",
-    "Place CSV/Parquet/DataZoo-exported files under data\\tls_alternative\\cesnet_tls_year22.",
-    "If using a local archive, run: python scripts/download_tls_alternative.py --candidate cesnet_tls_year22 --mode local-archive --archive path/to/archive --out data/tls_alternative/cesnet_tls_year22",
-    "Then run: python -m src.data.audit --dataset cesnet_tls_year22"
-  ],
-  "dataset_hash": null,
+  "partial_archive_path": "E:\\graphcold-data\\_downloads\\cesnet_tls_year22\\CESNET-TLS-Year22.zip.part",
+  "partial_archive_bytes": 31330024,
+  "archive_path": "E:\\graphcold-data\\_downloads\\cesnet_tls_year22\\CESNET-TLS-Year22.zip",
+  "actual_data_path": "E:\\graphcold-data\\tls_alternative\\cesnet_tls_year22",
   "files": [],
+  "dataset_hash": null,
   "rows": 0,
+  "columns": 0,
   "classes": 0,
+  "error": "Zenodo download was reachable but throughput stayed near 110 KB/s with an estimated 70+ hours remaining; download stopped intentionally and partial file retained for resume.",
   "blocking_reasons": [
-    "dataset root does not exist: data\\tls_alternative\\cesnet_tls_year22",
+    "no readable CSV files found",
     "label column missing: contract label candidate",
     "required column groups missing: label, tls_or_flow_features, timestamp",
     "row count 0 below min_samples 10000"
+  ],
+  "manual_instructions": [
+    "Resume the official Zenodo download on a faster network using the same command; curl will continue the .part file.",
+    "Or manually place CESNET-TLS-Year22.zip at E:\\graphcold-data\\_downloads\\cesnet_tls_year22\\CESNET-TLS-Year22.zip and run local-archive mode.",
+    "Then rerun audit, smoke, and cesnet_mini_matrix with --data-root E:\\graphcold-data."
   ]
 }
