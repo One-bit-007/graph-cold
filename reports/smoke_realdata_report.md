@@ -1,13 +1,18 @@
 # Real-Data Smoke Report
 
 - Dataset: cicids2017
-- Status: blocked
-- Passed: False
-- Dataset hash: `None`
+- Status: completed
+- Passed: True
+- Dataset hash: `2585508ac445a94a3eb2244aa64778678928d201555396b4b9afc1ed6a2f1ab4`
 - Seed: 42
-- Blocking reasons:
-  - dataset root does not exist: data/cicids2017
-  - missing expected files: Monday-WorkingHours.pcap_ISCX.csv, Tuesday-WorkingHours.pcap_ISCX.csv, Wednesday-workingHours.pcap_ISCX.csv, Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX.csv, Thursday-WorkingHours-Afternoon-Infilteration.pcap_ISCX.csv, Friday-WorkingHours-Morning.pcap_ISCX.csv, Friday-WorkingHours-Afternoon-PortScan.pcap_ISCX.csv, Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv
-  - label column missing: Label
-  - IP/port/protocol columns are all missing
-  - row count 0 below min_samples 10000
+- Quality checks:
+  - no_perfect_macro_f1: True
+  - not_all_methods_zero_fpr_fnr: True
+  - cold_clean_not_extreme: True
+  - ablation_hard_close_to_cold: True
+  - graphcold_err_above_hard: True
+  - metrics_finite: True
+  - no_single_class_collapse: True
+  - dataset_hash_recorded: True
+  - seed_recorded: True
+  - data_source_recorded: True

@@ -1,16 +1,70 @@
 {
   "stage": "realdata-smoke",
   "dataset": "cicids2017",
-  "status": "blocked",
-  "results_csv": null,
-  "dataset_hash": null,
+  "status": "completed",
+  "results_csv": "results\\smoke_realdata.csv",
+  "dataset_hash": "2585508ac445a94a3eb2244aa64778678928d201555396b4b9afc1ed6a2f1ab4",
   "seed": 42,
-  "blocking_reasons": [
-    "dataset root does not exist: data/cicids2017",
-    "missing expected files: Monday-WorkingHours.pcap_ISCX.csv, Tuesday-WorkingHours.pcap_ISCX.csv, Wednesday-workingHours.pcap_ISCX.csv, Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX.csv, Thursday-WorkingHours-Afternoon-Infilteration.pcap_ISCX.csv, Friday-WorkingHours-Morning.pcap_ISCX.csv, Friday-WorkingHours-Afternoon-PortScan.pcap_ISCX.csv, Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv",
-    "label column missing: Label",
-    "IP/port/protocol columns are all missing",
-    "row count 0 below min_samples 10000"
-  ],
-  "passed": false
+  "rows": 6,
+  "quality_checks": {
+    "no_perfect_macro_f1": {
+      "passed": true,
+      "detail": "No smoke row should report 100.0% Macro-F1."
+    },
+    "not_all_methods_zero_fpr_fnr": {
+      "passed": true,
+      "detail": {
+        "clean": false,
+        "symmetric_20": false
+      }
+    },
+    "cold_clean_not_extreme": {
+      "passed": true,
+      "detail": 0.9924540928932969
+    },
+    "ablation_hard_close_to_cold": {
+      "passed": true,
+      "detail": 0.0
+    },
+    "graphcold_err_above_hard": {
+      "passed": true,
+      "detail": {
+        "graphcold": 1.0,
+        "ablation_hard": 1.0
+      }
+    },
+    "metrics_finite": {
+      "passed": true,
+      "detail": [
+        "macro_f1",
+        "fpr",
+        "fnr",
+        "err",
+        "tail_err"
+      ]
+    },
+    "no_single_class_collapse": {
+      "passed": true,
+      "detail": 11
+    },
+    "dataset_hash_recorded": {
+      "passed": true,
+      "detail": [
+        "2585508ac445a94a3eb2244aa64778678928d201555396b4b9afc1ed6a2f1ab4"
+      ]
+    },
+    "seed_recorded": {
+      "passed": true,
+      "detail": [
+        42
+      ]
+    },
+    "data_source_recorded": {
+      "passed": true,
+      "detail": [
+        "C:\\Users\\g14370\\graph-cold\\data\\cicids2017"
+      ]
+    }
+  },
+  "passed": true
 }

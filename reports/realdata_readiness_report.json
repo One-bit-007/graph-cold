@@ -5,17 +5,11 @@
   "d6_d7_allowed": false,
   "datasets": {
     "cicids2017": {
-      "available": false,
-      "audit_passed": false,
-      "ready_for_smoke": false,
-      "ready_for_d5": false,
-      "blocking_reasons": [
-        "dataset root does not exist: data/cicids2017",
-        "missing expected files: Monday-WorkingHours.pcap_ISCX.csv, Tuesday-WorkingHours.pcap_ISCX.csv, Wednesday-workingHours.pcap_ISCX.csv, Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX.csv, Thursday-WorkingHours-Afternoon-Infilteration.pcap_ISCX.csv, Friday-WorkingHours-Morning.pcap_ISCX.csv, Friday-WorkingHours-Afternoon-PortScan.pcap_ISCX.csv, Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv",
-        "label column missing: Label",
-        "IP/port/protocol columns are all missing",
-        "row count 0 below min_samples 10000"
-      ]
+      "available": true,
+      "audit_passed": true,
+      "ready_for_smoke": true,
+      "ready_for_d5": true,
+      "blocking_reasons": []
     },
     "maltls22": {
       "available": false,
@@ -46,7 +40,6 @@
     }
   },
   "next_actions": [
-    "Resolve cicids2017: dataset root does not exist: data/cicids2017; missing expected files: Monday-WorkingHours.pcap_ISCX.csv, Tuesday-WorkingHours.pcap_ISCX.csv, Wednesday-workingHours.pcap_ISCX.csv, Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX.csv, Thursday-WorkingHours-Afternoon-Infilteration.pcap_ISCX.csv, Friday-WorkingHours-Morning.pcap_ISCX.csv, Friday-WorkingHours-Afternoon-PortScan.pcap_ISCX.csv, Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv; label column missing: Label; IP/port/protocol columns are all missing; row count 0 below min_samples 10000",
     "Resolve maltls22: dataset root does not exist: data/maltls22; label column missing: label; required column groups missing: flow_or_tls_features, timestamp; row count 0 below min_samples 10000; dataset source is not verified; do not report this dataset",
     "Resolve optc: dataset root does not exist: data/optc; missing expected files: events.csv; label column missing: label; missing required columns: host_id, process_id, parent_process_id, src_ip, dst_ip, timestamp, event_type, alert_type, label, risk_score; row count 0 below min_samples 1000",
     "Do not run D5/D6/D7 until all required real datasets pass audit."

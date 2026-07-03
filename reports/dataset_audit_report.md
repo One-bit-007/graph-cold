@@ -3,19 +3,15 @@
 ## cicids2017
 
 - Root: `data\cicids2017`
-- Available files: 0
-- Rows / columns: 0 / 0
-- Classes: 0
-- Dataset hash: `None`
-- Ready for smoke: False
-- Ready for D5: False
+- Available files: 8
+- Rows / columns: 2830743 / 79
+- Classes: 15
+- Dataset hash: `2585508ac445a94a3eb2244aa64778678928d201555396b4b9afc1ed6a2f1ab4`
+- Ready for smoke: True
+- Ready for D5: True
 - View support: {"host": "missing", "ip": "missing", "process": "not_expected", "temporal": "derived_limited", "threat_intel": "not_expected"}
 - Blocking reasons:
-  - dataset root does not exist: data/cicids2017
-  - missing expected files: Monday-WorkingHours.pcap_ISCX.csv, Tuesday-WorkingHours.pcap_ISCX.csv, Wednesday-workingHours.pcap_ISCX.csv, Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX.csv, Thursday-WorkingHours-Afternoon-Infilteration.pcap_ISCX.csv, Friday-WorkingHours-Morning.pcap_ISCX.csv, Friday-WorkingHours-Afternoon-PortScan.pcap_ISCX.csv, Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv
-  - label column missing: Label
-  - IP/port/protocol columns are all missing
-  - row count 0 below min_samples 10000
+  - none
 
 ## maltls22
 

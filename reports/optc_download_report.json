@@ -1,16 +1,16 @@
 {
   "dataset": "optc",
-  "mode": "local-events",
+  "mode": "instructions",
   "source": "https://github.com/FiveDirections/OpTC-data",
-  "out": "C:\\Users\\g14370\\AppData\\Local\\Temp\\pytest-of-g14370\\pytest-24\\test_optc_local_events_missing0\\optc",
-  "events_csv_present": true,
+  "out": "data\\optc",
+  "events_csv_present": false,
   "audit_invoked": true,
   "audit_passed": false,
   "full_download_attempted": false,
   "large_download_confirmed": false,
   "manual_action_required": true,
   "manifest_written": false,
-  "events_copied": true,
+  "events_copied": false,
   "manual_instructions": [
     "Review OpTC data source: https://github.com/FiveDirections/OpTC-data",
     "Obtain the authorized OpTC release through the official distribution channel.",
@@ -18,13 +18,13 @@
     "Required columns: host_id, process_id, parent_process_id, src_ip, dst_ip, timestamp, event_type, alert_type, label, risk_score.",
     "Run: python scripts/download_optc.py --mode local-events --events path/to/events.csv --out data/optc"
   ],
-  "file_hashes": {
-    "C:\\Users\\g14370\\AppData\\Local\\Temp\\pytest-of-g14370\\pytest-24\\test_optc_local_events_missing0\\optc\\events.csv": "eb6611cf0bdb45e5a94893bea9bb0bb2f8e2c0a419c266ea0e117a935d534f5b"
-  },
-  "dataset_hash": "ba1ad8b4d2c65070ea9dee7b246c4bba960a4b29ee321f028ddfacaffb9f8a76",
+  "file_hashes": {},
+  "dataset_hash": null,
   "blocking_reasons": [
-    "missing required columns: process_id, parent_process_id, src_ip, dst_ip, timestamp, event_type, alert_type, risk_score",
-    "row count 1 below min_samples 1000",
-    "class count 1 below min_classes 2"
+    "dataset root does not exist: data\\optc",
+    "missing expected files: events.csv",
+    "label column missing: label",
+    "missing required columns: host_id, process_id, parent_process_id, src_ip, dst_ip, timestamp, event_type, alert_type, label, risk_score",
+    "row count 0 below min_samples 1000"
   ]
 }

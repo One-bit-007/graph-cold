@@ -50,6 +50,35 @@ def test_cicids_loader_drops_small_classes_and_uses_clean_split(tmp_path: Path):
     assert dataset.meta["timestamps"]["train"] is not None
 
 
+def test_cicids_loader_strips_real_csv_column_whitespace(tmp_path: Path):
+    labels = ["BENIGN"] * 20 + ["DoS"] * 20
+    df = pd.DataFrame(
+        {
+            " Flow ID ": [f"flow-{idx}" for idx in range(len(labels))],
+            " Timestamp ": pd.date_range("2024-01-01", periods=len(labels), freq="s").astype(str),
+            " Feature A ": np.arange(len(labels), dtype=float),
+            " Label ": labels,
+        }
+    )
+    data_file = tmp_path / "cicids_spaced.csv"
+    df.to_csv(data_file, index=False)
+
+    dataset = load_dataset(
+        "cicids2017",
+        {
+            "path": str(data_file),
+            "label_col": "Label",
+            "drop_cols": ["Flow ID", "Timestamp"],
+            "min_class_count": 1,
+            "train_test_split": 0.8,
+            "seed": 0,
+        },
+    )
+
+    assert dataset.num_classes == 2
+    assert "Feature A" in dataset.meta["feature_names"]
+
+
 def test_maltls_loader_keeps_imbalanced_distribution(tmp_path: Path):
     labels = ["benign"] * 50 + ["attack_a"] * 10 + ["attack_b"] * 5
     df = pd.DataFrame(

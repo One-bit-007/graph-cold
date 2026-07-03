@@ -1,12 +1,12 @@
 {
   "dataset": "cicids2017",
-  "mode": "instructions",
+  "mode": "local-zip",
   "download_attempted": false,
-  "download_success": false,
+  "download_success": true,
   "official_source_used": true,
   "third_party_mirror_used": false,
   "download_url_discovered": null,
-  "manual_action_required": true,
+  "manual_action_required": false,
   "manual_instructions": [
     "Open the official CICIDS-2017 page: https://www.unb.ca/cic/datasets/ids-2017.html",
     "Use the official Download this dataset link and complete the CIC form if required.",
@@ -23,8 +23,7 @@
     "Friday-WorkingHours-Afternoon-PortScan.pcap_ISCX.csv",
     "Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
   ],
-  "files_present": [],
-  "missing_files": [
+  "files_present": [
     "Monday-WorkingHours.pcap_ISCX.csv",
     "Tuesday-WorkingHours.pcap_ISCX.csv",
     "Wednesday-workingHours.pcap_ISCX.csv",
@@ -34,8 +33,18 @@
     "Friday-WorkingHours-Afternoon-PortScan.pcap_ISCX.csv",
     "Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
   ],
-  "file_hashes": {},
-  "dataset_hash": null,
+  "missing_files": [],
+  "file_hashes": {
+    "data\\cicids2017\\Monday-WorkingHours.pcap_ISCX.csv": "852c4beb34eda186f32561fa79df7a0747e92e1a6535b01270820dd9ffe17f34",
+    "data\\cicids2017\\Tuesday-WorkingHours.pcap_ISCX.csv": "52b8692ae8c7d2ed04671fe2b98335693c0a92c7ab157d8c8b534d6523080851",
+    "data\\cicids2017\\Wednesday-workingHours.pcap_ISCX.csv": "893c27dc968bf7a8adef1689f90be55ca4a4dc3088fb63d6ff247ac56856df2a",
+    "data\\cicids2017\\Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX.csv": "d67066211fb1689c78406f1506f4c44704ecb92088353d5c96d96d6474eb819d",
+    "data\\cicids2017\\Thursday-WorkingHours-Afternoon-Infilteration.pcap_ISCX.csv": "6bcda3857c2504676034e3ea57762d38393cc734cb377a726bd5cb153961b1b5",
+    "data\\cicids2017\\Friday-WorkingHours-Morning.pcap_ISCX.csv": "53a41c24d570ea83b7ac55b2e94df94e7a8216aeb80a2af0246b6bc8bb543000",
+    "data\\cicids2017\\Friday-WorkingHours-Afternoon-PortScan.pcap_ISCX.csv": "ca1824c51bfbb7b3c72290a11be04366ba8815878c6a1cc5c44cb1cee269e99b",
+    "data\\cicids2017\\Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv": "6ff1580f5f81c0ae28a26f7631721018577f5f7c5e0feac28b795fcfe7b411ee"
+  },
+  "dataset_hash": "2585508ac445a94a3eb2244aa64778678928d201555396b4b9afc1ed6a2f1ab4",
   "audit_invoked": true,
-  "audit_passed": false
+  "audit_passed": true
 }

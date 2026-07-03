@@ -51,6 +51,7 @@ def load_dataset(name: str, cfg: dict) -> Dataset:
     seed = int(ds_cfg.get("seed", cfg.get("seed", 0) if isinstance(cfg, dict) else 0))
     rng = np.random.default_rng(seed)
     df = _read_dataset_frame(ds_cfg["path"])
+    df.columns = [str(col).strip() for col in df.columns]
 
     label_col = ds_cfg.get("label_col")
     if not label_col or label_col not in df.columns:

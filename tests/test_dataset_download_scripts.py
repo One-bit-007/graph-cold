@@ -2,9 +2,49 @@ from pathlib import Path
 import zipfile
 
 import pandas as pd
+import pytest
 
 from scripts import check_data_ready, download_cicids2017, download_optc, download_tls_alternative, prepare_datasets
+from src.data.audit import DatasetAuditResult
 from src.data.contracts import CICIDS2017_CONTRACT
+
+
+@pytest.fixture(autouse=True)
+def _avoid_real_dataset_global_audits(monkeypatch):
+    def fake_result(name: str) -> DatasetAuditResult:
+        return DatasetAuditResult(
+            name=name,
+            root=f"data/{name}",
+            exists=False,
+            expected_files_present=False,
+            missing_files=[],
+            files_used=[],
+            file_hashes={},
+            dataset_hash=None,
+            num_rows=0,
+            num_columns=0,
+            label_column=None,
+            label_column_present=False,
+            class_count=0,
+            label_distribution={},
+            missing_values=0,
+            infinite_values=0,
+            duplicate_rows=0,
+            numeric_feature_count=0,
+            required_columns_ok=False,
+            required_any_columns_status={},
+            expected_view_support={},
+            actual_view_support={},
+            ready_for_smoke=False,
+            ready_for_d5=False,
+            blocking_reasons=["unit-test global audit skipped"],
+        )
+
+    fake_audits = {name: fake_result(name) for name in ("cicids2017", "maltls22", "optc")}
+    monkeypatch.setattr(download_cicids2017, "audit_all_datasets", lambda: fake_audits)
+    monkeypatch.setattr(download_optc, "audit_all_datasets", lambda: fake_audits)
+    monkeypatch.setattr(prepare_datasets, "audit_all_datasets", lambda: fake_audits)
+    monkeypatch.setattr(download_tls_alternative, "write_readiness_reports", lambda *args, **kwargs: {})
 
 
 def _write_cicids_zip(path: Path) -> None:
@@ -123,4 +163,3 @@ def test_gitignore_covers_raw_data_extensions():
     for item in ["data/", "data_raw/", "*.pcap", "*.pcapng", "*.zip", "*.7z", "*.gz", "*.parquet", "*.csv"]:
         assert item in text
     assert "!tests/fixtures/**/*.csv" in text
-
