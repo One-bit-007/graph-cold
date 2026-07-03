@@ -54,6 +54,8 @@ class MultiViewGraph:
     snapshots: list | None = None
     view_masks: dict[str, Any] | None = None
     temporal_pairs: Any | None = None
+    active_views: list[str] | None = None
+    inactive_views: list[str] | None = None
 
 
 def build_multiview_graph(dataset, cfg) -> MultiViewGraph:
@@ -70,9 +72,10 @@ def build_multiview_graph(dataset, cfg) -> MultiViewGraph:
     batch_size = int(_nested_get(cfg, ("train", "batch_size"), graph_cfg.get("batch_size", 128)))
     batches = _make_batches(n_nodes, batch_size)
     timestamps = _dataset_timestamps(dataset, graph_cfg.get("split", "train"))
+    active_views, inactive_views = _active_views(dataset, graph_cfg)
 
     views: dict[str, EdgeIndex] = {}
-    for view in VIEW_NAMES:
+    for view in active_views:
         feature_mask = _select_feature_mask(view, feature_names, X)
         if view == "temporal":
             edge_index, edge_weight, snapshots, temporal_pairs = _temporal_edges(
@@ -114,6 +117,8 @@ def build_multiview_graph(dataset, cfg) -> MultiViewGraph:
         snapshots=temporal_snapshots,
         view_masks={view: edge.feature_mask for view, edge in views.items()},
         temporal_pairs=temporal_pairs_final,
+        active_views=active_views,
+        inactive_views=inactive_views,
     )
 
 
@@ -160,6 +165,19 @@ def _dataset_timestamps(dataset, split: str) -> np.ndarray | None:
     if value is None:
         return None
     return np.asarray(value)
+
+
+def _active_views(dataset, graph_cfg: dict) -> tuple[list[str], list[str]]:
+    requested = list(graph_cfg.get("views", VIEW_NAMES))
+    meta = getattr(dataset, "meta", {}) or {}
+    support = meta.get("expected_view_support")
+    if not isinstance(support, dict):
+        return requested, [view for view in VIEW_NAMES if view not in requested]
+    active = [view for view in requested if bool(support.get(view, False))]
+    inactive = [view for view in requested if view not in active]
+    if not active:
+        raise ValueError("At least one active graph view is required.")
+    return active, inactive
 
 
 def _nested_get(cfg: dict, path: tuple[str, ...], default):

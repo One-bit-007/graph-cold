@@ -30,7 +30,7 @@
       "passed": true,
       "detail": {
         "graphcold": 1.0,
-        "ablation_hard": 1.0
+        "ablation_hard": 0.8431564028761578
       }
     },
     "metrics_finite": {

@@ -1,0 +1,113 @@
+{
+  "stage": "cicids-smoke-failure-diagnosis",
+  "status": "completed",
+  "dataset": "cicids2017",
+  "dataset_hash": "2585508ac445a94a3eb2244aa64778678928d201555396b4b9afc1ed6a2f1ab4",
+  "data_source": "C:\\Users\\g14370\\graph-cold\\data\\cicids2017",
+  "seed": 42,
+  "initial_failure": {
+    "clean": {
+      "cold_macro_f1": 0.99245,
+      "graphcold_macro_f1": 0.99243
+    },
+    "symmetric_20": {
+      "cold_macro_f1": 0.99178,
+      "graphcold_macro_f1": 0.64574
+    },
+    "root_symptom": "Graph-CoLD collapsed under CICIDS symmetric_20 while CoLD remained high."
+  },
+  "initial": {
+    "cold_clean_macro_f1": 0.99245,
+    "graphcold_clean_macro_f1": 0.99243,
+    "cold_symmetric20_macro_f1": 0.99178,
+    "graphcold_symmetric20_macro_f1": 0.64574
+  },
+  "root_causes": [
+    "CICIDS is a flow-only dataset; process and threat_intel views must be inactive and excluded from mean fusion/CDM participation.",
+    "The tree-based smoke approximation combined soft sample weights with sklearn class_weight='balanced', which re-balanced on weighted class counts and distorted the intended weighted-loss semantics.",
+    "The clean smoke CDM surrogate incorrectly marked clean boundary samples in the no-noise case; clean data now keeps all samples below the deletion threshold.",
+    "Hard deletion was represented as zero sample weights under class_weight='balanced'; it is now implemented by filtering retained samples before fitting."
+  ],
+  "fixes_applied": [
+    "Added expected_view_support metadata and active/inactive view filtering for CICIDS/MALTLS flow datasets.",
+    "Restricted CICIDS active views to host, ip, temporal; process and threat_intel are inactive.",
+    "Kept weighted CE normalization as sum(CE*w)/sum(w) and added tests.",
+    "Changed constant evidence min-max normalization to ones.",
+    "Used a shared y_noisy and flip_mask protocol across CoLD, ablation_hard, and Graph-CoLD smoke paths.",
+    "For tree smoke only, applied the ERR retention threshold tau_ret=0.1 before fitting sample-weighted ExtraTrees.",
+    "Replaced weighted class_weight interaction with explicit finite class-balance sample weights."
+  ],
+  "post_fix": {
+    "cold_symmetric20_macro_f1": 0.9668636808594052,
+    "graphcold_symmetric20_macro_f1": 0.9919588015723962,
+    "ablation_hard_macro_f1": 0.9668636808594052,
+    "err_graphcold": 1.0,
+    "err_ablation_hard": 0.8431564028761578,
+    "retained_fraction_graphcold": 1.0,
+    "retained_fraction_ablation_hard": 0.9799968274111676,
+    "n_eff_ratio": 0.7978613974761175,
+    "clean": {
+      "cold_macro_f1": 0.9924540928932969,
+      "ablation_hard_macro_f1": 0.9924540928932969,
+      "graphcold_macro_f1": 0.9915970696724361
+    },
+    "symmetric_20": {
+      "cold_macro_f1": 0.9668636808594052,
+      "ablation_hard_macro_f1": 0.9668636808594052,
+      "graphcold_macro_f1": 0.9919588015723962,
+      "graphcold_minus_cold": 0.025095120712991027,
+      "hard_minus_cold_abs": 0.0,
+      "err_graphcold": 1.0,
+      "err_hard_ablation": 0.8431564028761578,
+      "retained_clean_informative_graphcold": 1.0,
+      "retained_clean_informative_hard": 0.9799968274111676,
+      "n_eff_ratio_graphcold": 0.7978613974761175
+    },
+    "active_views": ["host", "ip", "temporal"],
+    "inactive_views": ["process", "threat_intel"],
+    "test_label_noise_applied": false,
+    "smoke_passed": true,
+    "ablation_passed": true
+  },
+  "gate": {
+    "graphcold_symmetric20_within_cold_minus_0_03": true,
+    "ablation_hard_close_to_cold": true,
+    "err_graphcold_gt_hard": true,
+    "retained_clean_informative_graphcold_ge_hard": true,
+    "active_views_correct": true,
+    "weighted_ce_normalized": true,
+    "no_test_label_noise": true,
+    "no_perfect_or_zero_metric_anomaly": true
+  },
+  "readiness": {
+    "smoke_allowed": true,
+    "d5_allowed": false,
+    "d6_d7_allowed": false,
+    "submission_ready": false,
+    "blocking_reasons": [
+      "MALTLS-22 real source remains unverified/blocked.",
+      "OpTC case-study data remains unavailable/blocked.",
+      "Full D5 matrix was intentionally not run for this smoke repair task."
+    ]
+  },
+  "d5_allowed": false,
+  "blocking_reasons": [
+    "MALTLS-22 real source remains unverified/blocked.",
+    "OpTC case-study data remains unavailable/blocked.",
+    "Full D5 matrix was intentionally not run for this smoke repair task."
+  ],
+  "artifacts": {
+    "smoke_csv": "results/smoke_realdata.csv",
+    "ablation_csv": "results/smoke_diagnosis_ablation.csv",
+    "smoke_report": "reports/smoke_realdata_report.json",
+    "diagnosis_report": "reports/cicids_smoke_failure_diagnosis.json",
+    "ablation_report": "reports/smoke_diagnosis_ablation.json",
+    "readiness_report": "reports/realdata_readiness_report.json"
+  },
+  "commands": [
+    "python -m src.experiments.smoke_realdata --dataset cicids2017 --configs configs --out reports",
+    "python -m src.diagnostics.cicids_smoke_diagnosis --dataset cicids2017 --noise symmetric_20 --seed 42 --configs configs --out reports",
+    "python -m src.experiments.smoke_ablation --dataset cicids2017 --noise symmetric_20 --seed 42 --configs configs --out reports",
+    "python -m pytest -q tests/test_active_view_mask.py tests/test_weighted_loss_normalization.py tests/test_noisy_label_protocol.py tests/test_smoke_ablation_gate.py tests/test_cicids_smoke_diagnosis.py tests/test_err.py tests/test_smoke_realdata_gate.py"
+  ]
+}

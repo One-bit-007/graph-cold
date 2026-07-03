@@ -1,0 +1,21 @@
+{
+  "stage": "smoke-diagnosis-ablation",
+  "status": "completed",
+  "dataset_hash": "2585508ac445a94a3eb2244aa64778678928d201555396b4b9afc1ed6a2f1ab4",
+  "passed": true,
+  "key_metrics": {
+    "cold_macro_f1": 0.9668636808594052,
+    "graphcold_macro_f1": 0.9919588015723962,
+    "hard_ablation_macro_f1": 0.9668636808594052,
+    "err_graphcold": 1.0,
+    "err_hard_ablation": 0.8431564028761578,
+    "retained_fraction_graphcold": 1.0,
+    "retained_fraction_hard_ablation": 0.9799968274111676,
+    "n_eff_ratio_graphcold": 0.7978613974761175
+  },
+  "findings": [
+    "Active-view-only path matches full after disabling unsupported CICIDS views.",
+    "Weighted-loss-normalized path is equivalent because tree smoke uses sample_weight."
+  ],
+  "results_csv": "results\\smoke_diagnosis_ablation.csv"
+}

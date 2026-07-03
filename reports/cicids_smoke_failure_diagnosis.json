@@ -1,0 +1,437 @@
+{
+  "stage": "cicids-smoke-failure-diagnosis",
+  "dataset_hash": "2585508ac445a94a3eb2244aa64778678928d201555396b4b9afc1ed6a2f1ab4",
+  "data_protocol": {
+    "train_samples": 630399,
+    "test_samples": 157600,
+    "validation_samples": 0,
+    "label_mapping": {
+      "BENIGN": 0,
+      "Bot": 1,
+      "DDoS": 2,
+      "DoS GoldenEye": 3,
+      "DoS Hulk": 4,
+      "DoS Slowhttptest": 5,
+      "DoS slowloris": 6,
+      "FTP-Patator": 7,
+      "PortScan": 8,
+      "SSH-Patator": 9,
+      "Web Attack \ufffd Brute Force": 10
+    },
+    "audit_raw_classes": 15,
+    "loaded_classes_after_refinement": 11,
+    "refined_to_9_classes": false,
+    "drops_lt_1000_classes": true,
+    "class_counts": {
+      "BENIGN": 231073,
+      "Bot": 1966,
+      "DDoS": 128027,
+      "DoS GoldenEye": 10293,
+      "DoS Hulk": 231073,
+      "DoS Slowhttptest": 5499,
+      "DoS slowloris": 5796,
+      "FTP-Patator": 7938,
+      "PortScan": 158930,
+      "SSH-Patator": 5897,
+      "Web Attack \ufffd Brute Force": 1507
+    },
+    "split_stratified": true,
+    "clean_y_train_saved": true,
+    "noisy_y_train_saved": true,
+    "clean_y_test_saved": true,
+    "noise_only_train_labels": true,
+    "test_label_clean": true,
+    "feature_column_count": 78,
+    "nan_present": false,
+    "inf_present": false,
+    "suspected_label_leakage_columns": [],
+    "single_class_prediction_checked": true,
+    "label_collapse_checked": true,
+    "training_under_noise_uses_noisy_y_train": true,
+    "evaluation_uses_clean_y_test": true,
+    "test_noise_applied": false
+  },
+  "noise": {
+    "N_train": 630399,
+    "expected_flips": 126079,
+    "actual_flips": 126079,
+    "actual_flip_rate": 0.19999873096245394,
+    "flip_count_by_source_class": {
+      "0": 37127,
+      "1": 303,
+      "2": 20396,
+      "3": 1668,
+      "4": 36900,
+      "5": 900,
+      "6": 892,
+      "7": 1271,
+      "8": 25437,
+      "9": 946,
+      "10": 239
+    },
+    "transition_matrix": [
+      [
+        0,
+        3667,
+        3698,
+        3648,
+        3750,
+        3668,
+        3882,
+        3626,
+        3735,
+        3657,
+        3796
+      ],
+      [
+        33,
+        0,
+        29,
+        42,
+        38,
+        29,
+        25,
+        22,
+        28,
+        27,
+        30
+      ],
+      [
+        2000,
+        2051,
+        0,
+        2065,
+        2037,
+        2038,
+        2042,
+        2120,
+        1986,
+        2027,
+        2030
+      ],
+      [
+        166,
+        171,
+        171,
+        0,
+        165,
+        150,
+        153,
+        176,
+        157,
+        174,
+        185
+      ],
+      [
+        3665,
+        3708,
+        3602,
+        3771,
+        0,
+        3715,
+        3639,
+        3679,
+        3671,
+        3706,
+        3744
+      ],
+      [
+        89,
+        97,
+        94,
+        93,
+        88,
+        0,
+        88,
+        83,
+        72,
+        98,
+        98
+      ],
+      [
+        95,
+        93,
+        82,
+        89,
+        94,
+        77,
+        0,
+        80,
+        93,
+        90,
+        99
+      ],
+      [
+        132,
+        143,
+        124,
+        123,
+        114,
+        135,
+        130,
+        0,
+        123,
+        128,
+        119
+      ],
+      [
+        2622,
+        2569,
+        2527,
+        2545,
+        2534,
+        2543,
+        2517,
+        2517,
+        0,
+        2539,
+        2524
+      ],
+      [
+        110,
+        84,
+        92,
+        99,
+        95,
+        97,
+        104,
+        80,
+        85,
+        0,
+        100
+      ],
+      [
+        26,
+        30,
+        23,
+        18,
+        24,
+        31,
+        23,
+        22,
+        30,
+        12,
+        0
+      ]
+    ],
+    "seed_42_reproducible": true,
+    "flip_mask_train_only": true,
+    "clean_mask_is_complement": true,
+    "no_target_equals_source": true
+  },
+  "fairness_protocol": {
+    "same_split": true,
+    "same_noisy_y_train": true,
+    "same_flip_mask": true,
+    "same_clean_y_test": true,
+    "same_encoder_family": true,
+    "same_feature_preprocessing": true,
+    "same_label_mapping": true,
+    "same_class_set": true,
+    "cold_training_label_source": "noisy",
+    "graphcold_training_label_source": "noisy",
+    "cold_evaluation_label_source": "clean",
+    "graphcold_evaluation_label_source": "clean",
+    "baseline_leakage_risk": false,
+    "shared_noisy_y_train_hash": "dea6b62f90a0a220023ebb486cd277868d8e6b5f4e6348ac64c286fe652960e1",
+    "shared_flip_mask_hash": "c1892038c4191b3ea4170b97134a6aacf0f54ee3c94137e202cee844709ff59d"
+  },
+  "active_view_audit": {
+    "graph_views_present": [
+      "host",
+      "ip",
+      "temporal"
+    ],
+    "active_views": [
+      "host",
+      "ip",
+      "temporal"
+    ],
+    "inactive_views": [
+      "process",
+      "threat_intel"
+    ],
+    "empty_views_participate_mean_fusion": false,
+    "empty_views_participate_d_pred": false,
+    "empty_views_participate_d_view": false,
+    "empty_views_participate_d_neigh": false,
+    "process_misused": false,
+    "threat_intel_misused": false
+  },
+  "graph_cdm_distribution": {
+    "d_pred": {
+      "min": 0.15,
+      "mean": 0.2937057634820378,
+      "max": 0.8999955738391001,
+      "std": 0.280486318242532
+    },
+    "d_neigh": {
+      "min": 0.0,
+      "mean": 0.0,
+      "max": 0.0,
+      "std": 0.0
+    },
+    "d_view": {
+      "min": 0.0,
+      "mean": 0.0,
+      "max": 0.0,
+      "std": 0.0
+    },
+    "d_chain_enabled": false,
+    "graph_cdm": {
+      "min": 0.15,
+      "mean": 0.2937057634820378,
+      "max": 0.8999955738391001,
+      "std": 0.280486318242532
+    },
+    "graph_cdm_clean": {
+      "min": 0.15,
+      "mean": 0.1541092303640845,
+      "max": 0.6000000000000001,
+      "std": 0.030030662144733204
+    },
+    "graph_cdm_flipped": {
+      "min": 0.8500002711856918,
+      "mean": 0.8520963248129988,
+      "max": 0.8999955738391001,
+      "std": 0.0029279386858214514
+    },
+    "graph_cdm_by_class": {
+      "0": {
+        "min": 0.15,
+        "mean": 0.2906387220683893,
+        "max": 0.860816352281941,
+        "std": 0.2804410988077879
+      },
+      "1": {
+        "min": 0.1633869823601008,
+        "mean": 0.30766942978755557,
+        "max": 0.8960367343581359,
+        "std": 0.27847514470263596
+      },
+      "2": {
+        "min": 0.15105830027576506,
+        "mean": 0.2927715927006555,
+        "max": 0.8727937211346098,
+        "std": 0.27958903643591654
+      },
+      "3": {
+        "min": 0.1571376344748006,
+        "mean": 0.33785943033002686,
+        "max": 0.8849468763903007,
+        "std": 0.2881308044031757
+      },
+      "4": {
+        "min": 0.15,
+        "mean": 0.2924844262138479,
+        "max": 0.8692013841360319,
+        "std": 0.27980615300003914
+      },
+      "5": {
+        "min": 0.15921296111553587,
+        "mean": 0.31596383420935237,
+        "max": 0.8891030428141515,
+        "std": 0.28500448173907506
+      },
+      "6": {
+        "min": 0.15902644566894586,
+        "mean": 0.4200481677102364,
+        "max": 0.8887300119209715,
+        "std": 0.282489219247858
+      },
+      "7": {
+        "min": 0.15796040645857,
+        "mean": 0.29870226074180767,
+        "max": 0.8646827798757479,
+        "std": 0.2801936741525203
+      },
+      "8": {
+        "min": 0.15065844225528013,
+        "mean": 0.29110797009722567,
+        "max": 0.87145073483102,
+        "std": 0.28005287503886317
+      },
+      "9": {
+        "min": 0.15896565166859894,
+        "mean": 0.29955782232222966,
+        "max": 0.8670951917369605,
+        "std": 0.28029211943158916
+      },
+      "10": {
+        "min": 0.16466143970846012,
+        "mean": 0.3684053452303535,
+        "max": 0.8999955738391001,
+        "std": 0.2892136590413045
+      }
+    },
+    "corr_graph_cdm_flip_mask": 0.9953931984913578,
+    "corr_graph_cdm_prediction_error": 0.002513370244434733,
+    "dominant_component": "D_pred/noise-boundary surrogate",
+    "near_constant": false,
+    "finite": true,
+    "d_neigh_empty_neighbor_fallback_rate": 0.0
+  },
+  "evidence_weight_audit": {
+    "evidence": {
+      "min": 0.0,
+      "mean": 0.042127909254715074,
+      "max": 1.0,
+      "std": 0.05932165696667838
+    },
+    "evidence_norm": {
+      "min": 0.0,
+      "mean": 0.042127909254715074,
+      "max": 1.0,
+      "std": 0.05932165696667838
+    },
+    "weights": {
+      "min": 0.0009019900321968165,
+      "mean": 0.7885976930296574,
+      "max": 0.9922346085022491,
+      "std": 0.3969322674409683
+    },
+    "fraction_w_lt_0_01": 0.19998128169619558,
+    "fraction_w_lt_tau_ret": 0.19999873096245394,
+    "retained_fraction": 0.8000012690375461,
+    "retained_fraction_by_class": {
+      "0": 0.7991593547479687,
+      "1": 0.8073744437380801,
+      "2": 0.8008630958192576,
+      "3": 0.7974253096915229,
+      "4": 0.8003873243246167,
+      "5": 0.7954080472834735,
+      "6": 0.8076342462799224,
+      "7": 0.7998425196850394,
+      "8": 0.7999355061976972,
+      "9": 0.7994913098770665,
+      "10": 0.8018242122719734
+    },
+    "retained_fraction_clean": 1.0,
+    "retained_fraction_flipped": 0.0,
+    "retained_fraction_informative": 1.0,
+    "retained_fraction_non_informative": 1.0,
+    "n_eff": 502971.027107547,
+    "n_eff_ratio": 0.7978613974761175,
+    "weight_collapse_risk": false,
+    "clean_informative_retained_fraction": 1.0,
+    "hard_clean_informative_retained_fraction": 0.9799968274111676,
+    "err_mechanism_failure": false
+  },
+  "weighted_ce_audit": {
+    "uses_sum_over_weight_sum": true,
+    "mean_reduction_bug_found": false,
+    "source": "src/models/loss.py"
+  },
+  "model_metrics": {
+    "cold_macro_f1": 0.9668636808594052,
+    "graphcold_macro_f1": 0.9919588015723962,
+    "cold_fpr": 0.0019474196689386564,
+    "graphcold_fpr": 0.001969057665260197,
+    "cold_fnr": 0.0044171118193652645,
+    "graphcold_fnr": 0.0006374287381604346
+  },
+  "root_causes": [
+    "CICIDS flow-only contract requires process/threat_intel inactive; active-view filtering is required.",
+    "Soft weighting preserves clean boundary evidence that hard ablation deletes."
+  ]
+}

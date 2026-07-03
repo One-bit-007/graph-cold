@@ -54,10 +54,11 @@ def run_smoke_realdata(
     rows: list[dict[str, Any]] = []
     for noise_name in SMOKE_NOISES:
         noisy, flip = _smoke_noise(bundle.y_train, bundle.num_classes, noise_name)
+        anomaly = _feature_anomaly(bundle.X_train, bundle.y_train)
         evidence = compute_evidence(
             bundle.y_train,
             {"evidence_preserving": {"freq_protect": "log", "gamma_anomaly": 1.0}},
-            anomaly=flip.astype(float),
+            anomaly=anomaly,
         )
         cdm = _smoke_cdm(flip, evidence)
         for method in SMOKE_METHODS:
@@ -124,26 +125,63 @@ def _smoke_noise(y: np.ndarray, num_classes: int, noise_name: str) -> tuple[np.n
 
 
 def _smoke_cdm(flip: np.ndarray, evidence: np.ndarray) -> np.ndarray:
-    raw = 0.20 + 0.60 * flip.astype(float) + 0.15 * evidence
+    clean = ~np.asarray(flip, dtype=bool)
+    if not np.asarray(flip, dtype=bool).any():
+        return np.clip(0.15 + 0.05 * evidence, 0.0, 1.0)
+    boundary_cut = np.quantile(evidence[clean], 0.995) if clean.any() else 1.0
+    clean_boundary = clean & (evidence >= boundary_cut)
+    raw = 0.15 + 0.70 * flip.astype(float) + 0.40 * clean_boundary.astype(float) + 0.05 * evidence
     return np.clip(raw, 0.0, 1.0)
 
 
 def _weights_for(method: str, cdm: np.ndarray, evidence: np.ndarray) -> np.ndarray:
-    cfg = {"evidence_preserving": {"theta": 0.5, "kappa": 4.0, "rho": 0.2}}
+    cfg = {"evidence_preserving": {"theta": 0.5, "kappa": 20.0, "rho": 0.01}}
     if method in {"CoLD", "ablation_hard"}:
         cfg["evidence_preserving"]["rho"] = 0.0
     return graph_cdm.soft_weights(cdm, evidence, cfg)
 
 
 def _fit_predict(X_train, y_train, X_test, weights, method: str) -> np.ndarray:
-    model = ExtraTreesClassifier(n_estimators=80, random_state=42, class_weight="balanced", n_jobs=-1)
-    sample_weight = np.clip(weights, 1e-3, 1.0)
     if method in {"CoLD", "ablation_hard"}:
-        sample_weight = (sample_weight >= 0.5).astype(float)
-        if sample_weight.sum() == 0:
-            sample_weight = np.ones_like(sample_weight)
+        keep = np.asarray(weights, dtype=float) >= 0.5
+        if keep.sum() > 0 and np.unique(np.asarray(y_train)[keep]).size >= 2:
+            model = ExtraTreesClassifier(n_estimators=80, random_state=42, class_weight="balanced", n_jobs=-1)
+            model.fit(X_train[keep], np.asarray(y_train)[keep])
+            return model.predict(X_test)
+        keep = np.ones(np.asarray(y_train).shape[0], dtype=bool)
+        model = ExtraTreesClassifier(n_estimators=80, random_state=42, class_weight="balanced", n_jobs=-1)
+        model.fit(X_train[keep], np.asarray(y_train)[keep])
+        return model.predict(X_test)
+    model = ExtraTreesClassifier(n_estimators=80, random_state=42, class_weight=None, n_jobs=-1)
+    retained_weight = np.where(np.asarray(weights, dtype=float) >= 0.1, weights, 0.0)
+    sample_weight = np.clip(retained_weight, 0.0, 1.0) * _class_balance_weights(y_train)
     model.fit(X_train, y_train, sample_weight=sample_weight)
     return model.predict(X_test)
+
+
+def _class_balance_weights(y_train: np.ndarray) -> np.ndarray:
+    y = np.asarray(y_train)
+    labels, counts = np.unique(y, return_counts=True)
+    weights = {label: y.shape[0] / (len(labels) * count) for label, count in zip(labels, counts)}
+    return np.asarray([weights[label] for label in y], dtype=np.float64)
+
+
+def _feature_anomaly(X_train: np.ndarray, y_train: np.ndarray) -> np.ndarray:
+    X = np.asarray(X_train, dtype=np.float64)
+    y = np.asarray(y_train)
+    anomaly = np.zeros(X.shape[0], dtype=np.float64)
+    for label in np.unique(y):
+        idx = np.flatnonzero(y == label)
+        if idx.size == 0:
+            continue
+        centroid = np.mean(X[idx], axis=0)
+        dist = np.linalg.norm(X[idx] - centroid, axis=1)
+        if dist.max() > dist.min():
+            dist = (dist - dist.min()) / (dist.max() - dist.min())
+        else:
+            dist = np.ones_like(dist)
+        anomaly[idx] = dist
+    return anomaly
 
 
 def _quality_checks(frame: pd.DataFrame) -> dict[str, dict[str, Any]]:
@@ -170,7 +208,7 @@ def _quality_checks(frame: pd.DataFrame) -> dict[str, dict[str, Any]]:
         checks["ablation_hard_close_to_cold"] = {"passed": False, "detail": "missing rows"}
     if {"Graph-CoLD", "ablation_hard"}.issubset(sym.index):
         checks["graphcold_err_above_hard"] = {
-            "passed": bool(float(sym.loc["Graph-CoLD", "err"]) >= float(sym.loc["ablation_hard", "err"])),
+            "passed": bool(float(sym.loc["Graph-CoLD", "err"]) > float(sym.loc["ablation_hard", "err"])),
             "detail": {
                 "graphcold": float(sym.loc["Graph-CoLD", "err"]),
                 "ablation_hard": float(sym.loc["ablation_hard", "err"]),
@@ -245,4 +283,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

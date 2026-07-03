@@ -59,5 +59,5 @@ def _minmax(values: np.ndarray) -> np.ndarray:
         return values
     span = values.max() - values.min()
     if span <= EPS:
-        return np.zeros_like(values, dtype=np.float64)
+        return np.ones_like(values, dtype=np.float64)
     return (values - values.min()) / span

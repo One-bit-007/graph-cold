@@ -1,10 +1,10 @@
 # OpTC Preparation Report
 
-- Mode: instructions
-- Events CSV present: False
+- Mode: local-events
+- Events CSV present: True
 - Audit passed: False
 - Full download attempted: False
-- Dataset hash: `None`
+- Dataset hash: `70d6898a5c75a603f4010e33ba77d66d9a70d8a0855baa9c9d0dbd831c2de7e1`
 
 ## Instructions
 - Review OpTC data source: https://github.com/FiveDirections/OpTC-data

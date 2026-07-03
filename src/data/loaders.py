@@ -118,6 +118,7 @@ def load_dataset(name: str, cfg: dict) -> Dataset:
         "timestamps": {"train": timestamp_train, "test": timestamp_test},
         "scaler": scaler,
         "benign_class": _benign_class_index(class_names),
+        "expected_view_support": _expected_view_support(key),
     }
 
     return Dataset(
@@ -308,3 +309,21 @@ def _build_feature_frame(features: pd.DataFrame) -> pd.DataFrame:
 def _can_stratify(y: np.ndarray) -> bool:
     _, counts = np.unique(y, return_counts=True)
     return len(counts) > 1 and bool(np.all(counts >= 2))
+
+
+def _expected_view_support(key: str) -> dict[str, bool]:
+    if key in {"cicids2017", "maltls22"}:
+        return {
+            "host": True,
+            "ip": True,
+            "temporal": True,
+            "process": False,
+            "threat_intel": False,
+        }
+    return {
+        "host": True,
+        "ip": True,
+        "temporal": True,
+        "process": True,
+        "threat_intel": True,
+    }
