@@ -27,6 +27,7 @@ def run(args) -> dict:
             args.mode,
             args.out or f"data/tls_alternative/{args.candidate}",
             args.confirm_large_download,
+            getattr(args, "archive", None),
         )
     elif args.dataset == "optc":
         result = download_optc.run(args.mode, args.out or "data/optc", args.events, args.confirm_large_download)
@@ -47,6 +48,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--mode", required=True)
     parser.add_argument("--out")
     parser.add_argument("--zip", dest="zip_path")
+    parser.add_argument("--archive")
     parser.add_argument("--candidate", default="cesnet_tls_year22")
     parser.add_argument("--events")
     parser.add_argument("--confirm-large-download", action="store_true")
@@ -60,4 +62,3 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

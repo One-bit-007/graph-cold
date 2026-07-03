@@ -21,6 +21,8 @@ class DatasetContract:
     min_classes: int = 2
     expected_view_support: dict[str, bool] = field(default_factory=dict)
     source_verified: bool = True
+    replacement_for: str | None = None
+    replacement_name_must_be_reported: bool = False
     notes: str = ""
 
 
@@ -104,6 +106,45 @@ TLS_ALTERNATIVE_CONTRACT = DatasetContract(
 )
 
 
+CESNET_TLS_YEAR22_CONTRACT = DatasetContract(
+    name="cesnet_tls_year22",
+    root="data/tls_alternative/cesnet_tls_year22",
+    expected_files=None,
+    label_column=None,
+    required_any_columns={
+        "label": ["label", "Label", "class", "Class", "service", "app", "target", "category"],
+        "tls_or_flow_features": [
+            "tls",
+            "TLS",
+            "sni",
+            "SNI",
+            "ja3",
+            "JA3",
+            "flow",
+            "Flow",
+            "packet",
+            "Packet",
+            "bytes",
+            "duration",
+        ],
+        "timestamp": ["timestamp", "Timestamp", "time", "Time", "start_time", "date"],
+    },
+    min_samples=10000,
+    min_classes=2,
+    expected_view_support={
+        "host": False,
+        "ip": True,
+        "temporal": True,
+        "process": False,
+        "threat_intel": False,
+    },
+    source_verified=True,
+    replacement_for="maltls22",
+    replacement_name_must_be_reported=True,
+    notes="Verified replacement candidate; report by true name CESNET-TLS-Year22, not MALTLS-22.",
+)
+
+
 OPTC_CONTRACT = DatasetContract(
     name="optc",
     root="data/optc",
@@ -136,6 +177,6 @@ OPTC_CONTRACT = DatasetContract(
 DATASET_CONTRACTS = {
     "cicids2017": CICIDS2017_CONTRACT,
     "maltls22": MALTLS22_CONTRACT,
+    "cesnet_tls_year22": CESNET_TLS_YEAR22_CONTRACT,
     "optc": OPTC_CONTRACT,
 }
-

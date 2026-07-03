@@ -43,7 +43,7 @@ class Dataset:
 
 
 def load_dataset(name: str, cfg: dict) -> Dataset:
-    """Load one of {cicids2017, maltls22, optc}."""
+    """Load one of {cicids2017, maltls22, cesnet_tls_year22, optc}."""
     key, ds_cfg = _resolve_dataset_cfg(name, cfg)
     if key == "optc":
         raise NotImplementedError("OpTC is reserved for the D4 enterprise case study.")
@@ -52,6 +52,11 @@ def load_dataset(name: str, cfg: dict) -> Dataset:
     rng = np.random.default_rng(seed)
     df = _read_dataset_frame(ds_cfg["path"])
     df.columns = [str(col).strip() for col in df.columns]
+    sample_rows = ds_cfg.get("sample_rows")
+    if sample_rows is not None:
+        sample_rows = int(sample_rows)
+        if sample_rows > 0 and len(df) > sample_rows:
+            df = df.sample(n=sample_rows, random_state=seed).reset_index(drop=True)
 
     label_col = ds_cfg.get("label_col")
     if not label_col or label_col not in df.columns:
@@ -70,6 +75,10 @@ def load_dataset(name: str, cfg: dict) -> Dataset:
     if key == "cicids2017":
         min_count = int(ds_cfg.get("min_class_count", 1000))
         work, timestamps = _filter_and_downsample_cicids(work, timestamps, label_col, min_count, rng)
+    elif key == "cesnet_tls_year22":
+        min_count = int(ds_cfg.get("min_class_count", 1000))
+        if str(ds_cfg.get("class_policy", "postfilter")) == "postfilter":
+            work, timestamps = _filter_and_downsample_postfilter(work, timestamps, label_col, min_count, rng)
 
     labels_raw = work[label_col].astype(str).to_numpy()
     class_names = _ordered_class_names(labels_raw)
@@ -107,8 +116,16 @@ def load_dataset(name: str, cfg: dict) -> Dataset:
     class_counts = {class_names[idx]: int(count) for idx, count in enumerate(np.bincount(y))}
     meta = {
         "dataset": key,
+        "dataset_name": key,
         "data_source": str(Path(ds_cfg["path"]).resolve()),
         "data_version": str(ds_cfg.get("version", "real-local")),
+        "label_column": label_col,
+        "num_classes": len(class_names),
+        "class_policy": str(ds_cfg.get("class_policy", "postfilter11" if key == "cicids2017" else "raw")),
+        "active_views": [view for view, enabled in _expected_view_support(key).items() if enabled],
+        "source_verified": bool(ds_cfg.get("source_verified", key != "maltls22")),
+        "replacement_for": ds_cfg.get("replacement_for"),
+        "reported_as": ds_cfg.get("reported_as", key),
         "feature_names": feature_names,
         "class_names": class_names,
         "label_mapping": label_mapping,
@@ -139,6 +156,10 @@ def _resolve_dataset_cfg(name: str, cfg: dict) -> tuple[str, dict]:
         "maltls": "maltls22",
         "maltls-22": "maltls22",
         "maltls22": "maltls22",
+        "cesnet": "cesnet_tls_year22",
+        "cesnet-tls-year22": "cesnet_tls_year22",
+        "cesnet_tls_year22": "cesnet_tls_year22",
+        "cesnettlsyear22": "cesnet_tls_year22",
         "optc": "optc",
     }
     key = aliases.get(name.lower())
@@ -240,6 +261,40 @@ def _filter_and_downsample_cicids(
     return downsampled, _reset_timestamps(timestamps)
 
 
+def _filter_and_downsample_postfilter(
+    df: pd.DataFrame,
+    timestamps: np.ndarray | None,
+    label_col: str,
+    min_count: int,
+    rng: np.random.Generator,
+) -> tuple[pd.DataFrame, np.ndarray | None]:
+    counts = df[label_col].value_counts()
+    keep_labels = counts[counts >= min_count].index
+    keep_mask = df[label_col].isin(keep_labels).to_numpy()
+    filtered = df.loc[keep_mask].reset_index(drop=True)
+    if timestamps is not None:
+        timestamps = timestamps[keep_mask]
+    if filtered.empty:
+        raise ValueError(f"No classes remain after postfilter min_class_count={min_count}.")
+
+    counts = filtered[label_col].value_counts()
+    if len(counts) <= 1:
+        return filtered, _reset_timestamps(timestamps)
+    dominant_label = counts.idxmax()
+    cap = int(counts.drop(index=dominant_label).max())
+    selected_positions: list[np.ndarray] = []
+    for label, group in filtered.groupby(label_col, sort=False):
+        positions = group.index.to_numpy()
+        if label == dominant_label and len(positions) > cap:
+            positions = np.sort(rng.choice(positions, size=cap, replace=False))
+        selected_positions.append(positions)
+    selected = np.sort(np.concatenate(selected_positions))
+    out = filtered.iloc[selected].reset_index(drop=True)
+    if timestamps is not None:
+        timestamps = timestamps[selected]
+    return out, _reset_timestamps(timestamps)
+
+
 def _reset_timestamps(timestamps: np.ndarray | None) -> np.ndarray | None:
     if timestamps is None:
         return None
@@ -312,6 +367,14 @@ def _can_stratify(y: np.ndarray) -> bool:
 
 
 def _expected_view_support(key: str) -> dict[str, bool]:
+    if key == "cesnet_tls_year22":
+        return {
+            "host": False,
+            "ip": True,
+            "temporal": True,
+            "process": False,
+            "threat_intel": False,
+        }
     if key in {"cicids2017", "maltls22"}:
         return {
             "host": True,

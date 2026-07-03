@@ -71,6 +71,33 @@ The command above will not download large CESNET files unless
 reported as `CESNET-TLS-Year22`, not MALTLS-22, and needs its own audited
 contract before use in experiments.
 
+DataZoo guarded mode:
+
+```bash
+python scripts/download_tls_alternative.py --candidate cesnet_tls_year22 --mode datazoo --out data/tls_alternative/cesnet_tls_year22 --confirm-large-download
+```
+
+Prepare a manually downloaded Zenodo/DataZoo archive or exported table:
+
+```bash
+python scripts/download_tls_alternative.py --candidate cesnet_tls_year22 --mode local-archive --archive path/to/cesnet_tls_year22_archive_or_table --out data/tls_alternative/cesnet_tls_year22
+```
+
+Official sources:
+
+- Zenodo record: https://zenodo.org/records/10608607
+- CESNET DataZoo docs: https://cesnet.github.io/cesnet-datazoo/
+- CESNET DataZoo GitHub: https://github.com/CESNET/cesnet-datazoo
+
+After local files are present, inspect schema and set `configs/datasets.yaml`
+`cesnet_tls_year22.label_col` if the label column is not named `label`, then run:
+
+```bash
+python -m src.data.audit --dataset cesnet_tls_year22
+python -m src.experiments.smoke_realdata --dataset cesnet_tls_year22 --configs configs --out reports
+python -m src.experiments.cesnet_mini_matrix --dataset cesnet_tls_year22 --configs configs --out results --reports reports
+```
+
 ## OpTC
 
 Print instructions:
@@ -133,4 +160,3 @@ Forbidden at this stage:
 ```bash
 python -c "from src.experiments.d5 import run_d5_experiments; run_d5_experiments(...)"
 ```
-

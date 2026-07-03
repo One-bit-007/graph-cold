@@ -1,22 +1,24 @@
 # Real-Data Readiness Report
 
 - D5 allowed: False
+- D6/D7 allowed: False
 - Submission ready: False
 
 ## Datasets
 
 ### cicids2017
-- audit_passed: True
-- smoke_passed: True
-- mini_matrix_passed: True
-- ready_for_d5_component: True
-- available: True
+- Available: True
+- Audit passed: True
+- Ready for smoke: True
+- Ready for D5/case: True
+- Blocking reasons:
+  - none
 
 ### maltls22
-- audit_passed: False
-- ready_for_d5_component: False
-- source_verified: False
-- available: False
+- Available: False
+- Audit passed: False
+- Ready for smoke: False
+- Ready for D5/case: False
 - Blocking reasons:
   - dataset root does not exist: data/maltls22
   - label column missing: label
@@ -24,10 +26,22 @@
   - row count 0 below min_samples 10000
   - dataset source is not verified; do not report this dataset
 
+### cesnet_tls_year22
+- Available: False
+- Audit passed: False
+- Ready for smoke: False
+- Ready for D5/case: False
+- Blocking reasons:
+  - dataset root does not exist: data/tls_alternative/cesnet_tls_year22
+  - label column missing: contract label candidate
+  - required column groups missing: label, tls_or_flow_features, timestamp
+  - row count 0 below min_samples 10000
+
 ### optc
-- audit_passed: False
-- available: False
-- ready_for_case_study: False
+- Available: False
+- Audit passed: False
+- Ready for smoke: False
+- Ready for D5/case: False
 - Blocking reasons:
   - dataset root does not exist: data/optc
   - missing expected files: events.csv
@@ -35,6 +49,8 @@
   - missing required columns: host_id, process_id, parent_process_id, src_ip, dst_ip, timestamp, event_type, alert_type, label, risk_score
   - row count 0 below min_samples 1000
 
-## Blocking Reasons
-- MALTLS-22 source unverified or replacement dataset not selected
-- OpTC events.csv unavailable
+## Next Actions
+- MALTLS-22 remains unevaluated unless source verification changes.
+- Resolve cesnet_tls_year22: dataset root does not exist: data/tls_alternative/cesnet_tls_year22; label column missing: contract label candidate; required column groups missing: label, tls_or_flow_features, timestamp; row count 0 below min_samples 10000
+- OpTC unavailable; keep it out of formal experiments or provide real events.csv.
+- Do not run D5 until CICIDS and CESNET-TLS-Year22 components pass.

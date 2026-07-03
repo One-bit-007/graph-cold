@@ -9,18 +9,15 @@
       "audit_passed": true,
       "ready_for_smoke": true,
       "ready_for_d5": true,
-      "blocking_reasons": [],
-      "smoke_passed": true,
-      "mini_matrix_passed": true,
       "ready_for_d5_component": true,
-      "class_policy": "postfilter11",
-      "num_classes": 11
+      "blocking_reasons": []
     },
     "maltls22": {
       "available": false,
       "audit_passed": false,
       "ready_for_smoke": false,
       "ready_for_d5": false,
+      "ready_for_d5_component": false,
       "blocking_reasons": [
         "dataset root does not exist: data/maltls22",
         "label column missing: label",
@@ -30,12 +27,31 @@
       ],
       "source_verified": false,
       "replacement_required_if_unavailable": true,
-      "ready_for_d5_component": false
+      "evaluated": false
+    },
+    "cesnet_tls_year22": {
+      "available": false,
+      "audit_passed": false,
+      "ready_for_smoke": false,
+      "ready_for_d5": false,
+      "ready_for_d5_component": false,
+      "blocking_reasons": [
+        "dataset root does not exist: data/tls_alternative/cesnet_tls_year22",
+        "label column missing: contract label candidate",
+        "required column groups missing: label, tls_or_flow_features, timestamp",
+        "row count 0 below min_samples 10000"
+      ],
+      "mini_matrix_passed": false,
+      "class_policy": "postfilter",
+      "reported_as": "CESNET-TLS-Year22",
+      "replacement_for": "MALTLS-22"
     },
     "optc": {
       "available": false,
       "audit_passed": false,
       "ready_for_case_study": false,
+      "formal_experiment": false,
+      "future_case_study_only": true,
       "blocking_reasons": [
         "dataset root does not exist: data/optc",
         "missing expected files: events.csv",
@@ -46,11 +62,10 @@
     }
   },
   "next_actions": [
-    "Select and audit a real second dataset before D5.",
-    "Provide OpTC events.csv or remove OpTC from formal experiments."
+    "MALTLS-22 remains unevaluated unless source verification changes.",
+    "Resolve cesnet_tls_year22: dataset root does not exist: data/tls_alternative/cesnet_tls_year22; label column missing: contract label candidate; required column groups missing: label, tls_or_flow_features, timestamp; row count 0 below min_samples 10000",
+    "OpTC unavailable; keep it out of formal experiments or provide real events.csv.",
+    "Do not run D5 until CICIDS and CESNET-TLS-Year22 components pass."
   ],
-  "blocking_reasons": [
-    "MALTLS-22 source unverified or replacement dataset not selected",
-    "OpTC events.csv unavailable"
-  ]
+  "d5_scope": []
 }

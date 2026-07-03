@@ -4,8 +4,11 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+import shutil
 import sys
+import tarfile
 import urllib.request
+import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -17,15 +20,16 @@ from src.data.audit import write_readiness_reports
 CANDIDATES = {
     "cesnet_tls_year22": {
         "label": "CESNET-TLS-Year22",
-        "url": "https://zenodo.org/records/7969895",
+        "url": "https://zenodo.org/records/10608607",
+        "datazoo": "https://cesnet.github.io/cesnet-datazoo/",
         "large": True,
-        "notes": "Year-spanning TLS metadata dataset; large public research corpus.",
+        "notes": "Year-spanning TLS flow/service dataset; large public research corpus.",
     },
     "cesnet_tls22": {
-        "label": "CESNET-TLS-Year22",
-        "url": "https://zenodo.org/records/7969895",
+        "label": "CESNET-TLS22",
+        "url": "https://www.liberouter.org/technology-v2/tools-services-datasets/datasets/cesnet-tls22/",
         "large": True,
-        "notes": "Alias for CESNET-TLS-Year22.",
+        "notes": "Earlier CESNET TLS traffic classification dataset; separate from CESNET-TLS-Year22.",
     },
     "ustc_tfc2016": {
         "label": "USTC-TFC2016",
@@ -42,12 +46,18 @@ CANDIDATES = {
 }
 
 
-def run(candidate: str, mode: str, out: str | Path, confirm_large_download: bool = False) -> dict:
+def run(
+    candidate: str,
+    mode: str,
+    out: str | Path,
+    confirm_large_download: bool = False,
+    archive: str | Path | None = None,
+) -> dict:
     if candidate not in CANDIDATES:
         raise ValueError(f"Unknown TLS alternative candidate: {candidate}")
     info = CANDIDATES[candidate]
     out_path = Path(out)
-    attempted = mode == "auto" and (confirm_large_download or not info["large"])
+    attempted = mode in {"auto", "datazoo"} and (confirm_large_download or not info["large"])
     report = {
         "dataset": "tls_alternative",
         "candidate": candidate,
@@ -58,21 +68,50 @@ def run(candidate: str, mode: str, out: str | Path, confirm_large_download: bool
         "download_success": False,
         "large_download_confirmed": confirm_large_download,
         "download_source": info["url"],
+        "datazoo_source": info.get("datazoo"),
         "manual_action_required": True,
         "out": str(out_path),
         "audit_passed": False,
         "notes": info["notes"],
     }
-    if mode == "auto" and info["large"] and not confirm_large_download:
+    if mode in {"auto", "datazoo"} and info["large"] and not confirm_large_download:
         report["error"] = "Large TLS download requires --confirm-large-download."
     elif mode == "auto":
         report["error"] = "Auto download is intentionally conservative; follow source instructions and audit local files."
         _probe_source(info["url"])
+    elif mode == "datazoo":
+        report["error"] = "DataZoo mode is guarded; install/use cesnet-datazoo manually, then audit exported files."
+        _probe_source(info.get("datazoo") or info["url"])
+    elif mode == "local-archive":
+        report.update(_prepare_local_archive(archive, out_path))
     elif mode != "instructions":
-        raise ValueError("TLS alternative supports modes: instructions, auto")
+        raise ValueError("TLS alternative supports modes: instructions, auto, datazoo, local-archive")
     _write_tls_reports(report)
     write_readiness_reports()
     return report
+
+
+def _prepare_local_archive(archive: str | Path | None, out_path: Path) -> dict:
+    if archive is None:
+        return {"download_success": False, "error": "--archive is required for local-archive mode."}
+    archive_path = Path(archive)
+    if not archive_path.exists():
+        return {"download_success": False, "error": f"Archive not found: {archive_path}"}
+    out_path.mkdir(parents=True, exist_ok=True)
+    if zipfile.is_zipfile(archive_path):
+        with zipfile.ZipFile(archive_path) as handle:
+            handle.extractall(out_path)
+    elif tarfile.is_tarfile(archive_path):
+        with tarfile.open(archive_path) as handle:
+            handle.extractall(out_path)
+    elif archive_path.is_file():
+        shutil.copy2(archive_path, out_path / archive_path.name)
+    return {
+        "download_success": True,
+        "manual_action_required": False,
+        "archive": str(archive_path),
+        "files_present": [str(path) for path in sorted(out_path.rglob("*")) if path.is_file()][:50],
+    }
 
 
 def _probe_source(url: str) -> None:
@@ -120,6 +159,7 @@ def _decision_markdown(report: dict) -> str:
             "- MALTLS-22 allowed for D5: false",
             f"- Recommended replacement candidate: {report['must_be_reported_as']}",
             f"- Download source: {report['download_source']}",
+            f"- DataZoo source: {report.get('datazoo_source')}",
             "- Replacement differs from MALTLS-22 and must not be renamed.",
             f"- Download attempted: {report['download_attempted']}",
             f"- Large download confirmed: {report['large_download_confirmed']}",
@@ -136,15 +176,15 @@ def _decision_markdown(report: dict) -> str:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--candidate", choices=sorted(CANDIDATES), default="cesnet_tls_year22")
-    parser.add_argument("--mode", choices=["instructions", "auto"], default="instructions")
+    parser.add_argument("--mode", choices=["instructions", "auto", "datazoo", "local-archive"], default="instructions")
     parser.add_argument("--out", default="data/tls_alternative/cesnet_tls_year22")
+    parser.add_argument("--archive")
     parser.add_argument("--confirm-large-download", action="store_true")
     args = parser.parse_args(argv)
-    report = run(args.candidate, args.mode, args.out, args.confirm_large_download)
+    report = run(args.candidate, args.mode, args.out, args.confirm_large_download, args.archive)
     print(json.dumps(report, indent=2))
-    return 0 if args.mode == "instructions" else 2
+    return 0 if args.mode in {"instructions", "local-archive"} and not report.get("error") else 2
 
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

@@ -22,6 +22,20 @@ maltls22:
   label_col: label
   drop_cols: []
 
+cesnet_tls_year22:
+  name: CESNET-TLS-Year22
+  path: data/tls_alternative/cesnet_tls_year22/
+  reported_as: CESNET-TLS-Year22
+  replacement_for: maltls22
+  source_verified: true
+  class_policy: postfilter
+  min_class_count: 1000
+  train_test_split: 0.8
+  # Set this after inspecting the downloaded schema if it differs.
+  label_col: label
+  sample_rows: null
+  drop_cols: []
+
 optc:
   name: OpTC
   path: data/optc/

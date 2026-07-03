@@ -1,0 +1,28 @@
+{
+  "stage": "two-dataset-readiness",
+  "cicids2017": {
+    "ready_for_d5_component": true,
+    "class_policy": "postfilter11",
+    "mini_matrix_passed": true
+  },
+  "cesnet_tls_year22": {
+    "ready_for_d5_component": false,
+    "class_policy": "postfilter",
+    "mini_matrix_passed": false,
+    "reported_as": "CESNET-TLS-Year22",
+    "replacement_for": "MALTLS-22"
+  },
+  "maltls22": {
+    "source_verified": false,
+    "evaluated": false
+  },
+  "optc": {
+    "available": false,
+    "formal_experiment": false,
+    "future_case_study_only": true
+  },
+  "d5_allowed": false,
+  "d5_scope": [],
+  "d6_d7_allowed": false,
+  "submission_ready": false
+}

@@ -1,0 +1,16 @@
+{
+  "stage": "cesnet-mini-matrix-gate",
+  "passed": false,
+  "status": "blocked",
+  "rows": 0,
+  "class_policy": "postfilter",
+  "results_csv": null,
+  "d5_allowed": false,
+  "blocking_reasons": [
+    "CESNET smoke gate has not passed; mini-matrix not run.",
+    "dataset root does not exist: data/tls_alternative/cesnet_tls_year22",
+    "label column missing: contract label candidate",
+    "required column groups missing: label, tls_or_flow_features, timestamp",
+    "row count 0 below min_samples 10000"
+  ]
+}

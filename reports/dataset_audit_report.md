@@ -30,6 +30,22 @@
   - row count 0 below min_samples 10000
   - dataset source is not verified; do not report this dataset
 
+## cesnet_tls_year22
+
+- Root: `data\tls_alternative\cesnet_tls_year22`
+- Available files: 0
+- Rows / columns: 0 / 0
+- Classes: 0
+- Dataset hash: `None`
+- Ready for smoke: False
+- Ready for D5: False
+- View support: {"host": "not_expected", "ip": "missing", "process": "not_expected", "temporal": "derived_limited", "threat_intel": "not_expected"}
+- Blocking reasons:
+  - dataset root does not exist: data/tls_alternative/cesnet_tls_year22
+  - label column missing: contract label candidate
+  - required column groups missing: label, tls_or_flow_features, timestamp
+  - row count 0 below min_samples 10000
+
 ## optc
 
 - Root: `data\optc`

@@ -117,6 +117,48 @@ Replacement rules:
 - A replacement needs its own contract and source investigation.
 - It can enter experiments only after real files pass audit.
 
+### CESNET-TLS-Year22
+
+Official dataset name to report: `CESNET-TLS-Year22`.
+
+Local key used by this repository:
+
+```text
+cesnet_tls_year22
+```
+
+Local path:
+
+```text
+data/
+  tls_alternative/
+    cesnet_tls_year22/
+      <real CESNET-TLS-Year22 CSV/Parquet/DataZoo export files>
+```
+
+Official sources:
+
+- Zenodo record: https://zenodo.org/records/10608607
+- CESNET DataZoo: https://cesnet.github.io/cesnet-datazoo/
+- DataZoo GitHub: https://github.com/CESNET/cesnet-datazoo
+
+The dataset must be reported as `CESNET-TLS-Year22`, never as MALTLS-22. It is
+a replacement candidate for the second main dataset slot only after real local
+files pass audit and smoke/mini-matrix gates.
+
+Expected schema is configurable because DataZoo exports and Zenodo files may
+differ. The contract accepts label-like columns (`label`, `class`, `service`,
+`app`, `target`, `category`), TLS/flow feature columns (`tls`, `sni`, `ja3`,
+`flow`, `packet`, `bytes`, `duration`), and timestamp-like columns.
+
+Graph view policy:
+
+- `ip`: expected from TLS/flow features.
+- `temporal`: expected from timestamp/date fields.
+- `host`: optional only if endpoint-like fields exist and are explicitly enabled.
+- `process`: unsupported.
+- `threat_intel`: unsupported.
+
 ## OpTC Enterprise Case
 
 The OpTC case study requires real provenance events at:

@@ -45,7 +45,7 @@ def run_smoke_realdata(
     audit = audit_dataset(contract)
     if not audit.ready_for_smoke:
         report = _blocked_report(dataset, audit)
-        _write_report(report, reports_dir)
+        _write_report(report, reports_dir, dataset)
         return report
 
     cfg = yaml.safe_load((Path(configs) / "datasets.yaml").read_text(encoding="utf-8"))
@@ -79,6 +79,8 @@ def run_smoke_realdata(
                     "err": err["err_final"],
                     "tail_err": err["err_tail"],
                     "class_count": bundle.num_classes,
+                    "class_policy": bundle.meta.get("class_policy"),
+                    "active_views": "|".join(bundle.meta.get("active_views", [])),
                 }
             )
 
@@ -86,7 +88,7 @@ def run_smoke_realdata(
     quality = _quality_checks(frame)
     results_dir = Path("results")
     results_dir.mkdir(parents=True, exist_ok=True)
-    smoke_csv = results_dir / "smoke_realdata.csv"
+    smoke_csv = results_dir / ("cesnet_smoke_realdata.csv" if dataset == "cesnet_tls_year22" else "smoke_realdata.csv")
     frame.to_csv(smoke_csv, index=False)
     report = {
         "stage": "realdata-smoke",
@@ -99,7 +101,7 @@ def run_smoke_realdata(
         "quality_checks": quality,
         "passed": bool(all(item["passed"] for item in quality.values())),
     }
-    _write_report(report, reports_dir)
+    _write_report(report, reports_dir, dataset)
     return report
 
 
@@ -235,9 +237,13 @@ def _quality_checks(frame: pd.DataFrame) -> dict[str, dict[str, Any]]:
     return checks
 
 
-def _write_report(report: dict[str, Any], reports_dir: Path) -> None:
-    json_path = reports_dir / "smoke_realdata_report.json"
-    md_path = reports_dir / "smoke_realdata_report.md"
+def _write_report(report: dict[str, Any], reports_dir: Path, dataset: str = "cicids2017") -> None:
+    if dataset == "cesnet_tls_year22":
+        json_path = reports_dir / "cesnet_smoke_report.json"
+        md_path = reports_dir / "cesnet_smoke_report.md"
+    else:
+        json_path = reports_dir / "smoke_realdata_report.json"
+        md_path = reports_dir / "smoke_realdata_report.md"
     json_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
     md_path.write_text(_report_markdown(report), encoding="utf-8")
 
@@ -265,9 +271,17 @@ def _report_markdown(report: dict[str, Any]) -> str:
 
 def _normalize_dataset(dataset: str) -> str:
     key = dataset.lower().replace("-", "")
-    aliases = {"cicids": "cicids2017", "cicids2017": "cicids2017", "maltls22": "maltls22", "maltls": "maltls22"}
+    aliases = {
+        "cicids": "cicids2017",
+        "cicids2017": "cicids2017",
+        "maltls22": "maltls22",
+        "maltls": "maltls22",
+        "cesnet": "cesnet_tls_year22",
+        "cesnettlsyear22": "cesnet_tls_year22",
+        "cesnet_tls_year22": "cesnet_tls_year22",
+    }
     if key not in aliases:
-        raise ValueError("Smoke supports cicids2017 and maltls22 only.")
+        raise ValueError("Smoke supports cicids2017, maltls22, and cesnet_tls_year22 only.")
     return aliases[key]
 
 

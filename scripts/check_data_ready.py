@@ -22,6 +22,7 @@ def main() -> int:
 
     cicids = readiness.get("datasets", {}).get("cicids2017", {})
     maltls = readiness.get("datasets", {}).get("maltls22", {})
+    cesnet = readiness.get("datasets", {}).get("cesnet_tls_year22", {})
     optc = readiness.get("datasets", {}).get("optc", {})
     tls_ready = "not selected"
     if tls:
@@ -29,9 +30,10 @@ def main() -> int:
 
     lines = [
         f"CICIDS-2017: {'ready' if cicids.get('ready_for_d5') else 'blocked'}",
+        f"CESNET-TLS-Year22: {'ready' if cesnet.get('ready_for_d5') or cesnet.get('ready_for_d5_component') else 'blocked'}",
         f"MALTLS-22: {'source verified' if maltls.get('source_verified') else 'source unverified / blocked'}",
         f"TLS alternative: {tls_ready}",
-        f"OpTC: {'ready' if optc.get('ready_for_case_study') else 'blocked'}",
+        f"OpTC: {'case-ready' if optc.get('ready_for_case_study') else 'future case / unavailable'}",
         f"D5 allowed: {str(readiness.get('d5_allowed', False)).lower()}",
         f"Smoke allowed: {str(bool(cicids.get('ready_for_smoke') or maltls.get('ready_for_smoke'))).lower()}",
         "Submission ready: false",
@@ -44,4 +46,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

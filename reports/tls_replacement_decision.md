@@ -3,7 +3,8 @@
 - MALTLS-22 source verified: false
 - MALTLS-22 allowed for D5: false
 - Recommended replacement candidate: CESNET-TLS-Year22
-- Download source: https://zenodo.org/records/7969895
+- Download source: https://zenodo.org/records/10608607
+- DataZoo source: https://cesnet.github.io/cesnet-datazoo/
 - Replacement differs from MALTLS-22 and must not be renamed.
 - Download attempted: False
 - Large download confirmed: False

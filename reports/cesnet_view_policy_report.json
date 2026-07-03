@@ -1,0 +1,28 @@
+{
+  "stage": "cesnet-view-policy",
+  "dataset": "cesnet_tls_year22",
+  "reported_as": "CESNET-TLS-Year22",
+  "active_views": [
+    "ip",
+    "temporal"
+  ],
+  "unsupported_views": [
+    "process",
+    "threat_intel"
+  ],
+  "optional_views": {
+    "host": false
+  },
+  "view_columns": {
+    "ip": [],
+    "temporal": [],
+    "host": [],
+    "process": [],
+    "threat_intel": []
+  },
+  "must_not_claim": [
+    "process lineage",
+    "threat-intel view"
+  ],
+  "ready_for_smoke": false
+}

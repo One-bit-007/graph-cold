@@ -1,0 +1,58 @@
+{
+  "name": "cesnet_tls_year22",
+  "root": "data\\tls_alternative\\cesnet_tls_year22",
+  "exists": false,
+  "expected_files_present": true,
+  "missing_files": [],
+  "files_used": [],
+  "file_hashes": {},
+  "dataset_hash": null,
+  "num_rows": 0,
+  "num_columns": 0,
+  "label_column": null,
+  "label_column_present": false,
+  "class_count": 0,
+  "label_distribution": {},
+  "missing_values": 0,
+  "infinite_values": 0,
+  "duplicate_rows": 0,
+  "numeric_feature_count": 0,
+  "required_columns_ok": true,
+  "required_any_columns_status": {
+    "label": false,
+    "tls_or_flow_features": false,
+    "timestamp": false
+  },
+  "expected_view_support": {
+    "host": false,
+    "ip": true,
+    "temporal": true,
+    "process": false,
+    "threat_intel": false
+  },
+  "actual_view_support": {
+    "host": "not_expected",
+    "ip": "missing",
+    "temporal": "derived_limited",
+    "process": "not_expected",
+    "threat_intel": "not_expected"
+  },
+  "ready_for_smoke": false,
+  "ready_for_d5": false,
+  "blocking_reasons": [
+    "dataset root does not exist: data/tls_alternative/cesnet_tls_year22",
+    "label column missing: contract label candidate",
+    "required column groups missing: label, tls_or_flow_features, timestamp",
+    "row count 0 below min_samples 10000"
+  ],
+  "class_imbalance_ratio": 0.0,
+  "selected_class_policy": "postfilter",
+  "active_views": [
+    "ip",
+    "temporal"
+  ],
+  "source_verified": true,
+  "replacement_for": "maltls22",
+  "ready_for_mini_matrix": false,
+  "ready_for_d5_component": false
+}

@@ -1,0 +1,14 @@
+{
+  "stage": "d5-scope-decision",
+  "main_experiment_datasets": [
+    "CICIDS-2017 post-filtered 11-class setting",
+    "CESNET-TLS-Year22 (pending gate)"
+  ],
+  "maltls22_evaluated": false,
+  "optc_formal_experiment": false,
+  "optc_rule": "Use only if the user provides real data/optc/events.csv; otherwise keep as future case study.",
+  "future_d5_must_not_include": [
+    "MALTLS-22"
+  ],
+  "old_d5_d6_d7_results_invalid": true
+}
