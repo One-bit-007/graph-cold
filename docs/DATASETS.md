@@ -5,6 +5,8 @@ the user and placed under `data/`, which is ignored by Git. The audit commands
 below verify files, schema, hashes, label distributions, and view support before
 any D5 experiment is allowed.
 
+Download/preparation commands are maintained in `docs/DATASET_DOWNLOADS.md`.
+
 ```bash
 python -m src.data.audit
 python -m src.experiments.smoke_realdata --dataset cicids2017 --configs configs --out reports
@@ -149,4 +151,3 @@ used only after this real provenance table passes audit.
 The repository `.gitignore` excludes `/data/`, `/datasets/`, `*.pcap`,
 `*.csv.gz`, and `*.parquet`. Keep raw data outside version control. Audit
 reports may include file hashes and schema summaries, but not raw rows.
-

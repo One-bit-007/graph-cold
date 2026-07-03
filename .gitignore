@@ -8,9 +8,17 @@ venv/
 # Data (do not commit raw datasets)
 /data/
 /datasets/
+data/
+data_raw/
 *.pcap
+*.pcapng
+*.zip
+*.7z
+*.gz
+*.csv
 *.csv.gz
 *.parquet
+!tests/fixtures/**/*.csv
 
 # Experiment artifacts
 experiments/results/**/*.png

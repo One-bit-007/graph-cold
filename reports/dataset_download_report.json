@@ -1,0 +1,41 @@
+{
+  "dataset": "cicids2017",
+  "mode": "instructions",
+  "download_attempted": false,
+  "download_success": false,
+  "official_source_used": true,
+  "third_party_mirror_used": false,
+  "download_url_discovered": null,
+  "manual_action_required": true,
+  "manual_instructions": [
+    "Open the official CICIDS-2017 page: https://www.unb.ca/cic/datasets/ids-2017.html",
+    "Use the official Download this dataset link and complete the CIC form if required.",
+    "Download MachineLearningCSV.zip, not the PCAP bundle.",
+    "Run: python scripts/download_cicids2017.py --mode local-zip --zip path/to/MachineLearningCSV.zip --out data/cicids2017"
+  ],
+  "files_expected": [
+    "Monday-WorkingHours.pcap_ISCX.csv",
+    "Tuesday-WorkingHours.pcap_ISCX.csv",
+    "Wednesday-workingHours.pcap_ISCX.csv",
+    "Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX.csv",
+    "Thursday-WorkingHours-Afternoon-Infilteration.pcap_ISCX.csv",
+    "Friday-WorkingHours-Morning.pcap_ISCX.csv",
+    "Friday-WorkingHours-Afternoon-PortScan.pcap_ISCX.csv",
+    "Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
+  ],
+  "files_present": [],
+  "missing_files": [
+    "Monday-WorkingHours.pcap_ISCX.csv",
+    "Tuesday-WorkingHours.pcap_ISCX.csv",
+    "Wednesday-workingHours.pcap_ISCX.csv",
+    "Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX.csv",
+    "Thursday-WorkingHours-Afternoon-Infilteration.pcap_ISCX.csv",
+    "Friday-WorkingHours-Morning.pcap_ISCX.csv",
+    "Friday-WorkingHours-Afternoon-PortScan.pcap_ISCX.csv",
+    "Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
+  ],
+  "file_hashes": {},
+  "dataset_hash": null,
+  "audit_invoked": true,
+  "audit_passed": false
+}

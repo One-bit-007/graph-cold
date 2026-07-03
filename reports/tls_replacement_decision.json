@@ -1,0 +1,20 @@
+{
+  "maltls22": {
+    "source_verified": false,
+    "available": false,
+    "ready_for_d5": false
+  },
+  "recommended_replacement": "cesnet_tls_year22",
+  "replacement_download_source": "https://zenodo.org/records/7969895",
+  "replacement_download_attempted": false,
+  "replacement_download_success": false,
+  "large_download_confirmed": false,
+  "must_be_reported_as": "CESNET-TLS-Year22",
+  "allowed_for_d5": false,
+  "user_confirmation_required": true,
+  "notes": [
+    "The replacement is not MALTLS-22.",
+    "If selected, the paper must name the replacement dataset explicitly.",
+    "A separate audited contract is required before experiments."
+  ]
+}
