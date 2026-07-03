@@ -1,0 +1,16 @@
+{
+  "stage": "d5-readiness-guard",
+  "implemented": true,
+  "readiness_required": true,
+  "readiness_files": [
+    "reports/second_dataset_selection_gate.json",
+    "reports/realdata_readiness_report.json",
+    "reports/two_dataset_readiness_report.json"
+  ],
+  "d5_allowed": false,
+  "d5_scope": [],
+  "old_hardcoded_datasets_removed": true,
+  "forbidden_formal_datasets": ["maltls22", "optc"],
+  "blocking_reasons": ["No verified second dataset is ready"],
+  "formal_outputs_generated": false
+}

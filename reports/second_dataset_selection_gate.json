@@ -1,0 +1,29 @@
+{
+  "stage": "second-dataset-selection",
+  "d5_allowed": false,
+  "selected_second_dataset": null,
+  "d5_scope": [],
+  "manuscript_dataset_names": [],
+  "rejected_candidates": {
+    "cesnet_tls_year22": [
+      "no readable CSV files found",
+      "label column missing: contract label candidate",
+      "required column groups missing: label, tls_or_flow_features, timestamp",
+      "row count 0 below min_samples 10000",
+      "not ready for D5 component"
+    ],
+    "unsw_nb15": [
+      "not ready for D5 component"
+    ],
+    "ustc_tfc2016": [
+      "candidate_only; not selected unless user confirms download and audit",
+      "not ready for D5 component"
+    ]
+  },
+  "paper_claims_changed": false,
+  "blocking_reasons": [
+    "No verified second dataset is ready"
+  ],
+  "maltls22_allowed": false,
+  "optc_formal_experiment": false
+}

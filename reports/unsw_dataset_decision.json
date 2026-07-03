@@ -1,0 +1,47 @@
+{
+  "stage": "unsw-class-policy",
+  "dataset": "unsw_nb15",
+  "reported_as": "UNSW-NB15",
+  "source_verified": true,
+  "dataset_hash": null,
+  "actual_data_path": "E:\\graphcold-data\\unsw_nb15",
+  "external_data_root": "E:\\graphcold-data",
+  "selected_policy": "postfilter",
+  "min_class_count": 1000,
+  "policies": {
+    "raw": {
+      "class_names": [],
+      "class_counts": {},
+      "num_classes": 0,
+      "macro_imbalance_ratio": 0.0,
+      "suitable_for_experiment": false
+    },
+    "postfilter": {
+      "class_names": [],
+      "class_counts": {},
+      "num_classes": 0,
+      "removed_classes": {},
+      "min_class_count": 1000,
+      "downsample_rule": "No dominant-class downsampling needed.",
+      "macro_imbalance_ratio": 0.0,
+      "suitable_for_experiment": false
+    }
+  },
+  "active_views": [
+    "ip",
+    "temporal"
+  ],
+  "unsupported_views": [
+    "host",
+    "process",
+    "threat_intel"
+  ],
+  "ready_for_smoke": false,
+  "ready_for_d5_component": false,
+  "blocking_reasons": [
+    "dataset root does not exist: E:\\graphcold-data\\unsw_nb15",
+    "label column missing: contract label candidate",
+    "required column groups missing: label, ip_or_flow, numeric_features",
+    "row count 0 below min_samples 10000"
+  ]
+}

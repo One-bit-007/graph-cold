@@ -88,5 +88,5 @@ optc:
 """,
         encoding="utf-8",
     )
-    with pytest.raises(FileNotFoundError, match="required real dataset|Required real dataset"):
+    with pytest.raises((FileNotFoundError, RuntimeError), match="required real dataset|Required real dataset|D5 readiness guard blocked"):
         run_d5_experiments(out_dir=tmp_path / "results", configs_dir=configs)

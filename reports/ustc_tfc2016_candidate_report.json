@@ -1,0 +1,21 @@
+{
+  "stage": "ustc-tfc2016-candidate-review",
+  "dataset": "ustc_tfc2016",
+  "reported_as": "USTC-TFC2016",
+  "status": "candidate_only",
+  "source_candidate": "USTC-TFC2016 public traffic classification corpus; source/license/schema must be verified before use",
+  "expected_data_format": [
+    "packet/flow tables or converted PCAP-derived features",
+    "explicit class/family labels",
+    "documented train/test split or reproducible split seed"
+  ],
+  "likely_preprocessing_required": [
+    "convert raw traffic artifacts into tabular flow features",
+    "normalize label taxonomy",
+    "verify benign/malicious class mapping",
+    "audit class counts and feature columns"
+  ],
+  "suitable_as_backup": false,
+  "reason": "Not selected unless the user confirms download, license, schema, and audit pass.",
+  "may_enter_d5": false
+}

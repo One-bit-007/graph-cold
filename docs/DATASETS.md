@@ -159,6 +159,64 @@ Graph view policy:
 - `process`: unsupported.
 - `threat_intel`: unsupported.
 
+### UNSW-NB15
+
+Official dataset name to report: `UNSW-NB15`.
+
+Local key used by this repository:
+
+```text
+unsw_nb15
+```
+
+Recommended local path:
+
+```text
+E:\graphcold-data\unsw_nb15\
+```
+
+Official source:
+
+- UNSW Canberra Cyber dataset page: https://research.unsw.edu.au/projects/unsw-nb15-dataset
+
+Recommended inputs are the official CSV files and the feature-list file. The
+loader defaults to multiclass `attack_cat`; binary `label` can be selected only
+by changing the dataset config and reporting the binary setting explicitly.
+Empty `attack_cat` values are removed before class-policy filtering.
+
+Default class policy:
+
+- `postfilter`
+- `min_class_count = 1000`
+- downsample the dominant retained class to the largest remaining class count
+  when needed
+
+Graph view policy:
+
+- `ip`: expected from `srcip`/`dstip`/ports/protocol/service/state fields.
+- `temporal`: expected from available time-like fields or derived limited order.
+- `host`: unsupported by default.
+- `process`: unsupported.
+- `threat_intel`: unsupported.
+
+UNSW-NB15 is a backup second-dataset candidate. If it replaces
+CESNET-TLS-Year22 in D5, the paper must report it as `UNSW-NB15`; it must never
+be described as MALTLS-22 or CESNET-TLS-Year22.
+
+### USTC-TFC2016 Candidate
+
+USTC-TFC2016 is tracked as `candidate_only`.
+
+Local key, if the user later confirms source, license, files, and schema:
+
+```text
+ustc_tfc2016
+```
+
+It is not selected for D5 by default because the current repository has not
+completed a source/license/schema audit. It may become a backup candidate only
+after user-confirmed download plus `src.data.audit` pass.
+
 ## OpTC Enterprise Case
 
 The OpTC case study requires real provenance events at:

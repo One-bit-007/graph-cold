@@ -12,6 +12,8 @@ DATASET_RELATIVE_PATHS = {
     "cicids2017": Path("cicids2017"),
     "maltls22": Path("maltls22"),
     "cesnet_tls_year22": Path("tls_alternative") / "cesnet_tls_year22",
+    "unsw_nb15": Path("unsw_nb15"),
+    "ustc_tfc2016": Path("ustc_tfc2016"),
     "optc": Path("optc"),
 }
 

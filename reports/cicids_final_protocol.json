@@ -1,0 +1,33 @@
+{
+  "stage": "cicids-final-protocol-freeze",
+  "dataset": "cicids2017",
+  "reported_as": "CICIDS-2017",
+  "dataset_hash": "2585508ac445a94a3eb2244aa64778678928d201555396b4b9afc1ed6a2f1ab4",
+  "selected_policy": "postfilter11",
+  "removed_classes": {
+    "Heartbleed": 11,
+    "Infiltration": 36,
+    "Web Attack \ufffd Sql Injection": 21,
+    "Web Attack \ufffd XSS": 652
+  },
+  "retained_classes": 11,
+  "active_views": ["host", "ip", "temporal"],
+  "inactive_views": ["process", "threat_intel"],
+  "noise_settings": {
+    "symmetric_rates": [0.1, 0.2, 0.4, 0.6],
+    "asymmetric_rates": [0.1, 0.2, 0.4, 0.6],
+    "training_only_noise": true
+  },
+  "graph_beta_settings": [0.0, 0.3, 0.6, 1.0],
+  "seeds": [0, 1, 2],
+  "split_policy": "8:2 stratified split when class counts permit",
+  "fairness_protocol": {
+    "cold": "same real CICIDS split and noise protocol",
+    "ablation_hard": "rho=0 hard-retention comparator",
+    "graph_cold": "same encoder/data protocol plus Graph-CDM/evidence weighting"
+  },
+  "err_definition": "ERR is measured on clean informative samples using retained(v)=1[w(v)>=tau_ret] and Tail-ERR; final ERR is the average of ERR and Tail-ERR.",
+  "no_refined9_claim": true,
+  "formal_d5_allowed": false,
+  "blocking_reason": "Second verified dataset is not ready."
+}

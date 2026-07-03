@@ -161,19 +161,20 @@ def write_dataset_specific_audit_report(result: DatasetAuditResult, out_dir: str
     json_path = out / f"{stem}.json"
     md_path = out / f"{stem}.md"
     payload = result.to_dict()
+    contract = DATASET_CONTRACTS.get(result.name)
     payload.update(
         {
             "class_imbalance_ratio": _imbalance_ratio(result.label_distribution),
-            "selected_class_policy": "postfilter" if result.name == "cesnet_tls_year22" else None,
+            "selected_class_policy": "postfilter" if result.name in {"cesnet_tls_year22", "unsw_nb15"} else None,
             "active_views": [view for view, active in result.expected_view_support.items() if active],
             "actual_data_path": result.root,
             "external_data_root": _external_root_for(result.name, result.root),
             "download_cache": str(get_download_cache(_external_root_for(result.name, result.root))) if result.name == "cesnet_tls_year22" else None,
             "data_source": result.root,
             "data_version": "real-local",
-            "reported_as": "CESNET-TLS-Year22" if result.name == "cesnet_tls_year22" else result.name,
-            "source_verified": DATASET_CONTRACTS[result.name].source_verified if result.name in DATASET_CONTRACTS else None,
-            "replacement_for": "MALTLS-22" if result.name == "cesnet_tls_year22" else DATASET_CONTRACTS[result.name].replacement_for if result.name in DATASET_CONTRACTS else None,
+            "reported_as": contract.reported_as if contract and contract.reported_as else result.name,
+            "source_verified": contract.source_verified if contract else None,
+            "replacement_for": "MALTLS-22" if result.name == "cesnet_tls_year22" else contract.replacement_for if contract else None,
             "ready_for_mini_matrix": bool(result.ready_for_smoke),
             "ready_for_d5_component": bool(result.ready_for_d5),
         }
@@ -203,6 +204,8 @@ def build_readiness(audits: dict[str, DatasetAuditResult]) -> dict[str, Any]:
     maltls = audits["maltls22"]
     cesnet = audits.get("cesnet_tls_year22")
     optc = audits["optc"]
+    unsw = audits.get("unsw_nb15")
+    ustc = audits.get("ustc_tfc2016")
     d5_allowed = bool(cicids.ready_for_d5 and cesnet and cesnet.ready_for_d5)
     next_actions = []
     for name, audit in audits.items():
@@ -238,6 +241,26 @@ def build_readiness(audits: dict[str, DatasetAuditResult]) -> dict[str, Any]:
                 "ready_for_smoke": False,
                 "ready_for_d5": False,
                 "blocking_reasons": ["contract not audited"],
+            },
+            "unsw_nb15": _readiness_dataset(unsw) if unsw is not None else {
+                "available": False,
+                "audit_passed": False,
+                "ready_for_smoke": False,
+                "ready_for_d5": False,
+                "ready_for_d5_component": False,
+                "blocking_reasons": ["contract not audited"],
+            },
+            "ustc_tfc2016": {
+                **(_readiness_dataset(ustc) if ustc is not None else {
+                    "available": False,
+                    "audit_passed": False,
+                    "ready_for_smoke": False,
+                    "ready_for_d5": False,
+                    "ready_for_d5_component": False,
+                    "blocking_reasons": ["contract not audited"],
+                }),
+                "candidate_only": True,
+                "selected_for_d5": False,
             },
             "optc": {
                 "available": optc.exists and optc.expected_files_present,
@@ -374,6 +397,7 @@ def _actual_view_support(contract: DatasetContract, any_status: dict[str, bool],
                 or any_status.get("dst_ip", "dst_ip" in columns)
                 or {"src_ip", "dst_ip"}.intersection(columns)
                 or any_status.get("tls_or_flow_features", False)
+                or any_status.get("ip_or_flow", False)
             ) else "missing"
         else:
             actual[view] = "available" if (
@@ -476,7 +500,7 @@ def _imbalance_ratio(counts: dict[str, int]) -> float:
 
 def _contract_for_data_root(dataset: str, data_root: str | Path | None) -> DatasetContract:
     contract = DATASET_CONTRACTS[dataset]
-    if data_root and dataset == "cesnet_tls_year22":
+    if data_root:
         return replace(contract, root=str(resolve_dataset_path(dataset, data_root)))
     return contract
 

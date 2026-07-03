@@ -1,0 +1,39 @@
+{
+  "stage": "parallel-second-dataset-prep",
+  "cesnet_download_disturbed": false,
+  "formal_d5_run": false,
+  "formal_outputs_generated": false,
+  "unsw_nb15": {
+    "contract": true,
+    "loader": true,
+    "policy_audit": true,
+    "ready": false,
+    "blocking_reasons": ["UNSW-NB15 files are not present locally"]
+  },
+  "ustc_tfc2016": {
+    "candidate_report": true,
+    "contract_stub": true,
+    "status": "candidate_only",
+    "ready": false
+  },
+  "second_dataset_selection": {
+    "implemented": true,
+    "selected": null,
+    "d5_allowed": false,
+    "scope": []
+  },
+  "cicids_protocol": {
+    "finalized": true,
+    "class_policy": "postfilter11",
+    "active_views": ["host", "ip", "temporal"]
+  },
+  "d5_guard": {
+    "implemented": true,
+    "readiness_required": true,
+    "old_hardcoded_datasets_removed": true
+  },
+  "analysis_scripts": {
+    "result_sanity": true,
+    "stat_tests": true
+  }
+}

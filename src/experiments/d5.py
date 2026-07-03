@@ -31,10 +31,11 @@ from src.metrics import (
 from src.models import graph_cdm
 from src.models.evidence import compute as compute_evidence
 from src.ranking.prioritize import alert_compression_ratio, priority_scores, topk
+from src.experiments.second_dataset_selection import select_second_dataset
 
 
 SEEDS = (0, 1, 2)
-DATASETS = ("cicids2017", "maltls22", "optc")
+DATASETS: tuple[str, ...] = ()
 NOISE_RATES = (0.10, 0.20, 0.40, 0.60)
 GRAPH_BETAS = (0.0, 0.3, 0.6, 1.0)
 BASELINES = (
@@ -68,13 +69,14 @@ class ExperimentBundle:
 
 
 def run_d5_experiments(out_dir: str | Path = "results", configs_dir: str | Path = "configs") -> dict:
+    dataset_scope = _readiness_guard(configs_dir)
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     rng = np.random.default_rng(42)
 
     raw_rows: list[dict] = []
     runtime_rows: list[dict] = []
-    for dataset_name in DATASETS:
+    for dataset_name in dataset_scope:
         for noise_spec in _noise_specs():
             for seed in SEEDS:
                 bundle = _load_real_dataset(dataset_name, seed, configs_dir)
@@ -101,11 +103,10 @@ def run_d5_experiments(out_dir: str | Path = "results", configs_dir: str | Path 
     runtime = pd.DataFrame(runtime_rows)
     table_main = _aggregate(raw)
 
-    ablation_raw = _run_ablation_matrix(SEEDS, configs_dir)
+    ablation_raw = _run_ablation_matrix(SEEDS, configs_dir, dataset_scope[-1])
     table_ablation = _aggregate(pd.DataFrame(ablation_raw), group_cols=("variant", "seed"))
     table_ablation_summary = _aggregate(pd.DataFrame(ablation_raw), group_cols=("variant",))
 
-    table_optc = _run_optc_table(out)
     stat_tests = _stat_tests(raw)
     runtime_json = _runtime_json(runtime)
 
@@ -113,21 +114,55 @@ def run_d5_experiments(out_dir: str | Path = "results", configs_dir: str | Path 
     table_main.to_csv(out / "table_main.csv", index=False)
     pd.DataFrame(ablation_raw).to_csv(out / "table_ablation_raw.csv", index=False)
     table_ablation_summary.to_csv(out / "table_ablation.csv", index=False)
-    table_optc.to_csv(out / "table_optc.csv", index=False)
     (out / "stat_tests.json").write_text(json.dumps(stat_tests, indent=2), encoding="utf-8")
     (out / "runtime.json").write_text(json.dumps(runtime_json, indent=2), encoding="utf-8")
 
-    _write_figures(raw, table_ablation_summary, table_optc, out)
+    _write_figures(raw, table_ablation_summary, pd.DataFrame(), out)
     _write_execution_report(stat_tests, out)
     return {
         "table_main": str(out / "table_main.csv"),
         "table_ablation": str(out / "table_ablation.csv"),
-        "table_optc": str(out / "table_optc.csv"),
         "stat_tests": str(out / "stat_tests.json"),
         "runtime": str(out / "runtime.json"),
         "num_main_rows": int(len(table_main)),
         "p_value_overall": stat_tests["overall"]["p_value"],
     }
+
+
+def _readiness_guard(configs_dir: str | Path = "configs") -> tuple[str, ...]:
+    reports_dir = Path(configs_dir).parent / "reports"
+    gate_path = reports_dir / "second_dataset_selection_gate.json"
+    readiness_path = reports_dir / "two_dataset_readiness_report.json"
+    realdata_path = reports_dir / "realdata_readiness_report.json"
+    if gate_path.exists():
+        gate = json.loads(gate_path.read_text(encoding="utf-8"))
+    elif realdata_path.exists() or readiness_path.exists():
+        gate = select_second_dataset(reports=reports_dir)
+    else:
+        raise RuntimeError(
+            "D5 readiness guard blocked: no readiness report found. "
+            "Run dataset audit and second-dataset selection before D5."
+        )
+    if not bool(gate.get("d5_allowed", False)):
+        reasons = "; ".join(gate.get("blocking_reasons") or ["two-dataset readiness gate is false"])
+        raise RuntimeError(f"D5 readiness guard blocked: {reasons}")
+    scope = [_normalize_scope_name(name) for name in gate.get("d5_scope", [])]
+    forbidden = {"maltls22", "optc"}
+    if not scope or any(name in forbidden for name in scope):
+        raise RuntimeError(f"D5 readiness guard blocked: invalid d5_scope={scope}; MALTLS-22 and OpTC are not allowed.")
+    if "cicids2017" not in scope or len(scope) < 2:
+        raise RuntimeError(f"D5 readiness guard blocked: d5_scope must include CICIDS-2017 plus one verified second dataset, got {scope}.")
+    return tuple(scope)
+
+
+def _normalize_scope_name(name: str) -> str:
+    lookup = {
+        "CICIDS-2017": "cicids2017",
+        "CESNET-TLS-Year22": "cesnet_tls_year22",
+        "UNSW-NB15": "unsw_nb15",
+        "USTC-TFC2016": "ustc_tfc2016",
+    }
+    return lookup.get(str(name), str(name).lower().replace("-", "_"))
 
 
 def _noise_specs() -> list[dict]:
@@ -346,9 +381,9 @@ def _aggregate(df: pd.DataFrame, group_cols=None) -> pd.DataFrame:
     return agg
 
 
-def _run_ablation_matrix(seeds: tuple[int, ...], configs_dir: str | Path) -> list[dict]:
+def _run_ablation_matrix(seeds: tuple[int, ...], configs_dir: str | Path, dataset_name: str) -> list[dict]:
     rows = []
-    base_bundle = _load_real_dataset("maltls22", 42, configs_dir)
+    base_bundle = _load_real_dataset(dataset_name, 42, configs_dir)
     scenario = _prepare_scenario(base_bundle.dataset, {"type": "graph_consistency", "rate": 0.6, "beta": 0.6, "level": "r=0.60,beta=0.6"}, 42)
     penalties = {
         "Graph-CoLD": 0.00,
@@ -489,14 +524,15 @@ def _write_figures(raw: pd.DataFrame, ablation: pd.DataFrame, optc: pd.DataFrame
     fig.savefig(out / "fig4_ablation_bar.png", dpi=160)
     plt.close(fig)
 
-    fig, ax = plt.subplots(figsize=(6, 4))
-    optc_mean = optc.groupby("method")["topk_hits"].mean().sort_values(ascending=False)
-    ax.bar(optc_mean.index, optc_mean.values)
-    ax.set_ylabel("Top-K malicious hits")
-    ax.set_title("Fig5: OpTC case ranking performance")
-    fig.tight_layout()
-    fig.savefig(out / "fig5_optc_ranking_performance.png", dpi=160)
-    plt.close(fig)
+    if not optc.empty and {"method", "topk_hits"}.issubset(optc.columns):
+        fig, ax = plt.subplots(figsize=(6, 4))
+        optc_mean = optc.groupby("method")["topk_hits"].mean().sort_values(ascending=False)
+        ax.bar(optc_mean.index, optc_mean.values)
+        ax.set_ylabel("Top-K malicious hits")
+        ax.set_title("Fig5: OpTC case ranking performance")
+        fig.tight_layout()
+        fig.savefig(out / "fig5_optc_ranking_performance.png", dpi=160)
+        plt.close(fig)
 
 
 def _write_execution_report(stat_tests: dict, out: Path) -> None:
@@ -505,7 +541,6 @@ def _write_execution_report(stat_tests: dict, out: Path) -> None:
         "outputs": [
             "results/table_main.csv",
             "results/table_ablation.csv",
-            "results/table_optc.csv",
             "results/stat_tests.json",
             "results/runtime.json",
         ],
@@ -513,7 +548,6 @@ def _write_execution_report(stat_tests: dict, out: Path) -> None:
             "results/fig2_macro_f1_vs_noise_rate.png",
             "results/fig3_err_vs_compression_ratio.png",
             "results/fig4_ablation_bar.png",
-            "results/fig5_optc_ranking_performance.png",
         ],
         "ck6": {
             "graph_cold_vs_cold_p_lt_0_05": stat_tests["overall"]["significant_p_lt_0_05"],
@@ -523,7 +557,8 @@ def _write_execution_report(stat_tests: dict, out: Path) -> None:
             "ablation_monotonic_degradation": True,
         },
         "notes": [
-            "D5 P0 mode is real-data only. Missing CICIDS-2017, MALTLS-22, or OpTC files raise FileNotFoundError.",
+            "D5 P0 mode is real-data only. Missing selected datasets raise FileNotFoundError.",
+            "D5 P0 guard permits only CICIDS-2017 plus one verified second dataset selected by reports/second_dataset_selection_gate.json.",
             "CSV outputs include data_source and data_version columns for traceability.",
         ],
     }

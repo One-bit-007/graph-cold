@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts import download_cicids2017, download_optc, download_tls_alternative
+from scripts import download_cicids2017, download_optc, download_tls_alternative, download_unsw_nb15
 from src.data.audit import audit_all_datasets, write_audit_reports, write_readiness_reports
 
 
@@ -32,6 +32,8 @@ def run(args) -> dict:
             getattr(args, "download_cache", None),
             getattr(args, "min_free_gb", None),
         )
+    elif args.dataset == "unsw_nb15":
+        result = download_unsw_nb15.run(args.mode, args.out or "data/unsw_nb15")
     elif args.dataset == "optc":
         result = download_optc.run(args.mode, args.out or "data/optc", args.events, args.confirm_large_download)
     else:
@@ -47,7 +49,7 @@ def run(args) -> dict:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dataset", choices=["cicids2017", "tls_alternative", "optc"], required=True)
+    parser.add_argument("--dataset", choices=["cicids2017", "tls_alternative", "unsw_nb15", "optc"], required=True)
     parser.add_argument("--mode", required=True)
     parser.add_argument("--out")
     parser.add_argument("--zip", dest="zip_path")

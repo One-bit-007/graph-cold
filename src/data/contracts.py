@@ -23,6 +23,7 @@ class DatasetContract:
     source_verified: bool = True
     replacement_for: str | None = None
     replacement_name_must_be_reported: bool = False
+    reported_as: str | None = None
     notes: str = ""
 
 
@@ -141,7 +142,57 @@ CESNET_TLS_YEAR22_CONTRACT = DatasetContract(
     source_verified=True,
     replacement_for="maltls22",
     replacement_name_must_be_reported=True,
+    reported_as="CESNET-TLS-Year22",
     notes="Verified replacement candidate; report by true name CESNET-TLS-Year22, not MALTLS-22.",
+)
+
+
+UNSW_NB15_CONTRACT = DatasetContract(
+    name="unsw_nb15",
+    root="data/unsw_nb15",
+    expected_files=None,
+    label_column=None,
+    required_any_columns={
+        "label": ["label", "Label", "attack_cat", "Attack_cat", "attack_cat"],
+        "ip_or_flow": ["srcip", "dstip", "saddr", "daddr", "sport", "dsport", "proto", "service", "state"],
+        "numeric_features": ["dur", "sbytes", "dbytes", "sttl", "dttl", "sload", "dload", "spkts", "dpkts"],
+    },
+    min_samples=10000,
+    min_classes=2,
+    expected_view_support={
+        "host": False,
+        "ip": True,
+        "temporal": True,
+        "process": False,
+        "threat_intel": False,
+    },
+    source_verified=True,
+    reported_as="UNSW-NB15",
+    notes="Verified backup second-dataset candidate; report under true UNSW-NB15 name only.",
+)
+
+
+USTC_TFC2016_CONTRACT = DatasetContract(
+    name="ustc_tfc2016",
+    root="data/ustc_tfc2016",
+    expected_files=None,
+    label_column=None,
+    required_any_columns={
+        "label": ["label", "Label", "class", "Class", "category", "Category", "family", "Family"],
+        "flow_or_payload": ["flow", "Flow", "packet", "Packet", "pcap", "payload", "Payload"],
+    },
+    min_samples=10000,
+    min_classes=2,
+    expected_view_support={
+        "host": False,
+        "ip": True,
+        "temporal": False,
+        "process": False,
+        "threat_intel": False,
+    },
+    source_verified=False,
+    reported_as="USTC-TFC2016",
+    notes="Candidate-only stub; do not enter D5 until user confirms download, license, schema, and audit.",
 )
 
 
@@ -178,5 +229,7 @@ DATASET_CONTRACTS = {
     "cicids2017": CICIDS2017_CONTRACT,
     "maltls22": MALTLS22_CONTRACT,
     "cesnet_tls_year22": CESNET_TLS_YEAR22_CONTRACT,
+    "unsw_nb15": UNSW_NB15_CONTRACT,
+    "ustc_tfc2016": USTC_TFC2016_CONTRACT,
     "optc": OPTC_CONTRACT,
 }

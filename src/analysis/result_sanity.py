@@ -1,0 +1,124 @@
+"""Sanity checks for D5 result tables."""
+from __future__ import annotations
+
+import argparse
+import json
+from pathlib import Path
+from typing import Any
+
+import numpy as np
+import pandas as pd
+
+
+HONEST_DATASETS = {"cicids2017", "cesnet_tls_year22", "unsw_nb15", "ustc_tfc2016"}
+VALID_VIEWS = {"host", "ip", "process", "temporal", "threat_intel"}
+
+
+def check_results(frame: pd.DataFrame) -> dict[str, Any]:
+    numeric = frame.select_dtypes(include=[np.number])
+    checks = {
+        "no_nan_inf": bool(not numeric.isna().any().any() and np.isfinite(numeric.to_numpy(dtype=float)).all()),
+        "no_perfect_anomaly": _no_perfect_anomaly(frame),
+        "ablation_hard_close_to_cold": _ablation_close(frame),
+        "err_graphcold_gt_hard": _err_direction(frame),
+        "beta0_matches_symmetric": _beta0_matches_symmetric(frame),
+        "active_views_valid": _active_views_valid(frame),
+        "dataset_names_honest": _dataset_names_honest(frame),
+        "maltls22_absent_unless_verified": _maltls_absent_or_verified(frame),
+    }
+    return {
+        "passed": bool(all(checks.values())),
+        "checks": checks,
+        "blocking_reasons": [name for name, ok in checks.items() if not ok],
+    }
+
+
+def _no_perfect_anomaly(frame: pd.DataFrame) -> bool:
+    needed = {"macro_f1", "fpr", "fnr"}
+    if not needed.issubset(frame.columns):
+        return True
+    perfect = (frame["macro_f1"] >= 0.999) & (frame["fpr"] <= 0.001) & (frame["fnr"] <= 0.001)
+    return bool(not perfect.any())
+
+
+def _ablation_close(frame: pd.DataFrame) -> bool:
+    if "variant" in frame.columns:
+        hard = frame[frame["variant"] == "ablation_hard"]
+        cold = frame[frame.get("method", pd.Series(dtype=str)) == "CoLD"]
+    else:
+        hard = frame[frame.get("method", pd.Series(dtype=str)) == "ablation_hard"]
+        cold = frame[frame.get("method", pd.Series(dtype=str)) == "CoLD"]
+    if hard.empty or cold.empty or "macro_f1" not in frame.columns:
+        return True
+    return bool(abs(float(hard["macro_f1"].mean()) - float(cold["macro_f1"].mean())) <= 0.1)
+
+
+def _err_direction(frame: pd.DataFrame) -> bool:
+    if "err" not in frame.columns:
+        return True
+    method_col = "method" if "method" in frame.columns else "variant" if "variant" in frame.columns else None
+    if method_col is None:
+        return True
+    graph = frame[frame[method_col] == "Graph-CoLD"]["err"]
+    hard = frame[frame[method_col].isin(["ablation_hard", "CoLD"])]["err"]
+    if graph.empty or hard.empty:
+        return True
+    return bool(float(graph.mean()) > float(hard.mean()))
+
+
+def _beta0_matches_symmetric(frame: pd.DataFrame) -> bool:
+    needed = {"noise_type", "noise_rate", "beta", "method", "macro_f1"}
+    if not needed.issubset(frame.columns):
+        return True
+    graph0 = frame[(frame["noise_type"] == "graph_consistency") & (frame["beta"].fillna(-1) == 0)]
+    sym = frame[frame["noise_type"] == "symmetric"]
+    if graph0.empty or sym.empty:
+        return True
+    merged = graph0.merge(sym, on=["noise_rate", "method", "seed"] if "seed" in frame.columns else ["noise_rate", "method"], suffixes=("_g0", "_sym"))
+    if merged.empty:
+        return True
+    return bool((merged["macro_f1_g0"] - merged["macro_f1_sym"]).abs().mean() <= 0.05)
+
+
+def _active_views_valid(frame: pd.DataFrame) -> bool:
+    if "active_views" not in frame.columns:
+        return True
+    for value in frame["active_views"].dropna().astype(str):
+        views = [part.strip() for part in value.replace("|", ",").split(",") if part.strip()]
+        if any(view not in VALID_VIEWS for view in views):
+            return False
+    return True
+
+
+def _dataset_names_honest(frame: pd.DataFrame) -> bool:
+    if "dataset" not in frame.columns:
+        return True
+    datasets = {str(value) for value in frame["dataset"].dropna().unique()}
+    forbidden = {"synthetic", "fallback", "emulation"}
+    return bool(datasets.issubset(HONEST_DATASETS) and not datasets.intersection(forbidden))
+
+
+def _maltls_absent_or_verified(frame: pd.DataFrame) -> bool:
+    if "dataset" not in frame.columns:
+        return True
+    if "maltls22" not in {str(value).lower() for value in frame["dataset"].dropna().unique()}:
+        return True
+    if "source_verified" not in frame.columns:
+        return False
+    return bool(frame[frame["dataset"].astype(str).str.lower() == "maltls22"]["source_verified"].all())
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("csv")
+    parser.add_argument("--out")
+    args = parser.parse_args()
+    report = check_results(pd.read_csv(args.csv))
+    text = json.dumps(report, indent=2)
+    if args.out:
+        Path(args.out).write_text(text, encoding="utf-8")
+    print(text)
+
+
+if __name__ == "__main__":
+    main()

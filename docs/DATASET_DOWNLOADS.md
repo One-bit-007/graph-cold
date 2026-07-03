@@ -98,6 +98,58 @@ python -m src.experiments.smoke_realdata --dataset cesnet_tls_year22 --configs c
 python -m src.experiments.cesnet_mini_matrix --dataset cesnet_tls_year22 --configs configs --out results --reports reports
 ```
 
+## UNSW-NB15 Backup Candidate
+
+Official source:
+
+- UNSW Canberra Cyber dataset page: https://research.unsw.edu.au/projects/unsw-nb15-dataset
+
+Recommended local path:
+
+```text
+E:\graphcold-data\unsw_nb15\
+```
+
+Download the official CSV files and the feature-list file manually from the
+UNSW page, then place the CSV files under the local path above. Do not commit
+raw CSVs or archives.
+
+Print instructions:
+
+```bash
+python scripts/download_unsw_nb15.py --mode instructions --out E:/graphcold-data/unsw_nb15
+```
+
+Write a local manifest:
+
+```bash
+python scripts/download_unsw_nb15.py --mode manifest --out E:/graphcold-data/unsw_nb15
+```
+
+Refresh audit and policy reports after files are present:
+
+```bash
+python -m src.data.audit --dataset unsw_nb15 --data-root E:/graphcold-data
+python -m src.data.unsw_policy --data-root E:/graphcold-data --out reports
+python -m src.experiments.second_dataset_selection --reports reports
+```
+
+Default loader policy:
+
+- multiclass `attack_cat`
+- drop empty `attack_cat`
+- `postfilter` with `min_class_count = 1000`
+- active views: `ip | temporal`
+
+If UNSW-NB15 is selected as the second dataset, D5 and the manuscript must
+report the dataset as `UNSW-NB15`.
+
+## USTC-TFC2016 Candidate
+
+USTC-TFC2016 is currently candidate-only. The repository records an audit stub
+and candidate report, but it must not enter D5 until the user confirms a
+download route, license, file format, label mapping, and audit pass.
+
 ## OpTC
 
 Print instructions:
@@ -143,6 +195,7 @@ download by default.
 python scripts/prepare_datasets.py --dataset cicids2017 --mode instructions
 python scripts/prepare_datasets.py --dataset cicids2017 --mode local-zip --zip path/to/MachineLearningCSV.zip
 python scripts/prepare_datasets.py --dataset tls_alternative --candidate cesnet_tls_year22 --mode instructions
+python scripts/prepare_datasets.py --dataset unsw_nb15 --mode instructions --out E:/graphcold-data/unsw_nb15
 python scripts/prepare_datasets.py --dataset optc --mode instructions
 python scripts/check_data_ready.py
 ```

@@ -45,7 +45,7 @@ class Dataset:
 
 
 def load_dataset(name: str, cfg: dict) -> Dataset:
-    """Load one of {cicids2017, maltls22, cesnet_tls_year22, optc}."""
+    """Load one of {cicids2017, maltls22, cesnet_tls_year22, unsw_nb15, optc}."""
     if isinstance(cfg, dict) and cfg.get("data_root"):
         cfg = apply_data_root_to_config(cfg, _normalize_dataset_key(name), cfg.get("data_root"))
     key, ds_cfg = _resolve_dataset_cfg(name, cfg)
@@ -62,7 +62,7 @@ def load_dataset(name: str, cfg: dict) -> Dataset:
         if sample_rows > 0 and len(df) > sample_rows:
             df = df.sample(n=sample_rows, random_state=seed).reset_index(drop=True)
 
-    label_col = ds_cfg.get("label_col")
+    label_col = _resolve_loader_label_column(key, df, ds_cfg)
     if not label_col or label_col not in df.columns:
         raise ValueError(f"Dataset '{name}' requires label_col '{label_col}' in the input table.")
 
@@ -71,6 +71,9 @@ def load_dataset(name: str, cfg: dict) -> Dataset:
     timestamps = _coalesce_timestamps(df, timestamp_cols)
 
     valid_label_mask = df[label_col].notna().to_numpy()
+    if key == "unsw_nb15" and label_col.lower() == "attack_cat":
+        stripped = df[label_col].astype("string").str.strip()
+        valid_label_mask = (stripped.notna() & (stripped != "") & (stripped.str.lower() != "nan")).to_numpy()
     if timestamps is not None:
         timestamps = timestamps[valid_label_mask]
     work = df.loc[valid_label_mask].drop(columns=drop_cols, errors="ignore").copy()
@@ -79,7 +82,7 @@ def load_dataset(name: str, cfg: dict) -> Dataset:
     if key == "cicids2017":
         min_count = int(ds_cfg.get("min_class_count", 1000))
         work, timestamps = _filter_and_downsample_cicids(work, timestamps, label_col, min_count, rng)
-    elif key == "cesnet_tls_year22":
+    elif key in {"cesnet_tls_year22", "unsw_nb15"}:
         min_count = int(ds_cfg.get("min_class_count", 1000))
         if str(ds_cfg.get("class_policy", "postfilter")) == "postfilter":
             work, timestamps = _filter_and_downsample_postfilter(work, timestamps, label_col, min_count, rng)
@@ -123,6 +126,7 @@ def load_dataset(name: str, cfg: dict) -> Dataset:
         "dataset_name": key,
         "data_source": str(Path(ds_cfg["path"]).resolve()),
         "data_version": str(ds_cfg.get("version", "real-local")),
+        "dataset_hash": ds_cfg.get("dataset_hash"),
         "label_column": label_col,
         "num_classes": len(class_names),
         "class_policy": str(ds_cfg.get("class_policy", "postfilter11" if key == "cicids2017" else "raw")),
@@ -176,12 +180,39 @@ def _normalize_dataset_key(name: str) -> str:
         "cesnet-tls-year22": "cesnet_tls_year22",
         "cesnet_tls_year22": "cesnet_tls_year22",
         "cesnettlsyear22": "cesnet_tls_year22",
+        "unsw": "unsw_nb15",
+        "unsw-nb15": "unsw_nb15",
+        "unsw_nb15": "unsw_nb15",
+        "unswnb15": "unsw_nb15",
+        "ustc": "ustc_tfc2016",
+        "ustc-tfc2016": "ustc_tfc2016",
+        "ustc_tfc2016": "ustc_tfc2016",
         "optc": "optc",
     }
     key = aliases.get(name.lower())
     if key is None:
         raise ValueError(f"Unknown dataset '{name}'. Expected one of {sorted(set(aliases.values()))}.")
     return key
+
+
+def load_unsw_nb15(cfg: dict) -> Dataset:
+    """Load real UNSW-NB15 files using the standard Dataset contract."""
+    return load_dataset("unsw_nb15", cfg)
+
+
+def _resolve_loader_label_column(key: str, df: pd.DataFrame, ds_cfg: dict) -> str | None:
+    requested = ds_cfg.get("label_col")
+    if requested and requested in df.columns:
+        return requested
+    if key == "unsw_nb15":
+        label_mode = str(ds_cfg.get("label_mode", "multiclass")).lower()
+        candidates = ["attack_cat", "Attack_cat", "Attack Cat"] if label_mode != "binary" else ["label", "Label"]
+        candidates.extend(["label", "Label", "attack_cat", "Attack_cat"])
+        for candidate in candidates:
+            for col in df.columns:
+                if str(col).strip().lower() == candidate.lower():
+                    return str(col).strip()
+    return requested
 
 
 def _read_dataset_frame(path_value: str | Path) -> pd.DataFrame:
@@ -375,7 +406,7 @@ def _can_stratify(y: np.ndarray) -> bool:
 
 
 def _expected_view_support(key: str) -> dict[str, bool]:
-    if key == "cesnet_tls_year22":
+    if key in {"cesnet_tls_year22", "unsw_nb15"}:
         return {
             "host": False,
             "ip": True,

@@ -36,6 +36,29 @@ cesnet_tls_year22:
   sample_rows: null
   drop_cols: []
 
+unsw_nb15:
+  name: UNSW-NB15
+  path: data/unsw_nb15/
+  reported_as: UNSW-NB15
+  source_verified: true
+  class_policy: postfilter
+  min_class_count: 1000
+  train_test_split: 0.8
+  label_col: attack_cat
+  label_mode: multiclass
+  sample_rows: null
+  drop_cols: [id]
+
+ustc_tfc2016:
+  name: USTC-TFC2016
+  path: data/ustc_tfc2016/
+  reported_as: USTC-TFC2016
+  source_verified: false
+  candidate_only: true
+  train_test_split: 0.8
+  label_col: label
+  drop_cols: []
+
 optc:
   name: OpTC
   path: data/optc/
