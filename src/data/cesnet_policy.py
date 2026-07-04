@@ -162,16 +162,20 @@ def write_view_policy_report(audit, ds_cfg: dict, reports: str | Path = "reports
     return report
 
 
-def _read_label_counts(root: Path, label_col: str) -> dict[str, int]:
+def _read_label_counts(root: Path, label_col: str, max_rows: int = 100_000) -> dict[str, int]:
     counts: dict[str, int] = {}
+    remaining = max_rows
     for path in _table_files(root):
-        frame = _read_table(path, columns=[label_col])
+        frame = _read_table(path, columns=[label_col], nrows=remaining)
         frame.columns = [str(col).strip() for col in frame.columns]
         if label_col not in frame.columns:
             continue
         part = frame[label_col].dropna().astype(str).value_counts()
         for label, count in part.items():
             counts[str(label)] = counts.get(str(label), 0) + int(count)
+        remaining -= len(frame)
+        if remaining <= 0:
+            break
     return _ordered(counts)
 
 
@@ -192,18 +196,19 @@ def _table_files(root: Path) -> list[Path]:
     if not root.exists():
         return []
     files: list[Path] = []
-    for pattern in ("*.csv", "*.csv.gz", "*.parquet"):
+    for pattern in ("*.csv", "*.csv.gz", "*.csv.xz", "*.parquet"):
         files.extend(sorted(root.rglob(pattern)))
     return files
 
 
-def _read_table(path: Path, columns: list[str] | None = None) -> pd.DataFrame:
+def _read_table(path: Path, columns: list[str] | None = None, nrows: int | None = None) -> pd.DataFrame:
     if path.suffix.lower() == ".parquet":
-        return pd.read_parquet(path, columns=columns)
+        frame = pd.read_parquet(path, columns=columns)
+        return frame.head(nrows) if nrows is not None else frame
     if columns:
         wanted = {col.strip() for col in columns}
-        return pd.read_csv(path, low_memory=False, usecols=lambda col: str(col).strip() in wanted)
-    return pd.read_csv(path, low_memory=False)
+        return pd.read_csv(path, low_memory=False, usecols=lambda col: str(col).strip() in wanted, nrows=nrows)
+    return pd.read_csv(path, low_memory=False, nrows=nrows)
 
 
 def _matching_columns(columns: list[str], candidates: list[str]) -> list[str]:

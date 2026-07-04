@@ -2,7 +2,7 @@
   "stage": "d5-scope-decision",
   "main_experiment_datasets": [
     "CICIDS-2017 post-filtered 11-class setting",
-    "CESNET-TLS-Year22 (pending gate)"
+    "CESNET-TLS-Year22"
   ],
   "maltls22_evaluated": false,
   "optc_formal_experiment": false,

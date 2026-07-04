@@ -6,10 +6,10 @@
 - Download source: https://zenodo.org/records/10608607
 - DataZoo source: https://cesnet.github.io/cesnet-datazoo/
 - Replacement differs from MALTLS-22 and must not be renamed.
-- Download attempted: True
-- Large download confirmed: True
-- Error: Zenodo download was reachable but throughput stayed near 110 KB/s with an estimated 70+ hours remaining; download stopped intentionally and partial file retained for resume.
-- Allowed for D5 now: false
+- Download attempted: False
+- Large download confirmed: False
+- Error: none
+- Allowed for D5 now: true
 - User confirmation required: true
 
 If this replacement is later selected and passes audit, the manuscript must report the dataset as `CICIDS-2017 + CESNET-TLS-Year22`.

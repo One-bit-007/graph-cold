@@ -6,9 +6,9 @@
     "mini_matrix_passed": true
   },
   "cesnet_tls_year22": {
-    "ready_for_d5_component": false,
+    "ready_for_d5_component": true,
     "class_policy": "postfilter",
-    "mini_matrix_passed": false,
+    "mini_matrix_passed": true,
     "reported_as": "CESNET-TLS-Year22",
     "replacement_for": "MALTLS-22",
     "actual_data_path": "E:\\graphcold-data\\tls_alternative\\cesnet_tls_year22"
@@ -22,8 +22,11 @@
     "formal_experiment": false,
     "future_case_study_only": true
   },
-  "d5_allowed": false,
-  "d5_scope": [],
+  "d5_allowed": true,
+  "d5_scope": [
+    "CICIDS-2017",
+    "CESNET-TLS-Year22"
+  ],
   "d6_d7_allowed": false,
   "submission_ready": false
 }

@@ -54,6 +54,7 @@ def test_cesnet_auto_download_uses_external_cache_and_out(tmp_path: Path, monkey
     monkeypatch.setattr(download_tls_alternative, "write_audit_reports", lambda *args, **kwargs: {})
     monkeypatch.setattr(download_tls_alternative, "write_readiness_reports", lambda *args, **kwargs: {})
     monkeypatch.setattr(download_tls_alternative, "write_dataset_specific_audit_report", lambda *args, **kwargs: {})
+    monkeypatch.setattr(download_tls_alternative, "_write_tls_reports", lambda *args, **kwargs: None)
 
     report = download_tls_alternative.run(
         "cesnet_tls_year22",

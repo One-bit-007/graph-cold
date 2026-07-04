@@ -1,16 +1,473 @@
 {
   "stage": "cesnet-mini-matrix-gate",
-  "passed": false,
-  "status": "blocked",
-  "rows": 0,
+  "passed": true,
+  "checks": {
+    "same_protocol_by_scenario": {
+      "passed": true,
+      "same_split": true,
+      "same_noisy_y_train": true,
+      "same_flip_mask": true,
+      "same_clean_y_test": true,
+      "same_active_views": true,
+      "same_class_policy": true,
+      "scenario_count": 39
+    },
+    "ablation_hard_close_to_cold": {
+      "passed": true,
+      "failures": []
+    },
+    "graphcold_no_collapse": {
+      "passed": true,
+      "details": [
+        {
+          "noise_type": "symmetric",
+          "rate": 0.2,
+          "beta": null,
+          "seed": 0,
+          "cold": 0.9943292030850457,
+          "graphcold": 0.9947089763770338,
+          "passed": true
+        },
+        {
+          "noise_type": "symmetric",
+          "rate": 0.2,
+          "beta": null,
+          "seed": 1,
+          "cold": 0.9955792409215196,
+          "graphcold": 0.9948212085652546,
+          "passed": true
+        },
+        {
+          "noise_type": "symmetric",
+          "rate": 0.2,
+          "beta": null,
+          "seed": 2,
+          "cold": 0.9933389349565351,
+          "graphcold": 0.9943991431553127,
+          "passed": true
+        },
+        {
+          "noise_type": "symmetric",
+          "rate": 0.4,
+          "beta": null,
+          "seed": 0,
+          "cold": 0.9930421004524796,
+          "graphcold": 0.9941026106227114,
+          "passed": true
+        },
+        {
+          "noise_type": "symmetric",
+          "rate": 0.4,
+          "beta": null,
+          "seed": 1,
+          "cold": 0.9945188884614986,
+          "graphcold": 0.9942165660836162,
+          "passed": true
+        },
+        {
+          "noise_type": "symmetric",
+          "rate": 0.4,
+          "beta": null,
+          "seed": 2,
+          "cold": 0.9936733239329856,
+          "graphcold": 0.9929192302107337,
+          "passed": true
+        },
+        {
+          "noise_type": "graph_consistency",
+          "rate": 0.2,
+          "beta": 0.6,
+          "seed": 0,
+          "cold": 0.9946681987155988,
+          "graphcold": 0.9947753708614492,
+          "passed": true
+        },
+        {
+          "noise_type": "graph_consistency",
+          "rate": 0.2,
+          "beta": 0.6,
+          "seed": 1,
+          "cold": 0.9951949999703903,
+          "graphcold": 0.9952374596960922,
+          "passed": true
+        },
+        {
+          "noise_type": "graph_consistency",
+          "rate": 0.2,
+          "beta": 0.6,
+          "seed": 2,
+          "cold": 0.9940218788191428,
+          "graphcold": 0.9952374596960922,
+          "passed": true
+        }
+      ],
+      "failures": []
+    },
+    "err_direction": {
+      "passed": true,
+      "failures": [],
+      "ties": []
+    },
+    "numeric_anomalies": {
+      "passed": true,
+      "failures": {
+        "nonfinite_rows": 0,
+        "perfect_zero_rows": 0,
+        "macro_f1_below_0_5_rows": 0,
+        "zero_retained_clean_informative_rows": 0,
+        "n_eff_below_0_3_rows": 0
+      }
+    },
+    "graph_beta0_equiv_symmetric": {
+      "passed": true,
+      "failures": []
+    }
+  },
+  "stability": [
+    {
+      "method": "CoLD",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.1,
+      "macro_f1_mean": 0.994289628245232,
+      "macro_f1_std": 0.0004959042341524605,
+      "err_mean": 0.9481914691548107,
+      "err_std": 0.0020302190628223096,
+      "compression_ratio_mean": 0.9608658008658009,
+      "compression_ratio_std": 0.0
+    },
+    {
+      "method": "CoLD",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.2,
+      "macro_f1_mean": 0.9942654402770151,
+      "macro_f1_std": 0.0009913699009784433,
+      "err_mean": 0.948145410728256,
+      "err_std": 0.0017664243356095592,
+      "compression_ratio_mean": 0.9608658008658009,
+      "compression_ratio_std": 0.0
+    },
+    {
+      "method": "CoLD",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.4,
+      "macro_f1_mean": 0.9935036002994156,
+      "macro_f1_std": 0.0007134821610684604,
+      "err_mean": 0.9497647937769482,
+      "err_std": 0.001027372709550895,
+      "compression_ratio_mean": 0.9608658008658009,
+      "compression_ratio_std": 0.0
+    },
+    {
+      "method": "CoLD",
+      "noise_type": "clean",
+      "noise_rate": 0.0,
+      "macro_f1_mean": 0.9950956921319197,
+      "macro_f1_std": 0.00045575100653905137,
+      "err_mean": 1.0,
+      "err_std": 0.0,
+      "compression_ratio_mean": 0.9608658008658009,
+      "compression_ratio_std": 0.0
+    },
+    {
+      "method": "CoLD",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.1,
+      "macro_f1_mean": 0.9942352054616973,
+      "macro_f1_std": 0.0006888308446766109,
+      "err_mean": 0.9475943236595282,
+      "err_std": 0.0023306910181036776,
+      "compression_ratio_mean": 0.9608658008658008,
+      "compression_ratio_std": 1.1102230246251565e-16
+    },
+    {
+      "method": "CoLD",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.2,
+      "macro_f1_mean": 0.9945220760780388,
+      "macro_f1_std": 0.0007392559433898027,
+      "err_mean": 0.9476131297722988,
+      "err_std": 0.0026553740287497203,
+      "compression_ratio_mean": 0.9608658008658008,
+      "compression_ratio_std": 1.1102230246251565e-16
+    },
+    {
+      "method": "CoLD",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.4,
+      "macro_f1_mean": 0.9938916782119994,
+      "macro_f1_std": 0.0006349828858870497,
+      "err_mean": 0.9478458505310162,
+      "err_std": 0.0025500231797751446,
+      "compression_ratio_mean": 0.9608658008658008,
+      "compression_ratio_std": 1.1102230246251565e-16
+    },
+    {
+      "method": "CoLD",
+      "noise_type": "symmetric",
+      "noise_rate": 0.1,
+      "macro_f1_mean": 0.9941031752617956,
+      "macro_f1_std": 0.0008157919971818333,
+      "err_mean": 0.9470558589526634,
+      "err_std": 0.0020402216725713624,
+      "compression_ratio_mean": 0.9608658008658009,
+      "compression_ratio_std": 0.0
+    },
+    {
+      "method": "CoLD",
+      "noise_type": "symmetric",
+      "noise_rate": 0.2,
+      "macro_f1_mean": 0.9944157929877001,
+      "macro_f1_std": 0.000916648265009555,
+      "err_mean": 0.9472500373162869,
+      "err_std": 0.00243934166383123,
+      "compression_ratio_mean": 0.9608658008658009,
+      "compression_ratio_std": 0.0
+    },
+    {
+      "method": "CoLD",
+      "noise_type": "symmetric",
+      "noise_rate": 0.4,
+      "macro_f1_mean": 0.993744770948988,
+      "macro_f1_std": 0.000605009208176359,
+      "err_mean": 0.9481155586277582,
+      "err_std": 0.0024551456558589532,
+      "compression_ratio_mean": 0.9608658008658009,
+      "compression_ratio_std": 0.0
+    },
+    {
+      "method": "Graph-CoLD",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.1,
+      "macro_f1_mean": 0.9946026045879557,
+      "macro_f1_std": 0.00024857863898246455,
+      "err_mean": 1.0,
+      "err_std": 0.0,
+      "compression_ratio_mean": 0.9608658008658009,
+      "compression_ratio_std": 0.0
+    },
+    {
+      "method": "Graph-CoLD",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.2,
+      "macro_f1_mean": 0.9946546756179752,
+      "macro_f1_std": 0.0004833298614339357,
+      "err_mean": 1.0,
+      "err_std": 0.0,
+      "compression_ratio_mean": 0.9608658008658009,
+      "compression_ratio_std": 0.0
+    },
+    {
+      "method": "Graph-CoLD",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.4,
+      "macro_f1_mean": 0.9941999385877919,
+      "macro_f1_std": 0.0006876884619999701,
+      "err_mean": 1.0,
+      "err_std": 0.0,
+      "compression_ratio_mean": 0.9608658008658009,
+      "compression_ratio_std": 0.0
+    },
+    {
+      "method": "Graph-CoLD",
+      "noise_type": "clean",
+      "noise_rate": 0.0,
+      "macro_f1_mean": 0.9952363679744484,
+      "macro_f1_std": 0.0005447728392665426,
+      "err_mean": 1.0,
+      "err_std": 0.0,
+      "compression_ratio_mean": 0.9608658008658009,
+      "compression_ratio_std": 0.0
+    },
+    {
+      "method": "Graph-CoLD",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.1,
+      "macro_f1_mean": 0.9947643143347303,
+      "macro_f1_std": 0.0007831280483115157,
+      "err_mean": 1.0,
+      "err_std": 0.0,
+      "compression_ratio_mean": 0.9608658008658008,
+      "compression_ratio_std": 1.1102230246251565e-16
+    },
+    {
+      "method": "Graph-CoLD",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.2,
+      "macro_f1_mean": 0.9948632697252058,
+      "macro_f1_std": 0.0002968589817351367,
+      "err_mean": 1.0,
+      "err_std": 0.0,
+      "compression_ratio_mean": 0.9608658008658008,
+      "compression_ratio_std": 1.1102230246251565e-16
+    },
+    {
+      "method": "Graph-CoLD",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.4,
+      "macro_f1_mean": 0.9940807613999305,
+      "macro_f1_std": 0.0009101254336829834,
+      "err_mean": 1.0,
+      "err_std": 0.0,
+      "compression_ratio_mean": 0.9608658008658008,
+      "compression_ratio_std": 1.1102230246251565e-16
+    },
+    {
+      "method": "Graph-CoLD",
+      "noise_type": "symmetric",
+      "noise_rate": 0.1,
+      "macro_f1_mean": 0.9948339719910547,
+      "macro_f1_std": 0.00039553601460133125,
+      "err_mean": 1.0,
+      "err_std": 0.0,
+      "compression_ratio_mean": 0.9608658008658009,
+      "compression_ratio_std": 0.0
+    },
+    {
+      "method": "Graph-CoLD",
+      "noise_type": "symmetric",
+      "noise_rate": 0.2,
+      "macro_f1_mean": 0.9946431093658671,
+      "macro_f1_std": 0.00017849117613554197,
+      "err_mean": 1.0,
+      "err_std": 0.0,
+      "compression_ratio_mean": 0.9608658008658009,
+      "compression_ratio_std": 0.0
+    },
+    {
+      "method": "Graph-CoLD",
+      "noise_type": "symmetric",
+      "noise_rate": 0.4,
+      "macro_f1_mean": 0.9937461356390204,
+      "macro_f1_std": 0.0005865582677876484,
+      "err_mean": 1.0,
+      "err_std": 0.0,
+      "compression_ratio_mean": 0.9608658008658009,
+      "compression_ratio_std": 0.0
+    },
+    {
+      "method": "ablation_hard",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.1,
+      "macro_f1_mean": 0.994289628245232,
+      "macro_f1_std": 0.0004959042341524605,
+      "err_mean": 0.9481914691548107,
+      "err_std": 0.0020302190628223096,
+      "compression_ratio_mean": 0.9608658008658009,
+      "compression_ratio_std": 0.0
+    },
+    {
+      "method": "ablation_hard",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.2,
+      "macro_f1_mean": 0.9942654402770151,
+      "macro_f1_std": 0.0009913699009784433,
+      "err_mean": 0.948145410728256,
+      "err_std": 0.0017664243356095592,
+      "compression_ratio_mean": 0.9608658008658009,
+      "compression_ratio_std": 0.0
+    },
+    {
+      "method": "ablation_hard",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.4,
+      "macro_f1_mean": 0.9935036002994156,
+      "macro_f1_std": 0.0007134821610684604,
+      "err_mean": 0.9497647937769482,
+      "err_std": 0.001027372709550895,
+      "compression_ratio_mean": 0.9608658008658009,
+      "compression_ratio_std": 0.0
+    },
+    {
+      "method": "ablation_hard",
+      "noise_type": "clean",
+      "noise_rate": 0.0,
+      "macro_f1_mean": 0.9950956921319197,
+      "macro_f1_std": 0.00045575100653905137,
+      "err_mean": 1.0,
+      "err_std": 0.0,
+      "compression_ratio_mean": 0.9608658008658009,
+      "compression_ratio_std": 0.0
+    },
+    {
+      "method": "ablation_hard",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.1,
+      "macro_f1_mean": 0.9942352054616973,
+      "macro_f1_std": 0.0006888308446766109,
+      "err_mean": 0.9475943236595282,
+      "err_std": 0.0023306910181036776,
+      "compression_ratio_mean": 0.9608658008658008,
+      "compression_ratio_std": 1.1102230246251565e-16
+    },
+    {
+      "method": "ablation_hard",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.2,
+      "macro_f1_mean": 0.9945220760780388,
+      "macro_f1_std": 0.0007392559433898027,
+      "err_mean": 0.9476131297722988,
+      "err_std": 0.0026553740287497203,
+      "compression_ratio_mean": 0.9608658008658008,
+      "compression_ratio_std": 1.1102230246251565e-16
+    },
+    {
+      "method": "ablation_hard",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.4,
+      "macro_f1_mean": 0.9938916782119994,
+      "macro_f1_std": 0.0006349828858870497,
+      "err_mean": 0.9478458505310162,
+      "err_std": 0.0025500231797751446,
+      "compression_ratio_mean": 0.9608658008658008,
+      "compression_ratio_std": 1.1102230246251565e-16
+    },
+    {
+      "method": "ablation_hard",
+      "noise_type": "symmetric",
+      "noise_rate": 0.1,
+      "macro_f1_mean": 0.9941031752617956,
+      "macro_f1_std": 0.0008157919971818333,
+      "err_mean": 0.9470558589526634,
+      "err_std": 0.0020402216725713624,
+      "compression_ratio_mean": 0.9608658008658009,
+      "compression_ratio_std": 0.0
+    },
+    {
+      "method": "ablation_hard",
+      "noise_type": "symmetric",
+      "noise_rate": 0.2,
+      "macro_f1_mean": 0.9944157929877001,
+      "macro_f1_std": 0.000916648265009555,
+      "err_mean": 0.9472500373162869,
+      "err_std": 0.00243934166383123,
+      "compression_ratio_mean": 0.9608658008658009,
+      "compression_ratio_std": 0.0
+    },
+    {
+      "method": "ablation_hard",
+      "noise_type": "symmetric",
+      "noise_rate": 0.4,
+      "macro_f1_mean": 0.993744770948988,
+      "macro_f1_std": 0.000605009208176359,
+      "err_mean": 0.9481155586277582,
+      "err_std": 0.0024551456558589532,
+      "compression_ratio_mean": 0.9608658008658009,
+      "compression_ratio_std": 0.0
+    }
+  ],
+  "rows": 117,
+  "methods": [
+    "CoLD",
+    "Graph-CoLD",
+    "ablation_hard"
+  ],
+  "seeds": [
+    0,
+    1,
+    2
+  ],
   "class_policy": "postfilter",
-  "results_csv": null,
-  "d5_allowed": false,
-  "blocking_reasons": [
-    "CESNET smoke gate has not passed; mini-matrix not run.",
-    "label column missing: contract label candidate",
-    "no readable CSV files found",
-    "required column groups missing: label, tls_or_flow_features, timestamp",
-    "row count 0 below min_samples 10000"
-  ]
+  "d5_allowed": true,
+  "blocking_reasons": [],
+  "results_csv": "results\\cesnet_mini_matrix.csv"
 }

@@ -155,7 +155,7 @@ def evaluate_gate(frame: pd.DataFrame, scenario_hashes: dict[str, dict[str, str]
     gate = cicids_mini_matrix.evaluate_gate(_frame_for_shared_gate(frame), scenario_hashes or {})
     gate["stage"] = "cesnet-mini-matrix-gate"
     gate["class_policy"] = SELECTED_POLICY
-    gate["d5_allowed"] = False
+    gate["d5_allowed"] = bool(gate.get("passed", False))
     gate["blocking_reasons"] = [] if gate["passed"] else ["CESNET mini-matrix gate failed."]
     return gate
 

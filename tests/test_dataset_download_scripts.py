@@ -45,9 +45,18 @@ def _avoid_real_dataset_global_audits(monkeypatch):
     monkeypatch.setattr(download_optc, "audit_all_datasets", lambda: fake_audits)
     monkeypatch.setattr(prepare_datasets, "audit_all_datasets", lambda: fake_audits)
     monkeypatch.setattr(download_tls_alternative, "audit_all_datasets", lambda: fake_audits)
+    monkeypatch.setattr(download_cicids2017, "write_audit_reports", lambda *args, **kwargs: {})
+    monkeypatch.setattr(download_cicids2017, "write_readiness_reports", lambda *args, **kwargs: {})
+    monkeypatch.setattr(download_optc, "write_audit_reports", lambda *args, **kwargs: {})
+    monkeypatch.setattr(download_optc, "write_readiness_reports", lambda *args, **kwargs: {})
+    monkeypatch.setattr(prepare_datasets, "write_audit_reports", lambda *args, **kwargs: {})
+    monkeypatch.setattr(prepare_datasets, "write_readiness_reports", lambda *args, **kwargs: {})
     monkeypatch.setattr(download_tls_alternative, "write_audit_reports", lambda *args, **kwargs: {})
     monkeypatch.setattr(download_tls_alternative, "write_dataset_specific_audit_report", lambda *args, **kwargs: {})
     monkeypatch.setattr(download_tls_alternative, "write_readiness_reports", lambda *args, **kwargs: {})
+    monkeypatch.setattr(download_tls_alternative, "_write_tls_reports", lambda *args, **kwargs: None)
+    monkeypatch.setattr(download_optc, "_write_report", lambda *args, **kwargs: None)
+    monkeypatch.setattr(download_cicids2017, "_write_download_report", lambda *args, **kwargs: None)
 
 
 def _write_cicids_zip(path: Path) -> None:

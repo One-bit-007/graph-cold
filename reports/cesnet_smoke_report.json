@@ -1,15 +1,73 @@
 {
   "stage": "realdata-smoke",
   "dataset": "cesnet_tls_year22",
-  "status": "blocked",
-  "results_csv": null,
-  "dataset_hash": null,
+  "status": "completed",
+  "results_csv": "results\\cesnet_smoke_realdata.csv",
+  "dataset_hash": "490bb4402e111c4ef752272e17d8faee44ce9ef25a0063c7c84ff4d3cb7f9084",
   "seed": 42,
-  "blocking_reasons": [
-    "no readable CSV files found",
-    "label column missing: contract label candidate",
-    "required column groups missing: label, tls_or_flow_features, timestamp",
-    "row count 0 below min_samples 10000"
-  ],
-  "passed": false
+  "rows": 6,
+  "quality_checks": {
+    "no_perfect_macro_f1": {
+      "passed": true,
+      "detail": "No smoke row should report 100.0% Macro-F1."
+    },
+    "no_100_f1_zero_fpr_fnr_anomaly": {
+      "passed": true,
+      "detail": 0
+    },
+    "cold_clean_not_extreme": {
+      "passed": true,
+      "detail": 0.9947411356791628
+    },
+    "ablation_hard_close_to_cold": {
+      "passed": true,
+      "detail": 0.0
+    },
+    "graphcold_err_above_hard": {
+      "passed": true,
+      "detail": {
+        "graphcold": 1.0,
+        "ablation_hard": 0.9434403082882119
+      }
+    },
+    "metrics_finite": {
+      "passed": true,
+      "detail": [
+        "macro_f1",
+        "fpr",
+        "fnr",
+        "err",
+        "tail_err"
+      ]
+    },
+    "no_single_class_collapse": {
+      "passed": true,
+      "detail": 16
+    },
+    "dataset_hash_recorded": {
+      "passed": true,
+      "detail": [
+        "490bb4402e111c4ef752272e17d8faee44ce9ef25a0063c7c84ff4d3cb7f9084"
+      ]
+    },
+    "seed_recorded": {
+      "passed": true,
+      "detail": [
+        42
+      ]
+    },
+    "data_source_recorded": {
+      "passed": true,
+      "detail": [
+        "E:\\graphcold-data\\tls_alternative\\cesnet_tls_year22"
+      ]
+    },
+    "cesnet_active_views_valid": {
+      "passed": true,
+      "detail": [
+        "ip|temporal"
+      ]
+    }
+  },
+  "passed": true
 }

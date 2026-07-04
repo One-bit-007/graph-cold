@@ -2,19 +2,16 @@
 
 - Root: `E:\graphcold-data\tls_alternative\cesnet_tls_year22`
 - Exists: True
-- Rows / columns: 0 / 0
-- Classes: 0
-- Dataset hash: `None`
+- Rows / columns: 100000 / 45
+- Classes: 178
+- Dataset hash: `490bb4402e111c4ef752272e17d8faee44ce9ef25a0063c7c84ff4d3cb7f9084`
 - Source verified: True
 - Replacement for: MALTLS-22
 - Selected class policy: postfilter
 - Active views: ip, temporal
-- Ready for smoke: False
-- Ready for mini-matrix: False
-- Ready for D5 component: False
+- Ready for smoke: True
+- Ready for mini-matrix: True
+- Ready for D5 component: True
 
 ## Blocking Reasons
-- no readable CSV files found
-- label column missing: contract label candidate
-- required column groups missing: label, tls_or_flow_features, timestamp
-- row count 0 below min_samples 10000
+- none

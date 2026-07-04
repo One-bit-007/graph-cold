@@ -33,6 +33,19 @@
 ## cesnet_tls_year22
 
 - Root: `E:\graphcold-data\tls_alternative\cesnet_tls_year22`
+- Available files: 365
+- Rows / columns: 100000 / 45
+- Classes: 178
+- Dataset hash: `490bb4402e111c4ef752272e17d8faee44ce9ef25a0063c7c84ff4d3cb7f9084`
+- Ready for smoke: True
+- Ready for D5: True
+- View support: {"host": "not_expected", "ip": "available", "process": "not_expected", "temporal": "available", "threat_intel": "not_expected"}
+- Blocking reasons:
+  - none
+
+## unsw_nb15
+
+- Root: `data\unsw_nb15`
 - Available files: 0
 - Rows / columns: 0 / 0
 - Classes: 0
@@ -41,10 +54,27 @@
 - Ready for D5: False
 - View support: {"host": "not_expected", "ip": "missing", "process": "not_expected", "temporal": "derived_limited", "threat_intel": "not_expected"}
 - Blocking reasons:
-  - no readable CSV files found
+  - dataset root does not exist: data/unsw_nb15
   - label column missing: contract label candidate
-  - required column groups missing: label, tls_or_flow_features, timestamp
+  - required column groups missing: label, ip_or_flow, numeric_features
   - row count 0 below min_samples 10000
+
+## ustc_tfc2016
+
+- Root: `data\ustc_tfc2016`
+- Available files: 0
+- Rows / columns: 0 / 0
+- Classes: 0
+- Dataset hash: `None`
+- Ready for smoke: False
+- Ready for D5: False
+- View support: {"host": "not_expected", "ip": "missing", "process": "not_expected", "temporal": "not_expected", "threat_intel": "not_expected"}
+- Blocking reasons:
+  - dataset root does not exist: data/ustc_tfc2016
+  - label column missing: contract label candidate
+  - required column groups missing: label, flow_or_payload
+  - row count 0 below min_samples 10000
+  - dataset source is not verified; do not report this dataset
 
 ## optc
 

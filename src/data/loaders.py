@@ -54,9 +54,9 @@ def load_dataset(name: str, cfg: dict) -> Dataset:
 
     seed = int(ds_cfg.get("seed", cfg.get("seed", 0) if isinstance(cfg, dict) else 0))
     rng = np.random.default_rng(seed)
-    df = _read_dataset_frame(ds_cfg["path"])
-    df.columns = [str(col).strip() for col in df.columns]
     sample_rows = ds_cfg.get("sample_rows")
+    df = _read_dataset_frame(ds_cfg["path"], sample_rows=int(sample_rows) if sample_rows is not None else None)
+    df.columns = [str(col).strip() for col in df.columns]
     if sample_rows is not None:
         sample_rows = int(sample_rows)
         if sample_rows > 0 and len(df) > sample_rows:
@@ -215,7 +215,7 @@ def _resolve_loader_label_column(key: str, df: pd.DataFrame, ds_cfg: dict) -> st
     return requested
 
 
-def _read_dataset_frame(path_value: str | Path) -> pd.DataFrame:
+def _read_dataset_frame(path_value: str | Path, sample_rows: int | None = None) -> pd.DataFrame:
     path = Path(path_value)
     if not path.exists():
         raise FileNotFoundError(
@@ -225,10 +225,10 @@ def _read_dataset_frame(path_value: str | Path) -> pd.DataFrame:
         )
 
     if path.is_file():
-        return _read_table(path)
+        return _read_table(path, nrows=sample_rows if sample_rows and sample_rows > 0 else None)
 
     files: list[Path] = []
-    for pattern in ("*.csv", "*.csv.gz", "*.parquet"):
+    for pattern in ("*.csv", "*.csv.gz", "*.csv.xz", "*.parquet"):
         files.extend(sorted(path.rglob(pattern)))
     if not files:
         raise FileNotFoundError(
@@ -236,16 +236,26 @@ def _read_dataset_frame(path_value: str | Path) -> pd.DataFrame:
             "Expected CICIDS-2017/MALTLS-22 tables in data/ according to configs/datasets.yaml."
         )
 
-    frames = [_read_table(file) for file in files]
+    frames = []
+    remaining = sample_rows if sample_rows and sample_rows > 0 else None
+    for file in files:
+        nrows = remaining if remaining is not None else None
+        frame = _read_table(file, nrows=nrows)
+        frames.append(frame)
+        if remaining is not None:
+            remaining -= len(frame)
+            if remaining <= 0:
+                break
     return pd.concat(frames, axis=0, ignore_index=True)
 
 
-def _read_table(path: Path) -> pd.DataFrame:
+def _read_table(path: Path, nrows: int | None = None) -> pd.DataFrame:
     suffixes = "".join(path.suffixes).lower()
     if suffixes.endswith(".parquet"):
-        return pd.read_parquet(path)
-    if suffixes.endswith(".csv") or suffixes.endswith(".csv.gz"):
-        return pd.read_csv(path, low_memory=False)
+        frame = pd.read_parquet(path)
+        return frame.head(nrows) if nrows is not None else frame
+    if suffixes.endswith(".csv") or suffixes.endswith(".csv.gz") or suffixes.endswith(".csv.xz"):
+        return pd.read_csv(path, low_memory=False, nrows=nrows)
     raise ValueError(f"Unsupported dataset file type: {path}")
 
 
@@ -253,7 +263,7 @@ def _timestamp_columns(columns) -> list[str]:
     timestamp_names = []
     for col in columns:
         normalized = str(col).strip().lower()
-        if normalized in {"timestamp", "time", "ts"} or "timestamp" in normalized:
+        if normalized in {"timestamp", "time", "ts"} or "timestamp" in normalized or normalized.startswith("time_"):
             timestamp_names.append(col)
     return timestamp_names
 

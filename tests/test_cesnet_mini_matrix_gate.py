@@ -16,7 +16,7 @@ def test_cesnet_mini_matrix_gate_uses_shared_checks():
 
     assert gate["passed"] is True
     assert gate["class_policy"] == "postfilter"
-    assert gate["d5_allowed"] is False
+    assert gate["d5_allowed"] is True
 
 
 def test_cesnet_mini_matrix_blocked_until_smoke_passes(tmp_path: Path, monkeypatch):

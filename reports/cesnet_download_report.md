@@ -1,28 +1,385 @@
 # CESNET-TLS-Year22 Download Report
 
-- Mode: auto
-- Download attempted: True
-- Download success: False
+- Mode: local-archive
+- Download attempted: False
+- Download success: True
+- Large download confirmed: False
 - Source: https://zenodo.org/records/10608607
-- Data root: `E:\graphcold-data`
-- Download cache: `E:\graphcold-data\_downloads\cesnet_tls_year22`
-- Archive path: `E:\graphcold-data\_downloads\cesnet_tls_year22\CESNET-TLS-Year22.zip`
-- Partial archive path: `E:\graphcold-data\_downloads\cesnet_tls_year22\CESNET-TLS-Year22.zip.part`
-- Partial archive bytes: 31330024
-- Actual data path: `E:\graphcold-data\tls_alternative\cesnet_tls_year22`
-- Error: Zenodo download was reachable but throughput stayed near 110 KB/s with an estimated 70+ hours remaining; download stopped intentionally and partial file retained for resume.
+- DataZoo source: https://cesnet.github.io/cesnet-datazoo/
+- Output path: `E:\graphcold-data\tls_alternative\cesnet_tls_year22`
+- Dataset hash: `490bb4402e111c4ef752272e17d8faee44ce9ef25a0063c7c84ff4d3cb7f9084`
+- Rows/classes: 100000 / 178
+- Error: none
 
-## Zenodo Files
-- CESNET-TLS-Year22.zip: 30491259088 bytes
-- servicemap.csv: 24817 bytes
-
-## Blocking Reasons
-- no readable CSV files found
-- label column missing: contract label candidate
-- required column groups missing: label, tls_or_flow_features, timestamp
-- row count 0 below min_samples 10000
+## Files
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-00\2022-01-01\flows-20220101.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-00\2022-01-02\flows-20220102.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-01\2022-01-03\flows-20220103.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-01\2022-01-04\flows-20220104.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-01\2022-01-05\flows-20220105.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-01\2022-01-06\flows-20220106.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-01\2022-01-07\flows-20220107.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-01\2022-01-08\flows-20220108.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-01\2022-01-09\flows-20220109.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-02\2022-01-10\flows-20220110.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-02\2022-01-11\flows-20220111.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-02\2022-01-12\flows-20220112.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-02\2022-01-13\flows-20220113.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-02\2022-01-14\flows-20220114.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-02\2022-01-15\flows-20220115.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-02\2022-01-16\flows-20220116.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-03\2022-01-17\flows-20220117.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-03\2022-01-18\flows-20220118.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-03\2022-01-19\flows-20220119.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-03\2022-01-20\flows-20220120.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-03\2022-01-21\flows-20220121.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-03\2022-01-22\flows-20220122.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-03\2022-01-23\flows-20220123.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-04\2022-01-24\flows-20220124.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-04\2022-01-25\flows-20220125.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-04\2022-01-26\flows-20220126.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-04\2022-01-27\flows-20220127.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-04\2022-01-28\flows-20220128.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-04\2022-01-29\flows-20220129.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-04\2022-01-30\flows-20220130.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-05\2022-01-31\flows-20220131.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-05\2022-02-01\flows-20220201.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-05\2022-02-02\flows-20220202.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-05\2022-02-03\flows-20220203.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-05\2022-02-04\flows-20220204.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-05\2022-02-05\flows-20220205.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-05\2022-02-06\flows-20220206.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-06\2022-02-07\flows-20220207.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-06\2022-02-08\flows-20220208.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-06\2022-02-09\flows-20220209.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-06\2022-02-10\flows-20220210.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-06\2022-02-11\flows-20220211.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-06\2022-02-12\flows-20220212.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-06\2022-02-13\flows-20220213.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-07\2022-02-14\flows-20220214.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-07\2022-02-15\flows-20220215.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-07\2022-02-16\flows-20220216.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-07\2022-02-17\flows-20220217.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-07\2022-02-18\flows-20220218.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-07\2022-02-19\flows-20220219.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-07\2022-02-20\flows-20220220.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-08\2022-02-21\flows-20220221.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-08\2022-02-22\flows-20220222.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-08\2022-02-23\flows-20220223.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-08\2022-02-24\flows-20220224.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-08\2022-02-25\flows-20220225.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-08\2022-02-26\flows-20220226.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-08\2022-02-27\flows-20220227.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-09\2022-02-28\flows-20220228.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-09\2022-03-01\flows-20220301.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-09\2022-03-02\flows-20220302.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-09\2022-03-03\flows-20220303.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-09\2022-03-04\flows-20220304.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-09\2022-03-05\flows-20220305.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-09\2022-03-06\flows-20220306.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-10\2022-03-07\flows-20220307.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-10\2022-03-08\flows-20220308.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-10\2022-03-09\flows-20220309.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-10\2022-03-10\flows-20220310.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-10\2022-03-11\flows-20220311.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-10\2022-03-12\flows-20220312.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-10\2022-03-13\flows-20220313.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-11\2022-03-14\flows-20220314.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-11\2022-03-15\flows-20220315.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-11\2022-03-16\flows-20220316.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-11\2022-03-17\flows-20220317.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-11\2022-03-18\flows-20220318.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-11\2022-03-19\flows-20220319.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-11\2022-03-20\flows-20220320.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-12\2022-03-21\flows-20220321.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-12\2022-03-22\flows-20220322.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-12\2022-03-23\flows-20220323.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-12\2022-03-24\flows-20220324.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-12\2022-03-25\flows-20220325.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-12\2022-03-26\flows-20220326.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-12\2022-03-27\flows-20220327.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-13\2022-03-28\flows-20220328.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-13\2022-03-29\flows-20220329.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-13\2022-03-30\flows-20220330.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-13\2022-03-31\flows-20220331.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-13\2022-04-01\flows-20220401.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-13\2022-04-02\flows-20220402.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-13\2022-04-03\flows-20220403.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-14\2022-04-04\flows-20220404.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-14\2022-04-05\flows-20220405.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-14\2022-04-06\flows-20220406.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-14\2022-04-07\flows-20220407.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-14\2022-04-08\flows-20220408.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-14\2022-04-09\flows-20220409.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-14\2022-04-10\flows-20220410.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-15\2022-04-11\flows-20220411.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-15\2022-04-12\flows-20220412.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-15\2022-04-13\flows-20220413.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-15\2022-04-14\flows-20220414.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-15\2022-04-15\flows-20220415.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-15\2022-04-16\flows-20220416.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-15\2022-04-17\flows-20220417.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-16\2022-04-18\flows-20220418.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-16\2022-04-19\flows-20220419.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-16\2022-04-20\flows-20220420.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-16\2022-04-21\flows-20220421.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-16\2022-04-22\flows-20220422.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-16\2022-04-23\flows-20220423.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-16\2022-04-24\flows-20220424.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-17\2022-04-25\flows-20220425.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-17\2022-04-26\flows-20220426.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-17\2022-04-27\flows-20220427.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-17\2022-04-28\flows-20220428.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-17\2022-04-29\flows-20220429.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-17\2022-04-30\flows-20220430.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-17\2022-05-01\flows-20220501.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-18\2022-05-02\flows-20220502.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-18\2022-05-03\flows-20220503.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-18\2022-05-04\flows-20220504.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-18\2022-05-05\flows-20220505.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-18\2022-05-06\flows-20220506.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-18\2022-05-07\flows-20220507.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-18\2022-05-08\flows-20220508.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-19\2022-05-09\flows-20220509.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-19\2022-05-10\flows-20220510.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-19\2022-05-11\flows-20220511.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-19\2022-05-12\flows-20220512.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-19\2022-05-13\flows-20220513.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-19\2022-05-14\flows-20220514.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-19\2022-05-15\flows-20220515.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-20\2022-05-16\flows-20220516.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-20\2022-05-17\flows-20220517.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-20\2022-05-18\flows-20220518.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-20\2022-05-19\flows-20220519.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-20\2022-05-20\flows-20220520.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-20\2022-05-21\flows-20220521.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-20\2022-05-22\flows-20220522.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-21\2022-05-23\flows-20220523.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-21\2022-05-24\flows-20220524.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-21\2022-05-25\flows-20220525.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-21\2022-05-26\flows-20220526.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-21\2022-05-27\flows-20220527.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-21\2022-05-28\flows-20220528.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-21\2022-05-29\flows-20220529.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-22\2022-05-30\flows-20220530.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-22\2022-05-31\flows-20220531.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-22\2022-06-01\flows-20220601.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-22\2022-06-02\flows-20220602.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-22\2022-06-03\flows-20220603.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-22\2022-06-04\flows-20220604.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-22\2022-06-05\flows-20220605.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-23\2022-06-06\flows-20220606.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-23\2022-06-07\flows-20220607.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-23\2022-06-08\flows-20220608.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-23\2022-06-09\flows-20220609.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-23\2022-06-10\flows-20220610.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-23\2022-06-11\flows-20220611.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-23\2022-06-12\flows-20220612.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-24\2022-06-13\flows-20220613.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-24\2022-06-14\flows-20220614.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-24\2022-06-15\flows-20220615.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-24\2022-06-16\flows-20220616.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-24\2022-06-17\flows-20220617.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-24\2022-06-18\flows-20220618.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-24\2022-06-19\flows-20220619.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-25\2022-06-20\flows-20220620.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-25\2022-06-21\flows-20220621.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-25\2022-06-22\flows-20220622.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-25\2022-06-23\flows-20220623.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-25\2022-06-24\flows-20220624.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-25\2022-06-25\flows-20220625.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-25\2022-06-26\flows-20220626.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-26\2022-06-27\flows-20220627.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-26\2022-06-28\flows-20220628.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-26\2022-06-29\flows-20220629.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-26\2022-06-30\flows-20220630.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-26\2022-07-01\flows-20220701.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-26\2022-07-02\flows-20220702.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-26\2022-07-03\flows-20220703.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-27\2022-07-04\flows-20220704.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-27\2022-07-05\flows-20220705.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-27\2022-07-06\flows-20220706.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-27\2022-07-07\flows-20220707.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-27\2022-07-08\flows-20220708.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-27\2022-07-09\flows-20220709.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-27\2022-07-10\flows-20220710.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-28\2022-07-11\flows-20220711.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-28\2022-07-12\flows-20220712.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-28\2022-07-13\flows-20220713.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-28\2022-07-14\flows-20220714.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-28\2022-07-15\flows-20220715.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-28\2022-07-16\flows-20220716.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-28\2022-07-17\flows-20220717.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-29\2022-07-18\flows-20220718.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-29\2022-07-19\flows-20220719.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-29\2022-07-20\flows-20220720.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-29\2022-07-21\flows-20220721.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-29\2022-07-22\flows-20220722.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-29\2022-07-23\flows-20220723.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-29\2022-07-24\flows-20220724.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-30\2022-07-25\flows-20220725.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-30\2022-07-26\flows-20220726.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-30\2022-07-27\flows-20220727.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-30\2022-07-28\flows-20220728.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-30\2022-07-29\flows-20220729.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-30\2022-07-30\flows-20220730.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-30\2022-07-31\flows-20220731.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-31\2022-08-01\flows-20220801.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-31\2022-08-02\flows-20220802.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-31\2022-08-03\flows-20220803.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-31\2022-08-04\flows-20220804.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-31\2022-08-05\flows-20220805.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-31\2022-08-06\flows-20220806.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-31\2022-08-07\flows-20220807.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-32\2022-08-08\flows-20220808.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-32\2022-08-09\flows-20220809.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-32\2022-08-10\flows-20220810.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-32\2022-08-11\flows-20220811.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-32\2022-08-12\flows-20220812.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-32\2022-08-13\flows-20220813.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-32\2022-08-14\flows-20220814.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-33\2022-08-15\flows-20220815.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-33\2022-08-16\flows-20220816.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-33\2022-08-17\flows-20220817.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-33\2022-08-18\flows-20220818.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-33\2022-08-19\flows-20220819.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-33\2022-08-20\flows-20220820.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-33\2022-08-21\flows-20220821.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-34\2022-08-22\flows-20220822.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-34\2022-08-23\flows-20220823.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-34\2022-08-24\flows-20220824.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-34\2022-08-25\flows-20220825.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-34\2022-08-26\flows-20220826.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-34\2022-08-27\flows-20220827.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-34\2022-08-28\flows-20220828.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-35\2022-08-29\flows-20220829.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-35\2022-08-30\flows-20220830.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-35\2022-08-31\flows-20220831.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-35\2022-09-01\flows-20220901.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-35\2022-09-02\flows-20220902.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-35\2022-09-03\flows-20220903.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-35\2022-09-04\flows-20220904.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-36\2022-09-05\flows-20220905.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-36\2022-09-06\flows-20220906.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-36\2022-09-07\flows-20220907.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-36\2022-09-08\flows-20220908.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-36\2022-09-09\flows-20220909.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-36\2022-09-10\flows-20220910.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-36\2022-09-11\flows-20220911.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-37\2022-09-12\flows-20220912.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-37\2022-09-13\flows-20220913.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-37\2022-09-14\flows-20220914.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-37\2022-09-15\flows-20220915.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-37\2022-09-16\flows-20220916.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-37\2022-09-17\flows-20220917.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-37\2022-09-18\flows-20220918.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-38\2022-09-19\flows-20220919.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-38\2022-09-20\flows-20220920.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-38\2022-09-21\flows-20220921.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-38\2022-09-22\flows-20220922.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-38\2022-09-23\flows-20220923.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-38\2022-09-24\flows-20220924.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-38\2022-09-25\flows-20220925.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-39\2022-09-26\flows-20220926.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-39\2022-09-27\flows-20220927.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-39\2022-09-28\flows-20220928.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-39\2022-09-29\flows-20220929.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-39\2022-09-30\flows-20220930.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-39\2022-10-01\flows-20221001.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-39\2022-10-02\flows-20221002.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-40\2022-10-03\flows-20221003.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-40\2022-10-04\flows-20221004.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-40\2022-10-05\flows-20221005.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-40\2022-10-06\flows-20221006.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-40\2022-10-07\flows-20221007.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-40\2022-10-08\flows-20221008.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-40\2022-10-09\flows-20221009.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-41\2022-10-10\flows-20221010.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-41\2022-10-11\flows-20221011.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-41\2022-10-12\flows-20221012.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-41\2022-10-13\flows-20221013.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-41\2022-10-14\flows-20221014.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-41\2022-10-15\flows-20221015.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-41\2022-10-16\flows-20221016.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-42\2022-10-17\flows-20221017.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-42\2022-10-18\flows-20221018.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-42\2022-10-19\flows-20221019.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-42\2022-10-20\flows-20221020.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-42\2022-10-21\flows-20221021.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-42\2022-10-22\flows-20221022.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-42\2022-10-23\flows-20221023.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-43\2022-10-24\flows-20221024.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-43\2022-10-25\flows-20221025.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-43\2022-10-26\flows-20221026.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-43\2022-10-27\flows-20221027.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-43\2022-10-28\flows-20221028.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-43\2022-10-29\flows-20221029.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-43\2022-10-30\flows-20221030.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-44\2022-10-31\flows-20221031.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-44\2022-11-01\flows-20221101.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-44\2022-11-02\flows-20221102.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-44\2022-11-03\flows-20221103.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-44\2022-11-04\flows-20221104.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-44\2022-11-05\flows-20221105.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-44\2022-11-06\flows-20221106.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-45\2022-11-07\flows-20221107.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-45\2022-11-08\flows-20221108.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-45\2022-11-09\flows-20221109.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-45\2022-11-10\flows-20221110.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-45\2022-11-11\flows-20221111.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-45\2022-11-12\flows-20221112.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-45\2022-11-13\flows-20221113.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-46\2022-11-14\flows-20221114.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-46\2022-11-15\flows-20221115.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-46\2022-11-16\flows-20221116.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-46\2022-11-17\flows-20221117.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-46\2022-11-18\flows-20221118.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-46\2022-11-19\flows-20221119.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-46\2022-11-20\flows-20221120.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-47\2022-11-21\flows-20221121.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-47\2022-11-22\flows-20221122.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-47\2022-11-23\flows-20221123.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-47\2022-11-24\flows-20221124.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-47\2022-11-25\flows-20221125.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-47\2022-11-26\flows-20221126.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-47\2022-11-27\flows-20221127.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-48\2022-11-28\flows-20221128.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-48\2022-11-29\flows-20221129.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-48\2022-11-30\flows-20221130.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-48\2022-12-01\flows-20221201.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-48\2022-12-02\flows-20221202.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-48\2022-12-03\flows-20221203.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-48\2022-12-04\flows-20221204.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-49\2022-12-05\flows-20221205.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-49\2022-12-06\flows-20221206.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-49\2022-12-07\flows-20221207.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-49\2022-12-08\flows-20221208.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-49\2022-12-09\flows-20221209.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-49\2022-12-10\flows-20221210.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-49\2022-12-11\flows-20221211.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-50\2022-12-12\flows-20221212.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-50\2022-12-13\flows-20221213.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-50\2022-12-14\flows-20221214.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-50\2022-12-15\flows-20221215.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-50\2022-12-16\flows-20221216.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-50\2022-12-17\flows-20221217.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-50\2022-12-18\flows-20221218.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-51\2022-12-19\flows-20221219.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-51\2022-12-20\flows-20221220.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-51\2022-12-21\flows-20221221.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-51\2022-12-22\flows-20221222.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-51\2022-12-23\flows-20221223.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-51\2022-12-24\flows-20221224.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-51\2022-12-25\flows-20221225.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-52\2022-12-26\flows-20221226.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-52\2022-12-27\flows-20221227.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-52\2022-12-28\flows-20221228.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-52\2022-12-29\flows-20221229.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-52\2022-12-30\flows-20221230.csv.xz`
+- `E:\graphcold-data\tls_alternative\cesnet_tls_year22\CESNET-TLS-Year22\WEEK-2022-52\2022-12-31\flows-20221231.csv.xz`
 
 ## Manual Instructions
-- Resume the official Zenodo download on a faster network using the same command; curl will continue the .part file.
-- Or manually place CESNET-TLS-Year22.zip at E:\graphcold-data\_downloads\cesnet_tls_year22\CESNET-TLS-Year22.zip and run local-archive mode.
-- Then rerun audit, smoke, and cesnet_mini_matrix with --data-root E:\graphcold-data.
+- none
+
+## Blocking Reasons
+- none

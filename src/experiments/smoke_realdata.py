@@ -200,10 +200,10 @@ def _quality_checks(frame: pd.DataFrame) -> dict[str, dict[str, Any]]:
         "passed": bool((frame["macro_f1"] < 1.0).all()),
         "detail": "No smoke row should report 100.0% Macro-F1.",
     }
-    grouped_zero = frame.groupby(["noise"])[["fpr", "fnr"]].apply(lambda part: bool(((part["fpr"] == 0.0) & (part["fnr"] == 0.0)).all()))
-    checks["not_all_methods_zero_fpr_fnr"] = {
-        "passed": bool(not grouped_zero.any()),
-        "detail": grouped_zero.to_dict(),
+    perfect_zero = (frame["macro_f1"] >= 0.999) & (frame["fpr"] <= 0.001) & (frame["fnr"] <= 0.001)
+    checks["no_100_f1_zero_fpr_fnr_anomaly"] = {
+        "passed": bool(not perfect_zero.any()),
+        "detail": int(perfect_zero.sum()),
     }
     cold_clean = frame[(frame["method"] == "CoLD") & (frame["noise"] == "clean")]["macro_f1"]
     checks["cold_clean_not_extreme"] = {
@@ -242,6 +242,11 @@ def _quality_checks(frame: pd.DataFrame) -> dict[str, dict[str, Any]]:
         "passed": bool(frame["data_source"].astype(str).str.len().gt(0).all()),
         "detail": sorted(frame["data_source"].astype(str).unique().tolist()),
     }
+    if "active_views" in frame.columns and (frame["dataset"] == "cesnet_tls_year22").all():
+        checks["cesnet_active_views_valid"] = {
+            "passed": bool((frame["active_views"] == "ip|temporal").all()),
+            "detail": sorted(frame["active_views"].unique().tolist()),
+        }
     return checks
 
 

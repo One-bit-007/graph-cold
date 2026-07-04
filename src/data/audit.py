@@ -69,7 +69,7 @@ def audit_dataset(contract: DatasetContract) -> DatasetAuditResult:
     file_hashes = {str(path): _sha256(path) for path in files if path.exists()}
     dataset_hash = _dataset_hash(file_hashes) if file_hashes else None
 
-    frame = _read_frames(files) if files else pd.DataFrame()
+    frame = _read_frames(files, max_rows=_audit_max_rows(contract)) if files else pd.DataFrame()
     if not frame.empty:
         frame.columns = [str(col).strip() for col in frame.columns]
 
@@ -295,25 +295,41 @@ def _files_for_contract(root: Path, contract: DatasetContract) -> tuple[list[Pat
         return files, missing
     if not root.exists():
         return [], []
-    patterns = ("*.csv", "*.csv.gz", "*.parquet")
+    patterns = ("*.csv", "*.csv.gz", "*.csv.xz", "*.parquet")
     files: list[Path] = []
     for pattern in patterns:
         files.extend(sorted(root.rglob(pattern)))
     return files, []
 
 
-def _read_frames(files: list[Path]) -> pd.DataFrame:
-    frames = [_read_table(path) for path in files]
+def _read_frames(files: list[Path], max_rows: int | None = None) -> pd.DataFrame:
+    frames = []
+    remaining = max_rows
+    for path in files:
+        nrows = remaining if remaining is not None else None
+        frame = _read_table(path, nrows=nrows)
+        frames.append(frame)
+        if remaining is not None:
+            remaining -= len(frame)
+            if remaining <= 0:
+                break
     if not frames:
         return pd.DataFrame()
     return pd.concat(frames, ignore_index=True)
 
 
-def _read_table(path: Path) -> pd.DataFrame:
+def _read_table(path: Path, nrows: int | None = None) -> pd.DataFrame:
     suffixes = "".join(path.suffixes).lower()
     if suffixes.endswith(".parquet"):
-        return pd.read_parquet(path)
-    return pd.read_csv(path, low_memory=False)
+        frame = pd.read_parquet(path)
+        return frame.head(nrows) if nrows is not None else frame
+    return pd.read_csv(path, low_memory=False, nrows=nrows)
+
+
+def _audit_max_rows(contract: DatasetContract) -> int | None:
+    if contract.name == "cesnet_tls_year22":
+        return 100_000
+    return None
 
 
 def _sha256(path: Path) -> str:

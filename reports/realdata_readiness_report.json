@@ -1,7 +1,7 @@
 {
   "stage": "realdata-acquisition-audit",
   "submission_ready": false,
-  "d5_allowed": false,
+  "d5_allowed": true,
   "d6_d7_allowed": false,
   "datasets": {
     "cicids2017": {
@@ -30,22 +30,41 @@
       "evaluated": false
     },
     "cesnet_tls_year22": {
+      "available": true,
+      "audit_passed": true,
+      "ready_for_smoke": true,
+      "ready_for_d5": true,
+      "ready_for_d5_component": true,
+      "blocking_reasons": []
+    },
+    "unsw_nb15": {
       "available": false,
       "audit_passed": false,
       "ready_for_smoke": false,
       "ready_for_d5": false,
       "ready_for_d5_component": false,
       "blocking_reasons": [
-        "no readable CSV files found",
+        "dataset root does not exist: data/unsw_nb15",
         "label column missing: contract label candidate",
-        "required column groups missing: label, tls_or_flow_features, timestamp",
+        "required column groups missing: label, ip_or_flow, numeric_features",
         "row count 0 below min_samples 10000"
+      ]
+    },
+    "ustc_tfc2016": {
+      "available": false,
+      "audit_passed": false,
+      "ready_for_smoke": false,
+      "ready_for_d5": false,
+      "ready_for_d5_component": false,
+      "blocking_reasons": [
+        "dataset root does not exist: data/ustc_tfc2016",
+        "label column missing: contract label candidate",
+        "required column groups missing: label, flow_or_payload",
+        "row count 0 below min_samples 10000",
+        "dataset source is not verified; do not report this dataset"
       ],
-      "mini_matrix_passed": false,
-      "class_policy": "postfilter",
-      "reported_as": "CESNET-TLS-Year22",
-      "replacement_for": "MALTLS-22",
-      "actual_data_path": "E:\\graphcold-data\\tls_alternative\\cesnet_tls_year22"
+      "candidate_only": true,
+      "selected_for_d5": false
     },
     "optc": {
       "available": false,
@@ -64,9 +83,8 @@
   },
   "next_actions": [
     "MALTLS-22 remains unevaluated unless source verification changes.",
-    "Resolve cesnet_tls_year22: no readable CSV files found; label column missing: contract label candidate; required column groups missing: label, tls_or_flow_features, timestamp; row count 0 below min_samples 10000",
-    "OpTC unavailable; keep it out of formal experiments or provide real events.csv.",
-    "Do not run D5 until CICIDS and CESNET-TLS-Year22 components pass."
-  ],
-  "d5_scope": []
+    "Resolve unsw_nb15: dataset root does not exist: data/unsw_nb15; label column missing: contract label candidate; required column groups missing: label, ip_or_flow, numeric_features; row count 0 below min_samples 10000",
+    "Resolve ustc_tfc2016: dataset root does not exist: data/ustc_tfc2016; label column missing: contract label candidate; required column groups missing: label, flow_or_payload; row count 0 below min_samples 10000; dataset source is not verified; do not report this dataset",
+    "OpTC unavailable; keep it out of formal experiments or provide real events.csv."
+  ]
 }

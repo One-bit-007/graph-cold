@@ -1,6 +1,6 @@
 # Real-Data Readiness Report
 
-- D5 allowed: False
+- D5 allowed: True
 - D6/D7 allowed: False
 - Submission ready: False
 
@@ -27,15 +27,35 @@
   - dataset source is not verified; do not report this dataset
 
 ### cesnet_tls_year22
+- Available: True
+- Audit passed: True
+- Ready for smoke: True
+- Ready for D5/case: True
+- Blocking reasons:
+  - none
+
+### unsw_nb15
 - Available: False
 - Audit passed: False
 - Ready for smoke: False
 - Ready for D5/case: False
 - Blocking reasons:
-  - no readable CSV files found
+  - dataset root does not exist: data/unsw_nb15
   - label column missing: contract label candidate
-  - required column groups missing: label, tls_or_flow_features, timestamp
+  - required column groups missing: label, ip_or_flow, numeric_features
   - row count 0 below min_samples 10000
+
+### ustc_tfc2016
+- Available: False
+- Audit passed: False
+- Ready for smoke: False
+- Ready for D5/case: False
+- Blocking reasons:
+  - dataset root does not exist: data/ustc_tfc2016
+  - label column missing: contract label candidate
+  - required column groups missing: label, flow_or_payload
+  - row count 0 below min_samples 10000
+  - dataset source is not verified; do not report this dataset
 
 ### optc
 - Available: False
@@ -51,6 +71,6 @@
 
 ## Next Actions
 - MALTLS-22 remains unevaluated unless source verification changes.
-- Resolve cesnet_tls_year22: no readable CSV files found; label column missing: contract label candidate; required column groups missing: label, tls_or_flow_features, timestamp; row count 0 below min_samples 10000
+- Resolve unsw_nb15: dataset root does not exist: data/unsw_nb15; label column missing: contract label candidate; required column groups missing: label, ip_or_flow, numeric_features; row count 0 below min_samples 10000
+- Resolve ustc_tfc2016: dataset root does not exist: data/ustc_tfc2016; label column missing: contract label candidate; required column groups missing: label, flow_or_payload; row count 0 below min_samples 10000; dataset source is not verified; do not report this dataset
 - OpTC unavailable; keep it out of formal experiments or provide real events.csv.
-- Do not run D5 until CICIDS and CESNET-TLS-Year22 components pass.

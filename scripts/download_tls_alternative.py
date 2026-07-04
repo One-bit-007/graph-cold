@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 from dataclasses import replace
+import hashlib
 import json
 from pathlib import Path
 import shutil
@@ -49,6 +50,12 @@ CANDIDATES = {
     },
 }
 
+EXPECTED_ARCHIVE_SIZES = {
+    "cesnet_tls_year22": {
+        "CESNET-TLS-Year22.zip": 30491259088,
+    }
+}
+
 
 def run(
     candidate: str,
@@ -91,10 +98,12 @@ def run(
         report.update(_prepare_zenodo_auto(info, out_path, cache_path, min_free_gb))
     elif mode == "datazoo":
         report.update(_prepare_datazoo(info, out_path))
+    elif mode == "verify-archive":
+        report.update(_verify_archive(candidate, archive))
     elif mode == "local-archive":
         report.update(_prepare_local_archive(archive, out_path))
     elif mode != "instructions":
-        raise ValueError("TLS alternative supports modes: instructions, auto, datazoo, local-archive")
+        raise ValueError("TLS alternative supports modes: instructions, auto, datazoo, verify-archive, local-archive")
     if candidate == "cesnet_tls_year22":
         report.update(_audit_cesnet(out_path))
     _write_tls_reports(report)
@@ -262,6 +271,11 @@ def _prepare_local_archive(archive: str | Path | None, out_path: Path) -> dict:
     archive_path = Path(archive)
     if not archive_path.exists():
         return {"download_success": False, "error": f"Archive not found: {archive_path}"}
+    verify = _verify_archive("cesnet_tls_year22", archive_path)
+    if not verify.get("archive_verified", False):
+        verify["download_success"] = False
+        verify["error"] = verify.get("error") or "Archive verification failed; local import blocked."
+        return verify
     out_path.mkdir(parents=True, exist_ok=True)
     if zipfile.is_zipfile(archive_path):
         _extract_archive(archive_path, out_path)
@@ -273,9 +287,146 @@ def _prepare_local_archive(archive: str | Path | None, out_path: Path) -> dict:
         "download_success": True,
         "manual_action_required": False,
         "archive": str(archive_path),
-        "archive_hashes": {str(archive_path): _sha256(archive_path)} if archive_path.is_file() else {},
+        "archive_verified": True,
+        "archive_sha256": verify.get("archive_sha256"),
+        "archive_size_bytes": verify.get("actual_size_bytes"),
+        "archive_member_count": verify.get("archive_member_count"),
+        "archive_summary": verify.get("archive_summary"),
+        "archive_hashes": {str(archive_path): verify.get("archive_sha256")} if archive_path.is_file() else {},
         "actual_data_path": str(out_path),
         "files_present": [str(path) for path in sorted(out_path.rglob("*")) if path.is_file()][:50],
+    }
+
+
+def _verify_archive(candidate: str, archive: str | Path | None) -> dict:
+    if archive is None:
+        return {"download_success": False, "archive_verified": False, "error": "--archive is required for verify-archive mode."}
+    archive_path = Path(archive)
+    expected = EXPECTED_ARCHIVE_SIZES.get(candidate, {}).get(archive_path.name)
+    if not archive_path.exists():
+        return {"download_success": False, "archive_verified": False, "zip_exists": False, "error": f"Archive not found: {archive_path}"}
+    part_exists = archive_path.with_suffix(archive_path.suffix + ".part").exists()
+    aria2_exists = Path(str(archive_path) + ".aria2").exists()
+    actual_size = archive_path.stat().st_size
+    if expected is not None and actual_size != expected:
+        return {
+            "download_success": False,
+            "archive_verified": False,
+            "zip_exists": True,
+            "aria2_control_file_exists": aria2_exists,
+            "part_file_exists": part_exists,
+            "actual_size_bytes": actual_size,
+            "expected_size_bytes": expected,
+            "download_complete": False,
+            "error": f"Archive size mismatch: {actual_size} != {expected}",
+        }
+    if part_exists or aria2_exists:
+        return {
+            "download_success": False,
+            "archive_verified": False,
+            "zip_exists": True,
+            "aria2_control_file_exists": aria2_exists,
+            "part_file_exists": part_exists,
+            "actual_size_bytes": actual_size,
+            "expected_size_bytes": expected,
+            "download_complete": False,
+            "error": "Incomplete download sidecar file exists next to archive.",
+        }
+    if not zipfile.is_zipfile(archive_path) and not tarfile.is_tarfile(archive_path):
+        return {
+            "download_success": False,
+            "archive_verified": False,
+            "zip_exists": True,
+            "aria2_control_file_exists": aria2_exists,
+            "part_file_exists": part_exists,
+            "actual_size_bytes": actual_size,
+            "expected_size_bytes": expected,
+            "download_complete": False,
+            "error": "Archive is not a valid ZIP or TAR file.",
+        }
+    members = _archive_members(archive_path)
+    bad_member = _test_archive(archive_path)
+    if bad_member:
+        return {
+            "download_success": False,
+            "archive_verified": False,
+            "zip_exists": True,
+            "aria2_control_file_exists": aria2_exists,
+            "part_file_exists": part_exists,
+            "actual_size_bytes": actual_size,
+            "expected_size_bytes": expected,
+            "download_complete": False,
+            "archive_member_count": len(members),
+            "archive_summary": _archive_summary(members),
+            "error": f"Archive integrity check failed at member: {bad_member}",
+        }
+    sha256 = _sha256(archive_path)
+    return {
+        "download_success": True,
+        "manual_action_required": False,
+        "archive_verified": True,
+        "zip_exists": True,
+        "aria2_control_file_exists": aria2_exists,
+        "part_file_exists": part_exists,
+        "actual_size_bytes": actual_size,
+        "expected_size_bytes": expected,
+        "download_complete": True,
+        "archive": str(archive_path),
+        "archive_sha256": sha256,
+        "archive_member_count": len(members),
+        "archive_summary": _archive_summary(members),
+    }
+
+
+def _archive_members(archive_path: Path) -> list[dict]:
+    if zipfile.is_zipfile(archive_path):
+        with zipfile.ZipFile(archive_path) as handle:
+            return [
+                {
+                    "name": item.filename,
+                    "compressed_size": int(item.compress_size),
+                    "size": int(item.file_size),
+                    "is_dir": item.is_dir(),
+                }
+                for item in handle.infolist()
+            ]
+    with tarfile.open(archive_path) as handle:
+        return [
+            {
+                "name": item.name,
+                "compressed_size": None,
+                "size": int(item.size),
+                "is_dir": item.isdir(),
+            }
+            for item in handle.getmembers()
+        ]
+
+
+def _test_archive(archive_path: Path) -> str | None:
+    if zipfile.is_zipfile(archive_path):
+        with zipfile.ZipFile(archive_path) as handle:
+            return handle.testzip()
+    if tarfile.is_tarfile(archive_path):
+        try:
+            with tarfile.open(archive_path) as handle:
+                for member in handle:
+                    extracted = handle.extractfile(member) if member.isfile() else None
+                    if extracted is not None:
+                        for _ in iter(lambda: extracted.read(1024 * 1024), b""):
+                            pass
+        except Exception as exc:
+            return str(exc)
+    return None
+
+
+def _archive_summary(members: list[dict]) -> dict:
+    files = [item for item in members if not item.get("is_dir")]
+    total_uncompressed = sum(int(item.get("size") or 0) for item in files)
+    return {
+        "member_count": len(members),
+        "file_count": len(files),
+        "total_uncompressed_bytes": total_uncompressed,
+        "first_members": members[:20],
     }
 
 
@@ -303,8 +454,6 @@ def _audit_cesnet(out_path: Path) -> dict:
 
 
 def _sha256(path: Path) -> str:
-    import hashlib
-
     digest = hashlib.sha256()
     with path.open("rb") as handle:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
@@ -323,6 +472,7 @@ def _write_tls_reports(report: dict) -> None:
 
 
 def _decision(report: dict) -> dict:
+    allowed_for_d5 = bool(report.get("candidate") == "cesnet_tls_year22" and report.get("download_success") and report.get("audit_passed"))
     return {
         "maltls22": {
             "source_verified": False,
@@ -335,7 +485,7 @@ def _decision(report: dict) -> dict:
         "replacement_download_success": report["download_success"],
         "large_download_confirmed": report["large_download_confirmed"],
         "must_be_reported_as": report["must_be_reported_as"],
-        "allowed_for_d5": False,
+        "allowed_for_d5": allowed_for_d5,
         "error": report.get("error"),
         "dataset_hash": report.get("dataset_hash"),
         "files": report.get("files", []),
@@ -343,7 +493,7 @@ def _decision(report: dict) -> dict:
         "notes": [
             "The replacement is not MALTLS-22.",
             "If selected, the paper must name the replacement dataset explicitly.",
-            "A separate audited contract is required before experiments.",
+            "A separate audited contract is required before experiments; CESNET may enter only after audit/smoke/mini-matrix gates pass.",
         ],
     }
 
@@ -362,7 +512,7 @@ def _decision_markdown(report: dict) -> str:
             f"- Download attempted: {report['download_attempted']}",
             f"- Large download confirmed: {report['large_download_confirmed']}",
             f"- Error: {report.get('error') or 'none'}",
-            "- Allowed for D5 now: false",
+            f"- Allowed for D5 now: {str(bool(report.get('audit_passed'))).lower()}",
             "- User confirmation required: true",
             "",
             "If this replacement is later selected and passes audit, the manuscript must report the dataset as "
@@ -406,7 +556,7 @@ def _download_markdown(report: dict) -> str:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--candidate", choices=sorted(CANDIDATES), default="cesnet_tls_year22")
-    parser.add_argument("--mode", choices=["instructions", "auto", "datazoo", "local-archive"], default="instructions")
+    parser.add_argument("--mode", choices=["instructions", "auto", "datazoo", "verify-archive", "local-archive"], default="instructions")
     parser.add_argument("--out", default="data/tls_alternative/cesnet_tls_year22")
     parser.add_argument("--archive")
     parser.add_argument("--data-root")
@@ -425,7 +575,7 @@ def main(argv: list[str] | None = None) -> int:
         args.min_free_gb,
     )
     print(json.dumps(report, indent=2))
-    return 0 if args.mode in {"instructions", "local-archive"} and not report.get("error") else 2
+    return 0 if args.mode in {"instructions", "verify-archive", "local-archive"} and not report.get("error") else 2
 
 
 if __name__ == "__main__":
