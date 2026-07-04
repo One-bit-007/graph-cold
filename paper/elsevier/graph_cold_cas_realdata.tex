@@ -1,0 +1,282 @@
+\documentclass[preprint,review,12pt]{elsarticle}
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage{graphicx}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\topmargin}{-0.25in}
+\setlength{\textheight}{8.9in}
+\journal{Computers \& Security}
+
+\title{Graph-CoLD: Label-space Graph Consistency and Evidence-preserving Denoising for SOC Alert Prioritization}
+\author{Graph-CoLD Project Team}
+\address{Real-data manuscript assembly generated from frozen D5.5/D6 artifacts.}
+
+\begin{document}
+\begin{frontmatter}
+\maketitle
+\begin{abstract}
+Security operations centers must triage large volumes of alerts under noisy
+labels and incomplete operational context. Graph-CoLD extends CoLD-style noisy
+label learning from independent samples to multi-view graphs. The method uses a
+label-space consistency diagnostic function, evidence preserving soft weights,
+and an operational ranking score to reduce review load while retaining clean
+informative evidence. We evaluate the implementation on two verified real-data
+settings, CICIDS-2017 postfilter11 and CESNET-TLS-Year22 postfilter25. Across the
+frozen D5.5 matrix, Graph-CoLD improves Macro-F1 over the self-implemented CoLD
+baseline by 1.83 percentage points under a paired grouped
+t-test (p=5.60e-06, Cohen dz=0.458,
+n=102). The strongest empirical signal is not perfect detection
+but improved robustness and evidence retention under noisy labels. The manuscript
+therefore reports Macro-F1, FPR, FNR, ERR, compression ratio, runtime, and memory,
+with explicit limits on unsupported datasets and baselines.
+\end{abstract}
+\begin{keyword}
+intrusion detection \sep noisy labels \sep graph learning \sep SOC alert prioritization \sep evidence retention
+\end{keyword}
+\end{frontmatter}
+
+\section{Introduction}
+Modern SOC pipelines combine network telemetry, traffic classifiers, threat
+labels, and analyst feedback. This creates two linked problems: high alert volume
+and imperfect labels. A model that simply optimizes classification accuracy can
+learn mislabeled regions or discard rare but operationally useful alerts. CoLD
+addresses noisy labels for cyber threat detection, but its original formulation
+treats training instances as independent samples and uses hard deletion after a
+confidence diagnostic \cite{yang2026cold}. Graph-CoLD asks whether the same
+problem can be handled more carefully when alerts have relational evidence across
+hosts, IPs, and time.
+
+This paper presents a real-data manuscript package for Graph-CoLD. The core idea
+is to move the diagnostic from embedding distance to label-space consistency over
+available graph views, then combine the diagnostic with evidence preservation. A
+sample can be downweighted when it appears inconsistent, but a clean informative
+sample should remain visible if it carries rare-class or anomaly evidence. The
+ranking component translates these weights into an alert-ordering proxy for SOC
+review; the present evaluation focuses on robustness, ERR, compression, and cost
+rather than on an analyst user study.
+
+\section{Related Work}
+CoLD is the closest method, motivating the reordering, diagnostic, and robust
+training structure used in this project \cite{yang2026cold}. Confident learning
+estimates label issues from predicted probabilities and motivates the
+Confident-Learning baseline \cite{northcutt2021confident}. Co-teaching trains
+peer networks on selected small-loss samples \cite{han2018coteaching}; our
+Co-Teaching-lite baseline is explicitly a lightweight smoke-passed approximation,
+not a faithful full deep reproduction. General loss-correction work also shows why
+label noise can shift decision boundaries \cite{patrini2017loss}.
+
+Graph learning provides a way to represent alert context through relations rather
+than isolated feature vectors. Graph convolutional and attention models are common
+building blocks for relational representation learning \cite{kipf2017gcn,
+velickovic2018gat}. For intrusion detection data, CICIDS-2017 remains a widely
+used benchmark with known class imbalance and traffic-generation caveats
+\cite{sharafaldin2018cicids}. CESNET-TLS-Year22 provides a large real TLS
+traffic source used here as a verified replacement for the unavailable MALTLS-22
+source \cite{cesnettlsyear22}.
+
+\section{Problem Formulation and Motivation}
+Let $v \in V$ denote a training alert or flow instance and let $G^m=(V,E^m)$ be an
+active graph view. The current real-data experiments use host, IP, and temporal
+views for CICIDS-2017, and IP plus temporal views for CESNET-TLS-Year22. Process
+and threat-intelligence views are disabled when a dataset lacks reliable
+provenance or threat-intelligence fields. The training labels may be corrupted,
+so the observed label $\tilde{y}_v$ is not assumed to be fully reliable.
+
+The objective is to learn a classifier and prioritization score that remain robust
+under label noise while preserving clean informative evidence. We therefore
+measure classification quality with Macro-F1, FPR, and FNR, and measure retention
+quality with ERR and Tail-ERR on clean informative samples. Compression ratio is
+reported as an operational queue-reduction proxy.
+
+\section{Methodology}
+Stage 1 uses the existing multi-view representation encoder from D2. The encoder
+applies CoLD-style feature masking, view-level message passing, cross-view
+contrastive learning, temporal alignment, and reconstruction. View fusion is the
+mean of active views. D7 does not alter this encoder or its loss.
+
+\subsection{Graph-CDM}
+Graph-CDM is a label-space consistency diagnostic function:
+\begin{equation}
+\operatorname{GraphCDM}(v)=\lambda_1D_{pred}(v)+\lambda_2D_{neigh}(v)+
+\lambda_3D_{view}(v)+\lambda_4D_{chain}(v).
+\end{equation}
+The prediction term compares view-wise predictions with the observed noisy
+training label,
+\begin{equation}
+D_{pred}(v)=\frac{1}{M}\sum_{m=1}^M
+\mathbf{1}\left[\tilde{y}_v^{(m)} \ne \tilde{y}_v\right].
+\end{equation}
+The neighborhood term is a label-space KL divergence,
+\begin{equation}
+D_{neigh}(v)=KL\left(\hat{y}_v\,\middle\|\,\frac{1}{|N(v)|}\sum_{u\in N(v)}\hat{y}_u\right).
+\end{equation}
+The view term is active-view mode disagreement,
+\begin{equation}
+D_{view}(v)=1-\max_c \frac{1}{M}\sum_m \mathbf{1}\left[\tilde{y}_v^{(m)}=c\right].
+\end{equation}
+$D_{chain}$ is used only when reliable provenance or temporal chains are
+available and is not the central driver of the CICIDS/CESNET experiments.
+
+\subsection{Evidence preservation and ranking}
+Evidence score $e(v)$ combines class-frequency protection with an anomaly source
+and is min-max normalized. The final training weight is
+\begin{equation}
+w(v)=\sigma\left(-\kappa(\operatorname{GraphCDM}(v)-\theta)\right)(1-\rho)
++\rho\tilde{e}(v).
+\end{equation}
+The classifier loss is the weighted cross entropy over training samples. Ranking
+uses
+\begin{equation}
+P(v)=\alpha_1\hat{y}_{mal}(v)+\alpha_2\operatorname{GraphCDM}(v)+\alpha_3\tilde{e}(v),
+\end{equation}
+which orders alerts for operational review. In this real-data package, ranking is
+reported through compression and evidence-retention metrics rather than an
+analyst-facing deployment study.
+
+\section{Experimental Setup}
+All formal results are drawn from the expanded main results CSV, with SHA256
+prefix c7d998d6c918ecfb; the exact path and full hash are listed in the
+reproducibility package. The formal datasets
+are CICIDS-2017 postfilter11 and CESNET-TLS-Year22 postfilter25. CICIDS-2017 uses
+787,999 rows after
+class filtering and dominant-class downsampling. CESNET-TLS-Year22 uses a
+deterministic audit-window subset with postfilter25 stratified splitting and must
+not be described as a full-archive evaluation.
+
+Noise settings include clean labels, symmetric noise, asymmetric noise, and
+graph consistency noise. Noise is injected only into training labels. Results are
+reported over seeds 0, 1, and 2 where present. Formal methods are Graph-CoLD,
+CoLD, ablation\_hard, Noisy-Supervised, Confident-Learning, and Co-Teaching-lite.
+Excluded methods are not reported as formal baselines: FINE: unavailable as a smoke-passed real-data implementation; MCRe: unavailable as a smoke-passed real-data implementation; MORSE: unavailable as a smoke-passed real-data implementation; Flash: unavailable as a smoke-passed real-data implementation; Argus: unavailable as a smoke-passed real-data implementation; Decoupling: unavailable as a smoke-passed real-data implementation; full Co-Teaching: unavailable as a smoke-passed real-data implementation.
+
+\begin{table}[t]
+\centering
+\caption{Verified real-data protocols used by the D7 manuscript.}
+\label{tab:dataset-protocol}
+\resizebox{\textwidth}{!}{\input{tables/table_1_dataset_protocol.tex}}
+\end{table}
+
+\section{Results and Analysis}
+Table~\ref{tab:main-performance} summarizes the method-level real-data
+performance. Averaged across the frozen matrix, Graph-CoLD obtains Macro-F1
+0.9915, compared with 0.9732 for CoLD.
+The paired grouped test reports a 1.83 percentage-point
+mean difference with p=5.60e-06 and effect size
+0.458. The effect is interpreted as a consistent positive
+shift, not as a claim that all unimplemented baselines have been beaten.
+
+\begin{table}[t]
+\centering
+\caption{Mean performance by dataset and formal method, aggregated from the D5.5 matrix.}
+\label{tab:main-performance}
+\resizebox{\textwidth}{!}{\input{tables/table_2_main_summary.tex}}
+\end{table}
+
+High-noise settings show why Graph-CDM and evidence weighting matter. On
+CICIDS-2017 high-noise rows, Graph-CoLD improves Macro-F1 over CoLD by
+5.19 percentage points. On CESNET-TLS-Year22 the
+corresponding lift is 0.00 percentage points,
+where a ceiling effect makes Macro-F1 margins smaller. ERR\_final averages
+1.0000 for Graph-CoLD and 0.8953 for
+ablation\_hard, supporting the evidence-preservation contribution.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig2_macro_f1_vs_noise_rate.pdf}
+\caption{Macro-F1 versus noise rate for verified real-data settings.}
+\label{fig:macro-noise}
+\end{figure}
+
+\begin{table}[t]
+\centering
+\caption{High-noise summary for rates at or above 0.4.}
+\label{tab:high-noise}
+\resizebox{\textwidth}{!}{\input{tables/table_3_high_noise.tex}}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig3_err_retention.pdf}
+\caption{Evidence retention and compression tradeoff.}
+\label{fig:err-retention}
+\end{figure}
+
+\begin{table}[t]
+\centering
+\caption{Ablation results for Graph-CDM and evidence preservation.}
+\label{tab:ablation}
+\resizebox{\textwidth}{!}{\input{tables/table_4_ablation.tex}}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig4_ablation.pdf}
+\caption{Ablation comparison for Macro-F1 and ERR.}
+\label{fig:ablation}
+\end{figure}
+
+\begin{table}[t]
+\centering
+\caption{Paired grouped statistical tests from D5.5.}
+\label{tab:stats}
+\resizebox{\textwidth}{!}{\input{tables/table_5_statistical_tests.tex}}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig5_runtime_cost.pdf}
+\caption{Runtime and memory cost by method.}
+\label{fig:runtime}
+\end{figure}
+
+\section{Discussion}
+The results support a careful claim: label-space graph consistency and evidence
+preserving weights improve robustness and retention on the evaluated real-data
+settings. The evidence-retention result is especially important for SOC use
+because compression without retained evidence can reduce analyst workload while
+damaging investigation quality. Graph-CoLD's additional runtime relative to CoLD
+is visible (4.02s versus 3.92s
+on average), so the method should be framed as a robustness-retention tradeoff
+rather than as a low-cost replacement.
+
+The CESNET-TLS-Year22 setting has high absolute Macro-F1 for several methods,
+which limits the visible room for classifier improvement. The manuscript therefore
+places the CESNET result next to ERR, compression, and cost, and states the subset
+policy explicitly. CICIDS-2017 shows larger high-noise margins but is still only
+one benchmark family.
+
+\section{Limitations}
+The current formal evaluation uses two verified real-data settings. MALTLS-22 is
+not evaluated because its source did not pass the local verification gate. OpTC is
+not evaluated as a formal enterprise case because no verified local provenance
+event table is available. CESNET-TLS-Year22 is a deterministic audit-window
+postfilter25 subset, not a full-archive evaluation. Co-Teaching-lite is not a full
+Co-Teaching implementation, and FINE, MCRe, MORSE, Flash, Argus, Decoupling, and
+full Co-Teaching are excluded from formal comparison until faithful real-data
+implementations are available.
+
+\section{Conclusion}
+Graph-CoLD connects representation learning, label-space graph consistency,
+evidence preserving denoising, and SOC-oriented ranking. On verified CICIDS-2017
+and CESNET-TLS-Year22 settings, the method improves Macro-F1 over the aligned CoLD
+baseline and preserves more clean informative evidence than hard deletion. The
+most submission-ready conclusion is that Graph-CoLD is a promising real-data
+robustness and evidence-retention approach whose broader baseline coverage and
+enterprise case evaluation remain future work.
+
+\section*{Acknowledgements}
+To be completed by the authors before journal submission.
+
+\section*{Declaration of competing interest}
+The authors should complete the journal declaration form before submission.
+
+\section*{Data and code availability}
+Raw datasets are not included in the repository. The reproducibility package
+documents the expected local data roots, audit gates, frozen result files, and
+commands used to recreate the tables and figures.
+
+\bibliographystyle{plain}
+\bibliography{references}
+\end{document}

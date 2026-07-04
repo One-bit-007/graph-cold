@@ -1,0 +1,8 @@
+{
+  "source_of_truth": "reports/realdata_readiness_report.json",
+  "d7_allowed": true,
+  "d7_artifacts_generated_before_d7": false,
+  "d6_checklist_d7_allowed_meaning": "D6 did not generate D7 manuscript artifacts.",
+  "readiness_d7_allowed_meaning": "D5.5/D6 real-data artifacts are available for D7 assembly.",
+  "submission_ready": false
+}

@@ -1,0 +1,32 @@
+{
+  "stage": "D7 real-data manuscript assembly",
+  "completed": true,
+  "source_csv": "results\\table_main_expanded.csv",
+  "source_sha256": "c7d998d6c918ecfbcb9cc56bd494dcec73b3fa6826b2046fb53e2ca2109519cd",
+  "manuscript": "paper\\elsevier\\graph_cold_cas_realdata.tex",
+  "pdf": "paper\\elsevier\\graph_cold_cas_realdata.pdf",
+  "reports": [
+    "reports\\d7\\d7_readiness_reconciliation.json",
+    "reports\\d7\\reviewer_simulation_final.md",
+    "reports\\d7\\rebuttal_preparation_pack.md",
+    "reports\\d7\\d7_final_audit.json",
+    "reports\\d7\\d7_final_audit.md"
+  ],
+  "audit": {
+    "real_data_only": true,
+    "uses_table_main_expanded": true,
+    "no_maltls22_results": true,
+    "no_optc_results": true,
+    "no_synthetic_fallback_claims": true,
+    "no_fake_baselines": true,
+    "cesnet_reported_as_cesnet": true,
+    "cesnet_subset_declared": true,
+    "co_teaching_lite_named_correctly": true,
+    "baseline_exclusions_declared": true,
+    "figures_exist": true,
+    "tables_exist": true,
+    "pdf_compiles": true,
+    "references_no_known_fake_entries": true,
+    "submission_ready": false
+  }
+}
