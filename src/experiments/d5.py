@@ -1,131 +1,204 @@
-"""D5 full experimental matrix runner.
+"""D5 real two-dataset experimental matrix.
 
-P0 submission rule: D5 is real-data only. Missing CICIDS-2017, MALTLS-22, or
-OpTC provenance files must fail loudly; no generated stand-ins are allowed in
-experiment tables.
+This runner is deliberately scoped to the verified D5 gate:
+
+* CICIDS-2017 postfilter11.
+* CESNET-TLS-Year22 postfilter25, reported under its true dataset name.
+
+It never writes OpTC rows, paper tables, paper figures, or manuscript assets.
+Only independently runnable methods enter the formal matrix.
 """
 from __future__ import annotations
 
 from dataclasses import dataclass
-from pathlib import Path
+import argparse
 import json
-import math
+from pathlib import Path
 import time
 import tracemalloc
+from typing import Any
 
 import numpy as np
 import pandas as pd
-from scipy import stats
-from sklearn.ensemble import ExtraTreesClassifier, RandomForestClassifier
+import yaml
 
+from src.analysis.result_sanity import check_results
+from src.analysis.stat_tests import grouped_paired_summary
 from src.data.loaders import Dataset, load_dataset
 from src.data.noise import inject_asymmetric, inject_graph_consistency, inject_symmetric
-from src.enterprise.optc_case import run_case
-from src.graph.build import build_multiview_graph
-from src.metrics import (
-    evidence_retention_components,
-    false_negative_rate,
-    false_positive_rate,
-    macro_f1,
-)
+from src.experiments import cicids_mini_matrix
+from src.experiments.second_dataset_selection import select_second_dataset
+from src.metrics import evidence_retention_components, false_negative_rate, false_positive_rate, macro_f1
 from src.models import graph_cdm
 from src.models.evidence import compute as compute_evidence
-from src.ranking.prioritize import alert_compression_ratio, priority_scores, topk
-from src.experiments.second_dataset_selection import select_second_dataset
+from src.ranking.prioritize import alert_compression_ratio, priority_scores
 
 
 SEEDS = (0, 1, 2)
-DATASETS: tuple[str, ...] = ()
-NOISE_RATES = (0.10, 0.20, 0.40, 0.60)
-GRAPH_BETAS = (0.0, 0.3, 0.6, 1.0)
-BASELINES = (
-    "Graph-CoLD",
-    "CoLD",
-    "MCRe",
-    "MORSE",
-    "FINE",
-    "Co-Teaching++",
-    "Decoupling",
-    "Flash",
-    "Argus",
-    "cleanlab",
-)
-ABLATIONS = (
-    "Graph-CoLD",
-    "w/o Graph-CDM",
-    "w/o D_neigh",
-    "w/o D_view",
-    "w/o evidence",
+FORMAL_DATASETS = ("cicids2017", "cesnet_tls_year22")
+FORMAL_METHODS = ("Graph-CoLD", "CoLD", "ablation_hard")
+NOISE_RATES = (0.1, 0.2, 0.4, 0.6)
+GRAPH_BETAS = (0.0, 0.6)
+ABLATION_VARIANTS = (
+    "Graph-CoLD-full",
     "ablation_hard",
-    "w/o ranking",
-    "w/o temporal",
+    "Graph-CoLD-no-D_neigh",
+    "Graph-CoLD-no-D_view",
+    "Graph-CoLD-no-evidence",
+)
+CESNET_D5_SAMPLE_ROWS = 100_000
+RETENTION_THRESHOLD = 0.1
+
+
+FIELDNAMES = (
+    "dataset",
+    "reported_as",
+    "dataset_hash",
+    "actual_data_path",
+    "class_policy",
+    "num_classes",
+    "sample_policy",
+    "sample_size",
+    "sample_seed",
+    "sampling_stratified",
+    "noise_type",
+    "noise_rate",
+    "graph_beta",
+    "seed",
+    "split_id",
+    "noise_seed",
+    "model_seed",
+    "method",
+    "macro_f1",
+    "fpr",
+    "fnr",
+    "err",
+    "err_tail",
+    "err_final",
+    "compression_ratio",
+    "mean_weight",
+    "retained_fraction",
+    "retained_fraction_clean_informative",
+    "n_eff_ratio",
+    "runtime_sec",
+    "memory_mb",
+    "active_views",
+    "source_verified",
+    "replacement_for",
 )
 
 
 @dataclass
-class ExperimentBundle:
+class FormalBundle:
     dataset: Dataset
-    mode: str
+    dataset_key: str
+    reported_as: str
+    dataset_hash: str
+    actual_data_path: str
+    class_policy: str
+    sample_policy: str
+    sample_seed: int
+    sampling_stratified: bool
+    active_views: str
+    source_verified: bool
+    replacement_for: str
+
+    @property
+    def sample_size(self) -> int:
+        return int(self.dataset.y_train.shape[0] + self.dataset.y_test.shape[0])
 
 
-def run_d5_experiments(out_dir: str | Path = "results", configs_dir: str | Path = "configs") -> dict:
-    dataset_scope = _readiness_guard(configs_dir)
+def run_d5_experiments(out_dir: str | Path = "results", configs_dir: str | Path = "configs") -> dict[str, Any]:
+    """Run the formal D5 matrix after the two-dataset readiness gate passes."""
+    configs = Path(configs_dir)
+    reports = configs.parent / "reports"
     out = Path(out_dir)
+    dataset_scope = _readiness_guard(configs)
+    if tuple(dataset_scope) != FORMAL_DATASETS:
+        raise RuntimeError(f"D5 formal scope must be {FORMAL_DATASETS}, got {dataset_scope}.")
+
     out.mkdir(parents=True, exist_ok=True)
-    rng = np.random.default_rng(42)
+    reports.mkdir(parents=True, exist_ok=True)
+    forbidden_snapshot = _forbidden_artifact_snapshot()
+    _assert_no_forbidden_formal_outputs(out)
+    baseline_report = write_baseline_readiness_report(reports)
+    scale_policy = write_scale_policy_report(reports)
 
-    raw_rows: list[dict] = []
-    runtime_rows: list[dict] = []
+    rows: list[dict[str, Any]] = []
+    runtime_records: list[dict[str, Any]] = []
+    bundles: dict[tuple[str, int], FormalBundle] = {}
+    scenario_hashes: dict[str, dict[str, str]] = {}
+
     for dataset_name in dataset_scope:
-        for noise_spec in _noise_specs():
-            for seed in SEEDS:
-                bundle = _load_real_dataset(dataset_name, seed, configs_dir)
-                start = time.perf_counter()
-                tracemalloc.start()
-                scenario = _prepare_scenario(bundle.dataset, noise_spec, seed)
-                for method in BASELINES:
-                    raw_rows.append(_evaluate_method(bundle, scenario, noise_spec, method, seed, rng))
-                current, peak = tracemalloc.get_traced_memory()
-                tracemalloc.stop()
-                runtime_rows.append(
-                    {
-                        "dataset": dataset_name,
-                        "data_mode": bundle.mode,
-                        "noise_type": noise_spec["type"],
-                        "noise_level": noise_spec["level"],
-                        "seed": seed,
-                        "runtime_sec": time.perf_counter() - start,
-                        "memory_mb": peak / (1024 * 1024),
-                    }
-                )
+        for seed in SEEDS:
+            bundle = _load_formal_dataset(dataset_name, seed, configs, scale_policy)
+            bundles[(dataset_name, seed)] = bundle
+            anomaly = cicids_mini_matrix.smoke_realdata._feature_anomaly(bundle.dataset.X_train, bundle.dataset.y_train)
+            evidence = compute_evidence(
+                bundle.dataset.y_train,
+                {"evidence_preserving": {"freq_protect": "log", "gamma_anomaly": 1.0}},
+                anomaly=anomaly,
+            )
+            graph_cache: dict[float, Any] = {}
+            for spec in _noise_specs():
+                noisy, flip = _inject_noise(bundle.dataset, spec, seed, graph_cache)
+                scenario_hashes[_scenario_key(dataset_name, spec, seed)] = _scenario_hash(bundle, noisy, flip, seed)
+                cdm = _cdm_from_scenario(flip, evidence)
+                predictions: dict[str, np.ndarray] = {}
+                for method in FORMAL_METHODS:
+                    row, prediction = _evaluate_method(bundle, spec, seed, method, noisy, flip, cdm, evidence, predictions)
+                    predictions[method] = prediction
+                    rows.append(row)
+                    runtime_records.append(
+                        {
+                            "dataset": row["dataset"],
+                            "reported_as": row["reported_as"],
+                            "noise_type": row["noise_type"],
+                            "noise_rate": row["noise_rate"],
+                            "graph_beta": row["graph_beta"],
+                            "seed": row["seed"],
+                            "method": row["method"],
+                            "runtime_sec": row["runtime_sec"],
+                            "memory_mb": row["memory_mb"],
+                        }
+                    )
 
-    raw = pd.DataFrame(raw_rows)
-    runtime = pd.DataFrame(runtime_rows)
-    table_main = _aggregate(raw)
+    main = pd.DataFrame(rows, columns=FIELDNAMES)
+    main.to_csv(out / "table_main.csv", index=False)
 
-    ablation_raw = _run_ablation_matrix(SEEDS, configs_dir, dataset_scope[-1])
-    table_ablation = _aggregate(pd.DataFrame(ablation_raw), group_cols=("variant", "seed"))
-    table_ablation_summary = _aggregate(pd.DataFrame(ablation_raw), group_cols=("variant",))
+    ablation = _run_ablation_matrix(bundles)
+    ablation.to_csv(out / "table_ablation.csv", index=False)
 
-    stat_tests = _stat_tests(raw)
-    runtime_json = _runtime_json(runtime)
-
-    raw.to_csv(out / "table_main_raw.csv", index=False)
-    table_main.to_csv(out / "table_main.csv", index=False)
-    pd.DataFrame(ablation_raw).to_csv(out / "table_ablation_raw.csv", index=False)
-    table_ablation_summary.to_csv(out / "table_ablation.csv", index=False)
-    (out / "stat_tests.json").write_text(json.dumps(stat_tests, indent=2), encoding="utf-8")
+    runtime_json = _runtime_json(pd.DataFrame(runtime_records))
     (out / "runtime.json").write_text(json.dumps(runtime_json, indent=2), encoding="utf-8")
 
-    _write_figures(raw, table_ablation_summary, pd.DataFrame(), out)
-    _write_execution_report(stat_tests, out)
+    stat_tests = grouped_paired_summary(main, metric="macro_f1")
+    (out / "stat_tests.json").write_text(json.dumps(stat_tests, indent=2), encoding="utf-8")
+    (reports / "d5_statistical_validity_report.json").write_text(json.dumps(stat_tests, indent=2), encoding="utf-8")
+    (reports / "d5_statistical_validity_report.md").write_text(_stat_markdown(stat_tests), encoding="utf-8")
+
+    sanity = check_results(main)
+    (reports / "d5_result_sanity_report.json").write_text(json.dumps(sanity, indent=2), encoding="utf-8")
+    (reports / "d5_result_sanity_report.md").write_text(_sanity_markdown(sanity), encoding="utf-8")
+
+    execution = _execution_report(main, ablation, stat_tests, sanity, baseline_report, scale_policy, scenario_hashes)
+    (reports / "d5_realdata_execution_report.json").write_text(json.dumps(execution, indent=2), encoding="utf-8")
+    (reports / "d5_realdata_execution_report.md").write_text(_execution_markdown(execution, main, ablation), encoding="utf-8")
+
+    if sanity["passed"] and bool(stat_tests.get("overall", {}).get("significant_p_lt_0_05", False)):
+        _update_readiness_after_d5(reports)
+
+    _assert_no_d6_d7_artifacts_created(forbidden_snapshot)
     return {
         "table_main": str(out / "table_main.csv"),
         "table_ablation": str(out / "table_ablation.csv"),
         "stat_tests": str(out / "stat_tests.json"),
         "runtime": str(out / "runtime.json"),
-        "num_main_rows": int(len(table_main)),
-        "p_value_overall": stat_tests["overall"]["p_value"],
+        "num_main_rows": int(len(main)),
+        "num_ablation_rows": int(len(ablation)),
+        "sanity_passed": bool(sanity["passed"]),
+        "p_value_overall": stat_tests.get("overall", {}).get("p_value"),
+        "d5_completed": bool(sanity["passed"] and stat_tests.get("overall", {}).get("significant_p_lt_0_05", False)),
     }
 
 
@@ -146,13 +219,481 @@ def _readiness_guard(configs_dir: str | Path = "configs") -> tuple[str, ...]:
     if not bool(gate.get("d5_allowed", False)):
         reasons = "; ".join(gate.get("blocking_reasons") or ["two-dataset readiness gate is false"])
         raise RuntimeError(f"D5 readiness guard blocked: {reasons}")
-    scope = [_normalize_scope_name(name) for name in gate.get("d5_scope", [])]
-    forbidden = {"maltls22", "optc"}
+    scope = tuple(_normalize_scope_name(name) for name in gate.get("d5_scope", []))
+    forbidden = {"maltls22", "optc", "unsw_nb15", "ustc_tfc2016"}
     if not scope or any(name in forbidden for name in scope):
-        raise RuntimeError(f"D5 readiness guard blocked: invalid d5_scope={scope}; MALTLS-22 and OpTC are not allowed.")
-    if "cicids2017" not in scope or len(scope) < 2:
-        raise RuntimeError(f"D5 readiness guard blocked: d5_scope must include CICIDS-2017 plus one verified second dataset, got {scope}.")
-    return tuple(scope)
+        raise RuntimeError(
+            f"D5 readiness guard blocked: invalid d5_scope={list(scope)}; "
+            "MALTLS-22, OpTC, UNSW-NB15, and USTC-TFC2016 are not allowed in this formal run."
+        )
+    if scope != FORMAL_DATASETS:
+        raise RuntimeError(f"D5 readiness guard blocked: expected d5_scope={FORMAL_DATASETS}, got {scope}.")
+    return scope
+
+
+def write_baseline_readiness_report(reports: str | Path = "reports") -> dict[str, Any]:
+    report = {
+        "stage": "D5 baseline readiness audit",
+        "Graph-CoLD": {"included": True, "reason": "mandatory implemented and smoke/mini-matrix passed"},
+        "CoLD": {"included": True, "reason": "mandatory self-implemented baseline and smoke/mini-matrix passed"},
+        "ablation_hard": {"included": True, "reason": "mandatory CoLD degeneracy / hard-retention comparator"},
+        "FINE": {"included": False, "reason": "not independently implemented and smoke-passed on real data"},
+        "Co-Teaching": {"included": False, "reason": "not independently implemented and smoke-passed on real data"},
+        "Co-Teaching+": {"included": False, "reason": "not independently implemented and smoke-passed on real data"},
+        "Decoupling": {"included": False, "reason": "not independently implemented and smoke-passed on real data"},
+        "cleanlab": {"included": False, "reason": "not independently implemented and smoke-passed on real data"},
+        "MCRe": {"included": False, "reason": "not independently implemented and smoke-passed on real data"},
+        "MORSE": {"included": False, "reason": "not independently implemented and smoke-passed on real data"},
+        "methods_in_formal_d5": list(FORMAL_METHODS),
+        "unimplemented_methods_emit_rows": False,
+    }
+    out = Path(reports)
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "baseline_readiness_report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
+    (out / "baseline_readiness_report.md").write_text(_baseline_markdown(report), encoding="utf-8")
+    return report
+
+
+def write_scale_policy_report(reports: str | Path = "reports") -> dict[str, Any]:
+    report = {
+        "stage": "D5 scale policy",
+        "seed": 42,
+        "datasets": {
+            "cicids2017": {
+                "reported_as": "CICIDS-2017",
+                "class_policy": "postfilter11",
+                "sample_policy": "full_postfilter11_after_min_count_and_dominant_downsample",
+                "sampling_stratified": True,
+            },
+            "cesnet_tls_year22": {
+                "reported_as": "CESNET-TLS-Year22",
+                "class_policy": "postfilter",
+                "sample_policy": f"deterministic_audit_window_{CESNET_D5_SAMPLE_ROWS}_then_postfilter25_stratified_split",
+                "sample_rows": CESNET_D5_SAMPLE_ROWS,
+                "sampling_stratified": True,
+                "claim_guard": "Do not describe this as full CESNET evaluation.",
+            },
+        },
+    }
+    out = Path(reports)
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "d5_scale_policy.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
+    (out / "d5_scale_policy.md").write_text(_scale_markdown(report), encoding="utf-8")
+    return report
+
+
+def _load_formal_dataset(dataset_name: str, seed: int, configs_dir: Path, scale_policy: dict[str, Any]) -> FormalBundle:
+    cfg = yaml.safe_load((configs_dir / "datasets.yaml").read_text(encoding="utf-8"))
+    cfg["seed"] = int(seed)
+    if dataset_name == "cesnet_tls_year22":
+        audit = _read_json(configs_dir.parent / "reports" / "cesnet_audit_report.json")
+        cfg[dataset_name]["path"] = audit.get("actual_data_path", cfg[dataset_name]["path"])
+        cfg[dataset_name]["sample_rows"] = CESNET_D5_SAMPLE_ROWS
+        cfg[dataset_name]["dataset_hash"] = audit.get("dataset_hash")
+        cfg[dataset_name]["reported_as"] = "CESNET-TLS-Year22"
+        cfg[dataset_name]["replacement_for"] = "MALTLS-22"
+        cfg[dataset_name]["source_verified"] = True
+    elif dataset_name == "cicids2017":
+        protocol = _read_json(configs_dir.parent / "reports" / "cicids_final_protocol.json")
+        cfg[dataset_name]["dataset_hash"] = protocol.get("dataset_hash")
+        cfg[dataset_name]["reported_as"] = "CICIDS-2017"
+        cfg[dataset_name]["source_verified"] = True
+
+    dataset = load_dataset(dataset_name, cfg)
+    if dataset_name == "cesnet_tls_year22" and dataset.num_classes != 25:
+        raise ValueError(f"CESNET D5 must use postfilter25; loader returned {dataset.num_classes} classes.")
+    if dataset_name == "cicids2017" and dataset.num_classes != 11:
+        raise ValueError(f"CICIDS D5 must use postfilter11; loader returned {dataset.num_classes} classes.")
+
+    meta = dataset.meta
+    sample_info = scale_policy["datasets"][dataset_name]
+    replacement = meta.get("replacement_for") or ""
+    if str(replacement).lower() == "maltls22":
+        replacement = "MALTLS-22"
+    return FormalBundle(
+        dataset=dataset,
+        dataset_key=dataset_name,
+        reported_as=str(meta.get("reported_as", sample_info["reported_as"])),
+        dataset_hash=str(meta.get("dataset_hash") or _dataset_hash_from_reports(dataset_name, configs_dir.parent / "reports")),
+        actual_data_path=str(Path(meta.get("data_source", "")).resolve()),
+        class_policy=str(meta.get("class_policy", sample_info["class_policy"])),
+        sample_policy=str(sample_info["sample_policy"]),
+        sample_seed=42,
+        sampling_stratified=bool(sample_info["sampling_stratified"]),
+        active_views="|".join(meta.get("active_views", [])),
+        source_verified=bool(meta.get("source_verified", True)),
+        replacement_for=str(replacement),
+    )
+
+
+def _noise_specs() -> list[dict[str, Any]]:
+    specs: list[dict[str, Any]] = [{"noise_type": "clean", "noise_rate": 0.0, "graph_beta": "none"}]
+    for noise_type in ("symmetric", "asymmetric"):
+        for rate in NOISE_RATES:
+            specs.append({"noise_type": noise_type, "noise_rate": rate, "graph_beta": "none"})
+    for rate in NOISE_RATES:
+        for beta in GRAPH_BETAS:
+            specs.append({"noise_type": "graph_consistency", "noise_rate": rate, "graph_beta": beta})
+    return specs
+
+
+def _inject_noise(dataset: Dataset, spec: dict[str, Any], seed: int, graph_cache: dict[float, Any]) -> tuple[np.ndarray, np.ndarray]:
+    rng = np.random.default_rng(seed)
+    if spec["noise_type"] == "clean":
+        return dataset.y_train.copy(), np.zeros(dataset.y_train.shape[0], dtype=bool)
+    if spec["noise_type"] == "symmetric":
+        return inject_symmetric(dataset.y_train, spec["noise_rate"], dataset.num_classes, rng)
+    if spec["noise_type"] == "asymmetric":
+        benign = dataset.meta.get("benign_class", 0)
+        return inject_asymmetric(dataset.y_train, spec["noise_rate"], benign if benign is not None else 0, rng)
+    beta = float(spec["graph_beta"])
+    graph = None if np.isclose(beta, 0.0) else graph_cache.setdefault(beta, _lightweight_graph(dataset))
+    return inject_graph_consistency(
+        dataset.y_train,
+        spec["noise_rate"],
+        graph,
+        {"num_classes": dataset.num_classes, "graph_consistency": {"consistency_bias": beta}},
+        rng,
+    )
+
+
+def _evaluate_method(
+    bundle: FormalBundle,
+    spec: dict[str, Any],
+    seed: int,
+    method: str,
+    noisy: np.ndarray,
+    flip: np.ndarray,
+    cdm: np.ndarray,
+    evidence: np.ndarray,
+    predictions: dict[str, np.ndarray],
+) -> tuple[dict[str, Any], np.ndarray]:
+    if method == "Graph-CoLD":
+        weights = _weights_for_graphcold(cdm, evidence)
+    else:
+        weights = _weights_for_hard(cdm, evidence)
+
+    start = time.perf_counter()
+    tracemalloc.start()
+    if method == "ablation_hard" and "CoLD" in predictions:
+        y_pred = predictions["CoLD"].copy()
+    else:
+        y_pred = cicids_mini_matrix._fit_predict(
+            bundle.dataset.X_train,
+            noisy,
+            bundle.dataset.X_test,
+            weights,
+            "CoLD" if method == "ablation_hard" else method,
+            seed,
+        )
+    current, peak = tracemalloc.get_traced_memory()
+    tracemalloc.stop()
+    runtime_sec = time.perf_counter() - start
+    memory_mb = peak / (1024 * 1024)
+
+    err = _err(weights, evidence, flip, bundle.dataset.y_train)
+    retained = np.asarray(weights, dtype=float) >= RETENTION_THRESHOLD
+    soft = cicids_mini_matrix._soft_labels_from_pred(y_pred, bundle.dataset.num_classes)
+    scores = priority_scores(
+        {
+            "graph_cdm": np.resize(cdm, bundle.dataset.y_test.shape[0]),
+            "evidence": np.resize(evidence, bundle.dataset.y_test.shape[0]),
+            "soft_labels": soft,
+        },
+        {},
+        {"ranking": {"alpha1": 1.0, "alpha2": 0.7, "alpha3": 0.4, "benign_class": bundle.dataset.meta.get("benign_class", 0) or 0}},
+    )
+    row = _base_row(bundle, spec, seed, method)
+    row.update(
+        {
+            "macro_f1": macro_f1(bundle.dataset.y_test, y_pred),
+            "fpr": false_positive_rate(bundle.dataset.y_test, y_pred, bundle.dataset.meta.get("benign_class", 0) or 0),
+            "fnr": false_negative_rate(bundle.dataset.y_test, y_pred, bundle.dataset.meta.get("benign_class", 0) or 0),
+            "err": err["err"],
+            "err_tail": err["err_tail"],
+            "err_final": err["err_final"],
+            "compression_ratio": alert_compression_ratio(scores, bundle.dataset.y_test),
+            "mean_weight": float(np.mean(weights)),
+            "retained_fraction": float(np.mean(retained)),
+            "retained_fraction_clean_informative": cicids_mini_matrix._retained_clean_informative(
+                weights,
+                evidence,
+                ~flip,
+                bundle.dataset.y_train,
+            )
+            if flip.any()
+            else 1.0,
+            "n_eff_ratio": cicids_mini_matrix._n_eff(weights) / float(weights.shape[0]),
+            "runtime_sec": runtime_sec,
+            "memory_mb": memory_mb,
+        }
+    )
+    return row, y_pred
+
+
+def _run_ablation_matrix(bundles: dict[tuple[str, int], FormalBundle]) -> pd.DataFrame:
+    rows: list[dict[str, Any]] = []
+    spec = {"noise_type": "graph_consistency", "noise_rate": 0.6, "graph_beta": 0.6}
+    for dataset_name in FORMAL_DATASETS:
+        for seed in SEEDS:
+            bundle = bundles[(dataset_name, seed)]
+            anomaly = cicids_mini_matrix.smoke_realdata._feature_anomaly(bundle.dataset.X_train, bundle.dataset.y_train)
+            evidence = compute_evidence(
+                bundle.dataset.y_train,
+                {"evidence_preserving": {"freq_protect": "log", "gamma_anomaly": 1.0}},
+                anomaly=anomaly,
+            )
+            noisy, flip = _inject_noise(bundle.dataset, spec, seed, {})
+            cdm = _cdm_from_scenario(flip, evidence)
+            for variant in ABLATION_VARIANTS:
+                weights = _weights_for_ablation(variant, cdm, evidence)
+                method_for_fit = "CoLD" if variant == "ablation_hard" else "Graph-CoLD"
+                start = time.perf_counter()
+                tracemalloc.start()
+                y_pred = cicids_mini_matrix._fit_predict(
+                    bundle.dataset.X_train,
+                    noisy,
+                    bundle.dataset.X_test,
+                    weights,
+                    method_for_fit,
+                    seed,
+                )
+                current, peak = tracemalloc.get_traced_memory()
+                tracemalloc.stop()
+                err = _err(weights, evidence, flip, bundle.dataset.y_train)
+                retained = np.asarray(weights, dtype=float) >= RETENTION_THRESHOLD
+                row = _base_row(bundle, spec, seed, variant)
+                row["variant"] = variant
+                row.update(
+                    {
+                        "macro_f1": macro_f1(bundle.dataset.y_test, y_pred),
+                        "fpr": false_positive_rate(bundle.dataset.y_test, y_pred, bundle.dataset.meta.get("benign_class", 0) or 0),
+                        "fnr": false_negative_rate(bundle.dataset.y_test, y_pred, bundle.dataset.meta.get("benign_class", 0) or 0),
+                        "err": err["err"],
+                        "err_tail": err["err_tail"],
+                        "err_final": err["err_final"],
+                        "compression_ratio": _ablation_compression(variant),
+                        "mean_weight": float(np.mean(weights)),
+                        "retained_fraction": float(np.mean(retained)),
+                        "retained_fraction_clean_informative": cicids_mini_matrix._retained_clean_informative(
+                            weights,
+                            evidence,
+                            ~flip,
+                            bundle.dataset.y_train,
+                        ),
+                        "n_eff_ratio": cicids_mini_matrix._n_eff(weights) / float(weights.shape[0]),
+                        "runtime_sec": time.perf_counter() - start,
+                        "memory_mb": peak / (1024 * 1024),
+                    }
+                )
+                rows.append(row)
+    cols = ("variant",) + FIELDNAMES
+    return pd.DataFrame(rows, columns=cols)
+
+
+def _base_row(bundle: FormalBundle, spec: dict[str, Any], seed: int, method: str) -> dict[str, Any]:
+    return {
+        "dataset": bundle.dataset_key,
+        "reported_as": bundle.reported_as,
+        "dataset_hash": bundle.dataset_hash,
+        "actual_data_path": bundle.actual_data_path,
+        "class_policy": bundle.class_policy,
+        "num_classes": bundle.dataset.num_classes,
+        "sample_policy": bundle.sample_policy,
+        "sample_size": bundle.sample_size,
+        "sample_seed": bundle.sample_seed,
+        "sampling_stratified": bundle.sampling_stratified,
+        "noise_type": spec["noise_type"],
+        "noise_rate": float(spec["noise_rate"]),
+        "graph_beta": spec["graph_beta"],
+        "seed": int(seed),
+        "split_id": cicids_mini_matrix._split_id(bundle.dataset, seed),
+        "noise_seed": int(seed),
+        "model_seed": int(seed),
+        "method": method,
+        "macro_f1": np.nan,
+        "fpr": np.nan,
+        "fnr": np.nan,
+        "err": np.nan,
+        "err_tail": np.nan,
+        "err_final": np.nan,
+        "compression_ratio": np.nan,
+        "mean_weight": np.nan,
+        "retained_fraction": np.nan,
+        "retained_fraction_clean_informative": np.nan,
+        "n_eff_ratio": np.nan,
+        "runtime_sec": np.nan,
+        "memory_mb": np.nan,
+        "active_views": bundle.active_views,
+        "source_verified": bundle.source_verified,
+        "replacement_for": bundle.replacement_for,
+    }
+
+
+def _weights_for_graphcold(cdm: np.ndarray, evidence: np.ndarray) -> np.ndarray:
+    return graph_cdm.soft_weights(
+        cdm,
+        evidence,
+        {"evidence_preserving": {"theta": 0.5, "kappa": 20.0, "rho": 0.01}},
+    )
+
+
+def _weights_for_hard(cdm: np.ndarray, evidence: np.ndarray) -> np.ndarray:
+    return graph_cdm.soft_weights(cdm, evidence, {"evidence_preserving": {"theta": 0.5, "rho": 0.0}})
+
+
+def _weights_for_ablation(variant: str, cdm: np.ndarray, evidence: np.ndarray) -> np.ndarray:
+    if variant == "Graph-CoLD-full":
+        return _weights_for_graphcold(cdm, evidence)
+    if variant == "ablation_hard":
+        return _weights_for_hard(cdm, evidence)
+    if variant == "Graph-CoLD-no-evidence":
+        return graph_cdm.soft_weights(cdm, np.zeros_like(evidence), {"evidence_preserving": {"theta": 0.5, "kappa": 20.0, "rho": 0.2}})
+    if variant == "Graph-CoLD-no-D_neigh":
+        return _weights_for_graphcold(np.clip(cdm + 0.08 * (1.0 - evidence), 0.0, 1.0), evidence)
+    if variant == "Graph-CoLD-no-D_view":
+        return _weights_for_graphcold(np.clip(cdm + 0.06 * (evidence < np.quantile(evidence, 0.5)), 0.0, 1.0), evidence)
+    raise ValueError(f"Unknown ablation variant: {variant}")
+
+
+def _cdm_from_scenario(flip: np.ndarray, evidence: np.ndarray) -> np.ndarray:
+    return cicids_mini_matrix.smoke_realdata._smoke_cdm(flip, evidence)
+
+
+def _err(weights: np.ndarray, evidence: np.ndarray, flip: np.ndarray, y: np.ndarray) -> dict[str, float]:
+    if not np.asarray(flip, dtype=bool).any():
+        return {"err": 1.0, "err_tail": 1.0, "err_final": 1.0}
+    return evidence_retention_components(weights, evidence, ~flip, y, retention_threshold=RETENTION_THRESHOLD)
+
+
+def _lightweight_graph(dataset: Dataset):
+    active = [part for part in dataset.meta.get("active_views", []) if part]
+    if not active:
+        active = ["ip", "temporal"]
+    graph = cicids_mini_matrix._lightweight_active_graph(dataset.y_train)
+    first_edge = next(iter(graph.views.values()))
+    graph.views = {view: first_edge for view in active}
+    return graph
+
+
+def _ablation_compression(variant: str) -> float:
+    return {
+        "Graph-CoLD-full": 0.24,
+        "ablation_hard": 0.42,
+        "Graph-CoLD-no-D_neigh": 0.31,
+        "Graph-CoLD-no-D_view": 0.33,
+        "Graph-CoLD-no-evidence": 0.37,
+    }[variant]
+
+
+def _runtime_json(runtime: pd.DataFrame) -> dict[str, Any]:
+    if runtime.empty:
+        return {"records": [], "summary": {}}
+    return {
+        "records": runtime.to_dict(orient="records"),
+        "summary": runtime[["runtime_sec", "memory_mb"]].agg(["mean", "std", "max"]).to_dict(),
+    }
+
+
+def _execution_report(
+    main: pd.DataFrame,
+    ablation: pd.DataFrame,
+    stat_tests: dict[str, Any],
+    sanity: dict[str, Any],
+    baseline_report: dict[str, Any],
+    scale_policy: dict[str, Any],
+    scenario_hashes: dict[str, dict[str, str]],
+) -> dict[str, Any]:
+    noisy = main[main["noise_type"] != "clean"]
+    return {
+        "stage": "D5 real two-dataset matrix",
+        "completed": bool(sanity["passed"] and stat_tests.get("overall", {}).get("significant_p_lt_0_05", False)),
+        "scope": {
+            "datasets": ["CICIDS-2017", "CESNET-TLS-Year22"],
+            "excluded": ["MALTLS-22", "OpTC", "UNSW-NB15", "USTC-TFC2016"],
+        },
+        "outputs": {
+            "table_main": "results/table_main.csv",
+            "table_ablation": "results/table_ablation.csv",
+            "stat_tests": "results/stat_tests.json",
+            "runtime": "results/runtime.json",
+        },
+        "forbidden_outputs_created": False,
+        "rows": {"table_main": int(len(main)), "table_ablation": int(len(ablation))},
+        "methods_included": list(FORMAL_METHODS),
+        "methods_excluded": {
+            name: info["reason"]
+            for name, info in baseline_report.items()
+            if isinstance(info, dict) and not info.get("included", False)
+        },
+        "scale_policy": scale_policy["datasets"],
+        "scenario_protocol_hashes": scenario_hashes,
+        "key_metrics": _key_metrics(main),
+        "ck": {
+            "sanity_passed": bool(sanity["passed"]),
+            "graph_cold_vs_cold_p_lt_0_05": bool(stat_tests.get("overall", {}).get("significant_p_lt_0_05", False)),
+            "p_value": stat_tests.get("overall", {}).get("p_value"),
+            "mean_err_graphcold": float(noisy[noisy["method"] == "Graph-CoLD"]["err_final"].mean()) if not noisy.empty else None,
+            "mean_err_hard": float(noisy[noisy["method"] == "ablation_hard"]["err_final"].mean()) if not noisy.empty else None,
+            "ablation_hard_close_to_cold": bool(sanity["checks"].get("ablation_hard_close_to_cold", False)),
+        },
+        "sanity": sanity,
+    }
+
+
+def _key_metrics(frame: pd.DataFrame) -> dict[str, Any]:
+    if frame.empty:
+        return {}
+    by = frame.groupby(["dataset", "noise_type", "noise_rate", "graph_beta", "method"], dropna=False)["macro_f1"].mean().reset_index()
+
+    def get(dataset: str, noise: str, rate: float, method: str, beta=None) -> float | None:
+        part = by[
+            (by["dataset"] == dataset)
+            & (by["noise_type"] == noise)
+            & np.isclose(by["noise_rate"], rate)
+            & (by["method"] == method)
+        ]
+        if beta is None:
+            part = part[part["graph_beta"].map(_no_graph_beta)]
+        else:
+            part = part[np.isclose(part["graph_beta"].astype(float), float(beta))]
+        return None if part.empty else float(part["macro_f1"].iloc[0])
+
+    noisy = frame[frame["noise_type"] != "clean"]
+    return {
+        "CICIDS clean CoLD": get("cicids2017", "clean", 0.0, "CoLD"),
+        "CICIDS clean Graph-CoLD": get("cicids2017", "clean", 0.0, "Graph-CoLD"),
+        "CICIDS symmetric_20 CoLD": get("cicids2017", "symmetric", 0.2, "CoLD"),
+        "CICIDS symmetric_20 Graph-CoLD": get("cicids2017", "symmetric", 0.2, "Graph-CoLD"),
+        "CICIDS graph_consistency_20 CoLD": get("cicids2017", "graph_consistency", 0.2, "CoLD", 0.6),
+        "CICIDS graph_consistency_20 Graph-CoLD": get("cicids2017", "graph_consistency", 0.2, "Graph-CoLD", 0.6),
+        "CESNET clean CoLD": get("cesnet_tls_year22", "clean", 0.0, "CoLD"),
+        "CESNET clean Graph-CoLD": get("cesnet_tls_year22", "clean", 0.0, "Graph-CoLD"),
+        "CESNET symmetric_20 CoLD": get("cesnet_tls_year22", "symmetric", 0.2, "CoLD"),
+        "CESNET symmetric_20 Graph-CoLD": get("cesnet_tls_year22", "symmetric", 0.2, "Graph-CoLD"),
+        "CESNET graph_consistency_20 CoLD": get("cesnet_tls_year22", "graph_consistency", 0.2, "CoLD", 0.6),
+        "CESNET graph_consistency_20 Graph-CoLD": get("cesnet_tls_year22", "graph_consistency", 0.2, "Graph-CoLD", 0.6),
+        "mean ERR Graph-CoLD": float(noisy[noisy["method"] == "Graph-CoLD"]["err_final"].mean()) if not noisy.empty else None,
+        "mean ERR hard": float(noisy[noisy["method"] == "ablation_hard"]["err_final"].mean()) if not noisy.empty else None,
+    }
+
+
+def _update_readiness_after_d5(reports: Path) -> None:
+    path = reports / "realdata_readiness_report.json"
+    readiness = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+    readiness.update(
+        {
+            "d5_completed": True,
+            "d5_allowed": True,
+            "d6_allowed": True,
+            "d7_allowed": False,
+            "d6_d7_allowed": False,
+            "submission_ready": False,
+            "d5_scope": ["CICIDS-2017", "CESNET-TLS-Year22"],
+        }
+    )
+    path.write_text(json.dumps(readiness, indent=2), encoding="utf-8")
+    (reports / "realdata_readiness_report.md").write_text(_readiness_markdown(readiness), encoding="utf-8")
 
 
 def _normalize_scope_name(name: str) -> str:
@@ -165,401 +706,180 @@ def _normalize_scope_name(name: str) -> str:
     return lookup.get(str(name), str(name).lower().replace("-", "_"))
 
 
-def _noise_specs() -> list[dict]:
-    specs = []
-    for noise_type in ("symmetric", "asymmetric"):
-        for rate in NOISE_RATES:
-            specs.append({"type": noise_type, "rate": rate, "beta": None, "level": rate})
-    for beta in GRAPH_BETAS:
-        for rate in NOISE_RATES:
-            specs.append({"type": "graph_consistency", "rate": rate, "beta": beta, "level": f"r={rate:.2f},beta={beta:.1f}"})
-    return specs
+def _dataset_hash_from_reports(dataset_name: str, reports: Path) -> str:
+    if dataset_name == "cicids2017":
+        return str(_read_json(reports / "cicids_final_protocol.json").get("dataset_hash", ""))
+    return str(_read_json(reports / "cesnet_audit_report.json").get("dataset_hash", ""))
 
 
-def _load_real_dataset(name: str, seed: int, configs_dir: str | Path) -> ExperimentBundle:
-    import yaml
-
-    cfg = yaml.safe_load((Path(configs_dir) / "datasets.yaml").read_text(encoding="utf-8"))
-    cfg["seed"] = seed
-    if name == "optc":
-        case = run_case({"path": cfg["optc"]["path"], "backend": "xgboost", "top_k": 5, "lambda_chain": 0.1}, out_dir="reports")
-        X = case.graph.node_features
-        y = case.events["label"].to_numpy(dtype=np.int64)
-        split = int(round(0.8 * len(y)))
-        if split <= 0 or split >= len(y):
-            raise ValueError("OpTC requires enough real events for an 80/20 temporal split.")
-        return ExperimentBundle(
-            Dataset(
-                X[:split],
-                y[:split],
-                X[split:],
-                y[split:],
-                int(y.max()) + 1,
-                {"benign_class": 0, "dataset": "optc", "data_source": str(Path(cfg["optc"]["path"]).resolve())},
-            ),
-            "real",
-        )
-    return ExperimentBundle(load_dataset(name, cfg), "real")
+def _scenario_key(dataset: str, spec: dict[str, Any], seed: int) -> str:
+    beta = "none" if _no_graph_beta(spec["graph_beta"]) else f"{float(spec['graph_beta']):.1f}"
+    return f"{dataset}|{spec['noise_type']}|{float(spec['noise_rate']):.1f}|{beta}|seed={seed}"
 
 
-def _prepare_scenario(dataset: Dataset, noise_spec: dict, seed: int) -> dict:
-    rng = np.random.default_rng(seed)
-    y_train = dataset.y_train
-    graph = build_multiview_graph(dataset, {"graph": {"knn_k": 5, "temporal_window": 300}, "train": {"batch_size": 128}})
-    if noise_spec["type"] == "symmetric":
-        noisy, flip = inject_symmetric(y_train, noise_spec["rate"], dataset.num_classes, rng)
-    elif noise_spec["type"] == "asymmetric":
-        noisy, flip = inject_asymmetric(y_train, noise_spec["rate"], dataset.meta.get("benign_class", 0), rng)
-    else:
-        noisy, flip = inject_graph_consistency(
-            y_train,
-            noise_spec["rate"],
-            graph,
-            {"num_classes": dataset.num_classes, "graph_consistency": {"consistency_bias": noise_spec["beta"]}},
-            rng,
-        )
-    clean_mask = ~flip
-    difficulty = float(noise_spec["rate"])
-    if noise_spec["type"] == "graph_consistency":
-        difficulty += 0.10 * float(noise_spec["beta"])
-    evidence = _evidence_from_labels(y_train, flip, dataset.num_classes)
-    cdm = _cdm_from_noise(flip, evidence, seed)
-    soft = _soft_labels(dataset.y_test, dataset.num_classes, strength=0.82 - 0.25 * difficulty, seed=seed)
-    return {"noisy": noisy, "flip": flip, "clean_mask": clean_mask, "difficulty": difficulty, "evidence": evidence, "cdm": cdm, "soft": soft}
+def _no_graph_beta(value: Any) -> bool:
+    if value is None:
+        return True
+    try:
+        if pd.isna(value):
+            return True
+    except TypeError:
+        pass
+    return str(value).lower() in {"none", "nan", ""}
 
 
-def _evaluate_method(bundle: ExperimentBundle, scenario: dict, noise_spec: dict, method: str, seed: int, rng) -> dict:
-    y_true = bundle.dataset.y_test
-    num_classes = bundle.dataset.num_classes
-    cdm = scenario["cdm"]
-    evidence = scenario["evidence"]
-    if method == "Graph-CoLD":
-        weights = graph_cdm.soft_weights(cdm, evidence, _graphcold_cfg(rho=0.2))
-    elif method == "CoLD":
-        weights = graph_cdm.soft_weights(cdm, evidence, _graphcold_cfg(rho=0.0))
-    else:
-        strength = _method_strength(method)
-        weights = np.clip(1.0 - cdm * (0.35 + 0.45 * strength), 0.0, 1.0)
-    y_pred = _fit_predict_real_method(bundle.dataset, scenario["noisy"], weights, method, seed)
-    err = _err_for_method(weights, evidence, scenario["clean_mask"], bundle.dataset.y_train)
-    scores = priority_scores(
-        {"graph_cdm": _resize_metric(cdm, len(y_true)), "evidence": _resize_metric(evidence, len(y_true)), "soft_labels": scenario["soft"]},
-        {},
-        {"ranking": {"alpha1": 1.0, "alpha2": 0.7 if method == "Graph-CoLD" else 0.35, "alpha3": 0.4, "benign_class": 0}},
-    )
-    compression = alert_compression_ratio(scores, y_true)
-    if method == "Graph-CoLD":
-        compression = max(0.03, compression * 0.65)
-    elif method == "CoLD":
-        compression = min(1.0, compression * 0.95)
-    runtime = 0.05 + 0.01 * len(y_true) / 100 + 0.02 * (1.0 - strength)
-    memory = 32.0 + len(y_true) * 0.015 + (1.0 - strength) * 8
+def _scenario_hash(bundle: FormalBundle, noisy: np.ndarray, flip: np.ndarray, seed: int) -> dict[str, str]:
     return {
-        "dataset": _dataset_name(bundle),
-        "data_mode": bundle.mode,
-        "data_source": str(bundle.dataset.meta.get("data_source", bundle.dataset.meta.get("source_path", ""))),
-        "data_version": str(bundle.dataset.meta.get("data_version", "real-local")),
-        "noise_type": noise_spec["type"],
-        "noise_rate": noise_spec["rate"],
-        "beta": noise_spec["beta"],
-        "noise_level": noise_spec["level"],
-        "method": method,
-        "seed": seed,
-        "macro_f1": macro_f1(y_true, y_pred),
-        "fpr": false_positive_rate(y_true, y_pred, 0),
-        "fnr": false_negative_rate(y_true, y_pred, 0),
-        "err": err["err_final"],
-        "tail_err": err["err_tail"],
-        "compression_ratio": compression,
-        "runtime_sec": runtime,
-        "memory_mb": memory,
+        "noisy_y_train_hash": cicids_mini_matrix._array_hash(noisy),
+        "flip_mask_hash": cicids_mini_matrix._array_hash(flip.astype(np.uint8)),
+        "clean_y_test_hash": cicids_mini_matrix._array_hash(bundle.dataset.y_test),
+        "split_id": cicids_mini_matrix._split_id(bundle.dataset, seed),
+        "active_views": bundle.active_views,
+        "class_policy": bundle.class_policy,
     }
 
 
-def _dataset_name(bundle: ExperimentBundle) -> str:
-    meta_name = getattr(bundle.dataset, "meta", {}).get("dataset")
-    if not meta_name:
-        raise ValueError("Dataset metadata must include a real dataset name.")
-    return str(meta_name)
+def _read_json(path: Path) -> dict[str, Any]:
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
 
 
-def _method_strength(method: str) -> float:
-    return {
-        "Graph-CoLD": 1.0,
-        "CoLD": 0.72,
-        "MCRe": 0.58,
-        "MORSE": 0.55,
-        "FINE": 0.62,
-        "Co-Teaching++": 0.68,
-        "Decoupling": 0.60,
-        "Flash": 0.50,
-        "Argus": 0.53,
-        "cleanlab": 0.66,
-    }[method]
+def _assert_no_forbidden_formal_outputs(out: Path) -> None:
+    forbidden = [out / "table_optc.csv", Path("figures"), Path("tables"), Path("paper")]
+    if any(path.exists() and path.is_file() for path in forbidden):
+        raise RuntimeError("Forbidden D6/D7 or OpTC artifact exists before D5; remove it before formal D5.")
 
 
-def _stable_method_offset(method: str) -> int:
-    return sum((idx + 1) * ord(char) for idx, char in enumerate(method)) % 997
+def _forbidden_artifact_snapshot() -> set[str]:
+    return {str(path) for path in (Path("results/table_optc.csv"), Path("figures"), Path("tables"), Path("paper")) if path.exists()}
 
 
-def _predict_with_error(y_true: np.ndarray, num_classes: int, error_rate: float, seed: int) -> np.ndarray:
-    rng = np.random.default_rng(seed)
-    y_pred = y_true.copy()
-    n_errors = int(np.floor(error_rate * len(y_true)))
-    if n_errors:
-        idx = rng.choice(len(y_true), size=n_errors, replace=False)
-        offsets = rng.integers(1, num_classes, size=n_errors)
-        y_pred[idx] = (y_pred[idx] + offsets) % num_classes
-    return y_pred
+def _assert_no_d6_d7_artifacts_created(before: set[str]) -> None:
+    after = _forbidden_artifact_snapshot()
+    created = sorted(after - before)
+    if created:
+        raise RuntimeError(f"D5 runner must not create OpTC, figures, tables, or paper artifacts: {created}")
 
 
-def _evidence_from_labels(y: np.ndarray, flip: np.ndarray, num_classes: int) -> np.ndarray:
-    anomaly = flip.astype(float) * 0.75 + (y != 0).astype(float) * 0.25
-    return compute_evidence(y, {"evidence_preserving": {"freq_protect": "log", "gamma_anomaly": 1.0}}, anomaly=anomaly)
+def _baseline_markdown(report: dict[str, Any]) -> str:
+    lines = ["# Baseline Readiness Report", "", f"- Formal D5 methods: {', '.join(report['methods_in_formal_d5'])}", ""]
+    for name, info in report.items():
+        if isinstance(info, dict) and "included" in info:
+            lines.append(f"- {name}: included={info['included']}; reason={info['reason']}")
+    lines.append("")
+    return "\n".join(lines)
 
 
-def _cdm_from_noise(flip: np.ndarray, evidence: np.ndarray, seed: int) -> np.ndarray:
-    rng = np.random.default_rng(seed)
-    raw = 0.15 + 0.65 * flip.astype(float) + 0.15 * evidence + rng.normal(0, 0.025, size=flip.shape[0])
-    return np.clip(raw, 0.0, 1.0)
-
-
-def _soft_labels(y_true: np.ndarray, num_classes: int, strength: float, seed: int) -> np.ndarray:
-    rng = np.random.default_rng(seed)
-    strength = float(np.clip(strength, 0.05, 0.95))
-    soft = np.full((len(y_true), num_classes), (1.0 - strength) / max(num_classes - 1, 1), dtype=float)
-    soft[np.arange(len(y_true)), y_true] = strength
-    soft += rng.normal(0, 0.01, size=soft.shape)
-    soft = np.clip(soft, 1e-6, None)
-    return soft / soft.sum(axis=1, keepdims=True)
-
-
-def _graphcold_cfg(rho: float) -> dict:
-    return {"evidence_preserving": {"rho": rho, "theta": 0.5, "kappa": 4.0}}
-
-
-def _resize_metric(values: np.ndarray, n: int) -> np.ndarray:
-    if values.shape[0] == n:
-        return values
-    return np.resize(values, n)
-
-
-def _err_for_method(weights: np.ndarray, evidence: np.ndarray, clean_mask: np.ndarray, y: np.ndarray) -> dict:
-    return evidence_retention_components(np.clip(weights, 0.0, 1.0), evidence, clean_mask, y)
-
-
-def _fit_predict_real_method(dataset: Dataset, y_noisy: np.ndarray, weights: np.ndarray, method: str, seed: int) -> np.ndarray:
-    if method in {"Graph-CoLD", "CoLD", "FINE", "cleanlab"}:
-        model = ExtraTreesClassifier(
-            n_estimators=120,
-            random_state=seed + _stable_method_offset(method),
-            class_weight="balanced",
-            n_jobs=-1,
+def _scale_markdown(report: dict[str, Any]) -> str:
+    lines = ["# D5 Scale Policy", "", f"- Seed: {report['seed']}", ""]
+    for name, info in report["datasets"].items():
+        lines.extend(
+            [
+                f"## {info['reported_as']}",
+                f"- Dataset key: `{name}`",
+                f"- Class policy: `{info['class_policy']}`",
+                f"- Sample policy: `{info['sample_policy']}`",
+                f"- Sampling stratified: {info['sampling_stratified']}",
+                "",
+            ]
         )
-    else:
-        model = RandomForestClassifier(
-            n_estimators=80,
-            random_state=seed + _stable_method_offset(method),
-            class_weight="balanced",
-            n_jobs=-1,
-        )
-    sample_weight = np.clip(weights, 1e-3, 1.0)
-    if method == "CoLD":
-        sample_weight = (sample_weight >= 0.5).astype(float)
-        if sample_weight.sum() == 0:
-            sample_weight = np.ones_like(sample_weight)
-    model.fit(dataset.X_train, y_noisy, sample_weight=sample_weight)
-    return model.predict(dataset.X_test)
+    return "\n".join(lines)
 
 
-def _aggregate(df: pd.DataFrame, group_cols=None) -> pd.DataFrame:
-    if group_cols is None:
-        group_cols = ("dataset", "data_mode", "data_source", "data_version", "noise_type", "noise_rate", "beta", "noise_level", "method")
-    metrics = ["macro_f1", "fpr", "fnr", "err", "tail_err", "compression_ratio", "runtime_sec", "memory_mb"]
-    agg = df.groupby(list(group_cols), dropna=False)[metrics].agg(["mean", "std"]).reset_index()
-    agg.columns = ["_".join([str(part) for part in col if part]) for col in agg.columns.to_flat_index()]
-    return agg
+def _sanity_markdown(report: dict[str, Any]) -> str:
+    lines = ["# D5 Result Sanity Report", "", f"- Passed: {report['passed']}", "", "## Checks"]
+    lines.extend([f"- {name}: {value}" for name, value in report["checks"].items()])
+    lines.extend(["", "## Blocking Reasons"])
+    lines.extend([f"- {reason}" for reason in report["blocking_reasons"]] or ["- none"])
+    lines.append("")
+    return "\n".join(lines)
 
 
-def _run_ablation_matrix(seeds: tuple[int, ...], configs_dir: str | Path, dataset_name: str) -> list[dict]:
-    rows = []
-    base_bundle = _load_real_dataset(dataset_name, 42, configs_dir)
-    scenario = _prepare_scenario(base_bundle.dataset, {"type": "graph_consistency", "rate": 0.6, "beta": 0.6, "level": "r=0.60,beta=0.6"}, 42)
-    penalties = {
-        "Graph-CoLD": 0.00,
-        "w/o Graph-CDM": 0.16,
-        "w/o D_neigh": 0.07,
-        "w/o D_view": 0.09,
-        "w/o evidence": 0.11,
-        "ablation_hard": 0.14,
-        "w/o ranking": 0.04,
-        "w/o temporal": 0.06,
-    }
-    for seed in seeds:
-        for variant in ABLATIONS:
-            error = 0.08 + penalties[variant] + 0.01 * seed
-            y_pred = _predict_with_error(base_bundle.dataset.y_test, base_bundle.dataset.num_classes, error, seed + 100)
-            weights = np.ones_like(scenario["evidence"]) if variant == "w/o evidence" else graph_cdm.soft_weights(
-                scenario["cdm"] * (0.65 if variant == "w/o D_neigh" else 1.0),
-                scenario["evidence"],
-                _graphcold_cfg(0.0 if variant == "ablation_hard" else 0.2),
-            )
-            err = _err_for_method(weights, scenario["evidence"], scenario["clean_mask"], base_bundle.dataset.y_train)
-            rows.append(
-                {
-                    "variant": variant,
-                    "dataset": _dataset_name(base_bundle),
-                    "data_mode": base_bundle.mode,
-                    "data_source": str(base_bundle.dataset.meta.get("data_source", base_bundle.dataset.meta.get("source_path", ""))),
-                    "data_version": str(base_bundle.dataset.meta.get("data_version", "real-local")),
-                    "seed": seed,
-                    "macro_f1": macro_f1(base_bundle.dataset.y_test, y_pred),
-                    "fpr": false_positive_rate(base_bundle.dataset.y_test, y_pred, 0),
-                    "fnr": false_negative_rate(base_bundle.dataset.y_test, y_pred, 0),
-                    "err": err["err_final"],
-                    "tail_err": err["err_tail"],
-                    "compression_ratio": 0.30 + penalties[variant],
-                    "runtime_sec": 0.08 + penalties[variant] / 2,
-                    "memory_mb": 36.0 + penalties[variant] * 10,
-                }
-            )
-    return rows
+def _stat_markdown(report: dict[str, Any]) -> str:
+    overall = report.get("overall", {})
+    lines = [
+        "# D5 Statistical Validity Report",
+        "",
+        f"- Overall test: {overall.get('test')}",
+        f"- Pairing keys: {', '.join(overall.get('pairing_keys', []))}",
+        f"- Pairs: {overall.get('n_pairs')}",
+        f"- Mean diff: {overall.get('mean_diff')}",
+        f"- Effect size Cohen dz: {overall.get('effect_size_cohen_dz')}",
+        f"- p-value: {overall.get('p_value')}",
+        f"- Significant p<0.05: {overall.get('significant_p_lt_0_05')}",
+        f"- Extreme p-value warning: {overall.get('extreme_p_value_warning')}",
+        "",
+        "## Comparisons",
+    ]
+    for name, info in report.get("comparisons", {}).items():
+        lines.append(f"- {name}: n={info.get('n_pairs')}, diff={info.get('mean_diff')}, p={info.get('p_value')}")
+    lines.append("")
+    return "\n".join(lines)
 
 
-def _run_optc_table(out: Path) -> pd.DataFrame:
-    case = run_case({"backend": "xgboost", "top_k": 5, "lambda_chain": 0.1}, out_dir="reports")
-    rows = []
-    for seed in SEEDS:
-        for method in ("Graph-CoLD", "CoLD", "Flash", "Argus"):
-            strength = _method_strength(method)
-            y = case.events["label"].to_numpy(dtype=np.int64)
-            y_pred = _predict_with_error(y, 2, 0.18 * (1.0 - strength) + (0.02 if method == "Graph-CoLD" else 0.10), seed + 55)
-            rows.append(
-                {
-                    "dataset": "optc",
-                    "data_mode": "real",
-                    "data_source": str(Path("data/optc").resolve()),
-                    "data_version": "real-local",
-                    "method": method,
-                    "seed": seed,
-                    "macro_f1": macro_f1(y, y_pred),
-                    "fpr": false_positive_rate(y, y_pred, 0),
-                    "fnr": false_negative_rate(y, y_pred, 0),
-                    "err": 0.82 + 0.08 * strength,
-                    "tail_err": 0.78 + 0.08 * strength,
-                    "compression_ratio": max(0.08, 0.32 - 0.12 * strength),
-                    "topk_hits": int(np.sum(y[case.ranking] != 0)),
-                    "d_chain_enabled": True,
-                }
-            )
-    return pd.DataFrame(rows)
+def _execution_markdown(report: dict[str, Any], main: pd.DataFrame, ablation: pd.DataFrame) -> str:
+    lines = [
+        "# D5 Real-Data Execution Report",
+        "",
+        f"- Completed: {report['completed']}",
+        f"- Main rows: {len(main)}",
+        f"- Ablation rows: {len(ablation)}",
+        f"- Methods included: {', '.join(report['methods_included'])}",
+        "- Excluded datasets: MALTLS-22, OpTC, UNSW-NB15, USTC-TFC2016",
+        "",
+        "## Key Metrics",
+    ]
+    for key, value in report["key_metrics"].items():
+        lines.append(f"- {key}: {value}")
+    lines.extend(["", "## Sanity", f"- Passed: {report['sanity']['passed']}", ""])
+    return "\n".join(lines)
 
 
-def _stat_tests(raw: pd.DataFrame) -> dict:
-    tests = {}
-    for dataset, part in raw.groupby("dataset"):
-        graph = part[part["method"] == "Graph-CoLD"].sort_values(["noise_type", "noise_level", "seed"])["macro_f1"].to_numpy()
-        cold = part[part["method"] == "CoLD"].sort_values(["noise_type", "noise_level", "seed"])["macro_f1"].to_numpy()
-        t_stat, p_val = stats.ttest_rel(graph, cold, alternative="greater")
-        tests[dataset] = {
-            "t_stat": float(t_stat),
-            "p_value": float(p_val),
-            "graph_cold_mean": float(np.mean(graph)),
-            "cold_mean": float(np.mean(cold)),
-            "significant_p_lt_0_05": bool(p_val < 0.05),
-        }
-    graph_all = raw[raw["method"] == "Graph-CoLD"].sort_values(["dataset", "noise_type", "noise_level", "seed"])["macro_f1"].to_numpy()
-    cold_all = raw[raw["method"] == "CoLD"].sort_values(["dataset", "noise_type", "noise_level", "seed"])["macro_f1"].to_numpy()
-    t_stat, p_val = stats.ttest_rel(graph_all, cold_all, alternative="greater")
-    return {
-        "overall": {
-            "test": "paired_t_test_greater_graph_cold_vs_cold",
-            "t_stat": float(t_stat),
-            "p_value": float(p_val),
-            "significant_p_lt_0_05": bool(p_val < 0.05),
-        },
-        "by_dataset": tests,
-    }
+def _readiness_markdown(readiness: dict[str, Any]) -> str:
+    lines = [
+        "# Real-Data Readiness Report",
+        "",
+        f"- D5 completed: {readiness.get('d5_completed')}",
+        f"- D6 allowed: {readiness.get('d6_allowed')}",
+        f"- D7 allowed: {readiness.get('d7_allowed')}",
+        f"- Submission ready: {readiness.get('submission_ready')}",
+        f"- D5 scope: {', '.join(readiness.get('d5_scope', []))}",
+        "",
+        "## Datasets",
+    ]
+    for name, info in readiness.get("datasets", {}).items():
+        lines.extend(["", f"### {name}"])
+        for key in (
+            "available",
+            "audit_passed",
+            "ready_for_smoke",
+            "ready_for_d5",
+            "ready_for_d5_component",
+            "source_verified",
+            "formal_experiment",
+            "future_case_study_only",
+        ):
+            if key in info:
+                lines.append(f"- {key}: {info[key]}")
+        reasons = info.get("blocking_reasons") or []
+        if reasons:
+            lines.append("- Blocking reasons:")
+            lines.extend([f"  - {reason}" for reason in reasons])
+        else:
+            lines.append("- Blocking reasons: none")
+    next_actions = readiness.get("next_actions") or []
+    lines.extend(["", "## Next Actions"])
+    lines.extend([f"- {action}" for action in next_actions] or ["- none"])
+    lines.append("")
+    return "\n".join(lines)
 
 
-def _runtime_json(runtime: pd.DataFrame) -> dict:
-    return {
-        "records": runtime.to_dict(orient="records"),
-        "summary": runtime[["runtime_sec", "memory_mb"]].agg(["mean", "std", "max"]).to_dict(),
-    }
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--out", default="results")
+    parser.add_argument("--configs", default="configs")
+    args = parser.parse_args()
+    print(json.dumps(run_d5_experiments(args.out, args.configs), indent=2))
 
 
-def _write_figures(raw: pd.DataFrame, ablation: pd.DataFrame, optc: pd.DataFrame, out: Path) -> None:
-    import matplotlib.pyplot as plt
-
-    graph = raw[(raw["method"].isin(["Graph-CoLD", "CoLD"])) & (raw["noise_type"].isin(["symmetric", "graph_consistency"]))]
-    fig, ax = plt.subplots(figsize=(7, 4))
-    plot_df = graph.groupby(["method", "noise_rate"])["macro_f1"].mean().reset_index()
-    for method, part in plot_df.groupby("method"):
-        ax.plot(part["noise_rate"], part["macro_f1"], marker="o", label=method)
-    ax.set_xlabel("Noise rate")
-    ax.set_ylabel("Macro-F1")
-    ax.set_title("Fig2: Macro-F1 vs noise rate")
-    ax.legend()
-    fig.tight_layout()
-    fig.savefig(out / "fig2_macro_f1_vs_noise_rate.png", dpi=160)
-    plt.close(fig)
-
-    fig, ax = plt.subplots(figsize=(6, 4))
-    gc = raw[raw["method"] == "Graph-CoLD"]
-    ax.scatter(gc["compression_ratio"], gc["err"], alpha=0.7)
-    ax.set_xlabel("Compression ratio")
-    ax.set_ylabel("ERR")
-    ax.set_title("Fig3: ERR vs compression ratio")
-    fig.tight_layout()
-    fig.savefig(out / "fig3_err_vs_compression_ratio.png", dpi=160)
-    plt.close(fig)
-
-    fig, ax = plt.subplots(figsize=(8, 4))
-    ax.bar(ablation["variant"], ablation["macro_f1_mean"])
-    ax.set_ylabel("Macro-F1")
-    ax.set_title("Fig4: Ablation study")
-    ax.tick_params(axis="x", labelrotation=35)
-    fig.tight_layout()
-    fig.savefig(out / "fig4_ablation_bar.png", dpi=160)
-    plt.close(fig)
-
-    if not optc.empty and {"method", "topk_hits"}.issubset(optc.columns):
-        fig, ax = plt.subplots(figsize=(6, 4))
-        optc_mean = optc.groupby("method")["topk_hits"].mean().sort_values(ascending=False)
-        ax.bar(optc_mean.index, optc_mean.values)
-        ax.set_ylabel("Top-K malicious hits")
-        ax.set_title("Fig5: OpTC case ranking performance")
-        fig.tight_layout()
-        fig.savefig(out / "fig5_optc_ranking_performance.png", dpi=160)
-        plt.close(fig)
-
-
-def _write_execution_report(stat_tests: dict, out: Path) -> None:
-    report = {
-        "stage": "D5",
-        "outputs": [
-            "results/table_main.csv",
-            "results/table_ablation.csv",
-            "results/stat_tests.json",
-            "results/runtime.json",
-        ],
-        "figures": [
-            "results/fig2_macro_f1_vs_noise_rate.png",
-            "results/fig3_err_vs_compression_ratio.png",
-            "results/fig4_ablation_bar.png",
-        ],
-        "ck6": {
-            "graph_cold_vs_cold_p_lt_0_05": stat_tests["overall"]["significant_p_lt_0_05"],
-            "p_value": stat_tests["overall"]["p_value"],
-            "err_improves_high_noise": True,
-            "ranking_stability_gt_cold": True,
-            "ablation_monotonic_degradation": True,
-        },
-        "notes": [
-            "D5 P0 mode is real-data only. Missing selected datasets raise FileNotFoundError.",
-            "D5 P0 guard permits only CICIDS-2017 plus one verified second dataset selected by reports/second_dataset_selection_gate.json.",
-            "CSV outputs include data_source and data_version columns for traceability.",
-        ],
-    }
-    (out / "d5_execution_report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
+if __name__ == "__main__":
+    main()

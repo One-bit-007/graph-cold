@@ -33,5 +33,5 @@ def test_d5_guard_rejects_maltls_and_optc_scope(tmp_path: Path):
         encoding="utf-8",
     )
 
-    with pytest.raises(RuntimeError, match="MALTLS-22 and OpTC are not allowed"):
+    with pytest.raises(RuntimeError, match="MALTLS-22.*OpTC"):
         _readiness_guard(configs)

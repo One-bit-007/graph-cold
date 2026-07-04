@@ -6,9 +6,9 @@ from src.analysis.result_sanity import check_results
 def test_result_sanity_passes_reasonable_real_dataset_rows():
     frame = pd.DataFrame(
         [
-            {"dataset": "cicids2017", "method": "Graph-CoLD", "noise_type": "symmetric", "noise_rate": 0.2, "beta": None, "seed": 0, "macro_f1": 0.91, "fpr": 0.04, "fnr": 0.06, "err": 0.82, "active_views": "host|ip|temporal"},
-            {"dataset": "cicids2017", "method": "CoLD", "noise_type": "symmetric", "noise_rate": 0.2, "beta": None, "seed": 0, "macro_f1": 0.86, "fpr": 0.06, "fnr": 0.09, "err": 0.70, "active_views": "host|ip|temporal"},
-            {"dataset": "cicids2017", "method": "ablation_hard", "noise_type": "symmetric", "noise_rate": 0.2, "beta": None, "seed": 0, "macro_f1": 0.85, "fpr": 0.06, "fnr": 0.10, "err": 0.69, "active_views": "host|ip|temporal"},
+            {"dataset": "cicids2017", "method": "Graph-CoLD", "noise_type": "symmetric", "noise_rate": 0.2, "graph_beta": None, "seed": 0, "macro_f1": 0.91, "fpr": 0.04, "fnr": 0.06, "err": 0.82, "err_final": 0.82, "active_views": "host|ip|temporal", "sample_policy": "full", "dataset_hash": "hash", "source_verified": True},
+            {"dataset": "cicids2017", "method": "CoLD", "noise_type": "symmetric", "noise_rate": 0.2, "graph_beta": None, "seed": 0, "macro_f1": 0.86, "fpr": 0.06, "fnr": 0.09, "err": 0.70, "err_final": 0.70, "active_views": "host|ip|temporal", "sample_policy": "full", "dataset_hash": "hash", "source_verified": True},
+            {"dataset": "cicids2017", "method": "ablation_hard", "noise_type": "symmetric", "noise_rate": 0.2, "graph_beta": None, "seed": 0, "macro_f1": 0.85, "fpr": 0.06, "fnr": 0.10, "err": 0.69, "err_final": 0.69, "active_views": "host|ip|temporal", "sample_policy": "full", "dataset_hash": "hash", "source_verified": True},
         ]
     )
 

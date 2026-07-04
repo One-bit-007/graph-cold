@@ -1,0 +1,49 @@
+{
+  "stage": "D5 baseline readiness audit",
+  "Graph-CoLD": {
+    "included": true,
+    "reason": "mandatory implemented and smoke/mini-matrix passed"
+  },
+  "CoLD": {
+    "included": true,
+    "reason": "mandatory self-implemented baseline and smoke/mini-matrix passed"
+  },
+  "ablation_hard": {
+    "included": true,
+    "reason": "mandatory CoLD degeneracy / hard-retention comparator"
+  },
+  "FINE": {
+    "included": false,
+    "reason": "not independently implemented and smoke-passed on real data"
+  },
+  "Co-Teaching": {
+    "included": false,
+    "reason": "not independently implemented and smoke-passed on real data"
+  },
+  "Co-Teaching+": {
+    "included": false,
+    "reason": "not independently implemented and smoke-passed on real data"
+  },
+  "Decoupling": {
+    "included": false,
+    "reason": "not independently implemented and smoke-passed on real data"
+  },
+  "cleanlab": {
+    "included": false,
+    "reason": "not independently implemented and smoke-passed on real data"
+  },
+  "MCRe": {
+    "included": false,
+    "reason": "not independently implemented and smoke-passed on real data"
+  },
+  "MORSE": {
+    "included": false,
+    "reason": "not independently implemented and smoke-passed on real data"
+  },
+  "methods_in_formal_d5": [
+    "Graph-CoLD",
+    "CoLD",
+    "ablation_hard"
+  ],
+  "unimplemented_methods_emit_rows": false
+}

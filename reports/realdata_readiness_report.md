@@ -1,24 +1,28 @@
 # Real-Data Readiness Report
 
-- D5 allowed: True
-- D6/D7 allowed: False
+- D5 completed: True
+- D6 allowed: True
+- D7 allowed: False
 - Submission ready: False
+- D5 scope: CICIDS-2017, CESNET-TLS-Year22
 
 ## Datasets
 
 ### cicids2017
-- Available: True
-- Audit passed: True
-- Ready for smoke: True
-- Ready for D5/case: True
-- Blocking reasons:
-  - none
+- available: True
+- audit_passed: True
+- ready_for_smoke: True
+- ready_for_d5: True
+- ready_for_d5_component: True
+- Blocking reasons: none
 
 ### maltls22
-- Available: False
-- Audit passed: False
-- Ready for smoke: False
-- Ready for D5/case: False
+- available: False
+- audit_passed: False
+- ready_for_smoke: False
+- ready_for_d5: False
+- ready_for_d5_component: False
+- source_verified: False
 - Blocking reasons:
   - dataset root does not exist: data/maltls22
   - label column missing: label
@@ -27,18 +31,19 @@
   - dataset source is not verified; do not report this dataset
 
 ### cesnet_tls_year22
-- Available: True
-- Audit passed: True
-- Ready for smoke: True
-- Ready for D5/case: True
-- Blocking reasons:
-  - none
+- available: True
+- audit_passed: True
+- ready_for_smoke: True
+- ready_for_d5: True
+- ready_for_d5_component: True
+- Blocking reasons: none
 
 ### unsw_nb15
-- Available: False
-- Audit passed: False
-- Ready for smoke: False
-- Ready for D5/case: False
+- available: False
+- audit_passed: False
+- ready_for_smoke: False
+- ready_for_d5: False
+- ready_for_d5_component: False
 - Blocking reasons:
   - dataset root does not exist: data/unsw_nb15
   - label column missing: contract label candidate
@@ -46,10 +51,11 @@
   - row count 0 below min_samples 10000
 
 ### ustc_tfc2016
-- Available: False
-- Audit passed: False
-- Ready for smoke: False
-- Ready for D5/case: False
+- available: False
+- audit_passed: False
+- ready_for_smoke: False
+- ready_for_d5: False
+- ready_for_d5_component: False
 - Blocking reasons:
   - dataset root does not exist: data/ustc_tfc2016
   - label column missing: contract label candidate
@@ -58,10 +64,10 @@
   - dataset source is not verified; do not report this dataset
 
 ### optc
-- Available: False
-- Audit passed: False
-- Ready for smoke: False
-- Ready for D5/case: False
+- available: False
+- audit_passed: False
+- formal_experiment: False
+- future_case_study_only: True
 - Blocking reasons:
   - dataset root does not exist: data/optc
   - missing expected files: events.csv

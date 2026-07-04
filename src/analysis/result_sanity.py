@@ -11,6 +11,12 @@ import pandas as pd
 
 
 HONEST_DATASETS = {"cicids2017", "cesnet_tls_year22", "unsw_nb15", "ustc_tfc2016"}
+FORMAL_D5_DATASETS = {"cicids2017", "cesnet_tls_year22"}
+FORMAL_D5_METHODS = {"Graph-CoLD", "CoLD", "ablation_hard"}
+EXPECTED_ACTIVE_VIEWS = {
+    "cicids2017": "host|ip|temporal",
+    "cesnet_tls_year22": "ip|temporal",
+}
 VALID_VIEWS = {"host", "ip", "process", "temporal", "threat_intel"}
 
 
@@ -23,8 +29,15 @@ def check_results(frame: pd.DataFrame) -> dict[str, Any]:
         "err_graphcold_gt_hard": _err_direction(frame),
         "beta0_matches_symmetric": _beta0_matches_symmetric(frame),
         "active_views_valid": _active_views_valid(frame),
+        "active_views_match_dataset_contract": _active_views_match_contract(frame),
         "dataset_names_honest": _dataset_names_honest(frame),
         "maltls22_absent_unless_verified": _maltls_absent_or_verified(frame),
+        "formal_d5_scope_only": _formal_scope_only(frame),
+        "no_optc_rows": _no_optc_rows(frame),
+        "no_fake_baseline_rows": _no_fake_baseline_rows(frame),
+        "sample_policy_present": _column_present_and_nonempty(frame, "sample_policy"),
+        "dataset_hash_present": _column_present_and_nonempty(frame, "dataset_hash"),
+        "source_verified_true": _source_verified_true(frame),
     }
     return {
         "passed": bool(all(checks.values())),
@@ -54,23 +67,27 @@ def _ablation_close(frame: pd.DataFrame) -> bool:
 
 
 def _err_direction(frame: pd.DataFrame) -> bool:
-    if "err" not in frame.columns:
+    err_col = "err_final" if "err_final" in frame.columns else "err"
+    if err_col not in frame.columns:
         return True
     method_col = "method" if "method" in frame.columns else "variant" if "variant" in frame.columns else None
     if method_col is None:
         return True
-    graph = frame[frame[method_col] == "Graph-CoLD"]["err"]
-    hard = frame[frame[method_col].isin(["ablation_hard", "CoLD"])]["err"]
+    noisy = frame[frame.get("noise_type", pd.Series(["noisy"] * len(frame))) != "clean"]
+    graph = noisy[noisy[method_col].isin(["Graph-CoLD", "Graph-CoLD-full"])][err_col]
+    hard = noisy[noisy[method_col].isin(["ablation_hard", "CoLD"])][err_col]
     if graph.empty or hard.empty:
         return True
     return bool(float(graph.mean()) > float(hard.mean()))
 
 
 def _beta0_matches_symmetric(frame: pd.DataFrame) -> bool:
-    needed = {"noise_type", "noise_rate", "beta", "method", "macro_f1"}
+    beta_col = "graph_beta" if "graph_beta" in frame.columns else "beta"
+    needed = {"noise_type", "noise_rate", beta_col, "method", "macro_f1"}
     if not needed.issubset(frame.columns):
         return True
-    graph0 = frame[(frame["noise_type"] == "graph_consistency") & (frame["beta"].fillna(-1) == 0)]
+    beta_values = pd.to_numeric(frame[beta_col], errors="coerce")
+    graph0 = frame[(frame["noise_type"] == "graph_consistency") & (beta_values.fillna(-1) == 0)]
     sym = frame[frame["noise_type"] == "symmetric"]
     if graph0.empty or sym.empty:
         return True
@@ -90,12 +107,61 @@ def _active_views_valid(frame: pd.DataFrame) -> bool:
     return True
 
 
+def _active_views_match_contract(frame: pd.DataFrame) -> bool:
+    if not {"dataset", "active_views"}.issubset(frame.columns):
+        return True
+    for dataset, expected in EXPECTED_ACTIVE_VIEWS.items():
+        part = frame[frame["dataset"].astype(str) == dataset]
+        if part.empty:
+            continue
+        values = {str(value) for value in part["active_views"].dropna().unique()}
+        if values != {expected}:
+            return False
+    return True
+
+
 def _dataset_names_honest(frame: pd.DataFrame) -> bool:
     if "dataset" not in frame.columns:
         return True
     datasets = {str(value) for value in frame["dataset"].dropna().unique()}
     forbidden = {"synthetic", "fallback", "emulation"}
     return bool(datasets.issubset(HONEST_DATASETS) and not datasets.intersection(forbidden))
+
+
+def _formal_scope_only(frame: pd.DataFrame) -> bool:
+    if "dataset" not in frame.columns:
+        return True
+    datasets = {str(value).lower() for value in frame["dataset"].dropna().unique()}
+    return bool(datasets.issubset(FORMAL_D5_DATASETS))
+
+
+def _no_optc_rows(frame: pd.DataFrame) -> bool:
+    if "dataset" not in frame.columns:
+        return True
+    return "optc" not in {str(value).lower() for value in frame["dataset"].dropna().unique()}
+
+
+def _no_fake_baseline_rows(frame: pd.DataFrame) -> bool:
+    if "method" not in frame.columns:
+        return True
+    methods = {str(value) for value in frame["method"].dropna().unique()}
+    return bool(methods.issubset(FORMAL_D5_METHODS))
+
+
+def _column_present_and_nonempty(frame: pd.DataFrame, column: str) -> bool:
+    if column not in frame.columns:
+        return False
+    values = frame[column]
+    return bool(values.notna().all() and (values.astype(str).str.len() > 0).all())
+
+
+def _source_verified_true(frame: pd.DataFrame) -> bool:
+    if "source_verified" not in frame.columns:
+        return False
+    values = frame["source_verified"]
+    if values.dtype == bool:
+        return bool(values.all())
+    return bool(values.astype(str).str.lower().isin({"true", "1"}).all())
 
 
 def _maltls_absent_or_verified(frame: pd.DataFrame) -> bool:
@@ -110,10 +176,14 @@ def _maltls_absent_or_verified(frame: pd.DataFrame) -> bool:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("csv")
+    parser.add_argument("csv", nargs="?")
+    parser.add_argument("--input", dest="input_csv")
     parser.add_argument("--out")
     args = parser.parse_args()
-    report = check_results(pd.read_csv(args.csv))
+    csv_path = args.input_csv or args.csv
+    if not csv_path:
+        raise SystemExit("Provide a result CSV path as positional csv or --input.")
+    report = check_results(pd.read_csv(csv_path))
     text = json.dumps(report, indent=2)
     if args.out:
         Path(args.out).write_text(text, encoding="utf-8")

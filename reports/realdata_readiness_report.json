@@ -86,5 +86,12 @@
     "Resolve unsw_nb15: dataset root does not exist: data/unsw_nb15; label column missing: contract label candidate; required column groups missing: label, ip_or_flow, numeric_features; row count 0 below min_samples 10000",
     "Resolve ustc_tfc2016: dataset root does not exist: data/ustc_tfc2016; label column missing: contract label candidate; required column groups missing: label, flow_or_payload; row count 0 below min_samples 10000; dataset source is not verified; do not report this dataset",
     "OpTC unavailable; keep it out of formal experiments or provide real events.csv."
+  ],
+  "d5_completed": true,
+  "d6_allowed": true,
+  "d7_allowed": false,
+  "d5_scope": [
+    "CICIDS-2017",
+    "CESNET-TLS-Year22"
   ]
 }

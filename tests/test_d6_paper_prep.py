@@ -2,13 +2,12 @@ import json
 from pathlib import Path
 
 import pandas as pd
+import pytest
 
 
 def test_d6_tables_figures_and_narrative_are_traceable():
-    if not Path("results/stat_tests.json").exists():
-        import pytest
-
-        pytest.skip("P0 removed non-real D5 results; D6 paper prep resumes after real D5 rerun.")
+    if not Path("reports/d6_paper_prep_report.json").exists():
+        pytest.skip("D5 real-data run intentionally does not generate D6 tables/figures/paper artifacts.")
     for path in [
         "tables/table_1_main_results.csv",
         "tables/table_2_ablation.csv",
