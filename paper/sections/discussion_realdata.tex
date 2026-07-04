@@ -1,0 +1,6 @@
+\section{Discussion}
+The CESNET-TLS-Year22 results exhibit a ceiling effect: several methods already achieve high Macro-F1, so small changes on this dataset should be interpreted cautiously. This is why the paper emphasizes stability and ERR alongside Macro-F1. CICIDS-2017 noisy settings show larger Graph-CoLD gains because corrupted labels more strongly affect local decision boundaries, leaving more room for Graph-CDM and evidence-preserving weights to help.
+
+ERR matters for SOC alert triage because high Macro-F1 alone does not show whether retained alerts preserve useful evidence. Compression ratio approximates review workload, while ERR measures whether clean informative evidence survives filtering. Together they describe the detection-versus-review tradeoff.
+
+Co-Teaching-lite is labeled ``lite'' because it is a lightweight, smoke-passed baseline adapter, not a full deep Co-Teaching reproduction. MALTLS-22 is not included because the available source could not be verified under the project audit gate. OpTC is not included as a formal experiment because no verified local provenance event table is available; it remains future work for a real enterprise case study.

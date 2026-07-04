@@ -1,0 +1,135 @@
+{
+  "stage": "D6 real-data paper prep",
+  "completed": true,
+  "source_csv": "results/table_main_expanded.csv",
+  "source_sha256": "c7d998d6c918ecfbcb9cc56bd494dcec73b3fa6826b2046fb53e2ca2109519cd",
+  "tables": [
+    "tables/table_1_dataset_protocol.csv",
+    "tables/table_2_main_performance.csv",
+    "tables/table_3_high_noise_summary.csv",
+    "tables/table_4_ablation_evidence.csv",
+    "tables/table_5_statistical_tests.csv"
+  ],
+  "figures": [
+    "figures/fig2_macro_f1_vs_noise_rate.png",
+    "figures/fig2_macro_f1_vs_noise_rate.pdf",
+    "figures/fig3_err_retention.png",
+    "figures/fig3_err_retention.pdf",
+    "figures/fig4_ablation.png",
+    "figures/fig4_ablation.pdf",
+    "figures/fig5_runtime_cost.png",
+    "figures/fig5_runtime_cost.pdf"
+  ],
+  "reports": [
+    "reports/d6/d6_statistical_narrative.json",
+    "reports/d6/d6_statistical_narrative.md",
+    "reports/d6/reviewer_risk_notes.md",
+    "reports/d6/d6_paper_prep_checklist.json",
+    "reports/d6/d6_paper_prep_checklist.md"
+  ],
+  "paper_sections": [
+    "paper/sections/experiments_realdata.tex",
+    "paper/sections/results_realdata.tex",
+    "paper/sections/discussion_realdata.tex",
+    "paper/sections/limitations_realdata.tex"
+  ],
+  "readiness": {
+    "stage": "realdata-acquisition-audit",
+    "submission_ready": false,
+    "d5_allowed": true,
+    "d6_d7_allowed": true,
+    "datasets": {
+      "cicids2017": {
+        "available": true,
+        "audit_passed": true,
+        "ready_for_smoke": true,
+        "ready_for_d5": true,
+        "ready_for_d5_component": true,
+        "blocking_reasons": []
+      },
+      "maltls22": {
+        "available": false,
+        "audit_passed": false,
+        "ready_for_smoke": false,
+        "ready_for_d5": false,
+        "ready_for_d5_component": false,
+        "blocking_reasons": [
+          "dataset root does not exist: data/maltls22",
+          "label column missing: label",
+          "required column groups missing: flow_or_tls_features, timestamp",
+          "row count 0 below min_samples 10000",
+          "dataset source is not verified; do not report this dataset"
+        ],
+        "source_verified": false,
+        "replacement_required_if_unavailable": true,
+        "evaluated": false
+      },
+      "cesnet_tls_year22": {
+        "available": true,
+        "audit_passed": true,
+        "ready_for_smoke": true,
+        "ready_for_d5": true,
+        "ready_for_d5_component": true,
+        "blocking_reasons": []
+      },
+      "unsw_nb15": {
+        "available": false,
+        "audit_passed": false,
+        "ready_for_smoke": false,
+        "ready_for_d5": false,
+        "ready_for_d5_component": false,
+        "blocking_reasons": [
+          "dataset root does not exist: data/unsw_nb15",
+          "label column missing: contract label candidate",
+          "required column groups missing: label, ip_or_flow, numeric_features",
+          "row count 0 below min_samples 10000"
+        ]
+      },
+      "ustc_tfc2016": {
+        "available": false,
+        "audit_passed": false,
+        "ready_for_smoke": false,
+        "ready_for_d5": false,
+        "ready_for_d5_component": false,
+        "blocking_reasons": [
+          "dataset root does not exist: data/ustc_tfc2016",
+          "label column missing: contract label candidate",
+          "required column groups missing: label, flow_or_payload",
+          "row count 0 below min_samples 10000",
+          "dataset source is not verified; do not report this dataset"
+        ],
+        "candidate_only": true,
+        "selected_for_d5": false
+      },
+      "optc": {
+        "available": false,
+        "audit_passed": false,
+        "ready_for_case_study": false,
+        "formal_experiment": false,
+        "future_case_study_only": true,
+        "blocking_reasons": [
+          "dataset root does not exist: data/optc",
+          "missing expected files: events.csv",
+          "label column missing: label",
+          "missing required columns: host_id, process_id, parent_process_id, src_ip, dst_ip, timestamp, event_type, alert_type, label, risk_score",
+          "row count 0 below min_samples 1000"
+        ]
+      }
+    },
+    "next_actions": [
+      "MALTLS-22 remains unevaluated unless source verification changes.",
+      "Resolve unsw_nb15: dataset root does not exist: data/unsw_nb15; label column missing: contract label candidate; required column groups missing: label, ip_or_flow, numeric_features; row count 0 below min_samples 10000",
+      "Resolve ustc_tfc2016: dataset root does not exist: data/ustc_tfc2016; label column missing: contract label candidate; required column groups missing: label, flow_or_payload; row count 0 below min_samples 10000; dataset source is not verified; do not report this dataset",
+      "OpTC unavailable; keep it out of formal experiments or provide real events.csv."
+    ],
+    "d5_completed": true,
+    "d6_allowed": true,
+    "d7_allowed": true,
+    "d5_scope": [
+      "CICIDS-2017",
+      "CESNET-TLS-Year22"
+    ],
+    "d5_baseline_expansion_completed": true,
+    "d6_completed": true
+  }
+}

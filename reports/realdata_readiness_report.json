@@ -2,7 +2,7 @@
   "stage": "realdata-acquisition-audit",
   "submission_ready": false,
   "d5_allowed": true,
-  "d6_d7_allowed": false,
+  "d6_d7_allowed": true,
   "datasets": {
     "cicids2017": {
       "available": true,
@@ -89,10 +89,11 @@
   ],
   "d5_completed": true,
   "d6_allowed": true,
-  "d7_allowed": false,
+  "d7_allowed": true,
   "d5_scope": [
     "CICIDS-2017",
     "CESNET-TLS-Year22"
   ],
-  "d5_baseline_expansion_completed": true
+  "d5_baseline_expansion_completed": true,
+  "d6_completed": true
 }

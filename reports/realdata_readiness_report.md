@@ -1,8 +1,8 @@
-# Real-Data Readiness Report
+# Real-data Readiness Report
 
-- D5 completed: True
-- D5 baseline expansion completed: True
-- D6 allowed: True
-- D7 allowed: False
-- Submission ready: False
-- D5 scope: CICIDS-2017, CESNET-TLS-Year22
+- d5_allowed: true
+- d6_completed: true
+- d7_allowed: true
+- submission_ready: false
+
+D7 allowed means the manuscript can be assembled from D6 artifacts. It does not mean the package is ready for journal submission.

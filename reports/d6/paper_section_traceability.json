@@ -1,0 +1,7 @@
+{
+  "experiments": "paper/sections/experiments_realdata.tex",
+  "results": "paper/sections/results_realdata.tex",
+  "discussion": "paper/sections/discussion_realdata.tex",
+  "limitations": "paper/sections/limitations_realdata.tex",
+  "source_csv": "results/table_main_expanded.csv"
+}

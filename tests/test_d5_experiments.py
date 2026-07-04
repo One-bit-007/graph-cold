@@ -25,8 +25,15 @@ def test_d5_required_real_two_dataset_outputs_and_guards_exist():
         assert (reports / name).exists(), name
 
     assert not (out / "table_optc.csv").exists()
-    assert not Path("figures").exists()
-    assert not Path("tables").exists()
+    d6_manifest_path = reports / "d6" / "d6_generation_manifest.json"
+    if d6_manifest_path.exists():
+        d6_manifest = json.loads(d6_manifest_path.read_text(encoding="utf-8"))
+        assert d6_manifest["source_csv"] == "results/table_main_expanded.csv"
+        assert all(Path(path).exists() for path in d6_manifest["figures"])
+        assert all(Path(path).exists() for path in d6_manifest["tables"])
+    else:
+        assert not Path("figures").exists()
+        assert not Path("tables").exists()
 
     main = pd.read_csv(out / "table_main.csv")
     assert set(FIELDNAMES).issubset(main.columns)

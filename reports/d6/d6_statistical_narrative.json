@@ -1,0 +1,237 @@
+{
+  "stage": "D6",
+  "source_csv": "results/table_main_expanded.csv",
+  "source_sha256": "c7d998d6c918ecfbcb9cc56bd494dcec73b3fa6826b2046fb53e2ca2109519cd",
+  "dataset_scope": [
+    "CICIDS-2017",
+    "CESNET-TLS-Year22"
+  ],
+  "sample_policy": {
+    "CICIDS-2017": "full_postfilter11_after_min_count_and_dominant_downsample",
+    "CESNET-TLS-Year22": "deterministic_audit_window_100000_then_postfilter25_stratified_split"
+  },
+  "method_scope": [
+    "Graph-CoLD",
+    "CoLD",
+    "ablation_hard",
+    "Noisy-Supervised",
+    "Confident-Learning",
+    "Co-Teaching-lite"
+  ],
+  "excluded_baselines": {
+    "FINE": "excluded: faithful FINE requires a validated embedding outlier protocol; D5.5 keeps it out instead of reporting approximate or fake rows",
+    "FINE-style": "excluded: faithful FINE requires a validated embedding outlier protocol; D5.5 keeps it out instead of reporting approximate or fake rows",
+    "MCRe": "excluded: no independently implemented and smoke-passed real-data implementation in this repository",
+    "MORSE": "excluded: no independently implemented and smoke-passed real-data implementation in this repository",
+    "Decoupling": "excluded: no independently implemented and smoke-passed real-data implementation in this repository",
+    "Flash": "excluded: provenance case-study method; no formal two-dataset label-noise implementation",
+    "Argus": "excluded: provenance case-study method; no formal two-dataset label-noise implementation",
+    "cleanlab": "legacy audit key; official cleanlab is represented by the Confident-Learning method row",
+    "Co-Teaching": "legacy full deep baseline name; D5.5 includes Co-Teaching-lite instead",
+    "Co-Teaching+": "not independently implemented and smoke-passed on real data"
+  },
+  "graph_cold_vs_cold": {
+    "mean_difference_pp": 1.8285494916563578,
+    "p_value": 5.5956741051131204e-06,
+    "effect_size": 0.4577987163803332,
+    "n_pairs": 102,
+    "test": "paired grouped t-test, greater alternative"
+  },
+  "method_means": {
+    "Co-Teaching-lite": {
+      "macro_f1_mean": 0.7185694546266541,
+      "err_final_mean": 0.823116832673131,
+      "compression_ratio_mean": 0.9910680878602673,
+      "runtime_sec_mean": 10.741484896077857
+    },
+    "CoLD": {
+      "macro_f1_mean": 0.9731713095876708,
+      "err_final_mean": 0.8952884210391963,
+      "compression_ratio_mean": 0.9908529026560847,
+      "runtime_sec_mean": 3.9157209382329694
+    },
+    "Confident-Learning": {
+      "macro_f1_mean": 0.7679072721054719,
+      "err_final_mean": 0.8245275987520679,
+      "compression_ratio_mean": 0.9935948503689104,
+      "runtime_sec_mean": 23.68053625392449
+    },
+    "Graph-CoLD": {
+      "macro_f1_mean": 0.9914568045042347,
+      "err_final_mean": 1.0,
+      "compression_ratio_mean": 0.9896126907522375,
+      "runtime_sec_mean": 4.0179826254889655
+    },
+    "Noisy-Supervised": {
+      "macro_f1_mean": 0.68364014007661,
+      "err_final_mean": 1.0,
+      "compression_ratio_mean": 0.99789143047106,
+      "runtime_sec_mean": 2.5739797970585925
+    },
+    "ablation_hard": {
+      "macro_f1_mean": 0.9731713095876708,
+      "err_final_mean": 0.8952884210391963,
+      "compression_ratio_mean": 0.9908529026560847,
+      "runtime_sec_mean": 0.00033139901928482327
+    }
+  },
+  "high_noise_summary": {
+    "CICIDS-2017": {
+      "Graph-CoLD": {
+        "macro_f1_mean": 0.9852,
+        "fpr_mean": 0.0021,
+        "fnr_mean": 0.0016,
+        "err_mean": 1.0,
+        "compression_ratio_mean": 0.997
+      },
+      "CoLD": {
+        "macro_f1_mean": 0.9333,
+        "fpr_mean": 0.002,
+        "fnr_mean": 0.0059,
+        "err_mean": 0.8228,
+        "compression_ratio_mean": 0.9989
+      },
+      "ablation_hard": {
+        "macro_f1_mean": 0.9333,
+        "fpr_mean": 0.002,
+        "fnr_mean": 0.0059,
+        "err_mean": 0.8228,
+        "compression_ratio_mean": 0.9989
+      },
+      "Noisy-Supervised": {
+        "macro_f1_mean": 0.4082,
+        "fpr_mean": 0.2585,
+        "fnr_mean": 0.2183,
+        "err_mean": 1.0,
+        "compression_ratio_mean": 1.0
+      },
+      "Confident-Learning": {
+        "macro_f1_mean": 0.5576,
+        "fpr_mean": 0.2002,
+        "fnr_mean": 0.1021,
+        "err_mean": 0.6819,
+        "compression_ratio_mean": 0.9995
+      },
+      "Co-Teaching-lite": {
+        "macro_f1_mean": 0.5623,
+        "fpr_mean": 0.2774,
+        "fnr_mean": 0.0813,
+        "err_mean": 0.6217,
+        "compression_ratio_mean": 0.9913
+      }
+    },
+    "CESNET-TLS-Year22": {
+      "Graph-CoLD": {
+        "macro_f1_mean": 0.9945,
+        "fpr_mean": 0.013,
+        "fnr_mean": 0.0001,
+        "err_mean": 1.0,
+        "compression_ratio_mean": 0.9821
+      },
+      "CoLD": {
+        "macro_f1_mean": 0.9944,
+        "fpr_mean": 0.0136,
+        "fnr_mean": 0.0001,
+        "err_mean": 0.9459,
+        "compression_ratio_mean": 0.9824
+      },
+      "ablation_hard": {
+        "macro_f1_mean": 0.9944,
+        "fpr_mean": 0.0136,
+        "fnr_mean": 0.0001,
+        "err_mean": 0.9459,
+        "compression_ratio_mean": 0.9824
+      },
+      "Noisy-Supervised": {
+        "macro_f1_mean": 0.5891,
+        "fpr_mean": 0.212,
+        "fnr_mean": 0.1619,
+        "err_mean": 1.0,
+        "compression_ratio_mean": 0.9999
+      },
+      "Confident-Learning": {
+        "macro_f1_mean": 0.8434,
+        "fpr_mean": 0.0598,
+        "fnr_mean": 0.0374,
+        "err_mean": 0.8444,
+        "compression_ratio_mean": 0.9952
+      },
+      "Co-Teaching-lite": {
+        "macro_f1_mean": 0.7992,
+        "fpr_mean": 0.1804,
+        "fnr_mean": 0.0076,
+        "err_mean": 0.8237,
+        "compression_ratio_mean": 0.9933
+      }
+    }
+  },
+  "err_interpretation": {
+    "graph_cold_err_final_mean": 1.0,
+    "ablation_hard_err_final_mean": 0.8952884210391963,
+    "difference_pp": 10.471157896080374
+  },
+  "dataset_specific_notes": {
+    "CICIDS-2017": {
+      "high_noise_macro_f1_lift_pp": 5.191731694374702,
+      "interpretation": "Graph-CoLD gains are larger on CICIDS noisy settings, where CoLD is more sensitive to corrupted labels."
+    },
+    "CESNET-TLS-Year22": {
+      "high_noise_macro_f1_lift_pp": 0.0011250239228211,
+      "interpretation": "CESNET has a ceiling effect; Macro-F1 changes are small, so ERR and stability carry more of the evidence."
+    }
+  },
+  "statistical_table": [
+    {
+      "Comparison": "Graph-CoLD vs CoLD",
+      "Mean difference": "1.83 pp",
+      "p-value": "5.60e-06",
+      "Effect size": "0.458",
+      "n": 102,
+      "Test type": "paired grouped t-test, greater alternative",
+      "Interpretation": "Graph-CoLD higher under paired grouped test."
+    },
+    {
+      "Comparison": "Graph-CoLD vs ablation_hard",
+      "Mean difference": "1.83 pp",
+      "p-value": "5.60e-06",
+      "Effect size": "0.458",
+      "n": 102,
+      "Test type": "paired grouped t-test, greater alternative",
+      "Interpretation": "Graph-CoLD higher under paired grouped test."
+    },
+    {
+      "Comparison": "Graph-CoLD vs Noisy-Supervised",
+      "Mean difference": "30.78 pp",
+      "p-value": "1.75e-26",
+      "Effect size": "1.424",
+      "n": 102,
+      "Test type": "paired grouped t-test, greater alternative",
+      "Interpretation": "Graph-CoLD higher under paired grouped test."
+    },
+    {
+      "Comparison": "Graph-CoLD vs Confident-Learning",
+      "Mean difference": "22.35 pp",
+      "p-value": "9.24e-25",
+      "Effect size": "1.342",
+      "n": 102,
+      "Test type": "paired grouped t-test, greater alternative",
+      "Interpretation": "Graph-CoLD higher under paired grouped test."
+    },
+    {
+      "Comparison": "Graph-CoLD vs Co-Teaching-lite",
+      "Mean difference": "27.29 pp",
+      "p-value": "4.05e-41",
+      "Effect size": "2.209",
+      "n": 102,
+      "Test type": "paired grouped t-test, greater alternative",
+      "Interpretation": "Graph-CoLD higher under paired grouped test."
+    }
+  ],
+  "required_language": [
+    "consistent improvement",
+    "robustness under noisy labels",
+    "evidence retention",
+    "operational alert reduction proxy"
+  ],
+  "caution": "Claims are limited to the verified CICIDS-2017 and CESNET-TLS-Year22 D5.5 result matrix."
+}
