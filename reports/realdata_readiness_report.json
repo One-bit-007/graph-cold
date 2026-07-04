@@ -93,5 +93,6 @@
   "d5_scope": [
     "CICIDS-2017",
     "CESNET-TLS-Year22"
-  ]
+  ],
+  "d5_baseline_expansion_completed": true
 }

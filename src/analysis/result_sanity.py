@@ -13,6 +13,16 @@ import pandas as pd
 HONEST_DATASETS = {"cicids2017", "cesnet_tls_year22", "unsw_nb15", "ustc_tfc2016"}
 FORMAL_D5_DATASETS = {"cicids2017", "cesnet_tls_year22"}
 FORMAL_D5_METHODS = {"Graph-CoLD", "CoLD", "ablation_hard"}
+EXPANDED_D5_METHODS = {
+    "Noisy-Supervised",
+    "Confident-Learning",
+    "CL-filtering",
+    "Co-Teaching-lite",
+    "FINE",
+    "FINE-style",
+}
+VALID_IMPLEMENTATION_STATUSES = {"reused_verified_d5", "implemented_smoke_passed"}
+FORBIDDEN_RESULT_TERMS = ("synthetic", "fallback", "emulation", "dummy", "placeholder")
 EXPECTED_ACTIVE_VIEWS = {
     "cicids2017": "host|ip|temporal",
     "cesnet_tls_year22": "ip|temporal",
@@ -35,6 +45,8 @@ def check_results(frame: pd.DataFrame) -> dict[str, Any]:
         "formal_d5_scope_only": _formal_scope_only(frame),
         "no_optc_rows": _no_optc_rows(frame),
         "no_fake_baseline_rows": _no_fake_baseline_rows(frame),
+        "no_forbidden_result_strings": _no_forbidden_result_strings(frame),
+        "implementation_status_valid": _implementation_status_valid(frame),
         "sample_policy_present": _column_present_and_nonempty(frame, "sample_policy"),
         "dataset_hash_present": _column_present_and_nonempty(frame, "dataset_hash"),
         "source_verified_true": _source_verified_true(frame),
@@ -91,7 +103,12 @@ def _beta0_matches_symmetric(frame: pd.DataFrame) -> bool:
     sym = frame[frame["noise_type"] == "symmetric"]
     if graph0.empty or sym.empty:
         return True
-    merged = graph0.merge(sym, on=["noise_rate", "method", "seed"] if "seed" in frame.columns else ["noise_rate", "method"], suffixes=("_g0", "_sym"))
+    keys = ["noise_rate", "method"]
+    if "dataset" in frame.columns:
+        keys.insert(0, "dataset")
+    if "seed" in frame.columns:
+        keys.append("seed")
+    merged = graph0.merge(sym, on=keys, suffixes=("_g0", "_sym"))
     if merged.empty:
         return True
     return bool((merged["macro_f1_g0"] - merged["macro_f1_sym"]).abs().mean() <= 0.05)
@@ -145,7 +162,36 @@ def _no_fake_baseline_rows(frame: pd.DataFrame) -> bool:
     if "method" not in frame.columns:
         return True
     methods = {str(value) for value in frame["method"].dropna().unique()}
-    return bool(methods.issubset(FORMAL_D5_METHODS))
+    if "implementation_status" not in frame.columns:
+        return bool(methods.issubset(FORMAL_D5_METHODS))
+    allowed = FORMAL_D5_METHODS | EXPANDED_D5_METHODS
+    if not methods.issubset(allowed):
+        return False
+    if frame["method"].isin({"FINE", "FINE-style"}).any():
+        return False
+    expanded = frame[~frame["method"].isin(FORMAL_D5_METHODS)]
+    if expanded.empty:
+        return True
+    statuses = {str(value) for value in expanded["implementation_status"].dropna().unique()}
+    return bool(statuses == {"implemented_smoke_passed"})
+
+
+def _no_forbidden_result_strings(frame: pd.DataFrame) -> bool:
+    object_cols = frame.select_dtypes(include=["object", "string"])
+    for col in object_cols.columns:
+        values = object_cols[col].dropna().astype(str).str.lower()
+        if values.empty:
+            continue
+        if values.str.contains("|".join(FORBIDDEN_RESULT_TERMS), regex=True).any():
+            return False
+    return True
+
+
+def _implementation_status_valid(frame: pd.DataFrame) -> bool:
+    if "implementation_status" not in frame.columns:
+        return True
+    statuses = {str(value) for value in frame["implementation_status"].dropna().unique()}
+    return bool(statuses.issubset(VALID_IMPLEMENTATION_STATUSES))
 
 
 def _column_present_and_nonempty(frame: pd.DataFrame, column: str) -> bool:

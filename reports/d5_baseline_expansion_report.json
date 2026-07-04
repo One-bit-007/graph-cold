@@ -1,0 +1,153 @@
+{
+  "stage": "D5.5 real-data baseline expansion",
+  "completed": true,
+  "baseline_expansion_status": "strong",
+  "original_table_main_sha256": "692b729050524a2882a3796178896315793e4ef5261a133aea6d54e22ef4077d",
+  "original_d5_rows_unchanged": true,
+  "outputs": {
+    "table_baseline_expansion": "results/table_baseline_expansion.csv",
+    "table_main_expanded": "results/table_main_expanded.csv",
+    "stat_tests": "results/stat_tests_baseline_expansion.json",
+    "runtime": "results/runtime_baseline_expansion.json"
+  },
+  "rows": {
+    "expanded": 612,
+    "added_baseline": 306
+  },
+  "datasets": [
+    "cesnet_tls_year22",
+    "cicids2017"
+  ],
+  "methods": [
+    "Co-Teaching-lite",
+    "CoLD",
+    "Confident-Learning",
+    "Graph-CoLD",
+    "Noisy-Supervised",
+    "ablation_hard"
+  ],
+  "included_baselines": [
+    "Co-Teaching-lite",
+    "Confident-Learning",
+    "Noisy-Supervised"
+  ],
+  "excluded_baselines": {
+    "FINE": "excluded: faithful FINE requires a validated embedding outlier protocol; D5.5 keeps it out instead of reporting approximate or fake rows",
+    "FINE-style": "excluded: faithful FINE requires a validated embedding outlier protocol; D5.5 keeps it out instead of reporting approximate or fake rows",
+    "MCRe": "excluded: no independently implemented and smoke-passed real-data implementation in this repository",
+    "MORSE": "excluded: no independently implemented and smoke-passed real-data implementation in this repository",
+    "Decoupling": "excluded: no independently implemented and smoke-passed real-data implementation in this repository",
+    "Flash": "excluded: provenance case-study method; no formal two-dataset label-noise implementation",
+    "Argus": "excluded: provenance case-study method; no formal two-dataset label-noise implementation"
+  },
+  "smoke": {
+    "passed_baselines": [
+      "Co-Teaching-lite",
+      "Confident-Learning",
+      "Noisy-Supervised"
+    ],
+    "failed_baselines": {}
+  },
+  "key_metrics": {
+    "Co-Teaching-lite": {
+      "macro_f1_mean": 0.7185694546266541,
+      "macro_f1_std": 0.12764239648444128,
+      "err_final_mean": 0.823116832673131,
+      "compression_ratio_mean": 0.9910680878602673
+    },
+    "CoLD": {
+      "macro_f1_mean": 0.9731713095876708,
+      "macro_f1_std": 0.04435706325539246,
+      "err_final_mean": 0.8952884210391963,
+      "compression_ratio_mean": 0.9908529026560847
+    },
+    "Confident-Learning": {
+      "macro_f1_mean": 0.7679072721054719,
+      "macro_f1_std": 0.16955274815573385,
+      "err_final_mean": 0.8245275987520679,
+      "compression_ratio_mean": 0.9935948503689104
+    },
+    "Graph-CoLD": {
+      "macro_f1_mean": 0.9914568045042347,
+      "macro_f1_std": 0.004937096405665715,
+      "err_final_mean": 1.0,
+      "compression_ratio_mean": 0.9896126907522375
+    },
+    "Noisy-Supervised": {
+      "macro_f1_mean": 0.68364014007661,
+      "macro_f1_std": 0.21919087871701032,
+      "err_final_mean": 1.0,
+      "compression_ratio_mean": 0.99789143047106
+    },
+    "ablation_hard": {
+      "macro_f1_mean": 0.9731713095876708,
+      "macro_f1_std": 0.04435706325539246,
+      "err_final_mean": 0.8952884210391963,
+      "compression_ratio_mean": 0.9908529026560847
+    }
+  },
+  "sanity": {
+    "passed": true,
+    "checks": {
+      "no_nan_inf": true,
+      "no_perfect_anomaly": true,
+      "ablation_hard_close_to_cold": true,
+      "err_graphcold_gt_hard": true,
+      "beta0_matches_symmetric": true,
+      "active_views_valid": true,
+      "active_views_match_dataset_contract": true,
+      "dataset_names_honest": true,
+      "maltls22_absent_unless_verified": true,
+      "formal_d5_scope_only": true,
+      "no_optc_rows": true,
+      "no_fake_baseline_rows": true,
+      "no_forbidden_result_strings": true,
+      "implementation_status_valid": true,
+      "sample_policy_present": true,
+      "dataset_hash_present": true,
+      "source_verified_true": true,
+      "original_d5_rows_unchanged": true
+    },
+    "blocking_reasons": []
+  },
+  "statistics": {
+    "comparisons": {
+      "Graph-CoLD_vs_Co-Teaching-lite": {
+        "n_pairs": 102,
+        "mean_diff": 0.27288734987758057,
+        "effect_size_cohen_dz": 2.208871733377313,
+        "p_value": 4.0477999562302313e-41,
+        "significant_p_lt_0_05": true
+      },
+      "Graph-CoLD_vs_CoLD": {
+        "n_pairs": 102,
+        "mean_diff": 0.018285494916563578,
+        "effect_size_cohen_dz": 0.4577987163803332,
+        "p_value": 5.5956741051131204e-06,
+        "significant_p_lt_0_05": true
+      },
+      "Graph-CoLD_vs_Confident-Learning": {
+        "n_pairs": 102,
+        "mean_diff": 0.22354953239876246,
+        "effect_size_cohen_dz": 1.3418402035755759,
+        "p_value": 9.240692796934754e-25,
+        "significant_p_lt_0_05": true
+      },
+      "Graph-CoLD_vs_Noisy-Supervised": {
+        "n_pairs": 102,
+        "mean_diff": 0.30781666442762434,
+        "effect_size_cohen_dz": 1.4238327525681225,
+        "p_value": 1.7529374305140513e-26,
+        "significant_p_lt_0_05": true
+      },
+      "Graph-CoLD_vs_ablation_hard": {
+        "n_pairs": 102,
+        "mean_diff": 0.018285494916563578,
+        "effect_size_cohen_dz": 0.4577987163803332,
+        "p_value": 5.5956741051131204e-06,
+        "significant_p_lt_0_05": true
+      }
+    }
+  },
+  "forbidden_outputs_created": false
+}
