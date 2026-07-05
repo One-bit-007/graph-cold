@@ -48,3 +48,15 @@ python -m src.paper.d7_assemble --audit-only
 
 Large dataset downloads are manual or optional and are not started by these
 scripts. Keep raw archives and extracted data outside Git tracking.
+
+## D8 manuscript hardening
+
+The D8 hardening step rewrites paper narrative and submission material only. It
+does not run D5, change results, or modify model code.
+
+```powershell
+python -m src.paper.d8_harden
+paper\elsevier\build_elsevier.ps1
+python -m src.paper.d8_harden --audit-only
+```
+
