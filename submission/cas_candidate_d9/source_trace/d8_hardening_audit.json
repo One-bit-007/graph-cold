@@ -1,0 +1,20 @@
+{
+  "stage": "D8",
+  "manuscript_v1_generated": true,
+  "pdf_compiles": true,
+  "real_data_only": true,
+  "results_unchanged": true,
+  "uses_table_main_expanded": true,
+  "no_model_code_modified": true,
+  "no_maltls22_results": true,
+  "no_optc_results": true,
+  "cesnet_subset_declared": true,
+  "co_teaching_lite_named_correctly": true,
+  "baseline_exclusions_declared": true,
+  "threats_to_validity_included": true,
+  "research_questions_included": true,
+  "references_corrected": true,
+  "no_forbidden_overclaiming": true,
+  "initial_draft_v1_ready": true,
+  "final_submission_ready": false
+}

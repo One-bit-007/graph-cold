@@ -1,0 +1,34 @@
+{
+  "stage": "D9",
+  "submission_ready": false,
+  "candidate_package_ready": true,
+  "human_confirmation_required": true,
+  "real_data_only": true,
+  "results_unchanged": true,
+  "results_hashes": {
+    "results/table_main_expanded.csv": "c7d998d6c918ecfbcb9cc56bd494dcec73b3fa6826b2046fb53e2ca2109519cd",
+    "results/table_baseline_expansion.csv": "b74a3552b9a11b87ee847df2fa5490197fcb4c4fbe59973c7ec3593945b9d158",
+    "results/stat_tests_baseline_expansion.json": "6aff31cb1d29cbae5a63bb586eb73fdf63b0fe38391c5819f8cdf9ac2fcfd7e4"
+  },
+  "formal_scope_ok": true,
+  "excluded_scope_declared": true,
+  "excluded_scope_not_reported": true,
+  "co_teaching_lite_not_full": true,
+  "cesnet_not_maltls": true,
+  "cesnet_subset_declared": true,
+  "no_forbidden_overclaiming": true,
+  "references_no_placeholders": true,
+  "support_materials_present": true,
+  "author_version_present": true,
+  "anonymous_review_version_present": true,
+  "anonymous_review_version_anonymized": true,
+  "raw_data_not_packaged": true,
+  "aria2_logs_not_packaged": true,
+  "model_code_unchanged_in_worktree": true,
+  "d8_submission_ready_left_false": true,
+  "blocking_items": [
+    "Named author list and affiliations require human confirmation.",
+    "Funding and competing-interest statements require human confirmation.",
+    "Final journal upload decision is manual; submission_ready intentionally remains false."
+  ]
+}

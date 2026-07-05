@@ -19,11 +19,5 @@ foreach ($Candidate in $PythonCandidates) {
 }
 if (-not $Python) { throw "No usable Python interpreter found. Set GRAPH_COLD_PYTHON to Python 3.10+ and rerun." }
 
-# Equivalent manual command: python -m src.paper.d8_harden
-& $Python -m src.paper.d8_harden
-Push-Location paper\elsevier
-powershell -ExecutionPolicy Bypass -File .\build_elsevier.ps1
-Pop-Location
-
-# Equivalent manual command: python -m src.paper.d8_harden --audit-only
-& $Python -m src.paper.d8_harden --audit-only
+# Equivalent manual command: python -m src.paper.d9_submission_lock
+& $Python -m src.paper.d9_submission_lock
