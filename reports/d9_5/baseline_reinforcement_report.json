@@ -1,0 +1,1154 @@
+{
+  "stage": "D9.5 baseline reinforcement",
+  "baseline_reinforcement_status": "partial",
+  "rows": {
+    "table_baseline_reinforcement": 102,
+    "table_main_reinforced": 714
+  },
+  "datasets": [
+    "cesnet_tls_year22",
+    "cicids2017"
+  ],
+  "methods": [
+    "Co-Teaching-lite",
+    "CoLD",
+    "Confident-Learning",
+    "Decoupling",
+    "Graph-CoLD",
+    "Noisy-Supervised",
+    "ablation_hard"
+  ],
+  "included_new_methods": [
+    "Decoupling"
+  ],
+  "smoke": {
+    "stage": "D9.5 baseline smoke gate",
+    "seed": 42,
+    "datasets": [
+      "cicids2017",
+      "cesnet_tls_year22"
+    ],
+    "settings": [
+      "clean",
+      "symmetric_20"
+    ],
+    "methods_requested": [
+      "Decoupling",
+      "FINE-style"
+    ],
+    "passed": true,
+    "passed_methods": [
+      "Decoupling"
+    ],
+    "failed_methods": {
+      "FINE-style": [
+        "cicids2017/symmetric: macro_f1_below_0_50"
+      ]
+    },
+    "rows": [
+      {
+        "dataset": "cicids2017",
+        "noise_type": "clean",
+        "noise_rate": 0.0,
+        "seed": 42,
+        "method": "Decoupling",
+        "macro_f1": 0.6184000947901945,
+        "fpr": 0.3128205128205128,
+        "fnr": 0.007379808771378552,
+        "err": 1.0,
+        "err_tail": 1.0,
+        "err_final": 1.0,
+        "retained_fraction": 0.05505243504510635,
+        "runtime_sec": 16.139151999959722,
+        "memory_mb": 422.1736145019531,
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "smoke_passed": true,
+        "failure_reason": "",
+        "details": {
+          "method": "Decoupling",
+          "method_family": "decoupling",
+          "warmup_epochs": 1,
+          "epochs": 4,
+          "batch_size": 16384,
+          "disagreement_fraction": 0.024592361345750866,
+          "update_fraction": 0.024592361345750866,
+          "retained_for_update_after_warmup": 0.05505243504510635,
+          "warmup_retained_all": true,
+          "trained_on": "noisy_y_train",
+          "train_label_source": "noisy_y_train",
+          "eval_label_source": "clean_y_test",
+          "classifier": "two SGDClassifier(log_loss)",
+          "notes": "standard tabular implementation of disagreement-update Decoupling",
+          "training_label_hash": "34ff5aee54b32179c157618b04d99f6c3613a2ebbc2d70613176f1fe755d9f0c",
+          "retained_fraction": 0.05505243504510635,
+          "post_warmup_samples_seen": 1891197,
+          "post_warmup_disagreements": 46509,
+          "post_warmup_updates": 46509
+        }
+      },
+      {
+        "dataset": "cicids2017",
+        "noise_type": "clean",
+        "noise_rate": 0.0,
+        "seed": 42,
+        "method": "FINE-style",
+        "macro_f1": 0.9902675229672636,
+        "fpr": 0.0019257816726171158,
+        "fnr": 0.0007720967814337658,
+        "err": 1.0,
+        "err_tail": 1.0,
+        "err_final": 1.0,
+        "retained_fraction": 1.0,
+        "runtime_sec": 7.574858999985736,
+        "memory_mb": 722.2699918746948,
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "smoke_passed": true,
+        "failure_reason": "",
+        "details": {
+          "method_name": "FINE-style",
+          "method_family": "fine_style",
+          "faithfulness_level": "representation-eigenvector filtering inspired by FINE; not full original implementation",
+          "representation_source": "standardized_features_pca",
+          "trained_on": "retained noisy_y_train",
+          "train_label_source": "noisy_y_train",
+          "eval_label_source": "clean_y_test",
+          "training_label_hash": "34ff5aee54b32179c157618b04d99f6c3613a2ebbc2d70613176f1fe755d9f0c",
+          "filter_rule": "class_wise_top_eigenvector_alignment",
+          "min_class_size_for_svd": 20,
+          "retain_fraction": 1.0,
+          "overall_retained_fraction": 1.0,
+          "score_min": 1.0,
+          "score_mean": 1.0,
+          "score_max": 1.0,
+          "class_retain_fraction": {
+            "0": {
+              "size": 184858,
+              "retained": 184858,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "1": {
+              "size": 1573,
+              "retained": 1573,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "2": {
+              "size": 102422,
+              "retained": 102422,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "3": {
+              "size": 8234,
+              "retained": 8234,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "4": {
+              "size": 184858,
+              "retained": 184858,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "5": {
+              "size": 4399,
+              "retained": 4399,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "6": {
+              "size": 4637,
+              "retained": 4637,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "7": {
+              "size": 6350,
+              "retained": 6350,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "8": {
+              "size": 127144,
+              "retained": 127144,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "9": {
+              "size": 4718,
+              "retained": 4718,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "10": {
+              "size": 1206,
+              "retained": 1206,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            }
+          },
+          "classes_retained_all_due_to_small_size": [],
+          "classifier": "ExtraTreesClassifier",
+          "n_estimators": 8,
+          "notes": "FINE-style eigenvector filtering; not full original FINE"
+        }
+      },
+      {
+        "dataset": "cicids2017",
+        "noise_type": "symmetric",
+        "noise_rate": 0.2,
+        "seed": 42,
+        "method": "Decoupling",
+        "macro_f1": 0.6026826729017022,
+        "fpr": 0.23836416747809153,
+        "fnr": 0.003303855994972393,
+        "err": 0.0663420162626643,
+        "err_tail": 0.14110046396072176,
+        "err_final": 0.10372124011169304,
+        "retained_fraction": 0.04099625792553605,
+        "runtime_sec": 17.110604899993632,
+        "memory_mb": 422.1735534667969,
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "smoke_passed": true,
+        "failure_reason": "",
+        "details": {
+          "method": "Decoupling",
+          "method_family": "decoupling",
+          "warmup_epochs": 1,
+          "epochs": 4,
+          "batch_size": 16384,
+          "disagreement_fraction": 0.014611381045972472,
+          "update_fraction": 0.014611381045972472,
+          "retained_for_update_after_warmup": 0.04099625792553605,
+          "warmup_retained_all": true,
+          "trained_on": "noisy_y_train",
+          "train_label_source": "noisy_y_train",
+          "eval_label_source": "clean_y_test",
+          "classifier": "two SGDClassifier(log_loss)",
+          "notes": "standard tabular implementation of disagreement-update Decoupling",
+          "training_label_hash": "dea6b62f90a0a220023ebb486cd277868d8e6b5f4e6348ac64c286fe652960e1",
+          "retained_fraction": 0.04099625792553605,
+          "post_warmup_samples_seen": 1891197,
+          "post_warmup_disagreements": 27633,
+          "post_warmup_updates": 27633
+        }
+      },
+      {
+        "dataset": "cicids2017",
+        "noise_type": "symmetric",
+        "noise_rate": 0.2,
+        "seed": 42,
+        "method": "FINE-style",
+        "macro_f1": 0.44757567024350975,
+        "fpr": 0.1940928270042194,
+        "fnr": 0.025470215917762714,
+        "err": 0.6387302604812946,
+        "err_tail": 0.7131001067661238,
+        "err_final": 0.6759151836237092,
+        "retained_fraction": 0.8000092005222089,
+        "runtime_sec": 8.731090800021775,
+        "memory_mb": 608.2194166183472,
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "smoke_passed": false,
+        "failure_reason": "macro_f1_below_0_50",
+        "details": {
+          "method_name": "FINE-style",
+          "method_family": "fine_style",
+          "faithfulness_level": "representation-eigenvector filtering inspired by FINE; not full original implementation",
+          "representation_source": "standardized_features_pca",
+          "trained_on": "retained noisy_y_train",
+          "train_label_source": "noisy_y_train",
+          "eval_label_source": "clean_y_test",
+          "training_label_hash": "dea6b62f90a0a220023ebb486cd277868d8e6b5f4e6348ac64c286fe652960e1",
+          "filter_rule": "class_wise_top_eigenvector_alignment",
+          "min_class_size_for_svd": 20,
+          "retain_fraction": 0.8,
+          "overall_retained_fraction": 0.8000092005222089,
+          "score_min": 4.368542275021148e-06,
+          "score_mean": 0.6695967539336372,
+          "score_max": 0.9986422545326716,
+          "class_retain_fraction": {
+            "0": {
+              "size": 156669,
+              "retained": 125336,
+              "retain_fraction": 0.8000051063069273,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.5829009613276182,
+              "score_max": 0.9986422545326716
+            },
+            "1": {
+              "size": 13883,
+              "retained": 11107,
+              "retain_fraction": 0.8000432183245696,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.5518309609498551,
+              "score_max": 0.9684458460850229
+            },
+            "2": {
+              "size": 92468,
+              "retained": 73975,
+              "retain_fraction": 0.8000064887312367,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.7726257211877707,
+              "score_max": 0.9935802066873534
+            },
+            "3": {
+              "size": 19059,
+              "retained": 15248,
+              "retain_fraction": 0.8000419749199853,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.5660235730218524,
+              "score_max": 0.9671831031122906
+            },
+            "4": {
+              "size": 156897,
+              "retained": 125518,
+              "retain_fraction": 0.8000025494432653,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.7522997869980188,
+              "score_max": 0.960560849761549
+            },
+            "5": {
+              "size": 15982,
+              "retained": 12786,
+              "retain_fraction": 0.8000250281566763,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.523863512544186,
+              "score_max": 0.9230101130155383
+            },
+            "6": {
+              "size": 16348,
+              "retained": 13079,
+              "retain_fraction": 0.8000367017372155,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.5417992672295977,
+              "score_max": 0.9106858731564733
+            },
+            "7": {
+              "size": 17484,
+              "retained": 13988,
+              "retain_fraction": 0.800045756119881,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.5226132054157271,
+              "score_max": 0.9431983828736387
+            },
+            "8": {
+              "size": 111687,
+              "retained": 89350,
+              "retain_fraction": 0.8000035814374099,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.7283556186573693,
+              "score_max": 0.9776944969993615
+            },
+            "9": {
+              "size": 16230,
+              "retained": 12984,
+              "retain_fraction": 0.8,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.47500562834735766,
+              "score_max": 0.951926153512522
+            },
+            "10": {
+              "size": 13692,
+              "retained": 10954,
+              "retain_fraction": 0.8000292141396436,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.5434326837249964,
+              "score_max": 0.9670490153330881
+            }
+          },
+          "classes_retained_all_due_to_small_size": [],
+          "classifier": "ExtraTreesClassifier",
+          "n_estimators": 8,
+          "notes": "FINE-style eigenvector filtering; not full original FINE"
+        }
+      },
+      {
+        "dataset": "cesnet_tls_year22",
+        "noise_type": "clean",
+        "noise_rate": 0.0,
+        "seed": 42,
+        "method": "Decoupling",
+        "macro_f1": 0.803891474673512,
+        "fpr": 0.04804804804804805,
+        "fnr": 0.0024386141944164144,
+        "err": 1.0,
+        "err_tail": 1.0,
+        "err_final": 1.0,
+        "retained_fraction": 0.037342276938178695,
+        "runtime_sec": 2.4174657000112347,
+        "memory_mb": 19.01902484893799,
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "smoke_passed": true,
+        "failure_reason": "",
+        "details": {
+          "method": "Decoupling",
+          "method_family": "decoupling",
+          "warmup_epochs": 1,
+          "epochs": 4,
+          "batch_size": 16384,
+          "disagreement_fraction": 0.013497208531871818,
+          "update_fraction": 0.013497208531871818,
+          "retained_for_update_after_warmup": 0.037342276938178695,
+          "warmup_retained_all": true,
+          "trained_on": "noisy_y_train",
+          "train_label_source": "noisy_y_train",
+          "eval_label_source": "clean_y_test",
+          "classifier": "two SGDClassifier(log_loss)",
+          "notes": "standard tabular implementation of disagreement-update Decoupling",
+          "training_label_hash": "7d1eb6f89bb24328334dc5399f0a829c1139bc0cb3f6bc73b7212685b541c3b1",
+          "retained_fraction": 0.037342276938178695,
+          "post_warmup_samples_seen": 146697,
+          "post_warmup_disagreements": 1980,
+          "post_warmup_updates": 1980
+        }
+      },
+      {
+        "dataset": "cesnet_tls_year22",
+        "noise_type": "clean",
+        "noise_rate": 0.0,
+        "seed": 42,
+        "method": "FINE-style",
+        "macro_f1": 0.9948935194041222,
+        "fpr": 0.012012012012012012,
+        "fnr": 8.409014463504877e-05,
+        "err": 1.0,
+        "err_tail": 1.0,
+        "err_final": 1.0,
+        "retained_fraction": 1.0,
+        "runtime_sec": 0.4865812999778427,
+        "memory_mb": 42.09471893310547,
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "smoke_passed": true,
+        "failure_reason": "",
+        "details": {
+          "method_name": "FINE-style",
+          "method_family": "fine_style",
+          "faithfulness_level": "representation-eigenvector filtering inspired by FINE; not full original implementation",
+          "representation_source": "standardized_features_pca",
+          "trained_on": "retained noisy_y_train",
+          "train_label_source": "noisy_y_train",
+          "eval_label_source": "clean_y_test",
+          "training_label_hash": "7d1eb6f89bb24328334dc5399f0a829c1139bc0cb3f6bc73b7212685b541c3b1",
+          "filter_rule": "class_wise_top_eigenvector_alignment",
+          "min_class_size_for_svd": 20,
+          "retain_fraction": 1.0,
+          "overall_retained_fraction": 1.0,
+          "score_min": 1.0,
+          "score_mean": 1.0,
+          "score_max": 1.0,
+          "class_retain_fraction": {
+            "0": {
+              "size": 1333,
+              "retained": 1333,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "1": {
+              "size": 1554,
+              "retained": 1554,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "2": {
+              "size": 1978,
+              "retained": 1978,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "3": {
+              "size": 1205,
+              "retained": 1205,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "4": {
+              "size": 1059,
+              "retained": 1059,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "5": {
+              "size": 1591,
+              "retained": 1591,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "6": {
+              "size": 870,
+              "retained": 870,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "7": {
+              "size": 1058,
+              "retained": 1058,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "8": {
+              "size": 1167,
+              "retained": 1167,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "9": {
+              "size": 2466,
+              "retained": 2466,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "10": {
+              "size": 1061,
+              "retained": 1061,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "11": {
+              "size": 3966,
+              "retained": 3966,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "12": {
+              "size": 2510,
+              "retained": 2510,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "13": {
+              "size": 2813,
+              "retained": 2813,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "14": {
+              "size": 3846,
+              "retained": 3846,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "15": {
+              "size": 3966,
+              "retained": 3966,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "16": {
+              "size": 1591,
+              "retained": 1591,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "17": {
+              "size": 2067,
+              "retained": 2067,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "18": {
+              "size": 2814,
+              "retained": 2814,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "19": {
+              "size": 1430,
+              "retained": 1430,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "20": {
+              "size": 2809,
+              "retained": 2809,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "21": {
+              "size": 974,
+              "retained": 974,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "22": {
+              "size": 3042,
+              "retained": 3042,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "23": {
+              "size": 902,
+              "retained": 902,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            },
+            "24": {
+              "size": 827,
+              "retained": 827,
+              "retain_fraction": 1.0,
+              "retained_all_due_to_small_size": false
+            }
+          },
+          "classes_retained_all_due_to_small_size": [],
+          "classifier": "ExtraTreesClassifier",
+          "n_estimators": 8,
+          "notes": "FINE-style eigenvector filtering; not full original FINE"
+        }
+      },
+      {
+        "dataset": "cesnet_tls_year22",
+        "noise_type": "symmetric",
+        "noise_rate": 0.2,
+        "seed": 42,
+        "method": "Decoupling",
+        "macro_f1": 0.7748837545982462,
+        "fpr": 0.36036036036036034,
+        "fnr": 0.00042045072317524387,
+        "err": 0.2560212668980333,
+        "err_tail": 0.26262647044080606,
+        "err_final": 0.2593238686694197,
+        "retained_fraction": 0.1370580175463711,
+        "runtime_sec": 2.1877968999906443,
+        "memory_mb": 19.0189790725708,
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "smoke_passed": true,
+        "failure_reason": "",
+        "details": {
+          "method": "Decoupling",
+          "method_family": "decoupling",
+          "warmup_epochs": 1,
+          "epochs": 4,
+          "batch_size": 16384,
+          "disagreement_fraction": 0.05326625629699312,
+          "update_fraction": 0.05326625629699312,
+          "retained_for_update_after_warmup": 0.1370580175463711,
+          "warmup_retained_all": true,
+          "trained_on": "noisy_y_train",
+          "train_label_source": "noisy_y_train",
+          "eval_label_source": "clean_y_test",
+          "classifier": "two SGDClassifier(log_loss)",
+          "notes": "standard tabular implementation of disagreement-update Decoupling",
+          "training_label_hash": "dc1170c9d2ae7b23467cf3f913224b02f583eed949ce78fbadaf66bb41378001",
+          "retained_fraction": 0.1370580175463711,
+          "post_warmup_samples_seen": 146697,
+          "post_warmup_disagreements": 7814,
+          "post_warmup_updates": 7814
+        }
+      },
+      {
+        "dataset": "cesnet_tls_year22",
+        "noise_type": "symmetric",
+        "noise_rate": 0.2,
+        "seed": 42,
+        "method": "FINE-style",
+        "macro_f1": 0.8001510502208922,
+        "fpr": 0.06606606606606606,
+        "fnr": 0.0075681130171543895,
+        "err": 0.752789828837338,
+        "err_tail": 0.7934824211760455,
+        "err_final": 0.7731361250066917,
+        "retained_fraction": 0.8002004130963823,
+        "runtime_sec": 0.6078069999930449,
+        "memory_mb": 35.39519500732422,
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "smoke_passed": true,
+        "failure_reason": "",
+        "details": {
+          "method_name": "FINE-style",
+          "method_family": "fine_style",
+          "faithfulness_level": "representation-eigenvector filtering inspired by FINE; not full original implementation",
+          "representation_source": "standardized_features_pca",
+          "trained_on": "retained noisy_y_train",
+          "train_label_source": "noisy_y_train",
+          "eval_label_source": "clean_y_test",
+          "training_label_hash": "dc1170c9d2ae7b23467cf3f913224b02f583eed949ce78fbadaf66bb41378001",
+          "filter_rule": "class_wise_top_eigenvector_alignment",
+          "min_class_size_for_svd": 20,
+          "retain_fraction": 0.8,
+          "overall_retained_fraction": 0.8002004130963823,
+          "score_min": 2.7383223263191536e-05,
+          "score_mean": 0.6480024601278207,
+          "score_max": 0.9998503097676072,
+          "class_retain_fraction": {
+            "0": {
+              "size": 1449,
+              "retained": 1160,
+              "retain_fraction": 0.800552104899931,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.5829244429063236,
+              "score_max": 0.9523902708785215
+            },
+            "1": {
+              "size": 1624,
+              "retained": 1300,
+              "retain_fraction": 0.8004926108374384,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.6995974067900435,
+              "score_max": 0.9925360813246488
+            },
+            "2": {
+              "size": 1969,
+              "retained": 1576,
+              "retain_fraction": 0.8004062976130015,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.5377497048381338,
+              "score_max": 0.9840086018304488
+            },
+            "3": {
+              "size": 1370,
+              "retained": 1096,
+              "retain_fraction": 0.8,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.7146980624360708,
+              "score_max": 0.9740736545873969
+            },
+            "4": {
+              "size": 1287,
+              "retained": 1030,
+              "retain_fraction": 0.8003108003108003,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.7279883282404817,
+              "score_max": 0.9985955484183162
+            },
+            "5": {
+              "size": 1698,
+              "retained": 1359,
+              "retain_fraction": 0.8003533568904594,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.5387265267591742,
+              "score_max": 0.7838074769857994
+            },
+            "6": {
+              "size": 1111,
+              "retained": 889,
+              "retain_fraction": 0.8001800180018002,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.6727227873634214,
+              "score_max": 0.9706128798549285
+            },
+            "7": {
+              "size": 1240,
+              "retained": 992,
+              "retain_fraction": 0.8,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.5362579132182783,
+              "score_max": 0.9095427763919354
+            },
+            "8": {
+              "size": 1344,
+              "retained": 1076,
+              "retain_fraction": 0.8005952380952381,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.6045920929553165,
+              "score_max": 0.9900865392211063
+            },
+            "9": {
+              "size": 2373,
+              "retained": 1899,
+              "retain_fraction": 0.8002528445006322,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.5254115754895499,
+              "score_max": 0.8166025647734477
+            },
+            "10": {
+              "size": 1287,
+              "retained": 1030,
+              "retain_fraction": 0.8003108003108003,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.7353121477552313,
+              "score_max": 0.9992909979435758
+            },
+            "11": {
+              "size": 3516,
+              "retained": 2813,
+              "retain_fraction": 0.800056882821388,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.7373340878242295,
+              "score_max": 0.9979555880772422
+            },
+            "12": {
+              "size": 2334,
+              "retained": 1868,
+              "retain_fraction": 0.8003427592116538,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.8601566151731894,
+              "score_max": 0.9998503097676072
+            },
+            "13": {
+              "size": 2593,
+              "retained": 2075,
+              "retain_fraction": 0.8002313922097956,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.8209350766175803,
+              "score_max": 0.9977864672943435
+            },
+            "14": {
+              "size": 3445,
+              "retained": 2756,
+              "retain_fraction": 0.8,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.7712011865706286,
+              "score_max": 0.9996308028786955
+            },
+            "15": {
+              "size": 3564,
+              "retained": 2852,
+              "retain_fraction": 0.8002244668911336,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.8154717083275252,
+              "score_max": 0.9834794842300554
+            },
+            "16": {
+              "size": 1651,
+              "retained": 1321,
+              "retain_fraction": 0.8001211387038158,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.49452398312026397,
+              "score_max": 0.9791359303904869
+            },
+            "17": {
+              "size": 2076,
+              "retained": 1661,
+              "retain_fraction": 0.8000963391136802,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.4942013170175285,
+              "score_max": 0.7794946568460116
+            },
+            "18": {
+              "size": 2651,
+              "retained": 2121,
+              "retain_fraction": 0.8000754432289702,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.5294818967549388,
+              "score_max": 0.9934820968469504
+            },
+            "19": {
+              "size": 1511,
+              "retained": 1209,
+              "retain_fraction": 0.800132362673726,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.4932457942490193,
+              "score_max": 0.8493611717574284
+            },
+            "20": {
+              "size": 2687,
+              "retained": 2150,
+              "retain_fraction": 0.8001488649050986,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.5277268067891389,
+              "score_max": 0.9547384038676578
+            },
+            "21": {
+              "size": 1137,
+              "retained": 910,
+              "retain_fraction": 0.8003518029903254,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.46737042904945847,
+              "score_max": 0.7889058919465908
+            },
+            "22": {
+              "size": 2790,
+              "retained": 2232,
+              "retain_fraction": 0.8,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.6453137704813614,
+              "score_max": 0.983859648825995
+            },
+            "23": {
+              "size": 1130,
+              "retained": 904,
+              "retain_fraction": 0.8,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.5355515339791551,
+              "score_max": 0.8816327643675809
+            },
+            "24": {
+              "size": 1062,
+              "retained": 850,
+              "retain_fraction": 0.800376647834275,
+              "retained_all_due_to_small_size": false,
+              "score_min": 0.0,
+              "score_mean": 0.7155279231613079,
+              "score_max": 0.9947999370625117
+            }
+          },
+          "classes_retained_all_due_to_small_size": [],
+          "classifier": "ExtraTreesClassifier",
+          "n_estimators": 8,
+          "notes": "FINE-style eigenvector filtering; not full original FINE"
+        }
+      }
+    ],
+    "criteria": {
+      "no_crash": true,
+      "no_nan_inf": true,
+      "no_100_f1_zero_fpr_fnr_anomaly": true,
+      "train_label_source": "noisy_y_train under noise",
+      "eval_label_source": "clean_y_test",
+      "deterministic_under_seed_42": true,
+      "macro_f1_min": 0.5,
+      "fine_style_retained_fraction_nonzero": true,
+      "decoupling_disagreement_update_recorded": true,
+      "no_test_label_leakage": true
+    }
+  },
+  "sanity": {
+    "passed": true,
+    "checks": {
+      "no_nan_inf": true,
+      "no_perfect_anomaly": true,
+      "ablation_hard_close_to_cold": true,
+      "err_graphcold_gt_hard": true,
+      "beta0_matches_symmetric": true,
+      "active_views_valid": true,
+      "active_views_match_dataset_contract": true,
+      "dataset_names_honest": true,
+      "maltls22_absent_unless_verified": true,
+      "formal_d5_scope_only": true,
+      "no_optc_rows": true,
+      "no_fake_baseline_rows": true,
+      "no_forbidden_result_strings": true,
+      "implementation_status_valid": true,
+      "sample_policy_present": true,
+      "dataset_hash_present": true,
+      "source_verified_true": true,
+      "original_d5_expanded_rows_unchanged": true,
+      "decoupling_rows_smoke_passed": true,
+      "fine_style_rows_smoke_passed": true,
+      "fine_not_misnamed": true,
+      "co_teaching_lite_still_lite": true,
+      "reinforcement_methods_only": true
+    },
+    "blocking_reasons": []
+  },
+  "statistics": {
+    "stage": "D9.5 reinforced statistical validity",
+    "paired_grouped_testing": true,
+    "naive_pooled_test_used": false,
+    "comparisons_present": {
+      "Graph-CoLD_vs_CoLD": true,
+      "Graph-CoLD_vs_ablation_hard": true,
+      "Graph-CoLD_vs_Noisy-Supervised": true,
+      "Graph-CoLD_vs_Confident-Learning": true,
+      "Graph-CoLD_vs_Co-Teaching-lite": true,
+      "Graph-CoLD_vs_Decoupling": true,
+      "Graph-CoLD_vs_FINE-style": false
+    },
+    "comparisons": {
+      "Graph-CoLD_vs_CoLD": {
+        "test": "paired_t_test_greater",
+        "metric": "macro_f1",
+        "method_a": "Graph-CoLD",
+        "method_b": "CoLD",
+        "pairing_keys": [
+          "dataset",
+          "noise_type",
+          "noise_rate",
+          "graph_beta",
+          "seed"
+        ],
+        "n_pairs": 102,
+        "method_a_mean": 0.9914568045042347,
+        "method_a_std": 0.004937096405665715,
+        "method_b_mean": 0.9731713095876708,
+        "method_b_std": 0.04435706325539246,
+        "mean_diff": 0.018285494916563578,
+        "effect_size_cohen_dz": 0.4577987163803332,
+        "t_stat": 4.623540396858996,
+        "p_value": 5.5956741051131204e-06,
+        "significant_p_lt_0_05": true,
+        "extreme_p_value_warning": false,
+        "naive_pooled_test_used": false
+      },
+      "Graph-CoLD_vs_ablation_hard": {
+        "test": "paired_t_test_greater",
+        "metric": "macro_f1",
+        "method_a": "Graph-CoLD",
+        "method_b": "ablation_hard",
+        "pairing_keys": [
+          "dataset",
+          "noise_type",
+          "noise_rate",
+          "graph_beta",
+          "seed"
+        ],
+        "n_pairs": 102,
+        "method_a_mean": 0.9914568045042347,
+        "method_a_std": 0.004937096405665715,
+        "method_b_mean": 0.9731713095876708,
+        "method_b_std": 0.04435706325539246,
+        "mean_diff": 0.018285494916563578,
+        "effect_size_cohen_dz": 0.4577987163803332,
+        "t_stat": 4.623540396858996,
+        "p_value": 5.5956741051131204e-06,
+        "significant_p_lt_0_05": true,
+        "extreme_p_value_warning": false,
+        "naive_pooled_test_used": false
+      },
+      "Graph-CoLD_vs_Noisy-Supervised": {
+        "test": "paired_t_test_greater",
+        "metric": "macro_f1",
+        "method_a": "Graph-CoLD",
+        "method_b": "Noisy-Supervised",
+        "pairing_keys": [
+          "dataset",
+          "noise_type",
+          "noise_rate",
+          "graph_beta",
+          "seed"
+        ],
+        "n_pairs": 102,
+        "method_a_mean": 0.9914568045042347,
+        "method_a_std": 0.004937096405665715,
+        "method_b_mean": 0.68364014007661,
+        "method_b_std": 0.21919087871701032,
+        "mean_diff": 0.30781666442762434,
+        "effect_size_cohen_dz": 1.4238327525681225,
+        "t_stat": 14.380005915963423,
+        "p_value": 1.7529374305140513e-26,
+        "significant_p_lt_0_05": true,
+        "extreme_p_value_warning": true,
+        "naive_pooled_test_used": false
+      },
+      "Graph-CoLD_vs_Confident-Learning": {
+        "test": "paired_t_test_greater",
+        "metric": "macro_f1",
+        "method_a": "Graph-CoLD",
+        "method_b": "Confident-Learning",
+        "pairing_keys": [
+          "dataset",
+          "noise_type",
+          "noise_rate",
+          "graph_beta",
+          "seed"
+        ],
+        "n_pairs": 102,
+        "method_a_mean": 0.9914568045042347,
+        "method_a_std": 0.004937096405665715,
+        "method_b_mean": 0.7679072721054719,
+        "method_b_std": 0.16955274815573385,
+        "mean_diff": 0.22354953239876246,
+        "effect_size_cohen_dz": 1.3418402035755759,
+        "t_stat": 13.551921762504305,
+        "p_value": 9.240692796934754e-25,
+        "significant_p_lt_0_05": true,
+        "extreme_p_value_warning": true,
+        "naive_pooled_test_used": false
+      },
+      "Graph-CoLD_vs_Co-Teaching-lite": {
+        "test": "paired_t_test_greater",
+        "metric": "macro_f1",
+        "method_a": "Graph-CoLD",
+        "method_b": "Co-Teaching-lite",
+        "pairing_keys": [
+          "dataset",
+          "noise_type",
+          "noise_rate",
+          "graph_beta",
+          "seed"
+        ],
+        "n_pairs": 102,
+        "method_a_mean": 0.9914568045042347,
+        "method_a_std": 0.004937096405665715,
+        "method_b_mean": 0.7185694546266541,
+        "method_b_std": 0.12764239648444128,
+        "mean_diff": 0.27288734987758057,
+        "effect_size_cohen_dz": 2.208871733377313,
+        "t_stat": 22.308510979452574,
+        "p_value": 4.0477999562302313e-41,
+        "significant_p_lt_0_05": true,
+        "extreme_p_value_warning": true,
+        "naive_pooled_test_used": false
+      },
+      "Graph-CoLD_vs_Decoupling": {
+        "test": "paired_t_test_greater",
+        "metric": "macro_f1",
+        "method_a": "Graph-CoLD",
+        "method_b": "Decoupling",
+        "pairing_keys": [
+          "dataset",
+          "noise_type",
+          "noise_rate",
+          "graph_beta",
+          "seed"
+        ],
+        "n_pairs": 102,
+        "method_a_mean": 0.9914568045042347,
+        "method_a_std": 0.004937096405665715,
+        "method_b_mean": 0.6515321151711905,
+        "method_b_std": 0.11990559016755271,
+        "mean_diff": 0.33992468933304393,
+        "effect_size_cohen_dz": 2.9220275240437883,
+        "t_stat": 29.511031409110156,
+        "p_value": 9.211510672016564e-52,
+        "significant_p_lt_0_05": true,
+        "extreme_p_value_warning": true,
+        "naive_pooled_test_used": false
+      },
+      "Graph-CoLD_vs_FINE-style": {
+        "missing": true
+      }
+    },
+    "warnings": [
+      "Graph-CoLD_vs_Co-Teaching-lite: extreme p-value",
+      "Graph-CoLD_vs_Confident-Learning: extreme p-value",
+      "Graph-CoLD_vs_Decoupling: extreme p-value",
+      "Graph-CoLD_vs_Noisy-Supervised: extreme p-value"
+    ]
+  },
+  "original_hashes_before": {
+    "results/table_main_expanded.csv": "c7d998d6c918ecfbcb9cc56bd494dcec73b3fa6826b2046fb53e2ca2109519cd",
+    "results/table_baseline_expansion.csv": "b74a3552b9a11b87ee847df2fa5490197fcb4c4fbe59973c7ec3593945b9d158",
+    "results/stat_tests_baseline_expansion.json": "6aff31cb1d29cbae5a63bb586eb73fdf63b0fe38391c5819f8cdf9ac2fcfd7e4"
+  },
+  "original_hashes_after": {
+    "results/table_main_expanded.csv": "c7d998d6c918ecfbcb9cc56bd494dcec73b3fa6826b2046fb53e2ca2109519cd",
+    "results/table_baseline_expansion.csv": "b74a3552b9a11b87ee847df2fa5490197fcb4c4fbe59973c7ec3593945b9d158",
+    "results/stat_tests_baseline_expansion.json": "6aff31cb1d29cbae5a63bb586eb73fdf63b0fe38391c5819f8cdf9ac2fcfd7e4"
+  },
+  "original_results_unchanged": true
+}

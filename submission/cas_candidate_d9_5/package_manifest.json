@@ -1,0 +1,30 @@
+{
+  "stage": "D9.5 baseline reinforcement package",
+  "submission_ready": false,
+  "human_confirmation_required": true,
+  "included_new_methods": [
+    "Decoupling"
+  ],
+  "files": {
+    "baseline_reinforcement_summary.md": {
+      "bytes": 243,
+      "sha256": "1160e07d35747a8686277045e3a45df5292ca2991c27446e9ddc6fed8848133f"
+    },
+    "manuscript_anonymous_review_reinforced.pdf": {
+      "bytes": 343556,
+      "sha256": "8c3515d416e66d32f957ee9024114d62bdb5b4319e2a3a9f4a5f133045f577ee"
+    },
+    "manuscript_anonymous_review_reinforced.tex": {
+      "bytes": 21407,
+      "sha256": "a93db61e231dbdae3d89ce0a5c45012206be1463c2f10659b0493a4fffa08e32"
+    },
+    "manuscript_author_version_reinforced.pdf": {
+      "bytes": 343674,
+      "sha256": "a31cf2e6e0ef6a5f36b4814d4181c98e49cbcae3d70519bae25da587cf8dce8a"
+    },
+    "manuscript_author_version_reinforced.tex": {
+      "bytes": 21598,
+      "sha256": "4d1dc0dc7d09a7d4a086dc83acd0a24faa9ecda5a86f56bb9874313be8f2cc6e"
+    }
+  }
+}

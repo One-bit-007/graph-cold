@@ -1,0 +1,83 @@
+{
+  "stage": "D9.5 baseline feasibility audit",
+  "baseline_reinforcement_scope": [
+    "Decoupling",
+    "FINE-style"
+  ],
+  "methods": [
+    {
+      "method": "Decoupling",
+      "paper_source_verified": true,
+      "source": "Decoupling when to update from how to update, NeurIPS 2017",
+      "official_code_available": false,
+      "data_compatibility_with_CICIDS_CESNET": true,
+      "implementation_target": "tabular two-classifier disagreement update",
+      "faithful_full_or_style_approximate": "faithful to standard disagreement-update mechanism",
+      "include_in_this_patch": true,
+      "reason": "classic noisy-label disagreement-update baseline; feasible on tabular CICIDS/CESNET"
+    },
+    {
+      "method": "FINE",
+      "paper_source_verified": true,
+      "source": "FINE: Filtering Noisy Instances via their Eigenvectors, NeurIPS 2021",
+      "official_code_available": false,
+      "data_compatibility_with_CICIDS_CESNET": "partial",
+      "implementation_target": "none",
+      "faithful_full_or_style_approximate": "excluded full method",
+      "include_in_this_patch": false,
+      "reason": "full original implementation is not reproduced here"
+    },
+    {
+      "method": "FINE-style",
+      "paper_source_verified": true,
+      "source": "FINE-inspired class-wise eigenvector filtering",
+      "official_code_available": false,
+      "data_compatibility_with_CICIDS_CESNET": true,
+      "implementation_target": "standardized feature PCA plus class-wise eigenvector filtering",
+      "faithful_full_or_style_approximate": "style/approximate",
+      "include_in_this_patch": true,
+      "reason": "representation/eigenvector filtering baseline using standardized feature projections",
+      "warning": "not full FINE unless exact original implementation is reproduced"
+    },
+    {
+      "method": "MCRe",
+      "paper_source_verified": false,
+      "official_code_available": false,
+      "data_compatibility_with_CICIDS_CESNET": false,
+      "implementation_target": "excluded",
+      "faithful_full_or_style_approximate": "not implemented",
+      "include_in_this_patch": false,
+      "reason": "no verified real-data compatible implementation in current artifact"
+    },
+    {
+      "method": "MORSE",
+      "paper_source_verified": false,
+      "official_code_available": false,
+      "data_compatibility_with_CICIDS_CESNET": false,
+      "implementation_target": "excluded",
+      "faithful_full_or_style_approximate": "not implemented",
+      "include_in_this_patch": false,
+      "reason": "no verified real-data compatible implementation in current artifact"
+    },
+    {
+      "method": "Flash",
+      "paper_source_verified": false,
+      "official_code_available": false,
+      "data_compatibility_with_CICIDS_CESNET": false,
+      "implementation_target": "excluded",
+      "faithful_full_or_style_approximate": "not implemented",
+      "include_in_this_patch": false,
+      "reason": "no verified real-data compatible implementation in current artifact"
+    },
+    {
+      "method": "Argus",
+      "paper_source_verified": false,
+      "official_code_available": false,
+      "data_compatibility_with_CICIDS_CESNET": false,
+      "implementation_target": "excluded",
+      "faithful_full_or_style_approximate": "not implemented",
+      "include_in_this_patch": false,
+      "reason": "no verified real-data compatible implementation in current artifact"
+    }
+  ]
+}

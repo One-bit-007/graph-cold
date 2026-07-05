@@ -1,0 +1,20 @@
+{
+  "decoupling_implemented": true,
+  "fine_style_implemented": true,
+  "decoupling_smoke_passed": true,
+  "fine_style_smoke_passed": false,
+  "reinforcement_matrix_completed": true,
+  "table_main_reinforced_exists": true,
+  "graphcold_existing_rows_unchanged": true,
+  "manuscript_reinforced": true,
+  "pdf_compiles": true,
+  "no_fake_baselines": true,
+  "fine_not_misnamed": true,
+  "submission_ready": false,
+  "human_confirmation_required": true,
+  "results_table_main_expanded_unchanged": true,
+  "blocking_items": [
+    "Human author/funding/COI confirmation still required.",
+    "submission_ready intentionally remains false."
+  ]
+}

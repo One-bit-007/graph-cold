@@ -1,0 +1,29 @@
+{
+  "passed": true,
+  "checks": {
+    "no_nan_inf": true,
+    "no_perfect_anomaly": true,
+    "ablation_hard_close_to_cold": true,
+    "err_graphcold_gt_hard": true,
+    "beta0_matches_symmetric": true,
+    "active_views_valid": true,
+    "active_views_match_dataset_contract": true,
+    "dataset_names_honest": true,
+    "maltls22_absent_unless_verified": true,
+    "formal_d5_scope_only": true,
+    "no_optc_rows": true,
+    "no_fake_baseline_rows": true,
+    "no_forbidden_result_strings": true,
+    "implementation_status_valid": true,
+    "sample_policy_present": true,
+    "dataset_hash_present": true,
+    "source_verified_true": true,
+    "original_d5_expanded_rows_unchanged": true,
+    "decoupling_rows_smoke_passed": true,
+    "fine_style_rows_smoke_passed": true,
+    "fine_not_misnamed": true,
+    "co_teaching_lite_still_lite": true,
+    "reinforcement_methods_only": true
+  },
+  "blocking_reasons": []
+}

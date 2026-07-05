@@ -18,8 +18,8 @@ EXPANDED_D5_METHODS = {
     "Confident-Learning",
     "CL-filtering",
     "Co-Teaching-lite",
-    "FINE",
     "FINE-style",
+    "Decoupling",
 }
 VALID_IMPLEMENTATION_STATUSES = {"reused_verified_d5", "implemented_smoke_passed"}
 FORBIDDEN_RESULT_TERMS = ("synthetic", "fallback", "emulation", "dummy", "placeholder")
@@ -167,13 +167,32 @@ def _no_fake_baseline_rows(frame: pd.DataFrame) -> bool:
     allowed = FORMAL_D5_METHODS | EXPANDED_D5_METHODS
     if not methods.issubset(allowed):
         return False
-    if frame["method"].isin({"FINE", "FINE-style"}).any():
+    if frame["method"].isin({"FINE"}).any():
+        return False
+    if "FINE" in methods and "FINE-style" not in methods:
         return False
     expanded = frame[~frame["method"].isin(FORMAL_D5_METHODS)]
     if expanded.empty:
         return True
     statuses = {str(value) for value in expanded["implementation_status"].dropna().unique()}
-    return bool(statuses == {"implemented_smoke_passed"})
+    if statuses != {"implemented_smoke_passed"}:
+        return False
+    if "smoke_passed" in expanded.columns:
+        smoke_text = expanded["smoke_passed"].astype(str).str.strip().str.lower()
+        requires_smoke = expanded["method"].isin({"Decoupling", "FINE-style"}) | smoke_text.isin({"true", "false", "1", "0"})
+        smoke = expanded.loc[requires_smoke, "smoke_passed"]
+        if smoke.empty:
+            return True
+        if smoke.dtype == bool:
+            if not bool(smoke.all()):
+                return False
+        elif not bool(smoke.astype(str).str.lower().isin({"true", "1"}).all()):
+            return False
+    if "faithfulness_level" in expanded.columns:
+        fine = expanded[expanded["method"] == "FINE-style"]
+        if not fine.empty and not fine["faithfulness_level"].astype(str).str.contains("not full", case=False, regex=False).all():
+            return False
+    return True
 
 
 def _no_forbidden_result_strings(frame: pd.DataFrame) -> bool:
