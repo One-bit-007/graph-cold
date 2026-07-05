@@ -1,0 +1,28 @@
+{
+  "editor_simulation_completed": true,
+  "reviewer_simulation_completed": true,
+  "rebuttal_prewrite_completed": true,
+  "mandatory_risk_patch_applied": true,
+  "fine_style_exclusion_explained": true,
+  "cesnet_ceiling_effect_explained": true,
+  "decoupling_limitation_explained": true,
+  "err_one_clarified": true,
+  "no_overclaiming_terms": true,
+  "pdf_compiles": true,
+  "candidate_package_ready": true,
+  "submission_ready": false,
+  "human_confirmation_required": true,
+  "raw_data_not_packaged": true,
+  "aria2_logs_not_packaged": true,
+  "local_windows_paths_absent": true,
+  "remaining_human_tasks": [
+    "author list",
+    "affiliations",
+    "funding",
+    "COI",
+    "AI declaration review",
+    "final PDF visual review",
+    "journal upload decision"
+  ],
+  "missing_requested_inputs": []
+}

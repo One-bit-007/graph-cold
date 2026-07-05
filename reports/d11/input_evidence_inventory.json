@@ -1,0 +1,37 @@
+{
+  "stage": "D11 input evidence inventory",
+  "source_pdf_pages": 13,
+  "formal_methods": [
+    "Co-Teaching-lite",
+    "CoLD",
+    "Confident-Learning",
+    "Decoupling",
+    "Graph-CoLD",
+    "Noisy-Supervised",
+    "ablation_hard"
+  ],
+  "datasets": [
+    "cesnet_tls_year22",
+    "cicids2017"
+  ],
+  "table_main_reinforced_rows": 714,
+  "table_baseline_reinforcement_rows": 102,
+  "missing_required_inputs": [],
+  "forbidden_terms_before_patch": {
+    "dominates": 0,
+    "state-of-the-art": 1,
+    "massive": 0,
+    "near-perfect": 0,
+    "universal": 1,
+    "guaranteed": 0,
+    "causal proof": 0
+  },
+  "result_hashes": {
+    "results/table_main_reinforced.csv": "aed078981c966b93be2d5a3ab1e2f939abd0d0d56320580c12cdcfe24302e09a",
+    "results/table_main_expanded.csv": "c7d998d6c918ecfbcb9cc56bd494dcec73b3fa6826b2046fb53e2ca2109519cd",
+    "results/table_baseline_reinforcement.csv": "a909ddabf364b2802d491828a1387d36d7194783e7dcaf717afb3e32d456bf03",
+    "results/stat_tests_reinforced.json": "c7ff04ca9dac4d4d4ebcea6c16550849df38afc7f27982ded4e3f6e833f9fcfd",
+    "reports/d9/reviewer_risk_pack_v2.md": "162e0d3de552bc021a54fd9022aa39b704209b0d2b43a2c34bfd8c5dfcdc6dff"
+  },
+  "d9_risk_pack_v2_read": true
+}

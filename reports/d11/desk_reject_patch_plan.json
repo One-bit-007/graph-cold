@@ -1,0 +1,38 @@
+{
+  "stage": "D11 desk-reject patch plan",
+  "trigger": "pre_patch_desk_reject_probability_above_20_percent_internal_heuristic",
+  "probability_is_internal_heuristic_only": true,
+  "source_estimate": "24% before D11 patch; expected 14% after patch, internal heuristic estimate",
+  "patches": [
+    {
+      "patch_id": "E1",
+      "target": "FINE-style exclusion explanation",
+      "action": "Explain that FINE-style was implemented but excluded because it failed the pre-registered CICIDS symmetric smoke gate.",
+      "status_after_generation": "applied"
+    },
+    {
+      "patch_id": "E2",
+      "target": "CESNET ceiling-effect clarification",
+      "action": "Clarify that CESNET postfilter25 is interpreted as cross-domain stability and evidence-retention evidence under a Macro-F1 ceiling.",
+      "status_after_generation": "applied"
+    },
+    {
+      "patch_id": "E3",
+      "target": "Decoupling limitation",
+      "action": "Explain why disagreement-only filtering can underperform under correlated SOC noise.",
+      "status_after_generation": "applied"
+    },
+    {
+      "patch_id": "E4",
+      "target": "ERR=1.0 clarification",
+      "action": "State that ERR is a retained-mask evidence-retention measure, not detection accuracy.",
+      "status_after_generation": "applied"
+    },
+    {
+      "patch_id": "E5_E6",
+      "target": "Baseline coverage and overclaiming wording",
+      "action": "Use implemented smoke-passed baseline language and remove broad overclaiming terms.",
+      "status_after_generation": "applied"
+    }
+  ]
+}

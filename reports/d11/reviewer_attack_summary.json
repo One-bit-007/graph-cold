@@ -1,0 +1,84 @@
+{
+  "stage": "D11 reviewer attack simulation",
+  "reviewers": {
+    "R1": {
+      "file": "reviewer_1_method_ml.md",
+      "title": "Reviewer 1 - Methodology / ML",
+      "summary": "The paper is technically coherent and its label-space Graph-CDM is more specific than generic sample reweighting, but the reviewer will press for sharper novelty boundaries and careful baseline language.",
+      "likely_recommendation": "minor-to-major revision",
+      "score": 7,
+      "fatal_risk": "no",
+      "major_concerns": [
+        "Graph-CDM novelty could be seen as graph-structured reweighting unless label-space terms are emphasized.",
+        "Evidence score is heuristic and needs transparent interpretation.",
+        "FINE-style failure must be described as an exclusion gate rather than hidden negative evidence.",
+        "Decoupling should be described as a faithful disagreement-update baseline but not a strong neural comparator."
+      ],
+      "minor_concerns": [
+        "Co-Teaching-lite naming must remain explicit.",
+        "Extreme p-values should be interpreted through paired scenario design, not as broad certainty."
+      ],
+      "questions": [
+        "Why diagnose in label space instead of embedding space?",
+        "How sensitive is the method to evidence-score choices?",
+        "Does Graph-CDM reduce to CoLD when graph/evidence terms are removed?"
+      ]
+    },
+    "R2": {
+      "file": "reviewer_2_security_soc.md",
+      "title": "Reviewer 2 - Security / SOC",
+      "summary": "The SOC motivation is credible, especially evidence retention, but the paper must avoid implying deployment validation without analyst studies or verified enterprise provenance.",
+      "likely_recommendation": "minor-to-major revision",
+      "score": 7,
+      "fatal_risk": "no",
+      "major_concerns": [
+        "Compression ratio and ERR are operational proxies, not analyst-time measurements.",
+        "ERR=1.0 can look suspicious unless explicitly defined as retention over clean informative samples.",
+        "No OpTC formal case means enterprise realism remains limited.",
+        "CESNET ceiling effect makes classifier margin less informative."
+      ],
+      "minor_concerns": [
+        "Active view masks should be stated as contract-driven.",
+        "Ranking should be framed as an alert-priority proxy."
+      ],
+      "questions": [
+        "What does a SOC analyst gain from retained informative samples?",
+        "How would compression be used in a live queue?",
+        "What evidence is missing for an enterprise case?"
+      ]
+    },
+    "R3": {
+      "file": "reviewer_3_data_experiments.md",
+      "title": "Reviewer 3 - Data / Experimental Rigor",
+      "summary": "The artifact is unusually transparent about scope, hashes, and exclusions, but the reviewer will scrutinize deterministic subsets, omitted datasets, scenario dependence, and baseline fidelity.",
+      "likely_recommendation": "major revision possible, send-to-review likely",
+      "score": 6.5,
+      "fatal_risk": "no",
+      "major_concerns": [
+        "CESNET postfilter25 is not a full archive evaluation.",
+        "CICIDS postfilter11 can bias class coverage and must remain declared.",
+        "MALTLS-22 and OpTC omissions need direct justification.",
+        "Paired p-values may be correlated across scenario settings.",
+        "FINE-style failed smoke and is excluded; this should be transparent."
+      ],
+      "minor_concerns": [
+        "Reference the result table and audit hashes near claims.",
+        "Avoid interpreting p-values as independent operational trials."
+      ],
+      "questions": [
+        "Are split/noise/model seeds paired for every comparison?",
+        "Are active views fixed by dataset contracts?",
+        "Are raw datasets redistributed?"
+      ]
+    }
+  },
+  "overall_likely_outcome": "send_to_review_with_revision_risk",
+  "fatal_risks_detected": [],
+  "highest_risk_topics": [
+    "baseline coverage",
+    "CESNET subset and ceiling effect",
+    "SOC operational proxy interpretation",
+    "ERR=1.0 interpretation",
+    "statistical dependence across scenarios"
+  ]
+}

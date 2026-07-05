@@ -1,0 +1,32 @@
+{
+  "stage": "D11 desk reject probability optimization",
+  "probabilities_are_internal_heuristic_estimates_only": true,
+  "before_patch": {
+    "desk_reject_risk": "24% internal heuristic estimate",
+    "main_causes": [
+      "FINE-style exclusion not yet directly explained in the manuscript.",
+      "ERR=1.0 could be misread as perfect detection.",
+      "CESNET ceiling-effect interpretation needed stronger wording.",
+      "Decoupling underperformance needed mechanism-level explanation.",
+      "Broad benchmark wording remained in D9.5 text."
+    ]
+  },
+  "after_patch": {
+    "desk_reject_risk": "14% internal heuristic estimate",
+    "main_remaining_causes": [
+      "Human author, funding, competing-interest, and upload confirmations remain.",
+      "Evaluation remains bounded to two verified datasets and implemented baselines.",
+      "No analyst-in-the-loop SOC deployment study is included."
+    ]
+  },
+  "target_acceptance_probability_80plus": {
+    "status": "heuristic_target_only",
+    "estimated_probability_range": "60-75% internal heuristic estimate after D11, conditional on human confirmation",
+    "conditions": [
+      "human declarations completed",
+      "reference spot-check completed",
+      "final PDF visual review completed",
+      "journal upload metadata completed"
+    ]
+  }
+}

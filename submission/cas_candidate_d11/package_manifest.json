@@ -1,0 +1,54 @@
+{
+  "stage": "D11 C&S risk-optimized candidate package",
+  "candidate_package_ready": true,
+  "submission_ready": false,
+  "human_confirmation_required": true,
+  "raw_data_packaged": false,
+  "aria2_logs_packaged": false,
+  "included_files": {
+    "cover_letter_d11.md": {
+      "bytes": 892,
+      "sha256": "9d9a6f098e62d8d7b38a1814c1e02b71e8b5fa3fa81389b77171efa54dc47a0c"
+    },
+    "data_availability_statement_d11.md": {
+      "bytes": 374,
+      "sha256": "2eacee13442eb061e484f583119f207c2d1462333d8e1c3c20f26ccfef6b332e"
+    },
+    "generative_ai_statement_d11.md": {
+      "bytes": 309,
+      "sha256": "3f314257783d529a7166e13369af91a27301d5c166267831148832bca6c0d12f"
+    },
+    "highlights_d11.md": {
+      "bytes": 356,
+      "sha256": "99c669acb7b5aa32e9f91e5f114aa374118b5a3b6d0dd66e7013e915edf10495"
+    },
+    "manuscript_anonymous_review_d11.pdf": {
+      "bytes": 346023,
+      "sha256": "ea72e78184bd3d9932a3b233767e0829720c3f12fb2f05481cc4bf01b554f4c0"
+    },
+    "manuscript_anonymous_review_d11.tex": {
+      "bytes": 23156,
+      "sha256": "254aa4b5ac7e432f6f124a321b53d51862fda605a86f04647595b9b06ae76574"
+    },
+    "manuscript_author_version_d11.pdf": {
+      "bytes": 346155,
+      "sha256": "1450eaa10a2bb656b2f9138b446cb74806a82e75c76ddd5cf6a8bf0945a54816"
+    },
+    "manuscript_author_version_d11.tex": {
+      "bytes": 23347,
+      "sha256": "3d827b0ed2c052ef4ca3d345514dbaaf7aa9c06fcdf20fbde25c5ca56ac5fc70"
+    },
+    "package_manifest.json": {
+      "bytes": 1795,
+      "sha256": "cf8284aa858cbcf33ce1299cff24eff676e2f3ce9afbce6d2ab242536282c657"
+    },
+    "rebuttal_prewrite_full.md": {
+      "bytes": 7808,
+      "sha256": "3b08c7f6f3bcf86857df0df0b8e89efde8b2c20d86ac68cfc264c6898ca608c6"
+    },
+    "reviewer_risk_pack_d11.md": {
+      "bytes": 3709,
+      "sha256": "b1073edf595e9eb031a52ab7f2957905b0de37390379df5996dc7bab382c4650"
+    }
+  }
+}

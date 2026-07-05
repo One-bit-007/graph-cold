@@ -1,0 +1,63 @@
+{
+  "stage": "D11 editor desk reject simulation",
+  "probability_is_internal_heuristic_only": true,
+  "desk_reject_probability_estimate": "24% before D11 patch; expected 14% after patch, internal heuristic estimate",
+  "decision_simulation": "send_to_review",
+  "scope_fit": {
+    "score_0_to_10": 8,
+    "assessment": "The topic fits Computers & Security because it addresses noisy-label intrusion detection, SOC alert prioritization, evidence retention, and reproducible real-data evaluation."
+  },
+  "novelty": {
+    "score_0_to_10": 7,
+    "assessment": "Label-space Graph-CDM and evidence-preserving retention are differentiated from CoLD hard deletion, but novelty must be framed as bounded method engineering plus SOC-oriented evidence preservation."
+  },
+  "experimental_validity": {
+    "score_0_to_10": 7,
+    "assessment": "Real audited CICIDS-2017 and CESNET-TLS-Year22 subsets are used; exclusions are justified, but reviewers may still ask for broader baselines and full archive evaluation."
+  },
+  "reproducibility": {
+    "score_0_to_10": 8,
+    "assessment": "Audit reports, hashes, commands, and raw-data nonredistribution rules are documented."
+  },
+  "ethical_declaration_compliance": {
+    "score_0_to_10": 6,
+    "assessment": "Data availability is present and D11 adds a generative-AI statement, while human author/funding/COI confirmation remains a pre-upload item."
+  },
+  "desk_reject_red_flags": {
+    "synthetic_fallback_emulation_result_language": false,
+    "fake_baselines": false,
+    "overclaiming": "mitigated by D11 wording patch",
+    "missing_references": "no new unverified citations added",
+    "local_windows_paths": false,
+    "missing_declarations": "human declarations still require confirmation",
+    "figure_table_quality": "compiled and visually checked after D11",
+    "formula_rendering": "compiled after D11",
+    "author_placeholders": true,
+    "absent_cover_letter_highlights": false
+  },
+  "top_acceptance_signals": [
+    "Clear C&S fit: noisy-label intrusion detection and SOC alert prioritization.",
+    "Real-data-only reinforced matrix with explicit dataset and baseline scope.",
+    "Graph-CDM is stated as label-space consistency rather than embedding-distance filtering.",
+    "Evidence-retention framing addresses a security-operations failure mode.",
+    "Reproducibility gates, hashes, and candidate package are present."
+  ],
+  "top_desk_reject_risks": [
+    "CESNET-TLS-Year22 uses a deterministic postfilter25 subset rather than full archive coverage.",
+    "SOC benefit is supported by retention and compression proxies, not by an analyst study.",
+    "Baseline coverage is bounded to implemented and smoke-passed methods.",
+    "Human author, funding, competing-interest, and upload confirmations remain required."
+  ],
+  "mandatory_pre_submission_fixes": [
+    "Add explicit FINE-style smoke-gate exclusion language.",
+    "Clarify that ERR=1.0 is a retained-mask evidence metric, not a classification score.",
+    "Explain Decoupling under structured SOC noise.",
+    "State the CESNET ceiling-effect interpretation in Discussion and Limitations.",
+    "Remove broad benchmark wording from the final candidate."
+  ],
+  "optional_polish_items": [
+    "Human author metadata and institutional statements.",
+    "Final visual pass in the journal upload PDF.",
+    "Reference spot-check by the corresponding author."
+  ]
+}

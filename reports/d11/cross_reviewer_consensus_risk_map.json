@@ -1,0 +1,133 @@
+{
+  "stage": "D11 cross-reviewer consensus risk map",
+  "risks": [
+    {
+      "risk_cluster": "baseline coverage",
+      "mentioned_by_reviewers": [
+        "R1",
+        "R3"
+      ],
+      "severity": "high",
+      "current_manuscript_defense": "Formal methods are limited to implemented and smoke-passed baselines.",
+      "remaining_gap": "Broader faithful baselines remain future work.",
+      "recommended_patch": "Use bounded-comparison wording and avoid broad benchmark claims.",
+      "rebuttal_strategy": "Stress artifact honesty and smoke-passed criterion."
+    },
+    {
+      "risk_cluster": "FINE-style exclusion",
+      "mentioned_by_reviewers": [
+        "R1",
+        "R3"
+      ],
+      "severity": "medium",
+      "current_manuscript_defense": "D9.5 smoke report records the failure.",
+      "remaining_gap": "Formal manuscript needed a direct explanation.",
+      "recommended_patch": "Add Discussion/Limitation paragraph explaining exclusion.",
+      "rebuttal_strategy": "State that unstable numbers are not reported."
+    },
+    {
+      "risk_cluster": "CESNET subset / ceiling effect",
+      "mentioned_by_reviewers": [
+        "R2",
+        "R3"
+      ],
+      "severity": "high",
+      "current_manuscript_defense": "Manuscript states postfilter25 subset.",
+      "remaining_gap": "Ceiling effect needed stronger interpretation.",
+      "recommended_patch": "Add explicit ceiling-effect paragraph.",
+      "rebuttal_strategy": "Frame CESNET as cross-domain stability and retention check."
+    },
+    {
+      "risk_cluster": "SOC operational validity",
+      "mentioned_by_reviewers": [
+        "R2"
+      ],
+      "severity": "high",
+      "current_manuscript_defense": "Compression and ERR are already described as proxies.",
+      "remaining_gap": "No analyst study or enterprise case.",
+      "recommended_patch": "Keep proxy language and state future analyst validation.",
+      "rebuttal_strategy": "Acknowledge limitation directly."
+    },
+    {
+      "risk_cluster": "ERR interpretation",
+      "mentioned_by_reviewers": [
+        "R2",
+        "R3"
+      ],
+      "severity": "medium",
+      "current_manuscript_defense": "ERR is defined as evidence retention.",
+      "remaining_gap": "ERR=1.0 can be misread.",
+      "recommended_patch": "Add explicit statement that ERR is not detection accuracy.",
+      "rebuttal_strategy": "Explain retained-mask threshold and clean informative subset."
+    },
+    {
+      "risk_cluster": "Graph-CDM novelty",
+      "mentioned_by_reviewers": [
+        "R1"
+      ],
+      "severity": "medium",
+      "current_manuscript_defense": "Method section uses label-space components.",
+      "remaining_gap": "Novelty can look incremental.",
+      "recommended_patch": "Emphasize label-space graph consistency and evidence preservation.",
+      "rebuttal_strategy": "Contrast with embedding-distance and hard deletion."
+    },
+    {
+      "risk_cluster": "Co-Teaching-lite naming",
+      "mentioned_by_reviewers": [
+        "R1",
+        "R3"
+      ],
+      "severity": "low",
+      "current_manuscript_defense": "Already named lite.",
+      "remaining_gap": "None if wording remains precise.",
+      "recommended_patch": "Keep lite wording.",
+      "rebuttal_strategy": "State no full Co-Teaching claim."
+    },
+    {
+      "risk_cluster": "Decoupling weakness",
+      "mentioned_by_reviewers": [
+        "R1",
+        "R2"
+      ],
+      "severity": "medium",
+      "current_manuscript_defense": "Decoupling entered D9.5 matrix.",
+      "remaining_gap": "Underperformance may look unfair without mechanism explanation.",
+      "recommended_patch": "Add structured-noise disagreement limitation.",
+      "rebuttal_strategy": "Explain disagreement is vulnerable to correlated SOC labels."
+    },
+    {
+      "risk_cluster": "references / related work",
+      "mentioned_by_reviewers": [
+        "R1",
+        "R3"
+      ],
+      "severity": "medium",
+      "current_manuscript_defense": "References are limited and verified.",
+      "remaining_gap": "Reviewer may request wider literature.",
+      "recommended_patch": "Do not add unverified citations in D11; note bounded related work.",
+      "rebuttal_strategy": "Offer future revision literature expansion if requested."
+    },
+    {
+      "risk_cluster": "submission declarations",
+      "mentioned_by_reviewers": [
+        "AE",
+        "R3"
+      ],
+      "severity": "medium",
+      "current_manuscript_defense": "Data availability exists and D11 adds AI statement.",
+      "remaining_gap": "Human author/funding/COI confirmation remains.",
+      "recommended_patch": "Keep submission_ready false.",
+      "rebuttal_strategy": "Flag as pre-upload task, not science blocker."
+    }
+  ],
+  "estimated_desk_reject_risk": "14% after D11 patch, internal heuristic estimate",
+  "estimated_major_revision_risk": "45% internal heuristic estimate",
+  "estimated_minor_revision_or_accept_risk": "41% internal heuristic estimate",
+  "top_three_mandatory_patches": [
+    "Explain FINE-style smoke-gate exclusion.",
+    "Clarify CESNET ceiling effect and subset interpretation.",
+    "Clarify ERR=1.0 and Decoupling under structured SOC noise."
+  ],
+  "safe_to_submit_after_patches": false,
+  "safe_to_submit_after_patches_reason": "The package is a candidate, but human author/funding/COI and upload review remain required."
+}
