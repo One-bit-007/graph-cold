@@ -1,7 +1,7 @@
 import numpy as np
 
 from src.baselines.base import array_hash
-from src.baselines.coteaching import CoTeachingLiteBaseline
+from src.baselines.coteaching import CoTeachingBaseline
 
 
 def _toy():
@@ -17,14 +17,15 @@ def _toy():
     return X, y, y_noisy
 
 
-def test_coteaching_lite_uses_two_models_and_noisy_y_train():
+def test_coteaching_uses_two_models_and_noisy_y_train():
     X, y_clean, y_noisy = _toy()
-    baseline = CoTeachingLiteBaseline(seed=42, noise_rate=0.2, epochs=3)
+    baseline = CoTeachingBaseline(seed=42, noise_rate=0.2, epochs=3, batch_size=32)
 
     result = baseline.fit_predict(X, y_noisy, X, num_classes=3)
 
-    assert result.method == "Co-Teaching-lite"
+    assert result.method == "Co-Teaching"
     assert result.details["small_loss_exchange"] is True
+    assert result.details["mini_batch_exchange"] is True
     assert result.details["training_label_hash"] == array_hash(y_noisy)
     assert result.details["training_label_hash"] != array_hash(y_clean)
     assert result.retained_mask.shape == y_noisy.shape
@@ -32,11 +33,11 @@ def test_coteaching_lite_uses_two_models_and_noisy_y_train():
     assert result.proba.shape == (X.shape[0], 3)
 
 
-def test_coteaching_lite_is_deterministic_for_fixed_seed():
+def test_coteaching_is_deterministic_for_fixed_seed():
     X, _, y_noisy = _toy()
 
-    a = CoTeachingLiteBaseline(seed=9, noise_rate=0.2, epochs=3).fit_predict(X, y_noisy, X, num_classes=3)
-    b = CoTeachingLiteBaseline(seed=9, noise_rate=0.2, epochs=3).fit_predict(X, y_noisy, X, num_classes=3)
+    a = CoTeachingBaseline(seed=9, noise_rate=0.2, epochs=3, batch_size=32).fit_predict(X, y_noisy, X, num_classes=3)
+    b = CoTeachingBaseline(seed=9, noise_rate=0.2, epochs=3, batch_size=32).fit_predict(X, y_noisy, X, num_classes=3)
 
     np.testing.assert_array_equal(a.y_pred, b.y_pred)
     np.testing.assert_array_equal(a.retained_mask, b.retained_mask)

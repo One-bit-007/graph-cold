@@ -1,7 +1,7 @@
-"""Assemble the D7 real-data Computers & Security manuscript package.
+"""Assemble the real-data Computers & Security manuscript package.
 
-The generator is intentionally an aggregation-only step. It reads frozen D5/D5.5
-and D6 artifacts, creates manuscript assets, and writes audit material. It does
+The generator is intentionally an aggregation-only step. It reads frozen
+evaluation and paper-preparation artifacts, creates manuscript assets, and writes audit material. It does
 not import experiment runners, model code, graph encoders, noise injectors, or
 metric implementations.
 """
@@ -31,9 +31,13 @@ FORMAL_METHODS = (
     "ablation_hard",
     "Noisy-Supervised",
     "Confident-Learning",
-    "Co-Teaching-lite",
+    "Co-Teaching",
+    "Decoupling",
+    "FINE",
+    "MCRe",
+    "MORSE",
 )
-EXCLUDED_METHODS = ("FINE", "MCRe", "MORSE", "Flash", "Argus", "Decoupling", "full Co-Teaching")
+EXCLUDED_METHODS = ("Flash", "Argus")
 FIGURE_FILES = (
     "fig2_macro_f1_vs_noise_rate",
     "fig3_err_retention",

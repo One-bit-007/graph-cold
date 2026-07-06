@@ -71,7 +71,7 @@ def test_result_sanity_allows_only_smoke_passed_expanded_baselines():
     extra = frame.iloc[[0]].copy()
     extra["method"] = "Noisy-Supervised"
     extra["method_family"] = "noisy_supervised"
-    extra["implementation_status"] = "implemented_smoke_passed"
+    extra["implementation_status"] = "verified_implementation"
     extra["macro_f1"] = 0.84
     extra["err_final"] = 1.0
     extra["err"] = 1.0
@@ -89,7 +89,7 @@ def test_result_sanity_blocks_fake_or_placeholder_methods():
     fake = frame.iloc[[0]].copy()
     fake["method"] = "Random-Dummy"
     fake["method_family"] = "dummy"
-    fake["implementation_status"] = "implemented_smoke_passed"
+    fake["implementation_status"] = "verified_implementation"
     expanded = pd.concat([frame, fake], ignore_index=True)
 
     report = check_results(expanded)
@@ -97,6 +97,28 @@ def test_result_sanity_blocks_fake_or_placeholder_methods():
     assert report["passed"] is False
     assert "no_fake_baseline_rows" in report["blocking_reasons"]
     assert "no_forbidden_result_strings" in report["blocking_reasons"]
+
+
+def test_result_sanity_allows_p0_baseline_set():
+    frame = _annotate_original_rows(_original_rows())
+    additions = []
+    for method, family in [("MCRe", "mcre"), ("MORSE", "morse"), ("Co-Teaching", "co_teaching"), ("FINE", "fine")]:
+        row = frame.iloc[[0]].copy()
+        row["method"] = method
+        row["method_family"] = family
+        row["implementation_status"] = "verified_implementation"
+        row["macro_f1"] = 0.83
+        row["err_final"] = 0.9
+        row["err"] = 0.9
+        row["err_tail"] = 0.9
+        row["faithfulness_level"] = "eigenvector filtering" if method == "FINE" else "verified baseline"
+        additions.append(row)
+    expanded = pd.concat([frame, *additions], ignore_index=True)
+
+    report = check_results(expanded)
+
+    assert report["checks"]["no_fake_baseline_rows"] is True
+    assert report["checks"]["implementation_status_valid"] is True
 
 
 def test_file_hash_detects_original_table_changes(tmp_path: Path):

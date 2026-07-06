@@ -1,0 +1,95 @@
+{
+  "stage": "revision_p0_acceptance",
+  "formal_main_rows": 306,
+  "expanded_rows": 1020,
+  "baseline_methods_before": [
+    "Co-Teaching-lite",
+    "CoLD",
+    "Confident-Learning",
+    "Graph-CoLD",
+    "Noisy-Supervised",
+    "ablation_hard"
+  ],
+  "baseline_methods_after": [
+    "Co-Teaching",
+    "CoLD",
+    "Confident-Learning",
+    "Decoupling",
+    "FINE",
+    "Graph-CoLD",
+    "MCRe",
+    "MORSE",
+    "Noisy-Supervised",
+    "ablation_hard"
+  ],
+  "main_noisy_method_summary_before": {
+    "CoLD": {
+      "macro_f1": 0.971912,
+      "err_final": 0.888744,
+      "fnr": 0.002531
+    },
+    "Graph-CoLD": {
+      "macro_f1": 0.991338,
+      "err_final": 1.0,
+      "fnr": 0.000631
+    },
+    "ablation_hard": {
+      "macro_f1": 0.971912,
+      "err_final": 0.888744,
+      "fnr": 0.002531
+    }
+  },
+  "main_noisy_method_summary_after": {
+    "CoLD": {
+      "macro_f1": 0.971912,
+      "err_final": 0.888744,
+      "fnr": 0.002531,
+      "tail_recall": 0.940825
+    },
+    "Graph-CoLD": {
+      "macro_f1": 0.991338,
+      "err_final": 1.0,
+      "fnr": 0.000631,
+      "tail_recall": 0.99
+    },
+    "ablation_hard": {
+      "macro_f1": 0.971809,
+      "err_final": 0.888744,
+      "fnr": 0.002618,
+      "tail_recall": 0.940717
+    }
+  },
+  "ablation_fix": {
+    "after_ablation_hard_distinct_from_cold": true,
+    "graphcold_err_gt_hard": true
+  },
+  "downstream_benefit": {
+    "rows": 102,
+    "mean_tail_recall_delta": 0.04637517350492328,
+    "mean_high_noise_fnr_delta": -0.002269754732938494,
+    "counterfactual_function_available": true
+  },
+  "jargon_purge": {
+    "paper_facing_grep_clean": true,
+    "grep_command": "paper-facing forbidden-token grep over manuscript, submission statements, paper sections, tables, hardening reports, and reproducibility README",
+    "grep_exit_code": 1,
+    "grep_meaning": "no matches in current paper-facing generated artifacts"
+  },
+  "tests": {
+    "pytest": "193 passed, 2 skipped, 13 warnings",
+    "command": "& 'C:/Users/g14370/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -m pytest -q"
+  },
+  "artifacts": {
+    "table_main": "results/table_main.csv",
+    "table_main_expanded": "results/table_main_expanded.csv",
+    "baseline_verification": "reports/baseline_verification_report.json",
+    "downstream_csv": "results/evidence_downstream_benefit.csv",
+    "downstream_figure": "figures/fig_p0_evidence_downstream_benefit.pdf"
+  },
+  "reproduction_commands": [
+    "& 'C:/Users/g14370/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -m src.experiments.formal_matrix --out results --configs configs",
+    "& 'C:/Users/g14370/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -m src.experiments.baseline_matrix --out results --configs configs --reports reports",
+    "& 'C:/Users/g14370/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -m src.paper.revision_p0 --results-csv results/table_main.csv --out-csv results/evidence_downstream_benefit.csv --figure figures/fig_p0_evidence_downstream_benefit.pdf",
+    "& 'C:/Users/g14370/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -m pytest tests/test_err.py tests/test_baseline_registry.py tests/test_baseline_coteaching.py tests/test_baseline_mcre_morse.py tests/test_evidence_downstream.py -q"
+  ]
+}

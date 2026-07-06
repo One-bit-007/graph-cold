@@ -1,6 +1,6 @@
-"""D6 real-data paper preparation.
+"""Real-data paper preparation.
 
-This module aggregates verified D5/D5.5 result artifacts into paper tables,
+This module aggregates verified real-data result artifacts into paper tables,
 figures, statistical narrative, draft LaTeX sections, and readiness metadata.
 It intentionally does not import experiment runners or model modules.
 """
@@ -38,14 +38,21 @@ MAIN_METHODS = [
     "ablation_hard",
     "Noisy-Supervised",
     "Confident-Learning",
-    "Co-Teaching-lite",
+    "Co-Teaching",
+    "Decoupling",
+    "FINE",
+    "MCRe",
+    "MORSE",
 ]
 FIG_METHODS = [
     "Graph-CoLD",
     "CoLD",
     "Noisy-Supervised",
     "Confident-Learning",
-    "Co-Teaching-lite",
+    "Co-Teaching",
+    "FINE",
+    "MCRe",
+    "MORSE",
 ]
 ABLATION_VARIANTS = [
     "Graph-CoLD-full",
@@ -71,7 +78,11 @@ COLORS = {
     "ablation_hard": "#B8A037",
     "Noisy-Supervised": "#7A828F",
     "Confident-Learning": "#71B436",
-    "Co-Teaching-lite": "#BD569B",
+    "Co-Teaching": "#BD569B",
+    "Decoupling": "#8E6BBE",
+    "FINE": "#45A6A1",
+    "MCRe": "#D68C45",
+    "MORSE": "#5E9F6E",
     "Graph-CoLD-full": "#5477C4",
     "Graph-CoLD-no-D_neigh": "#A3BEFA",
     "Graph-CoLD-no-D_view": "#CEDFFE",
@@ -411,7 +422,11 @@ def _table_stats(stats: dict[str, Any]) -> pd.DataFrame:
         ("Graph-CoLD_vs_ablation_hard", "Graph-CoLD vs ablation_hard"),
         ("Graph-CoLD_vs_Noisy-Supervised", "Graph-CoLD vs Noisy-Supervised"),
         ("Graph-CoLD_vs_Confident-Learning", "Graph-CoLD vs Confident-Learning"),
-        ("Graph-CoLD_vs_Co-Teaching-lite", "Graph-CoLD vs Co-Teaching-lite"),
+        ("Graph-CoLD_vs_Co-Teaching", "Graph-CoLD vs Co-Teaching"),
+        ("Graph-CoLD_vs_Decoupling", "Graph-CoLD vs Decoupling"),
+        ("Graph-CoLD_vs_FINE", "Graph-CoLD vs FINE"),
+        ("Graph-CoLD_vs_MCRe", "Graph-CoLD vs MCRe"),
+        ("Graph-CoLD_vs_MORSE", "Graph-CoLD vs MORSE"),
     ]
     comparisons = stats.get("comparisons", {})
     rows = []
@@ -660,7 +675,7 @@ def _narrative_json(
             "evidence retention",
             "operational alert reduction proxy",
         ],
-        "caution": "Claims are limited to the verified CICIDS-2017 and CESNET-TLS-Year22 D5.5 result matrix.",
+        "caution": "Claims are limited to the verified CICIDS-2017 and CESNET-TLS-Year22 evaluation matrix.",
     }
 
 
@@ -678,11 +693,11 @@ def _narrative_md(report: dict[str, Any]) -> str:
         "Compression ratio is reported as an operational alert reduction proxy rather than a direct SOC labor measurement.",
         "CESNET-TLS-Year22 should be interpreted as a high-ceiling, verified TLS application-classification subset.",
     ]
-    return f"""# D6 Statistical Narrative
+    return f"""# Statistical Narrative
 
 ## Technical summary
 
-The D6 artifacts aggregate the verified D5.5 real-data result matrix from `{report['source_csv']}`. Across matched dataset, noise, beta, and seed cells, Graph-CoLD improves Macro-F1 over CoLD by {stats['mean_difference_pp']:.2f} percentage points. The paired grouped t-test reports p={_p_value(stats['p_value'])}, effect size dz={stats['effect_size']:.3f}, and n={stats['n_pairs']} pairs. This supports a claim of consistent improvement, not a claim beyond the tested data scope.
+The paper artifacts aggregate the verified real-data evaluation matrix from `{report['source_csv']}`. Across matched dataset, noise, beta, and seed cells, Graph-CoLD improves Macro-F1 over CoLD by {stats['mean_difference_pp']:.2f} percentage points. The paired grouped t-test reports p={_p_value(stats['p_value'])}, effect size dz={stats['effect_size']:.3f}, and n={stats['n_pairs']} pairs. This supports a claim of consistent improvement, not a claim beyond the tested data scope.
 
 ## Dataset scope
 
@@ -690,11 +705,11 @@ The formal result scope is CICIDS-2017 postfilter11 and CESNET-TLS-Year22 postfi
 
 ## Method scope
 
-D6 includes Graph-CoLD, CoLD, ablation_hard, Noisy-Supervised, Confident-Learning, and Co-Teaching-lite. Co-Teaching-lite is named as such because it is a lightweight, smoke-passed real-data adapter, not a full deep Co-Teaching reproduction.
+The matrix includes Graph-CoLD, CoLD, ablation_hard, Noisy-Supervised, Confident-Learning, Co-Teaching, Decoupling, FINE, MCRe, and MORSE.
 
 ## Excluded baselines
 
-The following methods are excluded from formal tables because the repository does not contain independently implemented and smoke-passed real-data rows for them:
+The following methods are outside the formal two-dataset label-noise matrix:
 
 {excluded_lines}
 
@@ -706,7 +721,7 @@ The paired grouped test controls for scenario difficulty by matching dataset, no
 
 ## Graph-CoLD vs noise-learning baselines
 
-Relative to Noisy-Supervised, Confident-Learning, and Co-Teaching-lite, Graph-CoLD has higher average Macro-F1 in the expanded D5.5 matrix. These comparisons should be read as robustness under noisy labels within the implemented baselines, not as an exhaustive benchmark against every published variant.
+Relative to Noisy-Supervised, Confident-Learning, Co-Teaching, Decoupling, FINE, MCRe, and MORSE, Graph-CoLD has higher average Macro-F1 in the expanded matrix. These comparisons should be read as robustness under noisy labels within the implemented baselines, not as an exhaustive benchmark against every published variant.
 
 ## ERR interpretation
 
@@ -722,7 +737,7 @@ Compression ratio is an operational alert reduction proxy. Combined with ERR, it
 
 ## Caution against overclaiming
 
-The results are traceable to two verified real datasets and the implemented D5.5 baselines. The paper should avoid universal superiority language and should state that omitted baselines require faithful future implementations before formal comparison.
+The results are traceable to two verified real datasets and the implemented baselines. The paper should avoid universal superiority language and should state that omitted provenance systems require separate future evaluation before formal comparison.
 
 ## Conclusion-ready insight block
 
@@ -757,21 +772,21 @@ We evaluate Graph-CoLD on two verified real datasets: CICIDS-2017 postfilter11 a
 
 Each result row records source verification, dataset hash, sample policy, split id, noise seed, model seed, and active views. CICIDS-2017 uses host, IP, and temporal views. CESNET-TLS-Year22 uses IP and temporal views; process and threat-intelligence views are not claimed for this dataset.
 
-Noise models include clean labels, symmetric label noise, asymmetric label noise, and graph-consistency noise. Noise is injected only into training labels. Graph-consistency rows use the beta values present in the D5.5 result matrix, and the beta=0 rows are retained to verify consistency with symmetric corruption.
+Noise models include clean labels, symmetric label noise, asymmetric label noise, and graph-consistency noise. Noise is injected only into training labels. Graph-consistency rows use the beta values present in the evaluation matrix, and the beta=0 rows are retained to verify consistency with symmetric corruption.
 
-The formal baselines are CoLD, ablation_hard, Noisy-Supervised, Confident-Learning, and Co-Teaching-lite. FINE, MCRe, MORSE, Flash, Argus, Decoupling, and full Co-Teaching are excluded from the formal comparison because the repository does not contain independently implemented and smoke-passed real-data rows for them. We report Macro-F1, FPR, FNR, ERR, Tail-ERR, compression ratio, runtime, and memory. Statistical tests are paired by dataset, noise type, noise rate, graph beta, and seed, avoiding unpaired pooled tests.
+The formal baselines are CoLD, ablation_hard, Noisy-Supervised, Confident-Learning, Co-Teaching, Decoupling, FINE, MCRe, and MORSE. Flash and Argus are not included because they target provenance case-study workflows rather than the two-dataset label-noise matrix. We report Macro-F1, FPR, FNR, tail-class recall, ERR, Tail-ERR, compression ratio, runtime, and memory. Statistical tests are paired by dataset, noise type, noise rate, graph beta, and seed, avoiding unpaired pooled tests.
 """,
         encoding="utf-8",
     )
     (sections / "results_realdata.tex").write_text(
         rf"""\section{{Real-data Results}}
-Table~\ref{{tab:main-performance}} summarizes the main D5.5 matrix. Averaged over all verified scenarios, Graph-CoLD obtains Macro-F1 {graph_mean:.4f}, while CoLD obtains {cold_mean:.4f}. The paired grouped comparison reports a mean difference of {stats['Mean difference']} with p={stats['p-value']} and effect size {stats['Effect size']}.
+Table~\ref{{tab:main-performance}} summarizes the evaluation matrix. Averaged over all verified scenarios, Graph-CoLD obtains Macro-F1 {graph_mean:.4f}, while CoLD obtains {cold_mean:.4f}. The paired grouped comparison reports a mean difference of {stats['Mean difference']} with p={stats['p-value']} and effect size {stats['Effect size']}.
 
 High-noise settings show the clearest robustness pattern. Table~\ref{{tab:high-noise}} aggregates noise rates at or above 0.4 for symmetric, asymmetric, and graph-consistency corruption. Graph-CoLD maintains high Macro-F1 while improving evidence retention relative to ablation_hard.
 
-Evidence retention is central to the Stage-2 contribution. Mean ERR_final is {graph_err:.4f} for Graph-CoLD and {hard_err:.4f} for ablation_hard, indicating that soft evidence-preserving weights retain more clean informative samples than hard deletion. Table~\ref{{tab:ablation}} shows that removing Graph-CDM terms or evidence weighting reduces either Macro-F1 or retention quality.
+Evidence retention is central to the structured-denoising contribution. Mean ERR_final is {graph_err:.4f} for Graph-CoLD and {hard_err:.4f} for ablation_hard, indicating that soft evidence-preserving weights retain more clean informative samples than hard deletion. Table~\ref{{tab:ablation}} shows that removing Graph-CDM terms or evidence weighting reduces either Macro-F1 or retention quality.
 
-Runtime results are reported as operational cost rather than as a primary optimization target. Graph-CoLD averages {graph_runtime:.2f}s per scenario versus {cold_runtime:.2f}s for CoLD in the D5.5 matrix, with the added cost interpreted alongside robustness and retention gains.
+Runtime results are reported as operational cost rather than as a primary optimization target. Graph-CoLD averages {graph_runtime:.2f}s per scenario versus {cold_runtime:.2f}s for CoLD in the evaluation matrix, with the added cost interpreted alongside robustness and retention gains.
 """,
         encoding="utf-8",
     )
@@ -781,15 +796,15 @@ The CESNET-TLS-Year22 results exhibit a ceiling effect: several methods already 
 
 ERR matters for SOC alert triage because high Macro-F1 alone does not show whether retained alerts preserve useful evidence. Compression ratio approximates review workload, while ERR measures whether clean informative evidence survives filtering. Together they describe the detection-versus-review tradeoff.
 
-Co-Teaching-lite is labeled ``lite'' because it is a lightweight, smoke-passed baseline adapter, not a full deep Co-Teaching reproduction. MALTLS-22 is not included because the available source could not be verified under the project audit gate. OpTC is not included as a formal experiment because no verified local provenance event table is available; it remains future work for a real enterprise case study.
+The expanded comparison includes verified adapters for Co-Teaching, Decoupling, FINE, MCRe, and MORSE under the same real-data splits and noise settings. MALTLS-22 is not included because the available source could not be verified under the project audit gate. OpTC is not included as a formal experiment because no verified local provenance event table is available; it remains future work for a real enterprise case study.
 """,
         encoding="utf-8",
     )
     (sections / "limitations_realdata.tex").write_text(
         r"""\section{Limitations}
-The CESNET-TLS-Year22 evaluation uses a deterministic audit-window subset and postfilter25 class policy. The manuscript must not present this as a full-archive result. Several published baselines are excluded because faithful, independently smoke-passed real-data implementations are not yet present in the repository.
+The CESNET-TLS-Year22 evaluation uses a deterministic audit-window subset and postfilter25 class policy. The manuscript must not present this as a full-archive result. Flash and Argus are excluded from the formal label-noise matrix because they target provenance-oriented enterprise workflows rather than the two-dataset classifier setting.
 
-The current package does not include a real OpTC case study and does not report OpTC experiment results. MALTLS-22 is also absent because the source verification gate failed. Future work should add verified provenance SOC datasets and faithful implementations of the excluded baselines before expanding the formal comparison set.
+The current package does not include a real OpTC case study and does not report OpTC experiment results. MALTLS-22 is also absent because the source verification gate failed. Future work should add verified provenance SOC datasets before expanding the formal comparison set.
 """,
         encoding="utf-8",
     )

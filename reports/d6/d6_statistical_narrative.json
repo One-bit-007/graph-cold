@@ -1,7 +1,7 @@
 {
   "stage": "D6",
   "source_csv": "results/table_main_expanded.csv",
-  "source_sha256": "c7d998d6c918ecfbcb9cc56bd494dcec73b3fa6826b2046fb53e2ca2109519cd",
+  "source_sha256": "97aa2a2c912b9a82873fc6ee4a0966f5a185e23fde978867a9f5ba96af35873a",
   "dataset_scope": [
     "CICIDS-2017",
     "CESNET-TLS-Year22"
@@ -16,19 +16,17 @@
     "ablation_hard",
     "Noisy-Supervised",
     "Confident-Learning",
-    "Co-Teaching-lite"
+    "Co-Teaching",
+    "Decoupling",
+    "FINE",
+    "MCRe",
+    "MORSE"
   ],
   "excluded_baselines": {
-    "FINE": "excluded: faithful FINE requires a validated embedding outlier protocol; D5.5 keeps it out instead of reporting approximate or fake rows",
-    "FINE-style": "excluded: faithful FINE requires a validated embedding outlier protocol; D5.5 keeps it out instead of reporting approximate or fake rows",
-    "MCRe": "excluded: no independently implemented and smoke-passed real-data implementation in this repository",
-    "MORSE": "excluded: no independently implemented and smoke-passed real-data implementation in this repository",
-    "Decoupling": "excluded: no independently implemented and smoke-passed real-data implementation in this repository",
     "Flash": "excluded: provenance case-study method; no formal two-dataset label-noise implementation",
     "Argus": "excluded: provenance case-study method; no formal two-dataset label-noise implementation",
     "cleanlab": "legacy audit key; official cleanlab is represented by the Confident-Learning method row",
-    "Co-Teaching": "legacy full deep baseline name; D5.5 includes Co-Teaching-lite instead",
-    "Co-Teaching+": "not independently implemented and smoke-passed on real data"
+    "Co-Teaching+": "not independently implemented and verified on real data"
   },
   "graph_cold_vs_cold": {
     "mean_difference_pp": 1.8285494916563578,
@@ -38,41 +36,65 @@
     "test": "paired grouped t-test, greater alternative"
   },
   "method_means": {
-    "Co-Teaching-lite": {
-      "macro_f1_mean": 0.7185694546266541,
-      "err_final_mean": 0.823116832673131,
-      "compression_ratio_mean": 0.9910680878602673,
-      "runtime_sec_mean": 10.741484896077857
+    "Co-Teaching": {
+      "macro_f1_mean": 0.7229687859964034,
+      "err_final_mean": 0.8247316950634399,
+      "compression_ratio_mean": 0.9901239075374372,
+      "runtime_sec_mean": 10.986523021568942
     },
     "CoLD": {
       "macro_f1_mean": 0.9731713095876708,
       "err_final_mean": 0.8952884210391963,
       "compression_ratio_mean": 0.9908529026560847,
-      "runtime_sec_mean": 3.9157209382329694
+      "runtime_sec_mean": 4.790481757840562
     },
     "Confident-Learning": {
       "macro_f1_mean": 0.7679072721054719,
       "err_final_mean": 0.8245275987520679,
       "compression_ratio_mean": 0.9935948503689104,
-      "runtime_sec_mean": 23.68053625392449
+      "runtime_sec_mean": 22.488114982353483
+    },
+    "Decoupling": {
+      "macro_f1_mean": 0.6445057711324641,
+      "err_final_mean": 0.31443365598599105,
+      "compression_ratio_mean": 0.9897412498679518,
+      "runtime_sec_mean": 8.971172250979055
+    },
+    "FINE": {
+      "macro_f1_mean": 0.6191849140901421,
+      "err_final_mean": 0.642385822889732,
+      "compression_ratio_mean": 0.9986829386545816,
+      "runtime_sec_mean": 2.727387440200283
     },
     "Graph-CoLD": {
       "macro_f1_mean": 0.9914568045042347,
       "err_final_mean": 1.0,
       "compression_ratio_mean": 0.9896126907522375,
-      "runtime_sec_mean": 4.0179826254889655
+      "runtime_sec_mean": 4.917658931371989
+    },
+    "MCRe": {
+      "macro_f1_mean": 0.6809805413810631,
+      "err_final_mean": 0.7824077369256476,
+      "compression_ratio_mean": 0.9891209303237971,
+      "runtime_sec_mean": 4.9700869137264885
+    },
+    "MORSE": {
+      "macro_f1_mean": 0.6719611461664925,
+      "err_final_mean": 0.9472472769452394,
+      "compression_ratio_mean": 0.9981293926978783,
+      "runtime_sec_mean": 10.709405354899241
     },
     "Noisy-Supervised": {
       "macro_f1_mean": 0.68364014007661,
       "err_final_mean": 1.0,
       "compression_ratio_mean": 0.99789143047106,
-      "runtime_sec_mean": 2.5739797970585925
+      "runtime_sec_mean": 2.703673292157713
     },
     "ablation_hard": {
-      "macro_f1_mean": 0.9731713095876708,
+      "macro_f1_mean": 0.9730741731552438,
       "err_final_mean": 0.8952884210391963,
-      "compression_ratio_mean": 0.9908529026560847,
-      "runtime_sec_mean": 0.00033139901928482327
+      "compression_ratio_mean": 0.9907622723811581,
+      "runtime_sec_mean": 5.184165422549567
     }
   },
   "high_noise_summary": {
@@ -93,10 +115,10 @@
       },
       "ablation_hard": {
         "macro_f1_mean": 0.9333,
-        "fpr_mean": 0.002,
-        "fnr_mean": 0.0059,
+        "fpr_mean": 0.0021,
+        "fnr_mean": 0.0061,
         "err_mean": 0.8228,
-        "compression_ratio_mean": 0.9989
+        "compression_ratio_mean": 0.9991
       },
       "Noisy-Supervised": {
         "macro_f1_mean": 0.4082,
@@ -112,12 +134,40 @@
         "err_mean": 0.6819,
         "compression_ratio_mean": 0.9995
       },
-      "Co-Teaching-lite": {
-        "macro_f1_mean": 0.5623,
-        "fpr_mean": 0.2774,
-        "fnr_mean": 0.0813,
-        "err_mean": 0.6217,
-        "compression_ratio_mean": 0.9913
+      "Co-Teaching": {
+        "macro_f1_mean": 0.5645,
+        "fpr_mean": 0.2844,
+        "fnr_mean": 0.0762,
+        "err_mean": 0.6327,
+        "compression_ratio_mean": 0.9939
+      },
+      "Decoupling": {
+        "macro_f1_mean": 0.5097,
+        "fpr_mean": 0.3096,
+        "fnr_mean": 0.0371,
+        "err_mean": 0.2807,
+        "compression_ratio_mean": 0.983
+      },
+      "FINE": {
+        "macro_f1_mean": 0.3402,
+        "fpr_mean": 0.3457,
+        "fnr_mean": 0.2431,
+        "err_mean": 0.337,
+        "compression_ratio_mean": 1.0
+      },
+      "MCRe": {
+        "macro_f1_mean": 0.4066,
+        "fpr_mean": 0.4376,
+        "fnr_mean": 0.1175,
+        "err_mean": 0.4594,
+        "compression_ratio_mean": 0.9974
+      },
+      "MORSE": {
+        "macro_f1_mean": 0.4105,
+        "fpr_mean": 0.4893,
+        "fnr_mean": 0.0846,
+        "err_mean": 0.8246,
+        "compression_ratio_mean": 0.9996
       }
     },
     "CESNET-TLS-Year22": {
@@ -136,11 +186,11 @@
         "compression_ratio_mean": 0.9824
       },
       "ablation_hard": {
-        "macro_f1_mean": 0.9944,
-        "fpr_mean": 0.0136,
+        "macro_f1_mean": 0.9942,
+        "fpr_mean": 0.0131,
         "fnr_mean": 0.0001,
         "err_mean": 0.9459,
-        "compression_ratio_mean": 0.9824
+        "compression_ratio_mean": 0.9846
       },
       "Noisy-Supervised": {
         "macro_f1_mean": 0.5891,
@@ -156,12 +206,40 @@
         "err_mean": 0.8444,
         "compression_ratio_mean": 0.9952
       },
-      "Co-Teaching-lite": {
-        "macro_f1_mean": 0.7992,
-        "fpr_mean": 0.1804,
-        "fnr_mean": 0.0076,
-        "err_mean": 0.8237,
-        "compression_ratio_mean": 0.9933
+      "Co-Teaching": {
+        "macro_f1_mean": 0.8102,
+        "fpr_mean": 0.2003,
+        "fnr_mean": 0.0062,
+        "err_mean": 0.8304,
+        "compression_ratio_mean": 0.9923
+      },
+      "Decoupling": {
+        "macro_f1_mean": 0.7068,
+        "fpr_mean": 0.2774,
+        "fnr_mean": 0.0223,
+        "err_mean": 0.3913,
+        "compression_ratio_mean": 0.9952
+      },
+      "FINE": {
+        "macro_f1_mean": 0.5791,
+        "fpr_mean": 0.2511,
+        "fnr_mean": 0.1549,
+        "err_mean": 0.5037,
+        "compression_ratio_mean": 0.9995
+      },
+      "MCRe": {
+        "macro_f1_mean": 0.7773,
+        "fpr_mean": 0.149,
+        "fnr_mean": 0.0799,
+        "err_mean": 0.79,
+        "compression_ratio_mean": 0.999
+      },
+      "MORSE": {
+        "macro_f1_mean": 0.7837,
+        "fpr_mean": 0.2161,
+        "fnr_mean": 0.0541,
+        "err_mean": 0.982,
+        "compression_ratio_mean": 0.9999
       }
     }
   },
@@ -192,9 +270,9 @@
     },
     {
       "Comparison": "Graph-CoLD vs ablation_hard",
-      "Mean difference": "1.83 pp",
-      "p-value": "5.60e-06",
-      "Effect size": "0.458",
+      "Mean difference": "1.84 pp",
+      "p-value": "4.49e-06",
+      "Effect size": "0.463",
       "n": 102,
       "Test type": "paired grouped t-test, greater alternative",
       "Interpretation": "Graph-CoLD higher under paired grouped test."
@@ -218,10 +296,46 @@
       "Interpretation": "Graph-CoLD higher under paired grouped test."
     },
     {
-      "Comparison": "Graph-CoLD vs Co-Teaching-lite",
-      "Mean difference": "27.29 pp",
-      "p-value": "4.05e-41",
-      "Effect size": "2.209",
+      "Comparison": "Graph-CoLD vs Co-Teaching",
+      "Mean difference": "26.85 pp",
+      "p-value": "7.33e-41",
+      "Effect size": "2.193",
+      "n": 102,
+      "Test type": "paired grouped t-test, greater alternative",
+      "Interpretation": "Graph-CoLD higher under paired grouped test."
+    },
+    {
+      "Comparison": "Graph-CoLD vs Decoupling",
+      "Mean difference": "34.70 pp",
+      "p-value": "9.79e-50",
+      "Effect size": "2.775",
+      "n": 102,
+      "Test type": "paired grouped t-test, greater alternative",
+      "Interpretation": "Graph-CoLD higher under paired grouped test."
+    },
+    {
+      "Comparison": "Graph-CoLD vs FINE",
+      "Mean difference": "37.23 pp",
+      "p-value": "6.73e-32",
+      "Effect size": "1.694",
+      "n": 102,
+      "Test type": "paired grouped t-test, greater alternative",
+      "Interpretation": "Graph-CoLD higher under paired grouped test."
+    },
+    {
+      "Comparison": "Graph-CoLD vs MCRe",
+      "Mean difference": "31.05 pp",
+      "p-value": "1.34e-31",
+      "Effect size": "1.678",
+      "n": 102,
+      "Test type": "paired grouped t-test, greater alternative",
+      "Interpretation": "Graph-CoLD higher under paired grouped test."
+    },
+    {
+      "Comparison": "Graph-CoLD vs MORSE",
+      "Mean difference": "31.95 pp",
+      "p-value": "1.75e-32",
+      "Effect size": "1.724",
       "n": 102,
       "Test type": "paired grouped t-test, greater alternative",
       "Interpretation": "Graph-CoLD higher under paired grouped test."
@@ -233,5 +347,5 @@
     "evidence retention",
     "operational alert reduction proxy"
   ],
-  "caution": "Claims are limited to the verified CICIDS-2017 and CESNET-TLS-Year22 D5.5 result matrix."
+  "caution": "Claims are limited to the verified CICIDS-2017 and CESNET-TLS-Year22 evaluation matrix."
 }

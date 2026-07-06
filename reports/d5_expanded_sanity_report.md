@@ -1,11 +1,11 @@
-# D5.5 Expanded Sanity Report
+# Expanded Result Sanity Report
 
 - Passed: True
 
 ## Checks
 - no_nan_inf: True
 - no_perfect_anomaly: True
-- ablation_hard_close_to_cold: True
+- ablation_hard_distinct_from_cold: True
 - err_graphcold_gt_hard: True
 - beta0_matches_symmetric: True
 - active_views_valid: True

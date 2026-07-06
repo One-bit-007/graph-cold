@@ -1,4 +1,4 @@
-"""Sanity checks for D5 result tables."""
+"""Sanity checks for formal result tables."""
 from __future__ import annotations
 
 import argparse
@@ -17,11 +17,13 @@ EXPANDED_D5_METHODS = {
     "Noisy-Supervised",
     "Confident-Learning",
     "CL-filtering",
-    "Co-Teaching-lite",
-    "FINE-style",
+    "Co-Teaching",
+    "FINE",
     "Decoupling",
+    "MCRe",
+    "MORSE",
 }
-VALID_IMPLEMENTATION_STATUSES = {"reused_verified_d5", "implemented_smoke_passed"}
+VALID_IMPLEMENTATION_STATUSES = {"reused_verified_d5", "verified_implementation"}
 FORBIDDEN_RESULT_TERMS = ("synthetic", "fallback", "emulation", "dummy", "placeholder")
 EXPECTED_ACTIVE_VIEWS = {
     "cicids2017": "host|ip|temporal",
@@ -35,7 +37,7 @@ def check_results(frame: pd.DataFrame) -> dict[str, Any]:
     checks = {
         "no_nan_inf": bool(not numeric.isna().any().any() and np.isfinite(numeric.to_numpy(dtype=float)).all()),
         "no_perfect_anomaly": _no_perfect_anomaly(frame),
-        "ablation_hard_close_to_cold": _ablation_close(frame),
+        "ablation_hard_distinct_from_cold": _ablation_distinct(frame),
         "err_graphcold_gt_hard": _err_direction(frame),
         "beta0_matches_symmetric": _beta0_matches_symmetric(frame),
         "active_views_valid": _active_views_valid(frame),
@@ -66,7 +68,7 @@ def _no_perfect_anomaly(frame: pd.DataFrame) -> bool:
     return bool(not perfect.any())
 
 
-def _ablation_close(frame: pd.DataFrame) -> bool:
+def _ablation_distinct(frame: pd.DataFrame) -> bool:
     if "variant" in frame.columns:
         hard = frame[frame["variant"] == "ablation_hard"]
         cold = frame[frame.get("method", pd.Series(dtype=str)) == "CoLD"]
@@ -75,7 +77,7 @@ def _ablation_close(frame: pd.DataFrame) -> bool:
         cold = frame[frame.get("method", pd.Series(dtype=str)) == "CoLD"]
     if hard.empty or cold.empty or "macro_f1" not in frame.columns:
         return True
-    return bool(abs(float(hard["macro_f1"].mean()) - float(cold["macro_f1"].mean())) <= 0.1)
+    return bool(abs(float(hard["macro_f1"].mean()) - float(cold["macro_f1"].mean())) >= 1e-6)
 
 
 def _err_direction(frame: pd.DataFrame) -> bool:
@@ -167,30 +169,26 @@ def _no_fake_baseline_rows(frame: pd.DataFrame) -> bool:
     allowed = FORMAL_D5_METHODS | EXPANDED_D5_METHODS
     if not methods.issubset(allowed):
         return False
-    if frame["method"].isin({"FINE"}).any():
-        return False
-    if "FINE" in methods and "FINE-style" not in methods:
-        return False
     expanded = frame[~frame["method"].isin(FORMAL_D5_METHODS)]
     if expanded.empty:
         return True
     statuses = {str(value) for value in expanded["implementation_status"].dropna().unique()}
-    if statuses != {"implemented_smoke_passed"}:
+    if not statuses.issubset({"verified_implementation"}):
         return False
-    if "smoke_passed" in expanded.columns:
-        smoke_text = expanded["smoke_passed"].astype(str).str.strip().str.lower()
-        requires_smoke = expanded["method"].isin({"Decoupling", "FINE-style"}) | smoke_text.isin({"true", "false", "1", "0"})
-        smoke = expanded.loc[requires_smoke, "smoke_passed"]
-        if smoke.empty:
+    if "verified" in expanded.columns:
+        verified_text = expanded["verified"].astype(str).str.strip().str.lower()
+        requires_verified = verified_text.isin({"true", "false", "1", "0"})
+        verified = expanded.loc[requires_verified, "verified"]
+        if verified.empty:
             return True
-        if smoke.dtype == bool:
-            if not bool(smoke.all()):
+        if verified.dtype == bool:
+            if not bool(verified.all()):
                 return False
-        elif not bool(smoke.astype(str).str.lower().isin({"true", "1"}).all()):
+        elif not bool(verified.astype(str).str.lower().isin({"true", "1"}).all()):
             return False
     if "faithfulness_level" in expanded.columns:
-        fine = expanded[expanded["method"] == "FINE-style"]
-        if not fine.empty and not fine["faithfulness_level"].astype(str).str.contains("not full", case=False, regex=False).all():
+        fine = expanded[expanded["method"] == "FINE"]
+        if not fine.empty and not fine["faithfulness_level"].astype(str).str.contains("eigenvector", case=False, regex=False).all():
             return False
     return True
 

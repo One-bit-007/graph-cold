@@ -59,7 +59,7 @@ class DecouplingMetadata:
 class DecouplingBaseline:
     method = "Decoupling"
     method_family = "decoupling"
-    implementation_status = "implemented_smoke_passed"
+    implementation_status = "verified_implementation"
     faithfulness_level = "standard tabular implementation of disagreement-update Decoupling"
 
     def __init__(

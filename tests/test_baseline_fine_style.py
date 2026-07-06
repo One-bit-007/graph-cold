@@ -1,7 +1,7 @@
 import numpy as np
 
 from src.baselines.base import array_hash
-from src.baselines.fine_style import FINEStyleBaseline
+from src.baselines.fine_style import FINEBaseline, FINEStyleBaseline
 
 
 def _toy():
@@ -55,3 +55,20 @@ def test_fine_style_is_deterministic_for_fixed_seed():
 
     np.testing.assert_array_equal(a.retained_mask, b.retained_mask)
     np.testing.assert_array_equal(a.y_pred, b.y_pred)
+
+
+def test_fine_formal_wrapper_reports_fine_with_caveat():
+    X, y_clean, y_noisy = _toy()
+
+    result = FINEBaseline(seed=11, noise_rate=0.2, n_components=4, classifier_epochs=3).fit_predict(
+        X,
+        y_noisy,
+        X,
+        num_classes=4,
+    )
+
+    assert result.method == "FINE"
+    assert result.method_family == "fine"
+    assert "eigenvector" in result.details["faithfulness_level"]
+    assert result.details["training_label_hash"] == array_hash(y_noisy)
+    assert result.details["training_label_hash"] != array_hash(y_clean)

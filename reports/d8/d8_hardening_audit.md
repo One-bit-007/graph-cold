@@ -1,6 +1,6 @@
-# D8 Hardening Audit
+# Manuscript Hardening Audit
 
-- stage: D8
+- stage: manuscript_hardening
 - manuscript_v1_generated: True
 - pdf_compiles: True
 - real_data_only: True
@@ -10,7 +10,7 @@
 - no_maltls22_results: True
 - no_optc_results: True
 - cesnet_subset_declared: True
-- co_teaching_lite_named_correctly: True
+- expanded_baselines_declared: True
 - baseline_exclusions_declared: True
 - threats_to_validity_included: True
 - research_questions_included: True

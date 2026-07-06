@@ -1,5 +1,5 @@
 {
-  "stage": "D8",
+  "stage": "manuscript_hardening",
   "manuscript_v1_generated": true,
   "pdf_compiles": true,
   "real_data_only": true,
@@ -9,7 +9,7 @@
   "no_maltls22_results": true,
   "no_optc_results": true,
   "cesnet_subset_declared": true,
-  "co_teaching_lite_named_correctly": true,
+  "expanded_baselines_declared": true,
   "baseline_exclusions_declared": true,
   "threats_to_validity_included": true,
   "research_questions_included": true,

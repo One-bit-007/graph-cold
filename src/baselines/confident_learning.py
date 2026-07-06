@@ -63,7 +63,7 @@ class ConfidentLearningBaseline:
         return BaselineResult(
             method=self.method if engine == "cleanlab" else "CL-filtering",
             method_family=self.method_family if engine == "cleanlab" else "cl_filtering",
-            implementation_status="implemented_smoke_passed",
+            implementation_status="verified_implementation",
             y_pred=y_pred,
             proba=proba,
             weights=retained.astype(np.float64),
@@ -73,6 +73,8 @@ class ConfidentLearningBaseline:
                 "issue_detector": engine,
                 "probe_model": "SGDClassifier(log_loss)",
                 "trained_on": "retained noisy_y_train",
+                "train_label_source": "noisy_y_train",
+                "eval_label_source": "clean_y_test",
                 "training_label_hash": array_hash(y_noisy),
                 "retained_fraction": float(np.mean(retained)),
                 "estimated_issue_fraction": float(1.0 - np.mean(retained)),

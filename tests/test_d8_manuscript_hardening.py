@@ -38,7 +38,9 @@ def test_d8_manuscript_has_submission_grade_structure():
     assert "This paper makes four contributions" in normalized
     for rq in ["RQ1", "RQ2", "RQ3", "RQ4", "RQ5"]:
         assert rq in text
-    assert "not a full Co-Teaching reproduction" in normalized
+    assert "formal baselines" in normalized
+    assert "verified adapters" in normalized
+    assert "not a full Co-Teaching reproduction" not in normalized
     assert "not a full-archive evaluation" in normalized or "not a full archive" in normalized
 
 
@@ -110,6 +112,7 @@ def test_d8_reproducibility_entrypoint_exists():
     script = Path("reproducibility/run_d8_manuscript.ps1")
     assert script.exists()
     text = script.read_text(encoding="utf-8")
-    assert "python -m src.paper.d8_harden" in text
+    assert "GRAPH_COLD_PYTHON" in text
+    assert "-m src.paper.d8_harden" in text
     assert "build_elsevier.ps1" in text
     assert "run_d5_experiments" not in text

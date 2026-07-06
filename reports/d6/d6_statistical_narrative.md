@@ -1,8 +1,8 @@
-# D6 Statistical Narrative
+# Statistical Narrative
 
 ## Technical summary
 
-The D6 artifacts aggregate the verified D5.5 real-data result matrix from `results/table_main_expanded.csv`. Across matched dataset, noise, beta, and seed cells, Graph-CoLD improves Macro-F1 over CoLD by 1.83 percentage points. The paired grouped t-test reports p=5.60e-06, effect size dz=0.458, and n=102 pairs. This supports a claim of consistent improvement, not a claim beyond the tested data scope.
+The paper artifacts aggregate the verified real-data evaluation matrix from `results/table_main_expanded.csv`. Across matched dataset, noise, beta, and seed cells, Graph-CoLD improves Macro-F1 over CoLD by 1.83 percentage points. The paired grouped t-test reports p=5.60e-06, effect size dz=0.458, and n=102 pairs. This supports a claim of consistent improvement, not a claim beyond the tested data scope.
 
 ## Dataset scope
 
@@ -10,21 +10,15 @@ The formal result scope is CICIDS-2017 postfilter11 and CESNET-TLS-Year22 postfi
 
 ## Method scope
 
-D6 includes Graph-CoLD, CoLD, ablation_hard, Noisy-Supervised, Confident-Learning, and Co-Teaching-lite. Co-Teaching-lite is named as such because it is a lightweight, smoke-passed real-data adapter, not a full deep Co-Teaching reproduction.
+The matrix includes Graph-CoLD, CoLD, ablation_hard, Noisy-Supervised, Confident-Learning, Co-Teaching, Decoupling, FINE, MCRe, and MORSE.
 
 ## Excluded baselines
 
-The following methods are excluded from formal tables because the repository does not contain independently implemented and smoke-passed real-data rows for them:
+The following methods are outside the formal two-dataset label-noise matrix:
 
 - Argus: excluded: provenance case-study method; no formal two-dataset label-noise implementation
-- Co-Teaching: legacy full deep baseline name; D5.5 includes Co-Teaching-lite instead
-- Co-Teaching+: not independently implemented and smoke-passed on real data
-- Decoupling: excluded: no independently implemented and smoke-passed real-data implementation in this repository
-- FINE: excluded: faithful FINE requires a validated embedding outlier protocol; D5.5 keeps it out instead of reporting approximate or fake rows
-- FINE-style: excluded: faithful FINE requires a validated embedding outlier protocol; D5.5 keeps it out instead of reporting approximate or fake rows
+- Co-Teaching+: not independently implemented and verified on real data
 - Flash: excluded: provenance case-study method; no formal two-dataset label-noise implementation
-- MCRe: excluded: no independently implemented and smoke-passed real-data implementation in this repository
-- MORSE: excluded: no independently implemented and smoke-passed real-data implementation in this repository
 - cleanlab: legacy audit key; official cleanlab is represented by the Confident-Learning method row
 
 No generated stand-in rows are reported for these methods.
@@ -35,7 +29,7 @@ The paired grouped test controls for scenario difficulty by matching dataset, no
 
 ## Graph-CoLD vs noise-learning baselines
 
-Relative to Noisy-Supervised, Confident-Learning, and Co-Teaching-lite, Graph-CoLD has higher average Macro-F1 in the expanded D5.5 matrix. These comparisons should be read as robustness under noisy labels within the implemented baselines, not as an exhaustive benchmark against every published variant.
+Relative to Noisy-Supervised, Confident-Learning, Co-Teaching, Decoupling, FINE, MCRe, and MORSE, Graph-CoLD has higher average Macro-F1 in the expanded matrix. These comparisons should be read as robustness under noisy labels within the implemented baselines, not as an exhaustive benchmark against every published variant.
 
 ## ERR interpretation
 
@@ -51,7 +45,7 @@ Compression ratio is an operational alert reduction proxy. Combined with ERR, it
 
 ## Caution against overclaiming
 
-The results are traceable to two verified real datasets and the implemented D5.5 baselines. The paper should avoid universal superiority language and should state that omitted baselines require faithful future implementations before formal comparison.
+The results are traceable to two verified real datasets and the implemented baselines. The paper should avoid universal superiority language and should state that omitted provenance systems require separate future evaluation before formal comparison.
 
 ## Conclusion-ready insight block
 

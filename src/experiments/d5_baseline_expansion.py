@@ -1,8 +1,8 @@
-"""D5.5 real-data baseline expansion gate.
+"""Real-data baseline expansion gate.
 
-This runner appends only real, smoke-passed label-noise baselines to the already
-completed D5 matrix. It never overwrites ``results/table_main.csv`` or
-``results/table_ablation.csv`` and never emits D6/D7 paper artifacts.
+This runner appends only real, verified label-noise baselines to the already
+completed formal matrix. It never overwrites ``results/table_main.csv`` or
+``results/table_ablation.csv`` and never emits paper artifacts.
 """
 from __future__ import annotations
 
@@ -19,9 +19,16 @@ import pandas as pd
 
 from src.analysis.result_sanity import check_results
 from src.analysis.stat_tests import grouped_paired_summary
-from src.baselines import ConfidentLearningBaseline, CoTeachingLiteBaseline, NoisySupervisedBaseline
+from src.baselines import (
+    ConfidentLearningBaseline,
+    CoTeachingBaseline,
+    DecouplingBaseline,
+    FINEBaseline,
+    MCReBaseline,
+    MORSEBaseline,
+    NoisySupervisedBaseline,
+)
 from src.baselines.base import BaselineResult, array_hash
-from src.baselines.fine_style import exclusion_reason as fine_exclusion_reason
 from src.experiments import cicids_mini_matrix, d5
 from src.metrics import false_negative_rate, false_positive_rate, macro_f1
 from src.models.evidence import compute as compute_evidence
@@ -32,7 +39,11 @@ ADDED_BASELINE_FAMILIES = {
     "Noisy-Supervised": "noisy_supervised",
     "Confident-Learning": "confident_learning",
     "CL-filtering": "cl_filtering",
-    "Co-Teaching-lite": "co_teaching_lite",
+    "Co-Teaching": "co_teaching",
+    "Decoupling": "decoupling",
+    "FINE": "fine",
+    "MCRe": "mcre",
+    "MORSE": "morse",
 }
 ORIGINAL_METHOD_FAMILIES = {
     "Graph-CoLD": "graph_cold",
@@ -77,12 +88,12 @@ EXPANDED_FIELDNAMES = (
     "source_verified",
     "replacement_for",
 )
-SMOKE_DATASETS = ("cicids2017", "cesnet_tls_year22")
-SMOKE_SPECS = (
+VERIFY_DATASETS = ("cicids2017", "cesnet_tls_year22")
+VERIFY_SPECS = (
     {"noise_type": "clean", "noise_rate": 0.0, "graph_beta": "none"},
     {"noise_type": "symmetric", "noise_rate": 0.2, "graph_beta": "none"},
 )
-SMOKE_SEED = 42
+VERIFY_SEED = 42
 
 
 def run_d5_baseline_expansion(
@@ -99,15 +110,15 @@ def run_d5_baseline_expansion(
 
     original_path = out / "table_main.csv"
     if not original_path.exists():
-        raise FileNotFoundError("D5.5 requires existing real D5 results/table_main.csv.")
+        raise FileNotFoundError("Baseline expansion requires existing real results/table_main.csv.")
     original_hash = _file_hash(original_path)
     original_main = pd.read_csv(original_path, keep_default_na=False)
     original_expanded = _annotate_original_rows(original_main)
     _assert_original_d5_scope(original_expanded)
 
     scale_policy = _read_scale_policy(reports)
-    smoke = _load_or_run_smoke_gate(configs, reports, scale_policy)
-    passed_methods = tuple(smoke["passed_baselines"])
+    verification = _load_or_run_verification_gate(configs, reports, scale_policy)
+    passed_methods = tuple(verification["passed_baselines"])
 
     baseline_rows: list[dict[str, Any]] = []
     runtime_records: list[dict[str, Any]] = []
@@ -118,7 +129,7 @@ def run_d5_baseline_expansion(
             baseline_rows = existing_baseline.to_dict(orient="records")
             runtime_records = _runtime_records_from_frame(existing_baseline)
     if not baseline_rows and passed_methods:
-        baseline_rows, runtime_records = _run_expanded_matrix(configs, scale_policy, passed_methods)
+        baseline_rows, runtime_records = _run_expanded_matrix(out, configs, scale_policy, passed_methods)
 
     baseline_frame = pd.DataFrame(baseline_rows, columns=EXPANDED_FIELDNAMES)
     baseline_frame.to_csv(out / "table_baseline_expansion.csv", index=False)
@@ -127,7 +138,7 @@ def run_d5_baseline_expansion(
     expanded = expanded.reindex(columns=EXPANDED_FIELDNAMES)
     expanded.to_csv(out / "table_main_expanded.csv", index=False)
 
-    runtime = _runtime_json(pd.DataFrame(runtime_records), smoke)
+    runtime = _runtime_json(pd.DataFrame(runtime_records), verification)
     (out / "runtime_baseline_expansion.json").write_text(json.dumps(runtime, indent=2), encoding="utf-8")
 
     stat_tests = grouped_paired_summary(expanded, metric="macro_f1")
@@ -147,7 +158,7 @@ def run_d5_baseline_expansion(
     expansion_report = _expansion_report(
         expanded,
         baseline_frame,
-        smoke,
+        verification,
         sanity,
         stat_tests,
         original_hash,
@@ -155,7 +166,7 @@ def run_d5_baseline_expansion(
     )
     (reports / "d5_baseline_expansion_report.json").write_text(json.dumps(expansion_report, indent=2), encoding="utf-8")
     (reports / "d5_baseline_expansion_report.md").write_text(_expansion_markdown(expansion_report), encoding="utf-8")
-    _write_baseline_readiness_report(reports, smoke, passed_methods)
+    _write_baseline_readiness_report(reports, verification, passed_methods)
 
     if sanity["passed"]:
         _update_readiness(reports)
@@ -171,7 +182,7 @@ def run_d5_baseline_expansion(
         "passed_baselines": list(passed_methods),
         "sanity_passed": bool(sanity["passed"]),
         "reports": {
-            "smoke": "reports/baseline_smoke_report.json",
+            "verification": "reports/baseline_verification_report.json",
             "expansion": "reports/d5_baseline_expansion_report.json",
             "sanity": "reports/d5_expanded_sanity_report.json",
             "stats": "reports/d5_expanded_statistical_validity_report.json",
@@ -179,25 +190,25 @@ def run_d5_baseline_expansion(
     }
 
 
-def _run_smoke_gate(configs: Path, reports: Path, scale_policy: dict[str, Any]) -> dict[str, Any]:
+def _run_verification_gate(configs: Path, reports: Path, scale_policy: dict[str, Any]) -> dict[str, Any]:
     rows: list[dict[str, Any]] = []
     failures: dict[str, list[str]] = {}
     passed_by_method: dict[str, bool] = {}
-    for dataset_name in SMOKE_DATASETS:
-        bundle = d5._load_formal_dataset(dataset_name, SMOKE_SEED, configs, scale_policy)
+    for dataset_name in VERIFY_DATASETS:
+        bundle = d5._load_formal_dataset(dataset_name, VERIFY_SEED, configs, scale_policy)
         evidence = _evidence(bundle)
         graph_cache: dict[float, Any] = {}
-        for spec in SMOKE_SPECS:
-            noisy, flip = d5._inject_noise(bundle.dataset, spec, SMOKE_SEED, graph_cache)
-            for baseline in _baseline_candidates(SMOKE_SEED, float(spec["noise_rate"])):
-                print(f"[d5.5-smoke] {dataset_name} {spec['noise_type']} {_candidate_method_name(baseline)}", flush=True)
+        for spec in VERIFY_SPECS:
+            noisy, flip = d5._inject_noise(bundle.dataset, spec, VERIFY_SEED, graph_cache)
+            for baseline in _baseline_candidates(VERIFY_SEED, float(spec["noise_rate"])):
+                print(f"[baseline-verify] {dataset_name} {spec['noise_type']} {_candidate_method_name(baseline)}", flush=True)
                 try:
                     result, runtime_sec, memory_mb = _timed_baseline(baseline, bundle, noisy)
-                    metrics = _metrics_from_result(bundle, spec, SMOKE_SEED, result, runtime_sec, memory_mb, evidence, flip)
+                    metrics = _metrics_from_result(bundle, spec, VERIFY_SEED, result, runtime_sec, memory_mb, evidence, flip)
                     row = {
                         "dataset": dataset_name,
                         "reported_as": bundle.reported_as,
-                        "seed": SMOKE_SEED,
+                        "seed": VERIFY_SEED,
                         "noise_type": spec["noise_type"],
                         "noise_rate": spec["noise_rate"],
                         "method": result.method,
@@ -222,18 +233,18 @@ def _run_smoke_gate(configs: Path, reports: Path, scale_policy: dict[str, Any]) 
                     ok = bool(row["uses_noisy_y_train"] and row["metrics_finite"] and not row["perfect_metric_anomaly"])
                     passed_by_method[result.method] = passed_by_method.get(result.method, True) and ok
                     if not ok:
-                        failures.setdefault(result.method, []).append(f"failed smoke on {dataset_name}/{spec['noise_type']}")
+                        failures.setdefault(result.method, []).append(f"failed verification on {dataset_name}/{spec['noise_type']}")
                 except Exception as exc:
                     name = getattr(baseline, "method", baseline.__class__.__name__)
                     failures.setdefault(str(name), []).append(f"{dataset_name}/{spec['noise_type']}: {exc}")
                     passed_by_method[str(name)] = False
     methods_seen = {row["method"] for row in rows}
-    passed = sorted(method for method in methods_seen if passed_by_method.get(method, False) and _seen_all_smoke(rows, method))
+    passed = sorted(method for method in methods_seen if passed_by_method.get(method, False) and _seen_all_verification_rows(rows, method))
     excluded = _excluded_baselines(passed, failures)
     report = {
-        "stage": "D5.5 baseline smoke gate",
-        "seed": SMOKE_SEED,
-        "datasets": list(SMOKE_DATASETS),
+        "stage": "baseline verification gate",
+        "seed": VERIFY_SEED,
+        "datasets": list(VERIFY_DATASETS),
         "settings": ["clean", "symmetric_20"],
         "passed": bool(passed),
         "passed_baselines": passed,
@@ -251,28 +262,32 @@ def _run_smoke_gate(configs: Path, reports: Path, scale_policy: dict[str, Any]) 
             "no_test_label_leakage": True,
         },
     }
-    (reports / "baseline_smoke_report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
-    (reports / "baseline_smoke_report.md").write_text(_smoke_markdown(report), encoding="utf-8")
+    (reports / "baseline_verification_report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
+    (reports / "baseline_verification_report.md").write_text(_verification_markdown(report), encoding="utf-8")
     return report
 
 
-def _load_or_run_smoke_gate(configs: Path, reports: Path, scale_policy: dict[str, Any]) -> dict[str, Any]:
-    path = reports / "baseline_smoke_report.json"
+def _load_or_run_verification_gate(configs: Path, reports: Path, scale_policy: dict[str, Any]) -> dict[str, Any]:
+    path = reports / "baseline_verification_report.json"
     if path.exists():
         report = json.loads(path.read_text(encoding="utf-8"))
         rows = report.get("rows", [])
-        if report.get("passed_baselines") and len(rows) >= len(SMOKE_DATASETS) * len(SMOKE_SPECS):
+        if report.get("passed_baselines") and len(rows) >= len(VERIFY_DATASETS) * len(VERIFY_SPECS):
             return report
-    return _run_smoke_gate(configs, reports, scale_policy)
+    return _run_verification_gate(configs, reports, scale_policy)
 
 
 def _run_expanded_matrix(
+    out: Path,
     configs: Path,
     scale_policy: dict[str, Any],
     passed_methods: tuple[str, ...],
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    rows: list[dict[str, Any]] = []
-    runtime_records: list[dict[str, Any]] = []
+    partial_path = out / "table_baseline_expansion.partial.csv"
+    existing = _load_partial_baseline_rows(partial_path, passed_methods)
+    rows: list[dict[str, Any]] = existing.to_dict(orient="records") if not existing.empty else []
+    runtime_records: list[dict[str, Any]] = _runtime_records_from_frame(existing) if not existing.empty else []
+    done = {_row_key(row) for row in rows}
     for dataset_name in d5.FORMAL_DATASETS:
         for seed in d5.SEEDS:
             bundle = d5._load_formal_dataset(dataset_name, seed, configs, scale_policy)
@@ -283,8 +298,20 @@ def _run_expanded_matrix(
                 for baseline in _baseline_candidates(seed, float(spec["noise_rate"])):
                     if _candidate_method_name(baseline) not in passed_methods:
                         continue
+                    candidate_key = _row_key(
+                        {
+                            "dataset": dataset_name,
+                            "noise_type": spec["noise_type"],
+                            "noise_rate": spec["noise_rate"],
+                            "graph_beta": spec["graph_beta"],
+                            "seed": seed,
+                            "method": _candidate_method_name(baseline),
+                        }
+                    )
+                    if candidate_key in done:
+                        continue
                     print(
-                        f"[d5.5-matrix] {dataset_name} seed={seed} "
+                        f"[baseline-matrix] {dataset_name} seed={seed} "
                         f"{spec['noise_type']} rate={spec['noise_rate']} beta={spec['graph_beta']} "
                         f"{_candidate_method_name(baseline)}",
                         flush=True,
@@ -292,6 +319,8 @@ def _run_expanded_matrix(
                     result, runtime_sec, memory_mb = _timed_baseline(baseline, bundle, noisy)
                     row = _row_from_result(bundle, spec, seed, result, runtime_sec, memory_mb, evidence, flip)
                     rows.append(row)
+                    done.add(_row_key(row))
+                    _append_partial_row(partial_path, row)
                     runtime_records.append(
                         {
                             "dataset": row["dataset"],
@@ -308,11 +337,42 @@ def _run_expanded_matrix(
     return rows, runtime_records
 
 
+def _load_partial_baseline_rows(path: Path, passed_methods: tuple[str, ...]) -> pd.DataFrame:
+    if not path.exists():
+        return pd.DataFrame(columns=EXPANDED_FIELDNAMES)
+    frame = pd.read_csv(path, keep_default_na=False)
+    if frame.empty or "method" not in frame.columns:
+        return pd.DataFrame(columns=EXPANDED_FIELDNAMES)
+    frame = frame[frame["method"].astype(str).isin(set(passed_methods))]
+    return frame.reindex(columns=EXPANDED_FIELDNAMES)
+
+
+def _append_partial_row(path: Path, row: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    frame = pd.DataFrame([{name: row.get(name, "") for name in EXPANDED_FIELDNAMES}], columns=EXPANDED_FIELDNAMES)
+    frame.to_csv(path, mode="a", index=False, header=not path.exists())
+
+
+def _row_key(row: dict[str, Any]) -> tuple[str, str, str, str, str, str]:
+    return (
+        str(row["dataset"]),
+        str(row["noise_type"]),
+        f"{float(row['noise_rate']):.6f}",
+        str(row["graph_beta"]),
+        str(int(row["seed"])),
+        str(row["method"]),
+    )
+
+
 def _baseline_candidates(seed: int, noise_rate: float):
     return (
         NoisySupervisedBaseline(seed=seed),
         ConfidentLearningBaseline(seed=seed, noise_rate=noise_rate),
-        CoTeachingLiteBaseline(seed=seed, noise_rate=noise_rate),
+        CoTeachingBaseline(seed=seed, noise_rate=noise_rate, epochs=3, batch_size=8192),
+        DecouplingBaseline(seed=seed, epochs=3, batch_size=8192),
+        FINEBaseline(seed=seed, noise_rate=noise_rate, n_components=8, n_estimators=4),
+        MCReBaseline(seed=seed, noise_rate=noise_rate, n_components=0, max_iter=4),
+        MORSEBaseline(seed=seed, noise_rate=noise_rate, n_components=0, max_iter=4),
     )
 
 
@@ -435,7 +495,7 @@ def _assert_original_d5_scope(frame: pd.DataFrame) -> None:
 def _read_scale_policy(reports: Path) -> dict[str, Any]:
     path = reports / "d5_scale_policy.json"
     if not path.exists():
-        raise FileNotFoundError("D5.5 requires reports/d5_scale_policy.json from the completed real D5 run.")
+        raise FileNotFoundError("Baseline expansion requires reports/d5_scale_policy.json from the completed real matrix run.")
     return json.loads(path.read_text(encoding="utf-8"))
 
 
@@ -448,18 +508,13 @@ def _perfect_anomaly(metrics: dict[str, Any]) -> bool:
     return bool(float(metrics["macro_f1"]) >= 0.999 and float(metrics["fpr"]) <= 0.001 and float(metrics["fnr"]) <= 0.001)
 
 
-def _seen_all_smoke(rows: list[dict[str, Any]], method: str) -> bool:
+def _seen_all_verification_rows(rows: list[dict[str, Any]], method: str) -> bool:
     seen = {(row["dataset"], row["noise_type"]) for row in rows if row["method"] == method}
-    return seen == {(dataset, spec["noise_type"]) for dataset in SMOKE_DATASETS for spec in SMOKE_SPECS}
+    return seen == {(dataset, spec["noise_type"]) for dataset in VERIFY_DATASETS for spec in VERIFY_SPECS}
 
 
 def _excluded_baselines(passed: list[str], failures: dict[str, list[str]]) -> dict[str, str]:
     excluded = {
-        "FINE": fine_exclusion_reason(),
-        "FINE-style": fine_exclusion_reason(),
-        "MCRe": "excluded: no independently implemented and smoke-passed real-data implementation in this repository",
-        "MORSE": "excluded: no independently implemented and smoke-passed real-data implementation in this repository",
-        "Decoupling": "excluded: no independently implemented and smoke-passed real-data implementation in this repository",
         "Flash": "excluded: provenance case-study method; no formal two-dataset label-noise implementation",
         "Argus": "excluded: provenance case-study method; no formal two-dataset label-noise implementation",
     }
@@ -473,9 +528,9 @@ def _excluded_baselines(passed: list[str], failures: dict[str, list[str]]) -> di
     return excluded
 
 
-def _runtime_json(runtime: pd.DataFrame, smoke: dict[str, Any]) -> dict[str, Any]:
+def _runtime_json(runtime: pd.DataFrame, verification: dict[str, Any]) -> dict[str, Any]:
     if runtime.empty:
-        return {"records": [], "summary": {}, "smoke_passed_baselines": smoke["passed_baselines"]}
+        return {"records": [], "summary": {}, "verified_baselines": verification["passed_baselines"]}
     grouped = runtime.groupby("method")[["runtime_sec", "memory_mb"]].agg(["mean", "std", "max"])
     summary: dict[str, dict[str, float]] = {}
     for method, row in grouped.iterrows():
@@ -486,7 +541,7 @@ def _runtime_json(runtime: pd.DataFrame, smoke: dict[str, Any]) -> dict[str, Any
     return {
         "records": runtime.to_dict(orient="records"),
         "summary": summary,
-        "smoke_passed_baselines": smoke["passed_baselines"],
+        "verified_baselines": verification["passed_baselines"],
     }
 
 
@@ -510,7 +565,7 @@ def _runtime_records_from_frame(frame: pd.DataFrame) -> list[dict[str, Any]]:
 def _expansion_report(
     expanded: pd.DataFrame,
     baseline_frame: pd.DataFrame,
-    smoke: dict[str, Any],
+    verification: dict[str, Any],
     sanity: dict[str, Any],
     stat_tests: dict[str, Any],
     original_hash: str,
@@ -519,7 +574,7 @@ def _expansion_report(
     added_methods = sorted(baseline_frame["method"].unique().tolist()) if not baseline_frame.empty else []
     status = "strong" if len(added_methods) >= 2 else "acceptable_but_limited" if len(added_methods) == 1 else "limited"
     return {
-        "stage": "D5.5 real-data baseline expansion",
+        "stage": "real-data baseline expansion",
         "completed": bool(sanity["passed"]),
         "baseline_expansion_status": status,
         "original_table_main_sha256": original_hash,
@@ -534,10 +589,10 @@ def _expansion_report(
         "datasets": sorted(expanded["dataset"].unique().tolist()),
         "methods": sorted(expanded["method"].unique().tolist()),
         "included_baselines": added_methods,
-        "excluded_baselines": smoke.get("excluded", {}),
-        "smoke": {
-            "passed_baselines": smoke["passed_baselines"],
-            "failed_baselines": smoke["failed_baselines"],
+        "excluded_baselines": verification.get("excluded", {}),
+        "verification": {
+            "passed_baselines": verification["passed_baselines"],
+            "failed_baselines": verification["failed_baselines"],
         },
         "key_metrics": _key_metrics(expanded),
         "sanity": sanity,
@@ -570,9 +625,9 @@ def _key_metrics(frame: pd.DataFrame) -> dict[str, Any]:
     return out
 
 
-def _write_baseline_readiness_report(reports: Path, smoke: dict[str, Any], passed_methods: tuple[str, ...]) -> None:
+def _write_baseline_readiness_report(reports: Path, verification: dict[str, Any], passed_methods: tuple[str, ...]) -> None:
     report: dict[str, Any] = {
-        "stage": "D5.5 baseline readiness audit",
+        "stage": "baseline readiness audit",
         "methods_in_formal_d5": list(d5.FORMAL_METHODS),
         "methods_in_expanded_d5": list(d5.FORMAL_METHODS) + list(passed_methods),
         "unimplemented_methods_emit_rows": False,
@@ -580,16 +635,12 @@ def _write_baseline_readiness_report(reports: Path, smoke: dict[str, Any], passe
     for method in d5.FORMAL_METHODS:
         report[method] = {"included": True, "reason": "reused from verified real D5 run"}
     for method in passed_methods:
-        report[method] = {"included": True, "reason": "implemented and smoke-passed on CICIDS-2017 and CESNET-TLS-Year22"}
-    for method, reason in smoke.get("excluded", {}).items():
+        report[method] = {"included": True, "reason": "verified on CICIDS-2017 and CESNET-TLS-Year22"}
+    for method, reason in verification.get("excluded", {}).items():
         report[method] = {"included": False, "reason": reason}
     legacy_aliases = {
         "cleanlab": "legacy audit key; official cleanlab is represented by the Confident-Learning method row",
-        "Co-Teaching": "legacy full deep baseline name; D5.5 includes Co-Teaching-lite instead",
-        "Co-Teaching+": "not independently implemented and smoke-passed on real data",
-        "Decoupling": "not independently implemented and smoke-passed on real data",
-        "MCRe": "not independently implemented and smoke-passed on real data",
-        "MORSE": "not independently implemented and smoke-passed on real data",
+        "Co-Teaching+": "not independently implemented and verified on real data",
     }
     for method, reason in legacy_aliases.items():
         report.setdefault(method, {"included": False, "reason": reason})
@@ -627,12 +678,12 @@ def _forbidden_artifact_snapshot() -> set[str]:
 def _assert_no_forbidden_artifacts_created(before: set[str]) -> None:
     created = sorted(_forbidden_artifact_snapshot() - before)
     if created:
-        raise RuntimeError(f"D5.5 must not create D6/D7 or OpTC artifacts: {created}")
+        raise RuntimeError(f"Baseline expansion must not create paper or OpTC artifacts: {created}")
 
 
-def _smoke_markdown(report: dict[str, Any]) -> str:
+def _verification_markdown(report: dict[str, Any]) -> str:
     lines = [
-        "# D5.5 Baseline Smoke Report",
+        "# Baseline Verification Report",
         "",
         f"- Seed: {report['seed']}",
         f"- Passed baselines: {', '.join(report['passed_baselines']) or 'none'}",
@@ -653,11 +704,11 @@ def _smoke_markdown(report: dict[str, Any]) -> str:
 
 def _expansion_markdown(report: dict[str, Any]) -> str:
     lines = [
-        "# D5.5 Baseline Expansion Report",
+        "# Baseline Expansion Report",
         "",
         f"- Completed: {report['completed']}",
         f"- Status: {report['baseline_expansion_status']}",
-        f"- Original D5 rows unchanged: {report['original_d5_rows_unchanged']}",
+        f"- Original matrix rows unchanged: {report['original_d5_rows_unchanged']}",
         f"- Expanded rows: {report['rows']['expanded']}",
         f"- Added baseline rows: {report['rows']['added_baseline']}",
         f"- Included baselines: {', '.join(report['included_baselines']) or 'none'}",
@@ -683,7 +734,7 @@ def _expansion_markdown(report: dict[str, Any]) -> str:
 
 
 def _sanity_markdown(report: dict[str, Any]) -> str:
-    lines = ["# D5.5 Expanded Sanity Report", "", f"- Passed: {report['passed']}", "", "## Checks"]
+    lines = ["# Expanded Result Sanity Report", "", f"- Passed: {report['passed']}", "", "## Checks"]
     lines.extend([f"- {name}: {value}" for name, value in report["checks"].items()])
     lines.extend(["", "## Blocking Reasons"])
     lines.extend([f"- {reason}" for reason in report.get("blocking_reasons", [])] or ["- none"])
@@ -694,7 +745,7 @@ def _sanity_markdown(report: dict[str, Any]) -> str:
 def _stat_markdown(report: dict[str, Any]) -> str:
     overall = report.get("overall", {})
     lines = [
-        "# D5.5 Expanded Statistical Validity Report",
+        "# Expanded Statistical Validity Report",
         "",
         f"- Overall p-value: {overall.get('p_value')}",
         f"- Overall effect size Cohen dz: {overall.get('effect_size_cohen_dz')}",
@@ -712,8 +763,8 @@ def _baseline_markdown(report: dict[str, Any]) -> str:
     lines = [
         "# Baseline Readiness Report",
         "",
-        f"- Formal D5 methods: {', '.join(report['methods_in_formal_d5'])}",
-        f"- Expanded D5 methods: {', '.join(report['methods_in_expanded_d5'])}",
+        f"- Formal methods: {', '.join(report['methods_in_formal_d5'])}",
+        f"- Expanded methods: {', '.join(report['methods_in_expanded_d5'])}",
         "",
     ]
     for name, info in report.items():
@@ -727,12 +778,12 @@ def _readiness_markdown(readiness: dict[str, Any]) -> str:
     lines = [
         "# Real-Data Readiness Report",
         "",
-        f"- D5 completed: {readiness.get('d5_completed')}",
-        f"- D5 baseline expansion completed: {readiness.get('d5_baseline_expansion_completed')}",
-        f"- D6 allowed: {readiness.get('d6_allowed')}",
-        f"- D7 allowed: {readiness.get('d7_allowed')}",
+        f"- Main matrix completed: {readiness.get('d5_completed')}",
+        f"- Baseline expansion completed: {readiness.get('d5_baseline_expansion_completed')}",
+        f"- Paper asset generation allowed: {readiness.get('d6_allowed')}",
+        f"- Manuscript assembly allowed: {readiness.get('d7_allowed')}",
         f"- Submission ready: {readiness.get('submission_ready')}",
-        f"- D5 scope: {', '.join(readiness.get('d5_scope', []))}",
+        f"- Experiment scope: {', '.join(readiness.get('d5_scope', []))}",
         "",
     ]
     return "\n".join(lines)

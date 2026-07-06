@@ -15,7 +15,7 @@ from src.baselines.base import BaselineResult, aligned_proba, array_hash
 class NoisySupervisedBaseline:
     method = "Noisy-Supervised"
     method_family = "noisy_supervised"
-    implementation_status = "implemented_smoke_passed"
+    implementation_status = "verified_implementation"
 
     def __init__(self, seed: int = 0, n_estimators: int = 8):
         self.seed = int(seed)
@@ -45,6 +45,8 @@ class NoisySupervisedBaseline:
                 "classifier": "ExtraTreesClassifier",
                 "n_estimators": self.n_estimators,
                 "trained_on": "noisy_y_train",
+                "train_label_source": "noisy_y_train",
+                "eval_label_source": "clean_y_test",
                 "training_label_hash": array_hash(y_noisy),
                 "filtering": "none",
             },

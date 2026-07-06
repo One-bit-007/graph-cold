@@ -24,6 +24,7 @@ import yaml
 
 from src.analysis.result_sanity import check_results
 from src.analysis.stat_tests import grouped_paired_summary
+from src.analysis.evidence_downstream import tail_class_recall
 from src.data.loaders import Dataset, load_dataset
 from src.data.noise import inject_asymmetric, inject_graph_consistency, inject_symmetric
 from src.experiments import cicids_mini_matrix
@@ -72,6 +73,7 @@ FIELDNAMES = (
     "macro_f1",
     "fpr",
     "fnr",
+    "tail_recall",
     "err",
     "err_tail",
     "err_final",
@@ -106,6 +108,29 @@ class FormalBundle:
     @property
     def sample_size(self) -> int:
         return int(self.dataset.y_train.shape[0] + self.dataset.y_test.shape[0])
+
+
+@dataclass(frozen=True)
+class GraphColdScenarioContext:
+    """Shared Stage-2 inputs for Graph-CoLD and its evidence ablations."""
+
+    graph: Any
+    representation: np.ndarray
+    cdm: np.ndarray
+    evidence: np.ndarray
+
+
+@dataclass(frozen=True)
+class MethodExecutionPlan:
+    """Runtime plan that makes method-level differences explicit."""
+
+    method: str
+    fit_method: str
+    graph: Any
+    representation: np.ndarray
+    cdm: np.ndarray
+    evidence: np.ndarray
+    weights: np.ndarray
 
 
 def run_d5_experiments(out_dir: str | Path = "results", configs_dir: str | Path = "configs") -> dict[str, Any]:
@@ -143,10 +168,10 @@ def run_d5_experiments(out_dir: str | Path = "results", configs_dir: str | Path 
             for spec in _noise_specs():
                 noisy, flip = _inject_noise(bundle.dataset, spec, seed, graph_cache)
                 scenario_hashes[_scenario_key(dataset_name, spec, seed)] = _scenario_hash(bundle, noisy, flip, seed)
-                cdm = _cdm_from_scenario(flip, evidence)
+                context = _graphcold_context(bundle, spec, seed, flip, evidence, graph_cache)
                 predictions: dict[str, np.ndarray] = {}
                 for method in FORMAL_METHODS:
-                    row, prediction = _evaluate_method(bundle, spec, seed, method, noisy, flip, cdm, evidence, predictions)
+                    row, prediction = _evaluate_method(bundle, spec, seed, method, noisy, flip, context, predictions)
                     predictions[method] = prediction
                     rows.append(row)
                     runtime_records.append(
@@ -364,40 +389,35 @@ def _evaluate_method(
     method: str,
     noisy: np.ndarray,
     flip: np.ndarray,
-    cdm: np.ndarray,
-    evidence: np.ndarray,
+    context: GraphColdScenarioContext,
     predictions: dict[str, np.ndarray],
 ) -> tuple[dict[str, Any], np.ndarray]:
-    if method == "Graph-CoLD":
-        weights = _weights_for_graphcold(cdm, evidence)
-    else:
-        weights = _weights_for_hard(cdm, evidence)
+    del predictions
+    plan = _execution_plan_for_method(method, context)
+    weights = plan.weights
 
     start = time.perf_counter()
     tracemalloc.start()
-    if method == "ablation_hard" and "CoLD" in predictions:
-        y_pred = predictions["CoLD"].copy()
-    else:
-        y_pred = cicids_mini_matrix._fit_predict(
-            bundle.dataset.X_train,
-            noisy,
-            bundle.dataset.X_test,
-            weights,
-            "CoLD" if method == "ablation_hard" else method,
-            seed,
-        )
+    y_pred = cicids_mini_matrix._fit_predict(
+        plan.representation,
+        noisy,
+        bundle.dataset.X_test,
+        weights,
+        plan.fit_method,
+        seed,
+    )
     current, peak = tracemalloc.get_traced_memory()
     tracemalloc.stop()
     runtime_sec = time.perf_counter() - start
     memory_mb = peak / (1024 * 1024)
 
-    err = _err(weights, evidence, flip, bundle.dataset.y_train)
+    err = _err(weights, plan.evidence, flip, bundle.dataset.y_train)
     retained = np.asarray(weights, dtype=float) >= RETENTION_THRESHOLD
     soft = cicids_mini_matrix._soft_labels_from_pred(y_pred, bundle.dataset.num_classes)
     scores = priority_scores(
         {
-            "graph_cdm": np.resize(cdm, bundle.dataset.y_test.shape[0]),
-            "evidence": np.resize(evidence, bundle.dataset.y_test.shape[0]),
+            "graph_cdm": np.resize(plan.cdm, bundle.dataset.y_test.shape[0]),
+            "evidence": np.resize(plan.evidence, bundle.dataset.y_test.shape[0]),
             "soft_labels": soft,
         },
         {},
@@ -409,6 +429,7 @@ def _evaluate_method(
             "macro_f1": macro_f1(bundle.dataset.y_test, y_pred),
             "fpr": false_positive_rate(bundle.dataset.y_test, y_pred, bundle.dataset.meta.get("benign_class", 0) or 0),
             "fnr": false_negative_rate(bundle.dataset.y_test, y_pred, bundle.dataset.meta.get("benign_class", 0) or 0),
+            "tail_recall": tail_class_recall(bundle.dataset.y_test, y_pred, benign_class=bundle.dataset.meta.get("benign_class", 0) or 0),
             "err": err["err"],
             "err_tail": err["err_tail"],
             "err_final": err["err_final"],
@@ -417,7 +438,7 @@ def _evaluate_method(
             "retained_fraction": float(np.mean(retained)),
             "retained_fraction_clean_informative": cicids_mini_matrix._retained_clean_informative(
                 weights,
-                evidence,
+                plan.evidence,
                 ~flip,
                 bundle.dataset.y_train,
             )
@@ -444,14 +465,14 @@ def _run_ablation_matrix(bundles: dict[tuple[str, int], FormalBundle]) -> pd.Dat
                 anomaly=anomaly,
             )
             noisy, flip = _inject_noise(bundle.dataset, spec, seed, {})
-            cdm = _cdm_from_scenario(flip, evidence)
+            context = _graphcold_context(bundle, spec, seed, flip, evidence, {})
             for variant in ABLATION_VARIANTS:
-                weights = _weights_for_ablation(variant, cdm, evidence)
-                method_for_fit = "CoLD" if variant == "ablation_hard" else "Graph-CoLD"
+                weights = _weights_for_ablation(variant, context.cdm, context.evidence)
+                method_for_fit = "Graph-CoLD"
                 start = time.perf_counter()
                 tracemalloc.start()
                 y_pred = cicids_mini_matrix._fit_predict(
-                    bundle.dataset.X_train,
+                    context.representation,
                     noisy,
                     bundle.dataset.X_test,
                     weights,
@@ -460,7 +481,7 @@ def _run_ablation_matrix(bundles: dict[tuple[str, int], FormalBundle]) -> pd.Dat
                 )
                 current, peak = tracemalloc.get_traced_memory()
                 tracemalloc.stop()
-                err = _err(weights, evidence, flip, bundle.dataset.y_train)
+                err = _err(weights, context.evidence, flip, bundle.dataset.y_train)
                 retained = np.asarray(weights, dtype=float) >= RETENTION_THRESHOLD
                 row = _base_row(bundle, spec, seed, variant)
                 row["variant"] = variant
@@ -469,6 +490,11 @@ def _run_ablation_matrix(bundles: dict[tuple[str, int], FormalBundle]) -> pd.Dat
                         "macro_f1": macro_f1(bundle.dataset.y_test, y_pred),
                         "fpr": false_positive_rate(bundle.dataset.y_test, y_pred, bundle.dataset.meta.get("benign_class", 0) or 0),
                         "fnr": false_negative_rate(bundle.dataset.y_test, y_pred, bundle.dataset.meta.get("benign_class", 0) or 0),
+                        "tail_recall": tail_class_recall(
+                            bundle.dataset.y_test,
+                            y_pred,
+                            benign_class=bundle.dataset.meta.get("benign_class", 0) or 0,
+                        ),
                         "err": err["err"],
                         "err_tail": err["err_tail"],
                         "err_final": err["err_final"],
@@ -477,7 +503,7 @@ def _run_ablation_matrix(bundles: dict[tuple[str, int], FormalBundle]) -> pd.Dat
                         "retained_fraction": float(np.mean(retained)),
                         "retained_fraction_clean_informative": cicids_mini_matrix._retained_clean_informative(
                             weights,
-                            evidence,
+                            context.evidence,
                             ~flip,
                             bundle.dataset.y_train,
                         ),
@@ -514,6 +540,7 @@ def _base_row(bundle: FormalBundle, spec: dict[str, Any], seed: int, method: str
         "macro_f1": np.nan,
         "fpr": np.nan,
         "fnr": np.nan,
+        "tail_recall": np.nan,
         "err": np.nan,
         "err_tail": np.nan,
         "err_final": np.nan,
@@ -540,6 +567,50 @@ def _weights_for_graphcold(cdm: np.ndarray, evidence: np.ndarray) -> np.ndarray:
 
 def _weights_for_hard(cdm: np.ndarray, evidence: np.ndarray) -> np.ndarray:
     return graph_cdm.soft_weights(cdm, evidence, {"evidence_preserving": {"theta": 0.5, "rho": 0.0}})
+
+
+def _graphcold_context(
+    bundle: FormalBundle,
+    spec: dict[str, Any],
+    seed: int,
+    flip: np.ndarray,
+    evidence: np.ndarray,
+    graph_cache: dict[float, Any],
+) -> GraphColdScenarioContext:
+    """Return the shared graph/representation/CDM/evidence context for one scenario."""
+
+    del seed
+    graph_key = float(spec["graph_beta"]) if spec["noise_type"] == "graph_consistency" and spec["graph_beta"] != "none" else -1.0
+    graph = graph_cache.setdefault(graph_key, _lightweight_graph(bundle.dataset))
+    return GraphColdScenarioContext(
+        graph=graph,
+        representation=bundle.dataset.X_train,
+        cdm=_cdm_from_scenario(flip, evidence),
+        evidence=evidence,
+    )
+
+
+def _execution_plan_for_method(method: str, context: GraphColdScenarioContext) -> MethodExecutionPlan:
+    if method == "Graph-CoLD":
+        fit_method = "Graph-CoLD"
+        weights = _weights_for_graphcold(context.cdm, context.evidence)
+    elif method == "ablation_hard":
+        fit_method = "Graph-CoLD"
+        weights = _weights_for_hard(context.cdm, context.evidence)
+    elif method == "CoLD":
+        fit_method = "CoLD"
+        weights = _weights_for_hard(context.cdm, context.evidence)
+    else:
+        raise ValueError(f"Unknown formal method: {method}")
+    return MethodExecutionPlan(
+        method=method,
+        fit_method=fit_method,
+        graph=context.graph,
+        representation=context.representation,
+        cdm=context.cdm,
+        evidence=context.evidence,
+        weights=weights,
+    )
 
 
 def _weights_for_ablation(variant: str, cdm: np.ndarray, evidence: np.ndarray) -> np.ndarray:
@@ -635,7 +706,7 @@ def _execution_report(
             "p_value": stat_tests.get("overall", {}).get("p_value"),
             "mean_err_graphcold": float(noisy[noisy["method"] == "Graph-CoLD"]["err_final"].mean()) if not noisy.empty else None,
             "mean_err_hard": float(noisy[noisy["method"] == "ablation_hard"]["err_final"].mean()) if not noisy.empty else None,
-            "ablation_hard_close_to_cold": bool(sanity["checks"].get("ablation_hard_close_to_cold", False)),
+            "ablation_hard_distinct_from_cold": bool(sanity["checks"].get("ablation_hard_distinct_from_cold", False)),
         },
         "sanity": sanity,
     }

@@ -33,7 +33,9 @@ def test_paper_sections_exist_and_use_correct_dataset_names():
     assert "CESNET-TLS-Year22" in text
     assert "MALTLS-22 is not included" in text
     assert "OpTC is not included as a formal experiment" in text
-    assert "Co-Teaching-lite" in text
+    assert "Co-Teaching" in text
+    assert "MCRe" in text
+    assert "MORSE" in text
 
 
 def test_paper_sections_report_sample_policy_and_do_not_claim_unavailable_results():

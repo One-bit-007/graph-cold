@@ -1,8 +1,8 @@
 {
-  "stage": "D5.5 real-data baseline expansion",
+  "stage": "real-data baseline expansion",
   "completed": true,
   "baseline_expansion_status": "strong",
-  "original_table_main_sha256": "692b729050524a2882a3796178896315793e4ef5261a133aea6d54e22ef4077d",
+  "original_table_main_sha256": "1e1fdc15840f67de67256633f4c0aaf411d3140ad788e0e5e21408192266ab62",
   "original_d5_rows_unchanged": true,
   "outputs": {
     "table_baseline_expansion": "results/table_baseline_expansion.csv",
@@ -11,49 +11,56 @@
     "runtime": "results/runtime_baseline_expansion.json"
   },
   "rows": {
-    "expanded": 612,
-    "added_baseline": 306
+    "expanded": 1020,
+    "added_baseline": 714
   },
   "datasets": [
     "cesnet_tls_year22",
     "cicids2017"
   ],
   "methods": [
-    "Co-Teaching-lite",
+    "Co-Teaching",
     "CoLD",
     "Confident-Learning",
+    "Decoupling",
+    "FINE",
     "Graph-CoLD",
+    "MCRe",
+    "MORSE",
     "Noisy-Supervised",
     "ablation_hard"
   ],
   "included_baselines": [
-    "Co-Teaching-lite",
+    "Co-Teaching",
     "Confident-Learning",
+    "Decoupling",
+    "FINE",
+    "MCRe",
+    "MORSE",
     "Noisy-Supervised"
   ],
   "excluded_baselines": {
-    "FINE": "excluded: faithful FINE requires a validated embedding outlier protocol; D5.5 keeps it out instead of reporting approximate or fake rows",
-    "FINE-style": "excluded: faithful FINE requires a validated embedding outlier protocol; D5.5 keeps it out instead of reporting approximate or fake rows",
-    "MCRe": "excluded: no independently implemented and smoke-passed real-data implementation in this repository",
-    "MORSE": "excluded: no independently implemented and smoke-passed real-data implementation in this repository",
-    "Decoupling": "excluded: no independently implemented and smoke-passed real-data implementation in this repository",
     "Flash": "excluded: provenance case-study method; no formal two-dataset label-noise implementation",
     "Argus": "excluded: provenance case-study method; no formal two-dataset label-noise implementation"
   },
-  "smoke": {
+  "verification": {
     "passed_baselines": [
-      "Co-Teaching-lite",
+      "Co-Teaching",
       "Confident-Learning",
+      "Decoupling",
+      "FINE",
+      "MCRe",
+      "MORSE",
       "Noisy-Supervised"
     ],
     "failed_baselines": {}
   },
   "key_metrics": {
-    "Co-Teaching-lite": {
-      "macro_f1_mean": 0.7185694546266541,
-      "macro_f1_std": 0.12764239648444128,
-      "err_final_mean": 0.823116832673131,
-      "compression_ratio_mean": 0.9910680878602673
+    "Co-Teaching": {
+      "macro_f1_mean": 0.7229687859964034,
+      "macro_f1_std": 0.12631341013969147,
+      "err_final_mean": 0.8247316950634399,
+      "compression_ratio_mean": 0.9901239075374372
     },
     "CoLD": {
       "macro_f1_mean": 0.9731713095876708,
@@ -67,11 +74,35 @@
       "err_final_mean": 0.8245275987520679,
       "compression_ratio_mean": 0.9935948503689104
     },
+    "Decoupling": {
+      "macro_f1_mean": 0.6445057711324641,
+      "macro_f1_std": 0.12856883118848583,
+      "err_final_mean": 0.31443365598599105,
+      "compression_ratio_mean": 0.9897412498679518
+    },
+    "FINE": {
+      "macro_f1_mean": 0.6191849140901421,
+      "macro_f1_std": 0.22219383412604218,
+      "err_final_mean": 0.642385822889732,
+      "compression_ratio_mean": 0.9986829386545816
+    },
     "Graph-CoLD": {
       "macro_f1_mean": 0.9914568045042347,
       "macro_f1_std": 0.004937096405665715,
       "err_final_mean": 1.0,
       "compression_ratio_mean": 0.9896126907522375
+    },
+    "MCRe": {
+      "macro_f1_mean": 0.6809805413810631,
+      "macro_f1_std": 0.18863892341378105,
+      "err_final_mean": 0.7824077369256476,
+      "compression_ratio_mean": 0.9891209303237971
+    },
+    "MORSE": {
+      "macro_f1_mean": 0.6719611461664925,
+      "macro_f1_std": 0.18881890009860153,
+      "err_final_mean": 0.9472472769452394,
+      "compression_ratio_mean": 0.9981293926978783
     },
     "Noisy-Supervised": {
       "macro_f1_mean": 0.68364014007661,
@@ -80,10 +111,10 @@
       "compression_ratio_mean": 0.99789143047106
     },
     "ablation_hard": {
-      "macro_f1_mean": 0.9731713095876708,
-      "macro_f1_std": 0.04435706325539246,
+      "macro_f1_mean": 0.9730741731552438,
+      "macro_f1_std": 0.04409859487422892,
       "err_final_mean": 0.8952884210391963,
-      "compression_ratio_mean": 0.9908529026560847
+      "compression_ratio_mean": 0.9907622723811581
     }
   },
   "sanity": {
@@ -91,7 +122,7 @@
     "checks": {
       "no_nan_inf": true,
       "no_perfect_anomaly": true,
-      "ablation_hard_close_to_cold": true,
+      "ablation_hard_distinct_from_cold": true,
       "err_graphcold_gt_hard": true,
       "beta0_matches_symmetric": true,
       "active_views_valid": true,
@@ -112,11 +143,11 @@
   },
   "statistics": {
     "comparisons": {
-      "Graph-CoLD_vs_Co-Teaching-lite": {
+      "Graph-CoLD_vs_Co-Teaching": {
         "n_pairs": 102,
-        "mean_diff": 0.27288734987758057,
-        "effect_size_cohen_dz": 2.208871733377313,
-        "p_value": 4.0477999562302313e-41,
+        "mean_diff": 0.26848801850783116,
+        "effect_size_cohen_dz": 2.193328480661416,
+        "p_value": 7.326753454118152e-41,
         "significant_p_lt_0_05": true
       },
       "Graph-CoLD_vs_CoLD": {
@@ -133,6 +164,34 @@
         "p_value": 9.240692796934754e-25,
         "significant_p_lt_0_05": true
       },
+      "Graph-CoLD_vs_Decoupling": {
+        "n_pairs": 102,
+        "mean_diff": 0.3469510333717703,
+        "effect_size_cohen_dz": 2.7745797788978304,
+        "p_value": 9.786881880399386e-50,
+        "significant_p_lt_0_05": true
+      },
+      "Graph-CoLD_vs_FINE": {
+        "n_pairs": 102,
+        "mean_diff": 0.3722718904140924,
+        "effect_size_cohen_dz": 1.6937231984683854,
+        "p_value": 6.732317201503154e-32,
+        "significant_p_lt_0_05": true
+      },
+      "Graph-CoLD_vs_MCRe": {
+        "n_pairs": 102,
+        "mean_diff": 0.3104762631231711,
+        "effect_size_cohen_dz": 1.6782312981541738,
+        "p_value": 1.3430412425030052e-31,
+        "significant_p_lt_0_05": true
+      },
+      "Graph-CoLD_vs_MORSE": {
+        "n_pairs": 102,
+        "mean_diff": 0.31949565833774196,
+        "effect_size_cohen_dz": 1.7241813565492767,
+        "p_value": 1.7475480709545108e-32,
+        "significant_p_lt_0_05": true
+      },
       "Graph-CoLD_vs_Noisy-Supervised": {
         "n_pairs": 102,
         "mean_diff": 0.30781666442762434,
@@ -142,9 +201,9 @@
       },
       "Graph-CoLD_vs_ablation_hard": {
         "n_pairs": 102,
-        "mean_diff": 0.018285494916563578,
-        "effect_size_cohen_dz": 0.4577987163803332,
-        "p_value": 5.5956741051131204e-06,
+        "mean_diff": 0.018382631348990538,
+        "effect_size_cohen_dz": 0.46324647084918513,
+        "p_value": 4.49238347554102e-06,
         "significant_p_lt_0_05": true
       }
     }

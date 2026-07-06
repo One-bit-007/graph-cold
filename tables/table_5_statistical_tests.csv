@@ -1,6 +1,10 @@
 Comparison,Mean difference,p-value,Effect size,n,Test type,Interpretation
 Graph-CoLD vs CoLD,1.83 pp,5.60e-06,0.458,102,"paired grouped t-test, greater alternative",Graph-CoLD higher under paired grouped test.
-Graph-CoLD vs ablation_hard,1.83 pp,5.60e-06,0.458,102,"paired grouped t-test, greater alternative",Graph-CoLD higher under paired grouped test.
+Graph-CoLD vs ablation_hard,1.84 pp,4.49e-06,0.463,102,"paired grouped t-test, greater alternative",Graph-CoLD higher under paired grouped test.
 Graph-CoLD vs Noisy-Supervised,30.78 pp,1.75e-26,1.424,102,"paired grouped t-test, greater alternative",Graph-CoLD higher under paired grouped test.
 Graph-CoLD vs Confident-Learning,22.35 pp,9.24e-25,1.342,102,"paired grouped t-test, greater alternative",Graph-CoLD higher under paired grouped test.
-Graph-CoLD vs Co-Teaching-lite,27.29 pp,4.05e-41,2.209,102,"paired grouped t-test, greater alternative",Graph-CoLD higher under paired grouped test.
+Graph-CoLD vs Co-Teaching,26.85 pp,7.33e-41,2.193,102,"paired grouped t-test, greater alternative",Graph-CoLD higher under paired grouped test.
+Graph-CoLD vs Decoupling,34.70 pp,9.79e-50,2.775,102,"paired grouped t-test, greater alternative",Graph-CoLD higher under paired grouped test.
+Graph-CoLD vs FINE,37.23 pp,6.73e-32,1.694,102,"paired grouped t-test, greater alternative",Graph-CoLD higher under paired grouped test.
+Graph-CoLD vs MCRe,31.05 pp,1.34e-31,1.678,102,"paired grouped t-test, greater alternative",Graph-CoLD higher under paired grouped test.
+Graph-CoLD vs MORSE,31.95 pp,1.75e-32,1.724,102,"paired grouped t-test, greater alternative",Graph-CoLD higher under paired grouped test.

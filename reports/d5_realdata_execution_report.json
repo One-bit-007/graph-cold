@@ -874,34 +874,34 @@
   },
   "key_metrics": {
     "CICIDS clean CoLD": 0.99103450791384,
-    "CICIDS clean Graph-CoLD": 0.9909420607833922,
+    "CICIDS clean Graph-CoLD": 0.9909420607833921,
     "CICIDS symmetric_20 CoLD": 0.9664568245848466,
     "CICIDS symmetric_20 Graph-CoLD": 0.9895291159218611,
-    "CICIDS graph_consistency_20 CoLD": 0.963806937821027,
+    "CICIDS graph_consistency_20 CoLD": 0.9638069378210269,
     "CICIDS graph_consistency_20 Graph-CoLD": 0.9900283078113804,
     "CESNET clean CoLD": 0.9955934525484782,
     "CESNET clean Graph-CoLD": 0.995767835677718,
     "CESNET symmetric_20 CoLD": 0.9952232324533897,
     "CESNET symmetric_20 Graph-CoLD": 0.9957641495937034,
     "CESNET graph_consistency_20 CoLD": 0.9944421721468588,
-    "CESNET graph_consistency_20 Graph-CoLD": 0.9958302669019212,
+    "CESNET graph_consistency_20 Graph-CoLD": 0.9958302669019213,
     "mean ERR Graph-CoLD": 1.0,
     "mean ERR hard": 0.8887439473541461
   },
   "ck": {
     "sanity_passed": true,
     "graph_cold_vs_cold_p_lt_0_05": true,
-    "p_value": 5.5956741051131204e-06,
+    "p_value": 5.5956741051129595e-06,
     "mean_err_graphcold": 1.0,
     "mean_err_hard": 0.8887439473541461,
-    "ablation_hard_close_to_cold": true
+    "ablation_hard_distinct_from_cold": true
   },
   "sanity": {
     "passed": true,
     "checks": {
       "no_nan_inf": true,
       "no_perfect_anomaly": true,
-      "ablation_hard_close_to_cold": true,
+      "ablation_hard_distinct_from_cold": true,
       "err_graphcold_gt_hard": true,
       "beta0_matches_symmetric": true,
       "active_views_valid": true,
@@ -911,6 +911,8 @@
       "formal_d5_scope_only": true,
       "no_optc_rows": true,
       "no_fake_baseline_rows": true,
+      "no_forbidden_result_strings": true,
+      "implementation_status_valid": true,
       "sample_policy_present": true,
       "dataset_hash_present": true,
       "source_verified_true": true

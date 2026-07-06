@@ -1,5 +1,5 @@
 {
-  "stage": "D5.5 baseline readiness audit",
+  "stage": "baseline readiness audit",
   "methods_in_formal_d5": [
     "Graph-CoLD",
     "CoLD",
@@ -9,8 +9,12 @@
     "Graph-CoLD",
     "CoLD",
     "ablation_hard",
-    "Co-Teaching-lite",
+    "Co-Teaching",
     "Confident-Learning",
+    "Decoupling",
+    "FINE",
+    "MCRe",
+    "MORSE",
     "Noisy-Supervised"
   ],
   "unimplemented_methods_emit_rows": false,
@@ -26,37 +30,33 @@
     "included": true,
     "reason": "reused from verified real D5 run"
   },
-  "Co-Teaching-lite": {
+  "Co-Teaching": {
     "included": true,
-    "reason": "implemented and smoke-passed on CICIDS-2017 and CESNET-TLS-Year22"
+    "reason": "verified on CICIDS-2017 and CESNET-TLS-Year22"
   },
   "Confident-Learning": {
     "included": true,
-    "reason": "implemented and smoke-passed on CICIDS-2017 and CESNET-TLS-Year22"
+    "reason": "verified on CICIDS-2017 and CESNET-TLS-Year22"
+  },
+  "Decoupling": {
+    "included": true,
+    "reason": "verified on CICIDS-2017 and CESNET-TLS-Year22"
+  },
+  "FINE": {
+    "included": true,
+    "reason": "verified on CICIDS-2017 and CESNET-TLS-Year22"
+  },
+  "MCRe": {
+    "included": true,
+    "reason": "verified on CICIDS-2017 and CESNET-TLS-Year22"
+  },
+  "MORSE": {
+    "included": true,
+    "reason": "verified on CICIDS-2017 and CESNET-TLS-Year22"
   },
   "Noisy-Supervised": {
     "included": true,
-    "reason": "implemented and smoke-passed on CICIDS-2017 and CESNET-TLS-Year22"
-  },
-  "FINE": {
-    "included": false,
-    "reason": "excluded: faithful FINE requires a validated embedding outlier protocol; D5.5 keeps it out instead of reporting approximate or fake rows"
-  },
-  "FINE-style": {
-    "included": false,
-    "reason": "excluded: faithful FINE requires a validated embedding outlier protocol; D5.5 keeps it out instead of reporting approximate or fake rows"
-  },
-  "MCRe": {
-    "included": false,
-    "reason": "excluded: no independently implemented and smoke-passed real-data implementation in this repository"
-  },
-  "MORSE": {
-    "included": false,
-    "reason": "excluded: no independently implemented and smoke-passed real-data implementation in this repository"
-  },
-  "Decoupling": {
-    "included": false,
-    "reason": "excluded: no independently implemented and smoke-passed real-data implementation in this repository"
+    "reason": "verified on CICIDS-2017 and CESNET-TLS-Year22"
   },
   "Flash": {
     "included": false,
@@ -70,12 +70,8 @@
     "included": false,
     "reason": "legacy audit key; official cleanlab is represented by the Confident-Learning method row"
   },
-  "Co-Teaching": {
-    "included": false,
-    "reason": "legacy full deep baseline name; D5.5 includes Co-Teaching-lite instead"
-  },
   "Co-Teaching+": {
     "included": false,
-    "reason": "not independently implemented and smoke-passed on real data"
+    "reason": "not independently implemented and verified on real data"
   }
 }

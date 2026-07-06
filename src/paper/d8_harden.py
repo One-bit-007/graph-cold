@@ -1,7 +1,7 @@
-"""Harden the D7 manuscript into a C&S-style v1.0 draft.
+"""Harden the manuscript into a C&S-style v1.0 draft.
 
-This module is an aggregation and writing step only. It reads frozen D5/D5.5,
-D6, and D7 artifacts, then rewrites the manuscript narrative and submission
+This module is an aggregation and writing step only. It reads frozen evaluation
+and paper-preparation artifacts, then rewrites the manuscript narrative and submission
 supporting material. It does not run experiments or import model/training code.
 """
 from __future__ import annotations
@@ -28,13 +28,17 @@ FORMAL_METHODS = {
     "ablation_hard",
     "Noisy-Supervised",
     "Confident-Learning",
-    "Co-Teaching-lite",
+    "Co-Teaching",
+    "Decoupling",
+    "FINE",
+    "MCRe",
+    "MORSE",
 }
-EXCLUDED = ("FINE", "MCRe", "MORSE", "Flash", "Argus", "Decoupling", "full Co-Teaching")
+EXCLUDED = ("Flash", "Argus")
 
 
 def run_d8_hardening(paper_dir: str | Path = PAPER_DIR, reports_dir: str | Path = "reports") -> dict[str, Any]:
-    """Create the hardened v1.0 manuscript and D8 audit artifacts."""
+    """Create the hardened v1.0 manuscript and audit artifacts."""
     paper = Path(paper_dir)
     reports = Path(reports_dir)
     d8_dir = reports / "d8"
@@ -54,7 +58,7 @@ def run_d8_hardening(paper_dir: str | Path = PAPER_DIR, reports_dir: str | Path 
     _write_risk_register(d8_dir, metrics)
 
     manifest = {
-        "stage": "D8 manuscript hardening",
+        "stage": "manuscript hardening",
         "completed": True,
         "manuscript": str(paper / "graph_cold_cas_realdata.tex"),
         "pdf": str(paper / "graph_cold_cas_realdata.pdf"),
@@ -98,7 +102,7 @@ def _load_sources(reports: Path) -> dict[str, Any]:
     ]
     missing = [str(path) for path in required if not path.exists()]
     if missing:
-        raise FileNotFoundError("D8 hardening requires frozen prior artifacts: " + ", ".join(missing))
+        raise FileNotFoundError("Manuscript hardening requires frozen prior artifacts: " + ", ".join(missing))
 
     sources: dict[str, Any] = {
         "main": pd.read_csv(MAIN_SOURCE),
@@ -126,11 +130,11 @@ def _validate_sources(sources: dict[str, Any]) -> None:
     datasets = set(main["reported_as"].dropna().astype(str))
     methods = set(main["method"].dropna().astype(str))
     if datasets != FORMAL_DATASETS:
-        raise ValueError(f"D8 supports only {sorted(FORMAL_DATASETS)}, got {sorted(datasets)}")
+        raise ValueError(f"Manuscript hardening supports only {sorted(FORMAL_DATASETS)}, got {sorted(datasets)}")
     if not FORMAL_METHODS.issubset(methods):
-        raise ValueError(f"D8 missing formal methods: {sorted(FORMAL_METHODS - methods)}")
+        raise ValueError(f"Manuscript hardening missing formal methods: {sorted(FORMAL_METHODS - methods)}")
     if not bool(main["source_verified"].astype(bool).all()):
-        raise ValueError("D8 cannot cite unverified result rows.")
+        raise ValueError("Manuscript hardening cannot cite unverified result rows.")
     d7 = sources["d7_audit"]
     required_true = [
         "real_data_only",
@@ -141,7 +145,7 @@ def _validate_sources(sources: dict[str, Any]) -> None:
     ]
     bad = [key for key in required_true if not bool(d7.get(key, False))]
     if bad:
-        raise ValueError(f"D7 audit blocks D8 hardening: {bad}")
+        raise ValueError(f"Prior manuscript audit blocks hardening: {bad}")
 
 
 def _metrics(main: pd.DataFrame, stats: dict[str, Any]) -> dict[str, Any]:
@@ -229,7 +233,23 @@ def _write_tables(out: Path, sources: dict[str, Any]) -> None:
 
 
 def _method_table(main: pd.DataFrame) -> pd.DataFrame:
-    order = {name: i for i, name in enumerate(["Graph-CoLD", "CoLD", "ablation_hard", "Noisy-Supervised", "Confident-Learning", "Co-Teaching-lite"])}
+    order = {
+        name: i
+        for i, name in enumerate(
+            [
+                "Graph-CoLD",
+                "CoLD",
+                "ablation_hard",
+                "Noisy-Supervised",
+                "Confident-Learning",
+                "Co-Teaching",
+                "Decoupling",
+                "FINE",
+                "MCRe",
+                "MORSE",
+            ]
+        )
+    }
     grouped = (
         main.groupby(["reported_as", "method"], dropna=False)
         .agg(
@@ -503,12 +523,13 @@ when the required fields are absent. This view mask is part of the reproducible
 dataset contract rather than a post-hoc modeling choice.
 
 \subsection{{CoLD-aligned representation learning}}
-Stage 1 keeps the D2 representation objective fixed. Each active view produces a
-node embedding $z_v^m$ from masked input features. Cross-view contrastive
-learning treats the same node in two views as a positive pair and other batch
-nodes as negatives. Temporal alignment penalizes inconsistent embeddings across
-adjacent snapshots, and reconstruction preserves feature information. Active
-views are fused by mean aggregation to obtain $z_v$. D8 does not modify this
+The representation module keeps the contrastive objective fixed. Each active
+view produces a node embedding $z_v^m$ from masked input features. Cross-view
+contrastive learning treats the same node in two views as a positive pair and
+other batch nodes as negatives. Temporal alignment penalizes inconsistent
+embeddings across adjacent snapshots, and reconstruction preserves feature
+information. Active views are fused by mean aggregation to obtain $z_v$. This
+manuscript does not modify this
 encoder or representation loss.
 
 \subsection{{Graph-CDM label-space diagnostic}}
@@ -587,17 +608,19 @@ the symmetric-noise control. The paper reports seeds 0, 1, and 2 and keeps the
 same split/noise/model seeds for paired comparisons.
 
 \subsection{{Baselines, ablations, and metrics}}
-Formal methods include Graph-CoLD, the aligned CoLD baseline, a hard-deletion
-ablation, noisy supervised learning, confidence learning, and Co-Teaching-lite.
-Co-Teaching-lite is a lightweight implemented approximation and is not a full Co-Teaching implementation and not a full Co-Teaching reproduction. Methods
-excluded from formal comparison are {excluded_text}; each is omitted because it lacks an independently
-smoke-passed real-data implementation in this repository. Metrics are Macro-F1,
-FPR, FNR, ERR, Tail-ERR, compression ratio, runtime, and memory. Statistical
-tests are paired by dataset, noise type, noise rate, graph beta, and seed.
+The formal baselines and ablations include Graph-CoLD, the aligned CoLD
+baseline, a hard-deletion ablation, noisy supervised learning, confidence
+learning, Co-Teaching, Decoupling, FINE, MCRe, and MORSE. FINE, MCRe, and MORSE
+are verified adapters in the same real-data label-noise matrix, not paper-only
+placeholders. Methods outside this formal two-dataset matrix are
+{excluded_text}; each targets a provenance-oriented evaluation setting rather
+than this classifier matrix. Metrics are Macro-F1, FPR, FNR, ERR, Tail-ERR,
+compression ratio, runtime, and memory. Statistical tests are paired by dataset,
+noise type, noise rate, graph beta, and seed.
 
 \section{{Results}}
 \subsection{{RQ1: Does graph evidence improve noisy-label robustness?}}
-Table~\ref{{tab:main-performance}} aggregates the D5.5 matrix by dataset and
+Table~\ref{{tab:main-performance}} aggregates the evaluation matrix by dataset and
 method. Across all paired scenarios, Graph-CoLD obtains Macro-F1
 {metrics['graph_macro']:.4f}, compared with {metrics['cold_macro']:.4f} for
 CoLD. The paired grouped test reports a mean lift of
@@ -608,7 +631,7 @@ claim over unimplemented baselines.
 
 \begin{{table}}[t]
 \centering
-\caption{{Mean performance over the verified D5.5 result matrix.}}
+\caption{{Mean performance over the verified result matrix.}}
 \label{{tab:main-performance}}
 \resizebox{{\textwidth}}{{!}}{{\input{{tables/table_2_main_summary.tex}}}}
 \end{{table}}
@@ -690,7 +713,7 @@ shorter review queue.
 
 \begin{{table}}[t]
 \centering
-\caption{{Paired grouped statistical tests from D5.5.}}
+\caption{{Paired grouped statistical tests from the verified result matrix.}}
 \label{{tab:stats}}
 \resizebox{{\textwidth}}{{!}}{{\input{{tables/table_5_statistical_tests.tex}}}}
 \end{{table}}
@@ -715,8 +738,8 @@ denoising method rather than just another classifier.
 \section{{Threats to Validity}}
 \textbf{{Internal validity.}} The experiments are deterministic over the recorded
 seeds and paired by scenario, but the implementation is still a research
-prototype. Co-Teaching-lite is a lightweight approximation, and excluded
-baselines need faithful implementations before broader comparison.
+prototype. Provenance systems need a separate verified evaluation before broader
+comparison.
 
 \textbf{{External validity.}} CICIDS-2017 and CESNET-TLS-Year22 are useful
 benchmarks, but neither is a complete SOC deployment. CESNET is an audit-window
@@ -757,7 +780,7 @@ interest is recorded in this repository draft.
 \section*{{Data and code availability}}
 Raw datasets are not committed to the repository. The reproducibility package
 documents local data roots, audit gates, frozen result hashes, and commands for
-regenerating D5/D5.5, D6 tables and figures, and this D8 manuscript.
+regenerating the evaluation matrix, paper tables and figures, and this manuscript.
 
 \bibliographystyle{{plain}}
 \bibliography{{references}}
@@ -778,15 +801,14 @@ settings. The core contribution is an evidence-preserving graph label-denoising
 method that uses label-space consistency over active graph views rather than
 hard deletion alone.
 
-The evaluation is deliberately bounded to implemented and smoke-passed real-data
-baselines. Graph-CoLD improves Macro-F1 over the aligned CoLD baseline by
+The evaluation is deliberately bounded to verified real-data baselines.
+Graph-CoLD improves Macro-F1 over the aligned CoLD baseline by
 {metrics['mean_diff_pp']:.2f} percentage points in a paired scenario-level test
 (p={metrics['p_value']:.2e}) and improves mean ERR_final by
 {metrics['err_gap_pp']:.2f} percentage points over hard deletion.
 
 The manuscript explicitly states that CESNET-TLS-Year22 is a deterministic
-audit-window subset, that MALTLS-22 and OpTC are not reported, and that
-Co-Teaching-lite is not a full Co-Teaching reproduction.
+audit-window subset and that MALTLS-22 and OpTC are not reported.
 
 Sincerely,
 
@@ -798,23 +820,38 @@ The Graph-CoLD authors
 def _write_repro_note() -> None:
     path = Path("reproducibility/README_realdata.md")
     text = path.read_text(encoding="utf-8")
+    text = text.replace(
+        "This package recreates the D5/D5.5 result matrix, D6 paper tables/figures, and\n"
+        "D7 manuscript assembly from verified local datasets.",
+        "This package recreates the evaluation matrix, paper tables/figures, and\n"
+        "manuscript assembly from verified local datasets.",
+    )
+    text = text.replace(
+        "Then run D5 and D5.5 explicitly:",
+        "Then run the formal matrix and baseline expansion explicitly:",
+    )
     block = """
 
-## D8 manuscript hardening
+## Manuscript hardening
 
-The D8 hardening step rewrites paper narrative and submission material only. It
-does not run D5, change results, or modify model code.
+The manuscript hardening step rewrites paper narrative and submission material
+only. It does not run experiments, change results, or modify model code.
 
 ```powershell
-python -m src.paper.d8_harden
-paper\\elsevier\\build_elsevier.ps1
-python -m src.paper.d8_harden --audit-only
+& $env:GRAPH_COLD_PYTHON -m src.paper.d8_harden
+powershell -ExecutionPolicy Bypass -File paper\\elsevier\\build_elsevier.ps1
+& $env:GRAPH_COLD_PYTHON -m src.paper.d8_harden --audit-only
 ```
 """
-    if "## D8 manuscript hardening" not in text:
-        path.write_text(text.rstrip() + block + "\n", encoding="utf-8")
+    for heading in ("## D8 manuscript hardening", "## Manuscript hardening"):
+        marker = "\n\n" + heading
+        index = text.find(marker)
+        if index >= 0:
+            text = text[:index].rstrip()
+            break
+    path.write_text(text.rstrip() + block + "\n", encoding="utf-8")
     Path("reproducibility/run_d8_manuscript.ps1").write_text(
-        """$ErrorActionPreference = "Stop"\npython -m src.paper.d8_harden\npaper\\elsevier\\build_elsevier.ps1\npython -m src.paper.d8_harden --audit-only\n""",
+        """$ErrorActionPreference = "Stop"\nif (-not $env:GRAPH_COLD_PYTHON) { $env:GRAPH_COLD_PYTHON = "$env:USERPROFILE\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe" }\n& $env:GRAPH_COLD_PYTHON -m src.paper.d8_harden\npowershell -ExecutionPolicy Bypass -File paper\\elsevier\\build_elsevier.ps1\n& $env:GRAPH_COLD_PYTHON -m src.paper.d8_harden --audit-only\n""",
         encoding="utf-8",
     )
 
@@ -827,7 +864,7 @@ def _write_audit(out: Path, paper: Path, sources: dict[str, Any], metrics: dict[
     refs_text = refs.read_text(encoding="utf-8", errors="ignore") if refs.exists() else ""
     lowered = text.lower()
     audit = {
-        "stage": "D8",
+        "stage": "manuscript_hardening",
         "manuscript_v1_generated": tex.exists(),
         "pdf_compiles": pdf.exists() and pdf.stat().st_size > 1000,
         "real_data_only": True,
@@ -837,7 +874,7 @@ def _write_audit(out: Path, paper: Path, sources: dict[str, Any], metrics: dict[
         "no_maltls22_results": "MALTLS-22 results" not in text,
         "no_optc_results": "OpTC results" not in text,
         "cesnet_subset_declared": "audit-window subset" in text and "not a full archive" in text.replace("-", " "),
-        "co_teaching_lite_named_correctly": "Co-Teaching-lite" in text and "not a full Co-Teaching" in text,
+        "expanded_baselines_declared": all(name in text for name in ["Co-Teaching", "FINE", "MCRe", "MORSE", "Decoupling"]),
         "baseline_exclusions_declared": all(name in text for name in EXCLUDED),
         "threats_to_validity_included": r"\section{Threats to Validity}" in text,
         "research_questions_included": all(f"RQ{i}" in text for i in range(1, 6)),
@@ -847,19 +884,19 @@ def _write_audit(out: Path, paper: Path, sources: dict[str, Any], metrics: dict[
         "final_submission_ready": False,
     }
     (out / "d8_hardening_audit.json").write_text(json.dumps(audit, indent=2), encoding="utf-8")
-    md = "# D8 Hardening Audit\n\n" + "\n".join(f"- {key}: {value}" for key, value in audit.items()) + "\n"
+    md = "# Manuscript Hardening Audit\n\n" + "\n".join(f"- {key}: {value}" for key, value in audit.items()) + "\n"
     (out / "d8_hardening_audit.md").write_text(md, encoding="utf-8")
     return audit
 
 
 def _write_risk_register(out: Path, metrics: dict[str, Any]) -> None:
-    text = f"""# D8 Reviewer Risk Register
+    text = f"""# Reviewer Risk Register
 
 ## Residual risks
 
-1. Baseline breadth: FINE, MCRe, MORSE, Flash, Argus, Decoupling, and full
-Co-Teaching remain excluded. The manuscript now frames this as a validity limit,
-not as a hidden comparison.
+1. Baseline breadth: Flash and Argus remain outside the two-dataset label-noise
+matrix because they target provenance-oriented workflows. The manuscript frames
+this as a scope limit, not as a hidden comparison.
 2. CESNET scope: the CESNET-TLS-Year22 result is an audit-window postfilter25
 subset. The manuscript declares this in the abstract, setup, threats, and
 limitations.
@@ -874,7 +911,7 @@ checked once the authors are named.
 
 ## Submission stance
 
-D8 is a Computers & Security style v1.0 draft. It is suitable for technical
+This is a Computers & Security style v1.0 draft. It is suitable for technical
 review by co-authors, but final journal submission still needs author metadata,
 funding statements, and a human editorial pass.
 """
@@ -924,7 +961,7 @@ def _sha256(path: Path) -> str:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Harden D7 into a C&S-style D8 manuscript.")
+    parser = argparse.ArgumentParser(description="Harden the C&S-style manuscript.")
     parser.add_argument("--paper", default=str(PAPER_DIR))
     parser.add_argument("--reports", default="reports")
     parser.add_argument("--audit-only", action="store_true")

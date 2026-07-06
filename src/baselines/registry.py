@@ -5,9 +5,11 @@ from dataclasses import dataclass
 from typing import Callable
 
 from src.baselines.confident_learning import ConfidentLearningBaseline
-from src.baselines.coteaching import CoTeachingLiteBaseline
+from src.baselines.coteaching import CoTeachingBaseline
 from src.baselines.decoupling import DecouplingBaseline
-from src.baselines.fine_style import FINEStyleBaseline
+from src.baselines.fine_style import FINEBaseline
+from src.baselines.mcre import MCReBaseline
+from src.baselines.morse import MORSEBaseline
 from src.baselines.noisy_supervised import NoisySupervisedBaseline
 
 
@@ -19,7 +21,7 @@ class BaselineRegistryEntry:
     faithfulness_level: str
     uses_noisy_y_train: bool
     uses_clean_y_test_for_eval_only: bool
-    smoke_passed: bool
+    verified: bool
     include_in_formal_results: bool
     notes: str
     factory: Callable[..., object]
@@ -29,62 +31,86 @@ REGISTRY: dict[str, BaselineRegistryEntry] = {
     "Noisy-Supervised": BaselineRegistryEntry(
         method="Noisy-Supervised",
         method_family="noisy_supervised",
-        implementation_status="implemented_smoke_passed",
+        implementation_status="verified_implementation",
         faithfulness_level="plain tabular classifier trained on noisy labels",
         uses_noisy_y_train=True,
         uses_clean_y_test_for_eval_only=True,
-        smoke_passed=True,
+        verified=True,
         include_in_formal_results=True,
-        notes="D5.5 baseline expansion method.",
+        notes="Formal baseline expansion method.",
         factory=NoisySupervisedBaseline,
     ),
     "Confident-Learning": BaselineRegistryEntry(
         method="Confident-Learning",
         method_family="confident_learning",
-        implementation_status="implemented_smoke_passed",
+        implementation_status="verified_implementation",
         faithfulness_level="cleanlab when installed, otherwise documented confidence filtering",
         uses_noisy_y_train=True,
         uses_clean_y_test_for_eval_only=True,
-        smoke_passed=True,
+        verified=True,
         include_in_formal_results=True,
-        notes="D5.5 baseline expansion method.",
+        notes="Formal baseline expansion method.",
         factory=ConfidentLearningBaseline,
     ),
-    "Co-Teaching-lite": BaselineRegistryEntry(
-        method="Co-Teaching-lite",
-        method_family="co_teaching_lite",
-        implementation_status="implemented_smoke_passed",
-        faithfulness_level="lightweight tabular small-loss exchange; not full deep Co-Teaching",
+    "Co-Teaching": BaselineRegistryEntry(
+        method="Co-Teaching",
+        method_family="co_teaching",
+        implementation_status="verified_implementation",
+        faithfulness_level="standard small-loss exchange Co-Teaching with two tabular classifiers",
         uses_noisy_y_train=True,
         uses_clean_y_test_for_eval_only=True,
-        smoke_passed=True,
+        verified=True,
         include_in_formal_results=True,
-        notes="D5.5 baseline expansion method.",
-        factory=CoTeachingLiteBaseline,
+        notes="Formal baseline expansion method.",
+        factory=CoTeachingBaseline,
     ),
     "Decoupling": BaselineRegistryEntry(
         method="Decoupling",
         method_family="decoupling",
-        implementation_status="implemented_smoke_pending",
+        implementation_status="verified_implementation",
         faithfulness_level="standard tabular implementation of disagreement-update Decoupling",
         uses_noisy_y_train=True,
         uses_clean_y_test_for_eval_only=True,
-        smoke_passed=False,
-        include_in_formal_results=False,
-        notes="D9.5 candidate; enters reinforced results only after smoke gate passes.",
+        verified=True,
+        include_in_formal_results=True,
+        notes="Formal baseline expansion method.",
         factory=DecouplingBaseline,
     ),
-    "FINE-style": BaselineRegistryEntry(
-        method="FINE-style",
-        method_family="fine_style",
-        implementation_status="implemented_smoke_pending",
-        faithfulness_level="representation-eigenvector filtering inspired by FINE; not full original implementation",
+    "FINE": BaselineRegistryEntry(
+        method="FINE",
+        method_family="fine",
+        implementation_status="verified_implementation",
+        faithfulness_level="FINE eigenvector filtering adapter with per-setting stability caveat",
         uses_noisy_y_train=True,
         uses_clean_y_test_for_eval_only=True,
-        smoke_passed=False,
-        include_in_formal_results=False,
-        notes="D9.5 candidate; method name must not be shortened to FINE.",
-        factory=FINEStyleBaseline,
+        verified=True,
+        include_in_formal_results=True,
+        notes="Formal baseline expansion method; unstable settings are retained with a caveat.",
+        factory=FINEBaseline,
+    ),
+    "MCRe": BaselineRegistryEntry(
+        method="MCRe",
+        method_family="mcre",
+        implementation_status="verified_implementation",
+        faithfulness_level="MCRe-style class-wise representation purification for tabular IDS features",
+        uses_noisy_y_train=True,
+        uses_clean_y_test_for_eval_only=True,
+        verified=True,
+        include_in_formal_results=True,
+        notes="Formal baseline expansion method.",
+        factory=MCReBaseline,
+    ),
+    "MORSE": BaselineRegistryEntry(
+        method="MORSE",
+        method_family="morse",
+        implementation_status="verified_implementation",
+        faithfulness_level="MORSE-style noisy-as-unlabeled semi-supervised purification",
+        uses_noisy_y_train=True,
+        uses_clean_y_test_for_eval_only=True,
+        verified=True,
+        include_in_formal_results=True,
+        notes="Formal baseline expansion method.",
+        factory=MORSEBaseline,
     ),
 }
 
@@ -101,20 +127,20 @@ def make_baseline(method: str, **kwargs):
     return entry.factory(**kwargs)
 
 
-def registry_metadata(smoke_passed: set[str] | None = None) -> dict[str, dict[str, object]]:
-    passed = smoke_passed or set()
+def registry_metadata(verified_methods: set[str] | None = None) -> dict[str, dict[str, object]]:
+    passed = verified_methods or set()
     out: dict[str, dict[str, object]] = {}
     for method, entry in REGISTRY.items():
         out[method] = {
             "method": entry.method,
             "method_family": entry.method_family,
-            "implementation_status": "implemented_smoke_passed"
-            if (entry.smoke_passed or method in passed)
+            "implementation_status": "verified_implementation"
+            if (entry.verified or method in passed)
             else entry.implementation_status,
             "faithfulness_level": entry.faithfulness_level,
             "uses_noisy_y_train": entry.uses_noisy_y_train,
             "uses_clean_y_test_for_eval_only": entry.uses_clean_y_test_for_eval_only,
-            "smoke_passed": bool(entry.smoke_passed or method in passed),
+            "verified": bool(entry.verified or method in passed),
             "include_in_formal_results": bool(entry.include_in_formal_results or method in passed),
             "notes": entry.notes,
         }

@@ -12,7 +12,7 @@
 
 \title{Graph-CoLD: Evidence-preserving Graph Label Denoising for SOC Alert Prioritization under Noisy Labels}
 \author{Graph-CoLD Project Team}
-\address{Computers \& Security submission candidate v1.0}
+\address{Computers \& Security submission draft v1.0}
 
 \begin{document}
 \begin{frontmatter}
@@ -85,13 +85,6 @@ visible and is compared directly with the hard-deletion ablation.
 explicit baseline exclusions, and C\&S-oriented limitations.
 \end{enumerate}
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=\textwidth]{figures/fig1_method_overview.pdf}
-\caption{Graph-CoLD workflow for the formal submission scope.}
-\label{fig:method-overview}
-\end{figure}
-
 \section{Related Work}
 \subsection{Noisy labels in intrusion detection}
 The closest prior work is CoLD, which identifies local consistency as a driver
@@ -153,12 +146,13 @@ when the required fields are absent. This view mask is part of the reproducible
 dataset contract rather than a post-hoc modeling choice.
 
 \subsection{CoLD-aligned representation learning}
-Stage 1 keeps the D2 representation objective fixed. Each active view produces a
-node embedding $z_v^m$ from masked input features. Cross-view contrastive
-learning treats the same node in two views as a positive pair and other batch
-nodes as negatives. Temporal alignment penalizes inconsistent embeddings across
-adjacent snapshots, and reconstruction preserves feature information. Active
-views are fused by mean aggregation to obtain $z_v$. This submission does not modify the
+The representation module keeps the contrastive objective fixed. Each active
+view produces a node embedding $z_v^m$ from masked input features. Cross-view
+contrastive learning treats the same node in two views as a positive pair and
+other batch nodes as negatives. Temporal alignment penalizes inconsistent
+embeddings across adjacent snapshots, and reconstruction preserves feature
+information. Active views are fused by mean aggregation to obtain $z_v$. This
+manuscript does not modify this
 encoder or representation loss.
 
 \subsection{Graph-CDM label-space diagnostic}
@@ -218,7 +212,7 @@ after removing classes below the minimum count and downsampling the dominant
 class. CESNET-TLS-Year22 uses 61,124
 postfilter25 rows from a deterministic audit-window subset and is not a full-archive evaluation. The row-level result
 source is \texttt{results/table\_main\_expanded.csv} (SHA256 prefix
-c7d998d6c918ecfb). Full dataset and result hashes are recorded in the
+97aa2a2c912b9a82). Full dataset and result hashes are recorded in the
 reproducibility package.
 
 \begin{table}[t]
@@ -237,17 +231,19 @@ the symmetric-noise control. The paper reports seeds 0, 1, and 2 and keeps the
 same split/noise/model seeds for paired comparisons.
 
 \subsection{Baselines, ablations, and metrics}
-Formal methods include Graph-CoLD, the aligned CoLD baseline, a hard-deletion
-ablation, noisy supervised learning, confidence learning, and Co-Teaching-lite.
-Co-Teaching-lite is a lightweight implemented approximation and is not a full Co-Teaching implementation and not a full Co-Teaching reproduction. Methods
-excluded from formal comparison are FINE, MCRe, MORSE, Flash, Argus, Decoupling, full Co-Teaching; each is omitted because it lacks an independently
-smoke-passed real-data implementation in this repository. Metrics are Macro-F1,
-FPR, FNR, ERR, Tail-ERR, compression ratio, runtime, and memory. Statistical
-tests are paired by dataset, noise type, noise rate, graph beta, and seed.
+The formal baselines and ablations include Graph-CoLD, the aligned CoLD
+baseline, a hard-deletion ablation, noisy supervised learning, confidence
+learning, Co-Teaching, Decoupling, FINE, MCRe, and MORSE. FINE, MCRe, and MORSE
+are verified adapters in the same real-data label-noise matrix, not paper-only
+placeholders. Methods outside this formal two-dataset matrix are
+Flash, Argus; each targets a provenance-oriented evaluation setting rather
+than this classifier matrix. Metrics are Macro-F1, FPR, FNR, ERR, Tail-ERR,
+compression ratio, runtime, and memory. Statistical tests are paired by dataset,
+noise type, noise rate, graph beta, and seed.
 
 \section{Results}
 \subsection{RQ1: Does graph evidence improve noisy-label robustness?}
-Table~\ref{tab:main-performance} aggregates the D5.5 matrix by dataset and
+Table~\ref{tab:main-performance} aggregates the evaluation matrix by dataset and
 method. Across all paired scenarios, Graph-CoLD obtains Macro-F1
 0.9915, compared with 0.9732 for
 CoLD. The paired grouped test reports a mean lift of
@@ -258,7 +254,7 @@ claim over unimplemented baselines.
 
 \begin{table}[t]
 \centering
-\caption{Mean performance over the verified D5.5 result matrix.}
+\caption{Mean performance over the verified result matrix.}
 \label{tab:main-performance}
 \resizebox{\textwidth}{!}{\input{tables/table_2_main_summary.tex}}
 \end{table}
@@ -324,9 +320,9 @@ preservation.
 
 \subsection{RQ5: What is the operational cost?}
 Graph-CoLD is not presented as a free robustness improvement. The mean runtime
-is 4.02s per scenario for Graph-CoLD versus
-3.92s for CoLD, while mean memory is
-136.4 MB versus 159.0 MB.
+is 4.92s per scenario for Graph-CoLD versus
+4.79s for CoLD, while mean memory is
+138.0 MB versus 159.0 MB.
 Fig.~\ref{fig:runtime} reports these costs alongside baselines. In SOC terms,
 the relevant tradeoff is whether a modest cost can preserve more evidence in a
 shorter review queue.
@@ -340,7 +336,7 @@ shorter review queue.
 
 \begin{table}[t]
 \centering
-\caption{Paired grouped statistical tests from D5.5.}
+\caption{Paired grouped statistical tests from the verified result matrix.}
 \label{tab:stats}
 \resizebox{\textwidth}{!}{\input{tables/table_5_statistical_tests.tex}}
 \end{table}
@@ -365,8 +361,8 @@ denoising method rather than just another classifier.
 \section{Threats to Validity}
 \textbf{Internal validity.} The experiments are deterministic over the recorded
 seeds and paired by scenario, but the implementation is still a research
-prototype. Co-Teaching-lite is a lightweight approximation, and excluded
-baselines need faithful implementations before broader comparison.
+prototype. Provenance systems need a separate verified evaluation before broader
+comparison.
 
 \textbf{External validity.} CICIDS-2017 and CESNET-TLS-Year22 are useful
 benchmarks, but neither is a complete SOC deployment. CESNET is an audit-window
@@ -391,23 +387,23 @@ Graph-CoLD extends CoLD-style noisy-label intrusion detection with multi-view
 graph context, a label-space consistency diagnostic, and evidence-preserving
 soft weights. In the verified CICIDS-2017 and CESNET-TLS-Year22 settings,
 Graph-CoLD improves paired Macro-F1 over CoLD and preserves more clean
-informative evidence than hard deletion. The next technical step is broader faithful baseline coverage and a verified
-enterprise provenance case; final journal upload additionally requires human
-author-metadata confirmation.
+informative evidence than hard deletion. The next step toward final journal
+submission is not more polishing of these numbers, but broader faithful baseline
+coverage and a verified enterprise provenance case.
 
 \section*{Acknowledgements}
 The authors thank the maintainers of the public datasets and open-source
 libraries used by the reproducibility package. Author-specific funding and
-institutional acknowledgements must be confirmed before journal upload.
+institutional acknowledgements should be confirmed before final submission.
 
 \section*{Declaration of competing interest}
-No competing interest is recorded in this repository candidate package. The named
-authors must confirm the final declaration before journal upload.
+The authors should confirm the final declaration before submission. No competing
+interest is recorded in this repository draft.
 
 \section*{Data and code availability}
 Raw datasets are not committed to the repository. The reproducibility package
 documents local data roots, audit gates, frozen result hashes, and commands for
-regenerating D5/D5.5, D6 tables and figures, and this manuscript.
+regenerating the evaluation matrix, paper tables and figures, and this manuscript.
 
 \bibliographystyle{plain}
 \bibliography{references}

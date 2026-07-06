@@ -38,7 +38,11 @@ def test_table_2_is_grouped_from_expanded_results():
         "ablation_hard",
         "Noisy-Supervised",
         "Confident-Learning",
-        "Co-Teaching-lite",
+        "Co-Teaching",
+        "Decoupling",
+        "FINE",
+        "MCRe",
+        "MORSE",
     }.issubset(set(table2["Method"]))
     assert "Macro-F1 mean +/- std" in table2.columns
 
@@ -74,7 +78,11 @@ def test_ablation_and_statistical_tables_have_formal_rows_only():
         "Graph-CoLD vs ablation_hard",
         "Graph-CoLD vs Noisy-Supervised",
         "Graph-CoLD vs Confident-Learning",
-        "Graph-CoLD vs Co-Teaching-lite",
+        "Graph-CoLD vs Co-Teaching",
+        "Graph-CoLD vs Decoupling",
+        "Graph-CoLD vs FINE",
+        "Graph-CoLD vs MCRe",
+        "Graph-CoLD vs MORSE",
     }
     assert table5["Test type"].str.contains("paired grouped").all()
     assert not table5["Test type"].str.contains("pooled", case=False).any()

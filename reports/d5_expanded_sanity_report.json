@@ -3,7 +3,7 @@
   "checks": {
     "no_nan_inf": true,
     "no_perfect_anomaly": true,
-    "ablation_hard_close_to_cold": true,
+    "ablation_hard_distinct_from_cold": true,
     "err_graphcold_gt_hard": true,
     "beta0_matches_symmetric": true,
     "active_views_valid": true,

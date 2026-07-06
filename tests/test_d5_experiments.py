@@ -1,9 +1,12 @@
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
+import numpy as np
 import pandas as pd
 import pytest
 
+from src.experiments import d5
 from src.experiments.d5 import FIELDNAMES, FORMAL_METHODS, run_d5_experiments
 
 
@@ -50,7 +53,8 @@ def test_d5_required_real_two_dataset_outputs_and_guards_exist():
 
     baseline = json.loads((reports / "baseline_readiness_report.json").read_text(encoding="utf-8"))
     assert baseline["methods_in_formal_d5"] == list(FORMAL_METHODS)
-    assert baseline["MCRe"]["included"] is False
+    for method in ["MCRe", "MORSE", "FINE", "Co-Teaching", "Decoupling"]:
+        assert baseline[method]["included"] is True
     assert baseline["cleanlab"]["included"] is False
 
     sanity = json.loads((reports / "d5_result_sanity_report.json").read_text(encoding="utf-8"))
@@ -94,3 +98,52 @@ cesnet_tls_year22:
     )
     with pytest.raises((FileNotFoundError, RuntimeError), match="Required real dataset|D5 readiness guard blocked"):
         run_d5_experiments(out_dir=tmp_path / "results", configs_dir=configs)
+
+
+def test_ablation_hard_reuses_graphcold_context_and_changes_only_weighting():
+    X_train = np.arange(30, dtype=np.float32).reshape(10, 3)
+    y_train = np.array([0, 0, 1, 1, 2, 2, 0, 1, 2, 0], dtype=np.int64)
+    dataset = SimpleNamespace(
+        X_train=X_train,
+        X_test=X_train.copy(),
+        y_train=y_train,
+        y_test=y_train.copy(),
+        num_classes=3,
+        meta={"active_views": ["ip", "temporal"], "train_indices": np.arange(10), "test_indices": np.arange(10, 20)},
+    )
+    bundle = d5.FormalBundle(
+        dataset=dataset,
+        dataset_key="toy",
+        reported_as="Toy",
+        dataset_hash="hash",
+        actual_data_path="none",
+        class_policy="toy",
+        sample_policy="toy",
+        sample_seed=42,
+        sampling_stratified=True,
+        active_views="ip|temporal",
+        source_verified=True,
+        replacement_for="",
+    )
+    flip = np.array([False, True, False, False, True, False, False, False, False, True])
+    evidence = np.linspace(0.05, 1.0, y_train.shape[0])
+    context = d5._graphcold_context(
+        bundle,
+        {"noise_type": "graph_consistency", "noise_rate": 0.4, "graph_beta": 0.6},
+        42,
+        flip,
+        evidence,
+        {},
+    )
+
+    full = d5._execution_plan_for_method("Graph-CoLD", context)
+    hard = d5._execution_plan_for_method("ablation_hard", context)
+    cold = d5._execution_plan_for_method("CoLD", context)
+
+    assert hard.fit_method == "Graph-CoLD"
+    assert cold.fit_method == "CoLD"
+    assert full.graph is hard.graph
+    assert full.representation is hard.representation
+    assert full.cdm is hard.cdm
+    assert full.evidence is hard.evidence
+    assert not np.array_equal(full.weights, hard.weights)

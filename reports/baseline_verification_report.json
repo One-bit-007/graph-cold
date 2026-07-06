@@ -1,0 +1,2095 @@
+{
+  "stage": "baseline verification gate",
+  "seed": 42,
+  "datasets": [
+    "cicids2017",
+    "cesnet_tls_year22"
+  ],
+  "settings": [
+    "clean",
+    "symmetric_20"
+  ],
+  "passed": true,
+  "passed_baselines": [
+    "Co-Teaching",
+    "Confident-Learning",
+    "Decoupling",
+    "FINE",
+    "MCRe",
+    "MORSE",
+    "Noisy-Supervised"
+  ],
+  "failed_baselines": {},
+  "excluded": {
+    "Flash": "excluded: provenance case-study method; no formal two-dataset label-noise implementation",
+    "Argus": "excluded: provenance case-study method; no formal two-dataset label-noise implementation"
+  },
+  "rows": [
+    {
+      "dataset": "cicids2017",
+      "reported_as": "CICIDS-2017",
+      "seed": 42,
+      "noise_type": "clean",
+      "noise_rate": 0.0,
+      "method": "Noisy-Supervised",
+      "method_family": "noisy_supervised",
+      "implementation_status": "verified_implementation",
+      "runtime_sec": 3.3014290999853984,
+      "memory_mb": 238.8972864151001,
+      "uses_noisy_y_train": true,
+      "evaluates_clean_y_test": true,
+      "dataset_hash": "2585508ac445a94a3eb2244aa64778678928d201555396b4b9afc1ed6a2f1ab4",
+      "sample_policy": "full_postfilter11_after_min_count_and_dominant_downsample",
+      "metrics_finite": true,
+      "perfect_metric_anomaly": false,
+      "deterministic_seed_42": true,
+      "macro_f1": 0.9902675229672636,
+      "fpr": 0.0019257816726171158,
+      "fnr": 0.0007720967814337658,
+      "err_final": 1.0,
+      "details": {
+        "classifier": "ExtraTreesClassifier",
+        "n_estimators": 8,
+        "trained_on": "noisy_y_train",
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "training_label_hash": "34ff5aee54b32179c157618b04d99f6c3613a2ebbc2d70613176f1fe755d9f0c",
+        "filtering": "none"
+      }
+    },
+    {
+      "dataset": "cicids2017",
+      "reported_as": "CICIDS-2017",
+      "seed": 42,
+      "noise_type": "clean",
+      "noise_rate": 0.0,
+      "method": "Confident-Learning",
+      "method_family": "confident_learning",
+      "implementation_status": "verified_implementation",
+      "runtime_sec": 19.691083599987905,
+      "memory_mb": 485.2394485473633,
+      "uses_noisy_y_train": true,
+      "evaluates_clean_y_test": true,
+      "dataset_hash": "2585508ac445a94a3eb2244aa64778678928d201555396b4b9afc1ed6a2f1ab4",
+      "sample_policy": "full_postfilter11_after_min_count_and_dominant_downsample",
+      "metrics_finite": true,
+      "perfect_metric_anomaly": false,
+      "deterministic_seed_42": true,
+      "macro_f1": 0.9303501537260555,
+      "fpr": 0.02421291788380396,
+      "fnr": 0.006221663599227903,
+      "err_final": 1.0,
+      "details": {
+        "classifier": "ExtraTreesClassifier",
+        "issue_detector": "cleanlab",
+        "probe_model": "SGDClassifier(log_loss)",
+        "trained_on": "retained noisy_y_train",
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "training_label_hash": "34ff5aee54b32179c157618b04d99f6c3613a2ebbc2d70613176f1fe755d9f0c",
+        "retained_fraction": 0.958962498354217,
+        "estimated_issue_fraction": 0.041037501645783014,
+        "filter_rule": "cleanlab_find_label_issues"
+      }
+    },
+    {
+      "dataset": "cicids2017",
+      "reported_as": "CICIDS-2017",
+      "seed": 42,
+      "noise_type": "clean",
+      "noise_rate": 0.0,
+      "method": "Co-Teaching",
+      "method_family": "co_teaching",
+      "implementation_status": "verified_implementation",
+      "runtime_sec": 42.05862540000817,
+      "memory_mb": 570.7302408218384,
+      "uses_noisy_y_train": true,
+      "evaluates_clean_y_test": true,
+      "dataset_hash": "2585508ac445a94a3eb2244aa64778678928d201555396b4b9afc1ed6a2f1ab4",
+      "sample_policy": "full_postfilter11_after_min_count_and_dominant_downsample",
+      "metrics_finite": true,
+      "perfect_metric_anomaly": false,
+      "deterministic_seed_42": true,
+      "macro_f1": 0.7186092525584395,
+      "fpr": 0.28189981607703124,
+      "fnr": 0.002028998518651524,
+      "err_final": 1.0,
+      "details": {
+        "classifier": "two SGDClassifier(log_loss)",
+        "trained_on": "noisy_y_train",
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "training_label_hash": "34ff5aee54b32179c157618b04d99f6c3613a2ebbc2d70613176f1fe755d9f0c",
+        "small_loss_exchange": true,
+        "mini_batch_exchange": true,
+        "forget_rate": 0.0,
+        "retained_fraction": 1.0,
+        "epochs": 6,
+        "batch_size": 4096,
+        "mean_exchanged_fraction": 1.0
+      }
+    },
+    {
+      "dataset": "cicids2017",
+      "reported_as": "CICIDS-2017",
+      "seed": 42,
+      "noise_type": "clean",
+      "noise_rate": 0.0,
+      "method": "Decoupling",
+      "method_family": "decoupling",
+      "implementation_status": "verified_implementation",
+      "runtime_sec": 54.42854240001179,
+      "memory_mb": 422.1734809875488,
+      "uses_noisy_y_train": true,
+      "evaluates_clean_y_test": true,
+      "dataset_hash": "2585508ac445a94a3eb2244aa64778678928d201555396b4b9afc1ed6a2f1ab4",
+      "sample_policy": "full_postfilter11_after_min_count_and_dominant_downsample",
+      "metrics_finite": true,
+      "perfect_metric_anomaly": false,
+      "deterministic_seed_42": true,
+      "macro_f1": 0.669601199106584,
+      "fpr": 0.2289732770745429,
+      "fnr": 0.004318355254298155,
+      "err_final": 1.0,
+      "details": {
+        "method": "Decoupling",
+        "method_family": "decoupling",
+        "warmup_epochs": 1,
+        "epochs": 6,
+        "batch_size": 4096,
+        "disagreement_fraction": 0.015302371989803283,
+        "update_fraction": 0.015302371989803283,
+        "retained_for_update_after_warmup": 0.058126678500441786,
+        "warmup_retained_all": true,
+        "trained_on": "noisy_y_train",
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "classifier": "two SGDClassifier(log_loss)",
+        "notes": "standard tabular implementation of disagreement-update Decoupling",
+        "training_label_hash": "34ff5aee54b32179c157618b04d99f6c3613a2ebbc2d70613176f1fe755d9f0c",
+        "retained_fraction": 0.058126678500441786,
+        "post_warmup_samples_seen": 3151995,
+        "post_warmup_disagreements": 48233,
+        "post_warmup_updates": 48233
+      }
+    },
+    {
+      "dataset": "cicids2017",
+      "reported_as": "CICIDS-2017",
+      "seed": 42,
+      "noise_type": "clean",
+      "noise_rate": 0.0,
+      "method": "FINE",
+      "method_family": "fine",
+      "implementation_status": "verified_implementation",
+      "runtime_sec": 6.247551299980842,
+      "memory_mb": 702.9616250991821,
+      "uses_noisy_y_train": true,
+      "evaluates_clean_y_test": true,
+      "dataset_hash": "2585508ac445a94a3eb2244aa64778678928d201555396b4b9afc1ed6a2f1ab4",
+      "sample_policy": "full_postfilter11_after_min_count_and_dominant_downsample",
+      "metrics_finite": true,
+      "perfect_metric_anomaly": false,
+      "deterministic_seed_42": true,
+      "macro_f1": 0.9902675229672636,
+      "fpr": 0.0019257816726171158,
+      "fnr": 0.0007720967814337658,
+      "err_final": 1.0,
+      "details": {
+        "method_name": "FINE",
+        "method_family": "fine",
+        "faithfulness_level": "FINE eigenvector filtering adapter on tabular IDS representations; reported with stability caveat when a dataset setting is unstable",
+        "representation_source": "standardized_features_pca",
+        "trained_on": "retained noisy_y_train",
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "training_label_hash": "34ff5aee54b32179c157618b04d99f6c3613a2ebbc2d70613176f1fe755d9f0c",
+        "filter_rule": "class_wise_top_eigenvector_alignment",
+        "min_class_size_for_svd": 20,
+        "retain_fraction": 1.0,
+        "overall_retained_fraction": 1.0,
+        "score_min": 1.0,
+        "score_mean": 1.0,
+        "score_max": 1.0,
+        "class_retain_fraction": {
+          "0": {
+            "size": 184858,
+            "retained": 184858,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "1": {
+            "size": 1573,
+            "retained": 1573,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "2": {
+            "size": 102422,
+            "retained": 102422,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "3": {
+            "size": 8234,
+            "retained": 8234,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "4": {
+            "size": 184858,
+            "retained": 184858,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "5": {
+            "size": 4399,
+            "retained": 4399,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "6": {
+            "size": 4637,
+            "retained": 4637,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "7": {
+            "size": 6350,
+            "retained": 6350,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "8": {
+            "size": 127144,
+            "retained": 127144,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "9": {
+            "size": 4718,
+            "retained": 4718,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "10": {
+            "size": 1206,
+            "retained": 1206,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          }
+        },
+        "classes_retained_all_due_to_small_size": [],
+        "classifier": "ExtraTreesClassifier",
+        "n_estimators": 8,
+        "notes": "class-wise eigenvector filtering baseline; reported with stability caveat when the real-data check is unstable"
+      }
+    },
+    {
+      "dataset": "cicids2017",
+      "reported_as": "CICIDS-2017",
+      "seed": 42,
+      "noise_type": "clean",
+      "noise_rate": 0.0,
+      "method": "MCRe",
+      "method_family": "mcre",
+      "implementation_status": "verified_implementation",
+      "runtime_sec": 11.151984199997969,
+      "memory_mb": 746.8686389923096,
+      "uses_noisy_y_train": true,
+      "evaluates_clean_y_test": true,
+      "dataset_hash": "2585508ac445a94a3eb2244aa64778678928d201555396b4b9afc1ed6a2f1ab4",
+      "sample_policy": "full_postfilter11_after_min_count_and_dominant_downsample",
+      "metrics_finite": true,
+      "perfect_metric_anomaly": false,
+      "deterministic_seed_42": true,
+      "macro_f1": 0.9922420248946433,
+      "fpr": 0.0018175916910094126,
+      "fnr": 0.0006284508686088791,
+      "err_final": 1.0,
+      "details": {
+        "method_name": "MCRe",
+        "method_family": "mcre",
+        "faithfulness_level": "MCRe-style class-wise representation purification for tabular IDS features",
+        "trained_on": "noisy_y_train",
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "training_label_hash": "34ff5aee54b32179c157618b04d99f6c3613a2ebbc2d70613176f1fe755d9f0c",
+        "filter_rule": "class_wise_centroid_density",
+        "retain_fraction": 1.0,
+        "target_retain_fraction": 1.0,
+        "class_retain_fraction": {
+          "0": {
+            "size": 184858,
+            "retained": 184858,
+            "retain_fraction": 1.0,
+            "score_mean": 0.3947414755821228
+          },
+          "1": {
+            "size": 1573,
+            "retained": 1573,
+            "retain_fraction": 1.0,
+            "score_mean": 0.3054905831813812
+          },
+          "2": {
+            "size": 102422,
+            "retained": 102422,
+            "retain_fraction": 1.0,
+            "score_mean": 0.38744136691093445
+          },
+          "3": {
+            "size": 8234,
+            "retained": 8234,
+            "retain_fraction": 1.0,
+            "score_mean": 0.31285548210144043
+          },
+          "4": {
+            "size": 184858,
+            "retained": 184858,
+            "retain_fraction": 1.0,
+            "score_mean": 0.33880743384361267
+          },
+          "5": {
+            "size": 4399,
+            "retained": 4399,
+            "retain_fraction": 1.0,
+            "score_mean": 0.2526821494102478
+          },
+          "6": {
+            "size": 4637,
+            "retained": 4637,
+            "retain_fraction": 1.0,
+            "score_mean": 0.36741241812705994
+          },
+          "7": {
+            "size": 6350,
+            "retained": 6350,
+            "retain_fraction": 1.0,
+            "score_mean": 0.3599892258644104
+          },
+          "8": {
+            "size": 127144,
+            "retained": 127144,
+            "retain_fraction": 1.0,
+            "score_mean": 0.3360441029071808
+          },
+          "9": {
+            "size": 4718,
+            "retained": 4718,
+            "retain_fraction": 1.0,
+            "score_mean": 0.37004438042640686
+          },
+          "10": {
+            "size": 1206,
+            "retained": 1206,
+            "retain_fraction": 1.0,
+            "score_mean": 0.2969568371772766
+          }
+        },
+        "classifier": "ExtraTreesClassifier"
+      }
+    },
+    {
+      "dataset": "cicids2017",
+      "reported_as": "CICIDS-2017",
+      "seed": 42,
+      "noise_type": "clean",
+      "noise_rate": 0.0,
+      "method": "MORSE",
+      "method_family": "morse",
+      "implementation_status": "verified_implementation",
+      "runtime_sec": 22.653355699963868,
+      "memory_mb": 832.2112894058228,
+      "uses_noisy_y_train": true,
+      "evaluates_clean_y_test": true,
+      "dataset_hash": "2585508ac445a94a3eb2244aa64778678928d201555396b4b9afc1ed6a2f1ab4",
+      "sample_policy": "full_postfilter11_after_min_count_and_dominant_downsample",
+      "metrics_finite": true,
+      "perfect_metric_anomaly": false,
+      "deterministic_seed_42": true,
+      "macro_f1": 0.9911091684623724,
+      "fpr": 0.002120523639510981,
+      "fnr": 0.0006194729990573237,
+      "err_final": 1.0,
+      "details": {
+        "method_name": "MORSE",
+        "method_family": "morse",
+        "faithfulness_level": "MORSE-style split of suspected noisy labels into unlabeled pseudo-label candidates",
+        "trained_on": "noisy_y_train_with_pseudo_labels_for_suspected_noisy_samples",
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "training_label_hash": "34ff5aee54b32179c157618b04d99f6c3613a2ebbc2d70613176f1fe755d9f0c",
+        "split_rule": "actual_noise_rate_as_unlabeled_split_ratio",
+        "target_clean_fraction": 1.0,
+        "clean_fraction": 1.0,
+        "pseudo_labeled_fraction": 0.0,
+        "retained_fraction": 1.0,
+        "pseudo_threshold": 0.6,
+        "classifier": "teacher_final_ExtraTreesClassifier"
+      }
+    },
+    {
+      "dataset": "cicids2017",
+      "reported_as": "CICIDS-2017",
+      "seed": 42,
+      "noise_type": "symmetric",
+      "noise_rate": 0.2,
+      "method": "Noisy-Supervised",
+      "method_family": "noisy_supervised",
+      "implementation_status": "verified_implementation",
+      "runtime_sec": 6.169894300051965,
+      "memory_mb": 224.3941822052002,
+      "uses_noisy_y_train": true,
+      "evaluates_clean_y_test": true,
+      "dataset_hash": "2585508ac445a94a3eb2244aa64778678928d201555396b4b9afc1ed6a2f1ab4",
+      "sample_policy": "full_postfilter11_after_min_count_and_dominant_downsample",
+      "metrics_finite": true,
+      "perfect_metric_anomaly": false,
+      "deterministic_seed_42": true,
+      "macro_f1": 0.6153333021990837,
+      "fpr": 0.09336795412744779,
+      "fnr": 0.009175382681689635,
+      "err_final": 1.0,
+      "details": {
+        "classifier": "ExtraTreesClassifier",
+        "n_estimators": 8,
+        "trained_on": "noisy_y_train",
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "training_label_hash": "dea6b62f90a0a220023ebb486cd277868d8e6b5f4e6348ac64c286fe652960e1",
+        "filtering": "none"
+      }
+    },
+    {
+      "dataset": "cicids2017",
+      "reported_as": "CICIDS-2017",
+      "seed": 42,
+      "noise_type": "symmetric",
+      "noise_rate": 0.2,
+      "method": "Confident-Learning",
+      "method_family": "confident_learning",
+      "implementation_status": "verified_implementation",
+      "runtime_sec": 17.858854199992493,
+      "memory_mb": 364.19060707092285,
+      "uses_noisy_y_train": true,
+      "evaluates_clean_y_test": true,
+      "dataset_hash": "2585508ac445a94a3eb2244aa64778678928d201555396b4b9afc1ed6a2f1ab4",
+      "sample_policy": "full_postfilter11_after_min_count_and_dominant_downsample",
+      "metrics_finite": true,
+      "perfect_metric_anomaly": false,
+      "deterministic_seed_42": true,
+      "macro_f1": 0.5583904941014312,
+      "fpr": 0.16081358866168993,
+      "fnr": 0.0031332764734928404,
+      "err_final": 0.7291749904390037,
+      "details": {
+        "classifier": "ExtraTreesClassifier",
+        "issue_detector": "cleanlab",
+        "probe_model": "SGDClassifier(log_loss)",
+        "trained_on": "retained noisy_y_train",
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "training_label_hash": "dea6b62f90a0a220023ebb486cd277868d8e6b5f4e6348ac64c286fe652960e1",
+        "retained_fraction": 0.7489240941054792,
+        "estimated_issue_fraction": 0.2510759058945208,
+        "filter_rule": "cleanlab_find_label_issues"
+      }
+    },
+    {
+      "dataset": "cicids2017",
+      "reported_as": "CICIDS-2017",
+      "seed": 42,
+      "noise_type": "symmetric",
+      "noise_rate": 0.2,
+      "method": "Co-Teaching",
+      "method_family": "co_teaching",
+      "implementation_status": "verified_implementation",
+      "runtime_sec": 36.2702976000146,
+      "memory_mb": 563.857141494751,
+      "uses_noisy_y_train": true,
+      "evaluates_clean_y_test": true,
+      "dataset_hash": "2585508ac445a94a3eb2244aa64778678928d201555396b4b9afc1ed6a2f1ab4",
+      "sample_policy": "full_postfilter11_after_min_count_and_dominant_downsample",
+      "metrics_finite": true,
+      "perfect_metric_anomaly": false,
+      "deterministic_seed_42": true,
+      "macro_f1": 0.6805586983483348,
+      "fpr": 0.24598074218327382,
+      "fnr": 0.002073887866409301,
+      "err_final": 0.8479410148537376,
+      "details": {
+        "classifier": "two SGDClassifier(log_loss)",
+        "trained_on": "noisy_y_train",
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "training_label_hash": "dea6b62f90a0a220023ebb486cd277868d8e6b5f4e6348ac64c286fe652960e1",
+        "small_loss_exchange": true,
+        "mini_batch_exchange": true,
+        "forget_rate": 0.2,
+        "retained_fraction": 0.7790907028723079,
+        "epochs": 6,
+        "batch_size": 4096,
+        "mean_exchanged_fraction": 0.8590776106349576
+      }
+    },
+    {
+      "dataset": "cicids2017",
+      "reported_as": "CICIDS-2017",
+      "seed": 42,
+      "noise_type": "symmetric",
+      "noise_rate": 0.2,
+      "method": "Decoupling",
+      "method_family": "decoupling",
+      "implementation_status": "verified_implementation",
+      "runtime_sec": 53.492659399984404,
+      "memory_mb": 422.17347717285156,
+      "uses_noisy_y_train": true,
+      "evaluates_clean_y_test": true,
+      "dataset_hash": "2585508ac445a94a3eb2244aa64778678928d201555396b4b9afc1ed6a2f1ab4",
+      "sample_policy": "full_postfilter11_after_min_count_and_dominant_downsample",
+      "metrics_finite": true,
+      "perfect_metric_anomaly": false,
+      "deterministic_seed_42": true,
+      "macro_f1": 0.43093782010425785,
+      "fpr": 0.2616899275127123,
+      "fnr": 0.014086277326390447,
+      "err_final": 0.7359939175073961,
+      "details": {
+        "method": "Decoupling",
+        "method_family": "decoupling",
+        "warmup_epochs": 1,
+        "epochs": 6,
+        "batch_size": 4096,
+        "disagreement_fraction": 0.22954636666619077,
+        "update_fraction": 0.22954636666619077,
+        "retained_for_update_after_warmup": 0.644540997051074,
+        "warmup_retained_all": true,
+        "trained_on": "noisy_y_train",
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "classifier": "two SGDClassifier(log_loss)",
+        "notes": "standard tabular implementation of disagreement-update Decoupling",
+        "training_label_hash": "dea6b62f90a0a220023ebb486cd277868d8e6b5f4e6348ac64c286fe652960e1",
+        "retained_fraction": 0.644540997051074,
+        "post_warmup_samples_seen": 3151995,
+        "post_warmup_disagreements": 723529,
+        "post_warmup_updates": 723529
+      }
+    },
+    {
+      "dataset": "cicids2017",
+      "reported_as": "CICIDS-2017",
+      "seed": 42,
+      "noise_type": "symmetric",
+      "noise_rate": 0.2,
+      "method": "FINE",
+      "method_family": "fine",
+      "implementation_status": "verified_implementation",
+      "runtime_sec": 6.961080499982927,
+      "memory_mb": 602.4498100280762,
+      "uses_noisy_y_train": true,
+      "evaluates_clean_y_test": true,
+      "dataset_hash": "2585508ac445a94a3eb2244aa64778678928d201555396b4b9afc1ed6a2f1ab4",
+      "sample_policy": "full_postfilter11_after_min_count_and_dominant_downsample",
+      "metrics_finite": true,
+      "perfect_metric_anomaly": false,
+      "deterministic_seed_42": true,
+      "macro_f1": 0.44757567024350975,
+      "fpr": 0.1940928270042194,
+      "fnr": 0.025470215917762714,
+      "err_final": 0.6759151836237092,
+      "details": {
+        "method_name": "FINE",
+        "method_family": "fine",
+        "faithfulness_level": "FINE eigenvector filtering adapter on tabular IDS representations; reported with stability caveat when a dataset setting is unstable",
+        "representation_source": "standardized_features_pca",
+        "trained_on": "retained noisy_y_train",
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "training_label_hash": "dea6b62f90a0a220023ebb486cd277868d8e6b5f4e6348ac64c286fe652960e1",
+        "filter_rule": "class_wise_top_eigenvector_alignment",
+        "min_class_size_for_svd": 20,
+        "retain_fraction": 0.8,
+        "overall_retained_fraction": 0.8000092005222089,
+        "score_min": 4.368542275021148e-06,
+        "score_mean": 0.6695967539336372,
+        "score_max": 0.9986422545326716,
+        "class_retain_fraction": {
+          "0": {
+            "size": 156669,
+            "retained": 125336,
+            "retain_fraction": 0.8000051063069273,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.5829009613276182,
+            "score_max": 0.9986422545326716
+          },
+          "1": {
+            "size": 13883,
+            "retained": 11107,
+            "retain_fraction": 0.8000432183245696,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.5518309609498551,
+            "score_max": 0.9684458460850229
+          },
+          "2": {
+            "size": 92468,
+            "retained": 73975,
+            "retain_fraction": 0.8000064887312367,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.7726257211877707,
+            "score_max": 0.9935802066873534
+          },
+          "3": {
+            "size": 19059,
+            "retained": 15248,
+            "retain_fraction": 0.8000419749199853,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.5660235730218524,
+            "score_max": 0.9671831031122906
+          },
+          "4": {
+            "size": 156897,
+            "retained": 125518,
+            "retain_fraction": 0.8000025494432653,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.7522997869980188,
+            "score_max": 0.960560849761549
+          },
+          "5": {
+            "size": 15982,
+            "retained": 12786,
+            "retain_fraction": 0.8000250281566763,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.523863512544186,
+            "score_max": 0.9230101130155383
+          },
+          "6": {
+            "size": 16348,
+            "retained": 13079,
+            "retain_fraction": 0.8000367017372155,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.5417992672295977,
+            "score_max": 0.9106858731564733
+          },
+          "7": {
+            "size": 17484,
+            "retained": 13988,
+            "retain_fraction": 0.800045756119881,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.5226132054157271,
+            "score_max": 0.9431983828736387
+          },
+          "8": {
+            "size": 111687,
+            "retained": 89350,
+            "retain_fraction": 0.8000035814374099,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.7283556186573693,
+            "score_max": 0.9776944969993615
+          },
+          "9": {
+            "size": 16230,
+            "retained": 12984,
+            "retain_fraction": 0.8,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.47500562834735766,
+            "score_max": 0.951926153512522
+          },
+          "10": {
+            "size": 13692,
+            "retained": 10954,
+            "retain_fraction": 0.8000292141396436,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.5434326837249964,
+            "score_max": 0.9670490153330881
+          }
+        },
+        "classes_retained_all_due_to_small_size": [],
+        "classifier": "ExtraTreesClassifier",
+        "n_estimators": 8,
+        "notes": "class-wise eigenvector filtering baseline; reported with stability caveat when the real-data check is unstable"
+      }
+    },
+    {
+      "dataset": "cicids2017",
+      "reported_as": "CICIDS-2017",
+      "seed": 42,
+      "noise_type": "symmetric",
+      "noise_rate": 0.2,
+      "method": "MCRe",
+      "method_family": "mcre",
+      "implementation_status": "verified_implementation",
+      "runtime_sec": 12.203480699972715,
+      "memory_mb": 649.8462495803833,
+      "uses_noisy_y_train": true,
+      "evaluates_clean_y_test": true,
+      "dataset_hash": "2585508ac445a94a3eb2244aa64778678928d201555396b4b9afc1ed6a2f1ab4",
+      "sample_policy": "full_postfilter11_after_min_count_and_dominant_downsample",
+      "metrics_finite": true,
+      "perfect_metric_anomaly": false,
+      "deterministic_seed_42": true,
+      "macro_f1": 0.5157122022439984,
+      "fpr": 0.22654982148653036,
+      "fnr": 0.014714728194999327,
+      "err_final": 0.9395380295852922,
+      "details": {
+        "method_name": "MCRe",
+        "method_family": "mcre",
+        "faithfulness_level": "MCRe-style class-wise representation purification for tabular IDS features",
+        "trained_on": "noisy_y_train",
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "training_label_hash": "dea6b62f90a0a220023ebb486cd277868d8e6b5f4e6348ac64c286fe652960e1",
+        "filter_rule": "class_wise_centroid_density",
+        "retain_fraction": 0.8000092005222089,
+        "target_retain_fraction": 0.8,
+        "class_retain_fraction": {
+          "0": {
+            "size": 156669,
+            "retained": 125336,
+            "retain_fraction": 0.8000051063069273,
+            "score_mean": 0.3884331285953522
+          },
+          "1": {
+            "size": 13883,
+            "retained": 11107,
+            "retain_fraction": 0.8000432183245696,
+            "score_mean": 0.3522244095802307
+          },
+          "2": {
+            "size": 92468,
+            "retained": 73975,
+            "retain_fraction": 0.8000064887312367,
+            "score_mean": 0.3841179311275482
+          },
+          "3": {
+            "size": 19059,
+            "retained": 15248,
+            "retain_fraction": 0.8000419749199853,
+            "score_mean": 0.37555643916130066
+          },
+          "4": {
+            "size": 156897,
+            "retained": 125518,
+            "retain_fraction": 0.8000025494432653,
+            "score_mean": 0.3364648222923279
+          },
+          "5": {
+            "size": 15982,
+            "retained": 12786,
+            "retain_fraction": 0.8000250281566763,
+            "score_mean": 0.3565738797187805
+          },
+          "6": {
+            "size": 16348,
+            "retained": 13079,
+            "retain_fraction": 0.8000367017372155,
+            "score_mean": 0.3659278452396393
+          },
+          "7": {
+            "size": 17484,
+            "retained": 13988,
+            "retain_fraction": 0.800045756119881,
+            "score_mean": 0.3511914610862732
+          },
+          "8": {
+            "size": 111687,
+            "retained": 89350,
+            "retain_fraction": 0.8000035814374099,
+            "score_mean": 0.3133848011493683
+          },
+          "9": {
+            "size": 16230,
+            "retained": 12984,
+            "retain_fraction": 0.8,
+            "score_mean": 0.34435006976127625
+          },
+          "10": {
+            "size": 13692,
+            "retained": 10954,
+            "retain_fraction": 0.8000292141396436,
+            "score_mean": 0.34882333874702454
+          }
+        },
+        "classifier": "ExtraTreesClassifier"
+      }
+    },
+    {
+      "dataset": "cicids2017",
+      "reported_as": "CICIDS-2017",
+      "seed": 42,
+      "noise_type": "symmetric",
+      "noise_rate": 0.2,
+      "method": "MORSE",
+      "method_family": "morse",
+      "implementation_status": "verified_implementation",
+      "runtime_sec": 27.96786749997409,
+      "memory_mb": 816.8168334960938,
+      "uses_noisy_y_train": true,
+      "evaluates_clean_y_test": true,
+      "dataset_hash": "2585508ac445a94a3eb2244aa64778678928d201555396b4b9afc1ed6a2f1ab4",
+      "sample_policy": "full_postfilter11_after_min_count_and_dominant_downsample",
+      "metrics_finite": true,
+      "perfect_metric_anomaly": false,
+      "deterministic_seed_42": true,
+      "macro_f1": 0.5163973609468746,
+      "fpr": 0.22484041977712863,
+      "fnr": 0.014660860977689994,
+      "err_final": 0.969662077000611,
+      "details": {
+        "method_name": "MORSE",
+        "method_family": "morse",
+        "faithfulness_level": "MORSE-style split of suspected noisy labels into unlabeled pseudo-label candidates",
+        "trained_on": "noisy_y_train_with_pseudo_labels_for_suspected_noisy_samples",
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "training_label_hash": "dea6b62f90a0a220023ebb486cd277868d8e6b5f4e6348ac64c286fe652960e1",
+        "split_rule": "actual_noise_rate_as_unlabeled_split_ratio",
+        "target_clean_fraction": 0.8,
+        "clean_fraction": 0.8000092005222089,
+        "pseudo_labeled_fraction": 0.11449891259345271,
+        "retained_fraction": 0.9145081131156617,
+        "pseudo_threshold": 0.6,
+        "classifier": "teacher_final_ExtraTreesClassifier"
+      }
+    },
+    {
+      "dataset": "cesnet_tls_year22",
+      "reported_as": "CESNET-TLS-Year22",
+      "seed": 42,
+      "noise_type": "clean",
+      "noise_rate": 0.0,
+      "method": "Noisy-Supervised",
+      "method_family": "noisy_supervised",
+      "implementation_status": "verified_implementation",
+      "runtime_sec": 0.20321260002674535,
+      "memory_mb": 21.199811935424805,
+      "uses_noisy_y_train": true,
+      "evaluates_clean_y_test": true,
+      "dataset_hash": "490bb4402e111c4ef752272e17d8faee44ce9ef25a0063c7c84ff4d3cb7f9084",
+      "sample_policy": "deterministic_audit_window_100000_then_postfilter25_stratified_split",
+      "metrics_finite": true,
+      "perfect_metric_anomaly": false,
+      "deterministic_seed_42": true,
+      "macro_f1": 0.9948935194041222,
+      "fpr": 0.012012012012012012,
+      "fnr": 8.409014463504877e-05,
+      "err_final": 1.0,
+      "details": {
+        "classifier": "ExtraTreesClassifier",
+        "n_estimators": 8,
+        "trained_on": "noisy_y_train",
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "training_label_hash": "7d1eb6f89bb24328334dc5399f0a829c1139bc0cb3f6bc73b7212685b541c3b1",
+        "filtering": "none"
+      }
+    },
+    {
+      "dataset": "cesnet_tls_year22",
+      "reported_as": "CESNET-TLS-Year22",
+      "seed": 42,
+      "noise_type": "clean",
+      "noise_rate": 0.0,
+      "method": "Confident-Learning",
+      "method_family": "confident_learning",
+      "implementation_status": "verified_implementation",
+      "runtime_sec": 6.2537785999593325,
+      "memory_mb": 36.18673896789551,
+      "uses_noisy_y_train": true,
+      "evaluates_clean_y_test": true,
+      "dataset_hash": "490bb4402e111c4ef752272e17d8faee44ce9ef25a0063c7c84ff4d3cb7f9084",
+      "sample_policy": "deterministic_audit_window_100000_then_postfilter25_stratified_split",
+      "metrics_finite": true,
+      "perfect_metric_anomaly": false,
+      "deterministic_seed_42": true,
+      "macro_f1": 0.974409371450225,
+      "fpr": 0.015015015015015015,
+      "fnr": 8.409014463504877e-05,
+      "err_final": 1.0,
+      "details": {
+        "classifier": "ExtraTreesClassifier",
+        "issue_detector": "cleanlab",
+        "probe_model": "SGDClassifier(log_loss)",
+        "trained_on": "retained noisy_y_train",
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "training_label_hash": "7d1eb6f89bb24328334dc5399f0a829c1139bc0cb3f6bc73b7212685b541c3b1",
+        "retained_fraction": 0.9582609051309843,
+        "estimated_issue_fraction": 0.041739094869015725,
+        "filter_rule": "cleanlab_find_label_issues"
+      }
+    },
+    {
+      "dataset": "cesnet_tls_year22",
+      "reported_as": "CESNET-TLS-Year22",
+      "seed": 42,
+      "noise_type": "clean",
+      "noise_rate": 0.0,
+      "method": "Co-Teaching",
+      "method_family": "co_teaching",
+      "implementation_status": "verified_implementation",
+      "runtime_sec": 4.8675627000047825,
+      "memory_mb": 55.39370059967041,
+      "uses_noisy_y_train": true,
+      "evaluates_clean_y_test": true,
+      "dataset_hash": "490bb4402e111c4ef752272e17d8faee44ce9ef25a0063c7c84ff4d3cb7f9084",
+      "sample_policy": "deterministic_audit_window_100000_then_postfilter25_stratified_split",
+      "metrics_finite": true,
+      "perfect_metric_anomaly": false,
+      "deterministic_seed_42": true,
+      "macro_f1": 0.8814994443046258,
+      "fpr": 0.09309309309309309,
+      "fnr": 0.0011772620248906827,
+      "err_final": 1.0,
+      "details": {
+        "classifier": "two SGDClassifier(log_loss)",
+        "trained_on": "noisy_y_train",
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "training_label_hash": "7d1eb6f89bb24328334dc5399f0a829c1139bc0cb3f6bc73b7212685b541c3b1",
+        "small_loss_exchange": true,
+        "mini_batch_exchange": true,
+        "forget_rate": 0.0,
+        "retained_fraction": 1.0,
+        "epochs": 6,
+        "batch_size": 4096,
+        "mean_exchanged_fraction": 1.0
+      }
+    },
+    {
+      "dataset": "cesnet_tls_year22",
+      "reported_as": "CESNET-TLS-Year22",
+      "seed": 42,
+      "noise_type": "clean",
+      "noise_rate": 0.0,
+      "method": "Decoupling",
+      "method_family": "decoupling",
+      "implementation_status": "verified_implementation",
+      "runtime_sec": 8.582404299988411,
+      "memory_mb": 19.01890277862549,
+      "uses_noisy_y_train": true,
+      "evaluates_clean_y_test": true,
+      "dataset_hash": "490bb4402e111c4ef752272e17d8faee44ce9ef25a0063c7c84ff4d3cb7f9084",
+      "sample_policy": "deterministic_audit_window_100000_then_postfilter25_stratified_split",
+      "metrics_finite": true,
+      "perfect_metric_anomaly": false,
+      "deterministic_seed_42": true,
+      "macro_f1": 0.8625007077504584,
+      "fpr": 0.07207207207207207,
+      "fnr": 0.0015977127480659267,
+      "err_final": 1.0,
+      "details": {
+        "method": "Decoupling",
+        "method_family": "decoupling",
+        "warmup_epochs": 1,
+        "epochs": 6,
+        "batch_size": 4096,
+        "disagreement_fraction": 0.027194830160125975,
+        "update_fraction": 0.027194830160125975,
+        "retained_for_update_after_warmup": 0.10720055624859404,
+        "warmup_retained_all": true,
+        "trained_on": "noisy_y_train",
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "classifier": "two SGDClassifier(log_loss)",
+        "notes": "standard tabular implementation of disagreement-update Decoupling",
+        "training_label_hash": "7d1eb6f89bb24328334dc5399f0a829c1139bc0cb3f6bc73b7212685b541c3b1",
+        "retained_fraction": 0.10720055624859404,
+        "post_warmup_samples_seen": 244495,
+        "post_warmup_disagreements": 6649,
+        "post_warmup_updates": 6649
+      }
+    },
+    {
+      "dataset": "cesnet_tls_year22",
+      "reported_as": "CESNET-TLS-Year22",
+      "seed": 42,
+      "noise_type": "clean",
+      "noise_rate": 0.0,
+      "method": "FINE",
+      "method_family": "fine",
+      "implementation_status": "verified_implementation",
+      "runtime_sec": 0.4887814999674447,
+      "memory_mb": 39.678157806396484,
+      "uses_noisy_y_train": true,
+      "evaluates_clean_y_test": true,
+      "dataset_hash": "490bb4402e111c4ef752272e17d8faee44ce9ef25a0063c7c84ff4d3cb7f9084",
+      "sample_policy": "deterministic_audit_window_100000_then_postfilter25_stratified_split",
+      "metrics_finite": true,
+      "perfect_metric_anomaly": false,
+      "deterministic_seed_42": true,
+      "macro_f1": 0.9948935194041222,
+      "fpr": 0.012012012012012012,
+      "fnr": 8.409014463504877e-05,
+      "err_final": 1.0,
+      "details": {
+        "method_name": "FINE",
+        "method_family": "fine",
+        "faithfulness_level": "FINE eigenvector filtering adapter on tabular IDS representations; reported with stability caveat when a dataset setting is unstable",
+        "representation_source": "standardized_features_pca",
+        "trained_on": "retained noisy_y_train",
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "training_label_hash": "7d1eb6f89bb24328334dc5399f0a829c1139bc0cb3f6bc73b7212685b541c3b1",
+        "filter_rule": "class_wise_top_eigenvector_alignment",
+        "min_class_size_for_svd": 20,
+        "retain_fraction": 1.0,
+        "overall_retained_fraction": 1.0,
+        "score_min": 1.0,
+        "score_mean": 1.0,
+        "score_max": 1.0,
+        "class_retain_fraction": {
+          "0": {
+            "size": 1333,
+            "retained": 1333,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "1": {
+            "size": 1554,
+            "retained": 1554,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "2": {
+            "size": 1978,
+            "retained": 1978,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "3": {
+            "size": 1205,
+            "retained": 1205,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "4": {
+            "size": 1059,
+            "retained": 1059,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "5": {
+            "size": 1591,
+            "retained": 1591,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "6": {
+            "size": 870,
+            "retained": 870,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "7": {
+            "size": 1058,
+            "retained": 1058,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "8": {
+            "size": 1167,
+            "retained": 1167,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "9": {
+            "size": 2466,
+            "retained": 2466,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "10": {
+            "size": 1061,
+            "retained": 1061,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "11": {
+            "size": 3966,
+            "retained": 3966,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "12": {
+            "size": 2510,
+            "retained": 2510,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "13": {
+            "size": 2813,
+            "retained": 2813,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "14": {
+            "size": 3846,
+            "retained": 3846,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "15": {
+            "size": 3966,
+            "retained": 3966,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "16": {
+            "size": 1591,
+            "retained": 1591,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "17": {
+            "size": 2067,
+            "retained": 2067,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "18": {
+            "size": 2814,
+            "retained": 2814,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "19": {
+            "size": 1430,
+            "retained": 1430,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "20": {
+            "size": 2809,
+            "retained": 2809,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "21": {
+            "size": 974,
+            "retained": 974,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "22": {
+            "size": 3042,
+            "retained": 3042,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "23": {
+            "size": 902,
+            "retained": 902,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          },
+          "24": {
+            "size": 827,
+            "retained": 827,
+            "retain_fraction": 1.0,
+            "retained_all_due_to_small_size": false
+          }
+        },
+        "classes_retained_all_due_to_small_size": [],
+        "classifier": "ExtraTreesClassifier",
+        "n_estimators": 8,
+        "notes": "class-wise eigenvector filtering baseline; reported with stability caveat when the real-data check is unstable"
+      }
+    },
+    {
+      "dataset": "cesnet_tls_year22",
+      "reported_as": "CESNET-TLS-Year22",
+      "seed": 42,
+      "noise_type": "clean",
+      "noise_rate": 0.0,
+      "method": "MCRe",
+      "method_family": "mcre",
+      "implementation_status": "verified_implementation",
+      "runtime_sec": 0.7501597999944352,
+      "memory_mb": 42.29395866394043,
+      "uses_noisy_y_train": true,
+      "evaluates_clean_y_test": true,
+      "dataset_hash": "490bb4402e111c4ef752272e17d8faee44ce9ef25a0063c7c84ff4d3cb7f9084",
+      "sample_policy": "deterministic_audit_window_100000_then_postfilter25_stratified_split",
+      "metrics_finite": true,
+      "perfect_metric_anomaly": false,
+      "deterministic_seed_42": true,
+      "macro_f1": 0.9965632597712681,
+      "fpr": 0.006006006006006006,
+      "fnr": 0.0,
+      "err_final": 1.0,
+      "details": {
+        "method_name": "MCRe",
+        "method_family": "mcre",
+        "faithfulness_level": "MCRe-style class-wise representation purification for tabular IDS features",
+        "trained_on": "noisy_y_train",
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "training_label_hash": "7d1eb6f89bb24328334dc5399f0a829c1139bc0cb3f6bc73b7212685b541c3b1",
+        "filter_rule": "class_wise_centroid_density",
+        "retain_fraction": 1.0,
+        "target_retain_fraction": 1.0,
+        "class_retain_fraction": {
+          "0": {
+            "size": 1333,
+            "retained": 1333,
+            "retain_fraction": 1.0,
+            "score_mean": 0.37137943506240845
+          },
+          "1": {
+            "size": 1554,
+            "retained": 1554,
+            "retain_fraction": 1.0,
+            "score_mean": 0.29605555534362793
+          },
+          "2": {
+            "size": 1978,
+            "retained": 1978,
+            "retain_fraction": 1.0,
+            "score_mean": 0.36339041590690613
+          },
+          "3": {
+            "size": 1205,
+            "retained": 1205,
+            "retain_fraction": 1.0,
+            "score_mean": 0.3009062111377716
+          },
+          "4": {
+            "size": 1059,
+            "retained": 1059,
+            "retain_fraction": 1.0,
+            "score_mean": 0.277284175157547
+          },
+          "5": {
+            "size": 1591,
+            "retained": 1591,
+            "retain_fraction": 1.0,
+            "score_mean": 0.32983842492103577
+          },
+          "6": {
+            "size": 870,
+            "retained": 870,
+            "retain_fraction": 1.0,
+            "score_mean": 0.3969450891017914
+          },
+          "7": {
+            "size": 1058,
+            "retained": 1058,
+            "retain_fraction": 1.0,
+            "score_mean": 0.34757450222969055
+          },
+          "8": {
+            "size": 1167,
+            "retained": 1167,
+            "retain_fraction": 1.0,
+            "score_mean": 0.25570711493492126
+          },
+          "9": {
+            "size": 2466,
+            "retained": 2466,
+            "retain_fraction": 1.0,
+            "score_mean": 0.3213132619857788
+          },
+          "10": {
+            "size": 1061,
+            "retained": 1061,
+            "retain_fraction": 1.0,
+            "score_mean": 0.2823927104473114
+          },
+          "11": {
+            "size": 3966,
+            "retained": 3966,
+            "retain_fraction": 1.0,
+            "score_mean": 0.338319331407547
+          },
+          "12": {
+            "size": 2510,
+            "retained": 2510,
+            "retain_fraction": 1.0,
+            "score_mean": 0.3051513135433197
+          },
+          "13": {
+            "size": 2813,
+            "retained": 2813,
+            "retain_fraction": 1.0,
+            "score_mean": 0.2745150923728943
+          },
+          "14": {
+            "size": 3846,
+            "retained": 3846,
+            "retain_fraction": 1.0,
+            "score_mean": 0.2555568814277649
+          },
+          "15": {
+            "size": 3966,
+            "retained": 3966,
+            "retain_fraction": 1.0,
+            "score_mean": 0.2734625041484833
+          },
+          "16": {
+            "size": 1591,
+            "retained": 1591,
+            "retain_fraction": 1.0,
+            "score_mean": 0.3544776737689972
+          },
+          "17": {
+            "size": 2067,
+            "retained": 2067,
+            "retain_fraction": 1.0,
+            "score_mean": 0.367735356092453
+          },
+          "18": {
+            "size": 2814,
+            "retained": 2814,
+            "retain_fraction": 1.0,
+            "score_mean": 0.3693356215953827
+          },
+          "19": {
+            "size": 1430,
+            "retained": 1430,
+            "retain_fraction": 1.0,
+            "score_mean": 0.36114826798439026
+          },
+          "20": {
+            "size": 2809,
+            "retained": 2809,
+            "retain_fraction": 1.0,
+            "score_mean": 0.36653512716293335
+          },
+          "21": {
+            "size": 974,
+            "retained": 974,
+            "retain_fraction": 1.0,
+            "score_mean": 0.3381139636039734
+          },
+          "22": {
+            "size": 3042,
+            "retained": 3042,
+            "retain_fraction": 1.0,
+            "score_mean": 0.33077695965766907
+          },
+          "23": {
+            "size": 902,
+            "retained": 902,
+            "retain_fraction": 1.0,
+            "score_mean": 0.35716453194618225
+          },
+          "24": {
+            "size": 827,
+            "retained": 827,
+            "retain_fraction": 1.0,
+            "score_mean": 0.3169352412223816
+          }
+        },
+        "classifier": "ExtraTreesClassifier"
+      }
+    },
+    {
+      "dataset": "cesnet_tls_year22",
+      "reported_as": "CESNET-TLS-Year22",
+      "seed": 42,
+      "noise_type": "clean",
+      "noise_rate": 0.0,
+      "method": "MORSE",
+      "method_family": "morse",
+      "implementation_status": "verified_implementation",
+      "runtime_sec": 1.2518225999665447,
+      "memory_mb": 95.06131172180176,
+      "uses_noisy_y_train": true,
+      "evaluates_clean_y_test": true,
+      "dataset_hash": "490bb4402e111c4ef752272e17d8faee44ce9ef25a0063c7c84ff4d3cb7f9084",
+      "sample_policy": "deterministic_audit_window_100000_then_postfilter25_stratified_split",
+      "metrics_finite": true,
+      "perfect_metric_anomaly": false,
+      "deterministic_seed_42": true,
+      "macro_f1": 0.9963014321284038,
+      "fpr": 0.003003003003003003,
+      "fnr": 8.409014463504877e-05,
+      "err_final": 1.0,
+      "details": {
+        "method_name": "MORSE",
+        "method_family": "morse",
+        "faithfulness_level": "MORSE-style split of suspected noisy labels into unlabeled pseudo-label candidates",
+        "trained_on": "noisy_y_train_with_pseudo_labels_for_suspected_noisy_samples",
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "training_label_hash": "7d1eb6f89bb24328334dc5399f0a829c1139bc0cb3f6bc73b7212685b541c3b1",
+        "split_rule": "actual_noise_rate_as_unlabeled_split_ratio",
+        "target_clean_fraction": 1.0,
+        "clean_fraction": 1.0,
+        "pseudo_labeled_fraction": 0.0,
+        "retained_fraction": 1.0,
+        "pseudo_threshold": 0.6,
+        "classifier": "teacher_final_ExtraTreesClassifier"
+      }
+    },
+    {
+      "dataset": "cesnet_tls_year22",
+      "reported_as": "CESNET-TLS-Year22",
+      "seed": 42,
+      "noise_type": "symmetric",
+      "noise_rate": 0.2,
+      "method": "Noisy-Supervised",
+      "method_family": "noisy_supervised",
+      "implementation_status": "verified_implementation",
+      "runtime_sec": 0.30754130001878366,
+      "memory_mb": 17.375014305114746,
+      "uses_noisy_y_train": true,
+      "evaluates_clean_y_test": true,
+      "dataset_hash": "490bb4402e111c4ef752272e17d8faee44ce9ef25a0063c7c84ff4d3cb7f9084",
+      "sample_policy": "deterministic_audit_window_100000_then_postfilter25_stratified_split",
+      "metrics_finite": true,
+      "perfect_metric_anomaly": false,
+      "deterministic_seed_42": true,
+      "macro_f1": 0.884349080009999,
+      "fpr": 0.057057057057057055,
+      "fnr": 0.004624957954927683,
+      "err_final": 1.0,
+      "details": {
+        "classifier": "ExtraTreesClassifier",
+        "n_estimators": 8,
+        "trained_on": "noisy_y_train",
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "training_label_hash": "dc1170c9d2ae7b23467cf3f913224b02f583eed949ce78fbadaf66bb41378001",
+        "filtering": "none"
+      }
+    },
+    {
+      "dataset": "cesnet_tls_year22",
+      "reported_as": "CESNET-TLS-Year22",
+      "seed": 42,
+      "noise_type": "symmetric",
+      "noise_rate": 0.2,
+      "method": "Confident-Learning",
+      "method_family": "confident_learning",
+      "implementation_status": "verified_implementation",
+      "runtime_sec": 5.561458300042432,
+      "memory_mb": 31.409018516540527,
+      "uses_noisy_y_train": true,
+      "evaluates_clean_y_test": true,
+      "dataset_hash": "490bb4402e111c4ef752272e17d8faee44ce9ef25a0063c7c84ff4d3cb7f9084",
+      "sample_policy": "deterministic_audit_window_100000_then_postfilter25_stratified_split",
+      "metrics_finite": true,
+      "perfect_metric_anomaly": false,
+      "deterministic_seed_42": true,
+      "macro_f1": 0.8894788214585125,
+      "fpr": 0.036036036036036036,
+      "fnr": 0.003363605785401951,
+      "err_final": 0.860983970122744,
+      "details": {
+        "classifier": "ExtraTreesClassifier",
+        "issue_detector": "cleanlab",
+        "probe_model": "SGDClassifier(log_loss)",
+        "trained_on": "retained noisy_y_train",
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "training_label_hash": "dc1170c9d2ae7b23467cf3f913224b02f583eed949ce78fbadaf66bb41378001",
+        "retained_fraction": 0.710137221620074,
+        "estimated_issue_fraction": 0.289862778379926,
+        "filter_rule": "cleanlab_find_label_issues"
+      }
+    },
+    {
+      "dataset": "cesnet_tls_year22",
+      "reported_as": "CESNET-TLS-Year22",
+      "seed": 42,
+      "noise_type": "symmetric",
+      "noise_rate": 0.2,
+      "method": "Co-Teaching",
+      "method_family": "co_teaching",
+      "implementation_status": "verified_implementation",
+      "runtime_sec": 4.278413499996532,
+      "memory_mb": 55.389079093933105,
+      "uses_noisy_y_train": true,
+      "evaluates_clean_y_test": true,
+      "dataset_hash": "490bb4402e111c4ef752272e17d8faee44ce9ef25a0063c7c84ff4d3cb7f9084",
+      "sample_policy": "deterministic_audit_window_100000_then_postfilter25_stratified_split",
+      "metrics_finite": true,
+      "perfect_metric_anomaly": false,
+      "deterministic_seed_42": true,
+      "macro_f1": 0.8492549938925315,
+      "fpr": 0.08408408408408409,
+      "fnr": 0.0011772620248906827,
+      "err_final": 0.9622414809570743,
+      "details": {
+        "classifier": "two SGDClassifier(log_loss)",
+        "trained_on": "noisy_y_train",
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "training_label_hash": "dc1170c9d2ae7b23467cf3f913224b02f583eed949ce78fbadaf66bb41378001",
+        "small_loss_exchange": true,
+        "mini_batch_exchange": true,
+        "forget_rate": 0.2,
+        "retained_fraction": 0.7957013435857584,
+        "epochs": 6,
+        "batch_size": 4096,
+        "mean_exchanged_fraction": 0.8637804454078816
+      }
+    },
+    {
+      "dataset": "cesnet_tls_year22",
+      "reported_as": "CESNET-TLS-Year22",
+      "seed": 42,
+      "noise_type": "symmetric",
+      "noise_rate": 0.2,
+      "method": "Decoupling",
+      "method_family": "decoupling",
+      "implementation_status": "verified_implementation",
+      "runtime_sec": 8.988590799970552,
+      "memory_mb": 19.018790245056152,
+      "uses_noisy_y_train": true,
+      "evaluates_clean_y_test": true,
+      "dataset_hash": "490bb4402e111c4ef752272e17d8faee44ce9ef25a0063c7c84ff4d3cb7f9084",
+      "sample_policy": "deterministic_audit_window_100000_then_postfilter25_stratified_split",
+      "metrics_finite": true,
+      "perfect_metric_anomaly": false,
+      "deterministic_seed_42": true,
+      "macro_f1": 0.7758652490797988,
+      "fpr": 0.0990990990990991,
+      "fnr": 0.0011772620248906827,
+      "err_final": 0.7040850399515335,
+      "details": {
+        "method": "Decoupling",
+        "method_family": "decoupling",
+        "warmup_epochs": 1,
+        "epochs": 6,
+        "batch_size": 4096,
+        "disagreement_fraction": 0.19615943066320374,
+        "update_fraction": 0.19615943066320374,
+        "retained_for_update_after_warmup": 0.5413198633918894,
+        "warmup_retained_all": true,
+        "trained_on": "noisy_y_train",
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "classifier": "two SGDClassifier(log_loss)",
+        "notes": "standard tabular implementation of disagreement-update Decoupling",
+        "training_label_hash": "dc1170c9d2ae7b23467cf3f913224b02f583eed949ce78fbadaf66bb41378001",
+        "retained_fraction": 0.5413198633918894,
+        "post_warmup_samples_seen": 244495,
+        "post_warmup_disagreements": 47960,
+        "post_warmup_updates": 47960
+      }
+    },
+    {
+      "dataset": "cesnet_tls_year22",
+      "reported_as": "CESNET-TLS-Year22",
+      "seed": 42,
+      "noise_type": "symmetric",
+      "noise_rate": 0.2,
+      "method": "FINE",
+      "method_family": "fine",
+      "implementation_status": "verified_implementation",
+      "runtime_sec": 0.5485427000094205,
+      "memory_mb": 37.22231864929199,
+      "uses_noisy_y_train": true,
+      "evaluates_clean_y_test": true,
+      "dataset_hash": "490bb4402e111c4ef752272e17d8faee44ce9ef25a0063c7c84ff4d3cb7f9084",
+      "sample_policy": "deterministic_audit_window_100000_then_postfilter25_stratified_split",
+      "metrics_finite": true,
+      "perfect_metric_anomaly": false,
+      "deterministic_seed_42": true,
+      "macro_f1": 0.8001510502208922,
+      "fpr": 0.06606606606606606,
+      "fnr": 0.0075681130171543895,
+      "err_final": 0.7731361250066917,
+      "details": {
+        "method_name": "FINE",
+        "method_family": "fine",
+        "faithfulness_level": "FINE eigenvector filtering adapter on tabular IDS representations; reported with stability caveat when a dataset setting is unstable",
+        "representation_source": "standardized_features_pca",
+        "trained_on": "retained noisy_y_train",
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "training_label_hash": "dc1170c9d2ae7b23467cf3f913224b02f583eed949ce78fbadaf66bb41378001",
+        "filter_rule": "class_wise_top_eigenvector_alignment",
+        "min_class_size_for_svd": 20,
+        "retain_fraction": 0.8,
+        "overall_retained_fraction": 0.8002004130963823,
+        "score_min": 2.7383223263191536e-05,
+        "score_mean": 0.6480024601278207,
+        "score_max": 0.9998503097676072,
+        "class_retain_fraction": {
+          "0": {
+            "size": 1449,
+            "retained": 1160,
+            "retain_fraction": 0.800552104899931,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.5829244429063236,
+            "score_max": 0.9523902708785215
+          },
+          "1": {
+            "size": 1624,
+            "retained": 1300,
+            "retain_fraction": 0.8004926108374384,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.6995974067900435,
+            "score_max": 0.9925360813246488
+          },
+          "2": {
+            "size": 1969,
+            "retained": 1576,
+            "retain_fraction": 0.8004062976130015,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.5377497048381338,
+            "score_max": 0.9840086018304488
+          },
+          "3": {
+            "size": 1370,
+            "retained": 1096,
+            "retain_fraction": 0.8,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.7146980624360708,
+            "score_max": 0.9740736545873969
+          },
+          "4": {
+            "size": 1287,
+            "retained": 1030,
+            "retain_fraction": 0.8003108003108003,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.7279883282404817,
+            "score_max": 0.9985955484183162
+          },
+          "5": {
+            "size": 1698,
+            "retained": 1359,
+            "retain_fraction": 0.8003533568904594,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.5387265267591742,
+            "score_max": 0.7838074769857994
+          },
+          "6": {
+            "size": 1111,
+            "retained": 889,
+            "retain_fraction": 0.8001800180018002,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.6727227873634214,
+            "score_max": 0.9706128798549285
+          },
+          "7": {
+            "size": 1240,
+            "retained": 992,
+            "retain_fraction": 0.8,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.5362579132182783,
+            "score_max": 0.9095427763919354
+          },
+          "8": {
+            "size": 1344,
+            "retained": 1076,
+            "retain_fraction": 0.8005952380952381,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.6045920929553165,
+            "score_max": 0.9900865392211063
+          },
+          "9": {
+            "size": 2373,
+            "retained": 1899,
+            "retain_fraction": 0.8002528445006322,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.5254115754895499,
+            "score_max": 0.8166025647734477
+          },
+          "10": {
+            "size": 1287,
+            "retained": 1030,
+            "retain_fraction": 0.8003108003108003,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.7353121477552313,
+            "score_max": 0.9992909979435758
+          },
+          "11": {
+            "size": 3516,
+            "retained": 2813,
+            "retain_fraction": 0.800056882821388,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.7373340878242295,
+            "score_max": 0.9979555880772422
+          },
+          "12": {
+            "size": 2334,
+            "retained": 1868,
+            "retain_fraction": 0.8003427592116538,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.8601566151731894,
+            "score_max": 0.9998503097676072
+          },
+          "13": {
+            "size": 2593,
+            "retained": 2075,
+            "retain_fraction": 0.8002313922097956,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.8209350766175803,
+            "score_max": 0.9977864672943435
+          },
+          "14": {
+            "size": 3445,
+            "retained": 2756,
+            "retain_fraction": 0.8,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.7712011865706286,
+            "score_max": 0.9996308028786955
+          },
+          "15": {
+            "size": 3564,
+            "retained": 2852,
+            "retain_fraction": 0.8002244668911336,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.8154717083275252,
+            "score_max": 0.9834794842300554
+          },
+          "16": {
+            "size": 1651,
+            "retained": 1321,
+            "retain_fraction": 0.8001211387038158,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.49452398312026397,
+            "score_max": 0.9791359303904869
+          },
+          "17": {
+            "size": 2076,
+            "retained": 1661,
+            "retain_fraction": 0.8000963391136802,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.4942013170175285,
+            "score_max": 0.7794946568460116
+          },
+          "18": {
+            "size": 2651,
+            "retained": 2121,
+            "retain_fraction": 0.8000754432289702,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.5294818967549388,
+            "score_max": 0.9934820968469504
+          },
+          "19": {
+            "size": 1511,
+            "retained": 1209,
+            "retain_fraction": 0.800132362673726,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.4932457942490193,
+            "score_max": 0.8493611717574284
+          },
+          "20": {
+            "size": 2687,
+            "retained": 2150,
+            "retain_fraction": 0.8001488649050986,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.5277268067891389,
+            "score_max": 0.9547384038676578
+          },
+          "21": {
+            "size": 1137,
+            "retained": 910,
+            "retain_fraction": 0.8003518029903254,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.46737042904945847,
+            "score_max": 0.7889058919465908
+          },
+          "22": {
+            "size": 2790,
+            "retained": 2232,
+            "retain_fraction": 0.8,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.6453137704813614,
+            "score_max": 0.983859648825995
+          },
+          "23": {
+            "size": 1130,
+            "retained": 904,
+            "retain_fraction": 0.8,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.5355515339791551,
+            "score_max": 0.8816327643675809
+          },
+          "24": {
+            "size": 1062,
+            "retained": 850,
+            "retain_fraction": 0.800376647834275,
+            "retained_all_due_to_small_size": false,
+            "score_min": 0.0,
+            "score_mean": 0.7155279231613079,
+            "score_max": 0.9947999370625117
+          }
+        },
+        "classes_retained_all_due_to_small_size": [],
+        "classifier": "ExtraTreesClassifier",
+        "n_estimators": 8,
+        "notes": "class-wise eigenvector filtering baseline; reported with stability caveat when the real-data check is unstable"
+      }
+    },
+    {
+      "dataset": "cesnet_tls_year22",
+      "reported_as": "CESNET-TLS-Year22",
+      "seed": 42,
+      "noise_type": "symmetric",
+      "noise_rate": 0.2,
+      "method": "MCRe",
+      "method_family": "mcre",
+      "implementation_status": "verified_implementation",
+      "runtime_sec": 0.8367988999816589,
+      "memory_mb": 39.08416938781738,
+      "uses_noisy_y_train": true,
+      "evaluates_clean_y_test": true,
+      "dataset_hash": "490bb4402e111c4ef752272e17d8faee44ce9ef25a0063c7c84ff4d3cb7f9084",
+      "sample_policy": "deterministic_audit_window_100000_then_postfilter25_stratified_split",
+      "metrics_finite": true,
+      "perfect_metric_anomaly": false,
+      "deterministic_seed_42": true,
+      "macro_f1": 0.9451755806902932,
+      "fpr": 0.018018018018018018,
+      "fnr": 0.007736293306424487,
+      "err_final": 0.964208526370053,
+      "details": {
+        "method_name": "MCRe",
+        "method_family": "mcre",
+        "faithfulness_level": "MCRe-style class-wise representation purification for tabular IDS features",
+        "trained_on": "noisy_y_train",
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "training_label_hash": "dc1170c9d2ae7b23467cf3f913224b02f583eed949ce78fbadaf66bb41378001",
+        "filter_rule": "class_wise_centroid_density",
+        "retain_fraction": 0.8002004130963823,
+        "target_retain_fraction": 0.8,
+        "class_retain_fraction": {
+          "0": {
+            "size": 1449,
+            "retained": 1160,
+            "retain_fraction": 0.800552104899931,
+            "score_mean": 0.3240247070789337
+          },
+          "1": {
+            "size": 1624,
+            "retained": 1300,
+            "retain_fraction": 0.8004926108374384,
+            "score_mean": 0.2573677599430084
+          },
+          "2": {
+            "size": 1969,
+            "retained": 1576,
+            "retain_fraction": 0.8004062976130015,
+            "score_mean": 0.3901631236076355
+          },
+          "3": {
+            "size": 1370,
+            "retained": 1096,
+            "retain_fraction": 0.8,
+            "score_mean": 0.36936458945274353
+          },
+          "4": {
+            "size": 1287,
+            "retained": 1030,
+            "retain_fraction": 0.8003108003108003,
+            "score_mean": 0.24951545894145966
+          },
+          "5": {
+            "size": 1698,
+            "retained": 1359,
+            "retain_fraction": 0.8003533568904594,
+            "score_mean": 0.29478371143341064
+          },
+          "6": {
+            "size": 1111,
+            "retained": 889,
+            "retain_fraction": 0.8001800180018002,
+            "score_mean": 0.27594852447509766
+          },
+          "7": {
+            "size": 1240,
+            "retained": 992,
+            "retain_fraction": 0.8,
+            "score_mean": 0.3091280460357666
+          },
+          "8": {
+            "size": 1344,
+            "retained": 1076,
+            "retain_fraction": 0.8005952380952381,
+            "score_mean": 0.35440218448638916
+          },
+          "9": {
+            "size": 2373,
+            "retained": 1899,
+            "retain_fraction": 0.8002528445006322,
+            "score_mean": 0.3048599660396576
+          },
+          "10": {
+            "size": 1287,
+            "retained": 1030,
+            "retain_fraction": 0.8003108003108003,
+            "score_mean": 0.2433743178844452
+          },
+          "11": {
+            "size": 3516,
+            "retained": 2813,
+            "retain_fraction": 0.800056882821388,
+            "score_mean": 0.2912435531616211
+          },
+          "12": {
+            "size": 2334,
+            "retained": 1868,
+            "retain_fraction": 0.8003427592116538,
+            "score_mean": 0.2678370773792267
+          },
+          "13": {
+            "size": 2593,
+            "retained": 2075,
+            "retain_fraction": 0.8002313922097956,
+            "score_mean": 0.2539614737033844
+          },
+          "14": {
+            "size": 3445,
+            "retained": 2756,
+            "retain_fraction": 0.8,
+            "score_mean": 0.24525287747383118
+          },
+          "15": {
+            "size": 3564,
+            "retained": 2852,
+            "retain_fraction": 0.8002244668911336,
+            "score_mean": 0.2792666554450989
+          },
+          "16": {
+            "size": 1651,
+            "retained": 1321,
+            "retain_fraction": 0.8001211387038158,
+            "score_mean": 0.32474133372306824
+          },
+          "17": {
+            "size": 2076,
+            "retained": 1661,
+            "retain_fraction": 0.8000963391136802,
+            "score_mean": 0.3173781633377075
+          },
+          "18": {
+            "size": 2651,
+            "retained": 2121,
+            "retain_fraction": 0.8000754432289702,
+            "score_mean": 0.32043659687042236
+          },
+          "19": {
+            "size": 1511,
+            "retained": 1209,
+            "retain_fraction": 0.800132362673726,
+            "score_mean": 0.33231356739997864
+          },
+          "20": {
+            "size": 2687,
+            "retained": 2150,
+            "retain_fraction": 0.8001488649050986,
+            "score_mean": 0.33760350942611694
+          },
+          "21": {
+            "size": 1137,
+            "retained": 910,
+            "retain_fraction": 0.8003518029903254,
+            "score_mean": 0.36563584208488464
+          },
+          "22": {
+            "size": 2790,
+            "retained": 2232,
+            "retain_fraction": 0.8,
+            "score_mean": 0.3533744513988495
+          },
+          "23": {
+            "size": 1130,
+            "retained": 904,
+            "retain_fraction": 0.8,
+            "score_mean": 0.3097832202911377
+          },
+          "24": {
+            "size": 1062,
+            "retained": 850,
+            "retain_fraction": 0.800376647834275,
+            "score_mean": 0.29822295904159546
+          }
+        },
+        "classifier": "ExtraTreesClassifier"
+      }
+    },
+    {
+      "dataset": "cesnet_tls_year22",
+      "reported_as": "CESNET-TLS-Year22",
+      "seed": 42,
+      "noise_type": "symmetric",
+      "noise_rate": 0.2,
+      "method": "MORSE",
+      "method_family": "morse",
+      "implementation_status": "verified_implementation",
+      "runtime_sec": 1.447236099978909,
+      "memory_mb": 84.5402421951294,
+      "uses_noisy_y_train": true,
+      "evaluates_clean_y_test": true,
+      "dataset_hash": "490bb4402e111c4ef752272e17d8faee44ce9ef25a0063c7c84ff4d3cb7f9084",
+      "sample_policy": "deterministic_audit_window_100000_then_postfilter25_stratified_split",
+      "metrics_finite": true,
+      "perfect_metric_anomaly": false,
+      "deterministic_seed_42": true,
+      "macro_f1": 0.9462010237087106,
+      "fpr": 0.018018018018018018,
+      "fnr": 0.007231752438614195,
+      "err_final": 0.9855601481080598,
+      "details": {
+        "method_name": "MORSE",
+        "method_family": "morse",
+        "faithfulness_level": "MORSE-style split of suspected noisy labels into unlabeled pseudo-label candidates",
+        "trained_on": "noisy_y_train_with_pseudo_labels_for_suspected_noisy_samples",
+        "train_label_source": "noisy_y_train",
+        "eval_label_source": "clean_y_test",
+        "training_label_hash": "dc1170c9d2ae7b23467cf3f913224b02f583eed949ce78fbadaf66bb41378001",
+        "split_rule": "actual_noise_rate_as_unlabeled_split_ratio",
+        "target_clean_fraction": 0.8,
+        "clean_fraction": 0.8002004130963823,
+        "pseudo_labeled_fraction": 0.17849035767602608,
+        "retained_fraction": 0.9786907707724084,
+        "pseudo_threshold": 0.6,
+        "classifier": "teacher_final_ExtraTreesClassifier"
+      }
+    }
+  ],
+  "criteria": {
+    "no_crash": true,
+    "no_nan_inf": true,
+    "no_100_f1_zero_fpr_fnr_anomaly": true,
+    "uses_noisy_y_train": true,
+    "evaluates_clean_y_test": true,
+    "records_runtime_memory": true,
+    "records_sample_policy_dataset_hash": true,
+    "no_test_label_leakage": true
+  }
+}
