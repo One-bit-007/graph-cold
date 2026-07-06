@@ -1,0 +1,506 @@
+{
+  "completed": true,
+  "methods": [
+    "Graph-CoLD",
+    "CoLD",
+    "ablation_hard",
+    "Confident-Learning"
+  ],
+  "scenario_scope": "representative paired prioritization scenarios on deterministic real-data audit windows",
+  "sample_rows_per_dataset": 100000,
+  "specs": [
+    {
+      "noise_type": "clean",
+      "noise_rate": 0.0,
+      "graph_beta": "none"
+    },
+    {
+      "noise_type": "symmetric",
+      "noise_rate": 0.4,
+      "graph_beta": "none"
+    },
+    {
+      "noise_type": "asymmetric",
+      "noise_rate": 0.4,
+      "graph_beta": "none"
+    },
+    {
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.4,
+      "graph_beta": 0.6
+    }
+  ],
+  "rows": {
+    "prioritization": 96,
+    "curve": 4800
+  },
+  "outputs": {
+    "table": "results\\table_prioritization.csv",
+    "curve": "results\\prioritization_curve.csv",
+    "stats": "results\\stat_tests_prioritization.json",
+    "figure": "figures/fig_p1_queue_load_curve.pdf"
+  },
+  "runtime_sec": 590.8409803999821,
+  "key_metrics": {
+    "CoLD": {
+      "topk_precision": 0.9991666666666666,
+      "topk_recall": 0.010635961870813003,
+      "precision_at_budget": 0.9997368135631771,
+      "compression_at_recall_90": 0.6629143848864062,
+      "compression_at_recall_95": 0.6997575723882424
+    },
+    "Confident-Learning": {
+      "topk_precision": 0.9641666666666667,
+      "topk_recall": 0.010185012574729766,
+      "precision_at_budget": 0.9656774568498849,
+      "compression_at_recall_90": 0.7268390333213143,
+      "compression_at_recall_95": 0.7943274329039465
+    },
+    "Graph-CoLD": {
+      "topk_precision": 0.9991666666666666,
+      "topk_recall": 0.010635961870813003,
+      "precision_at_budget": 0.9997027443345045,
+      "compression_at_recall_90": 0.662930702340626,
+      "compression_at_recall_95": 0.6997738898424622
+    },
+    "ablation_hard": {
+      "topk_precision": 0.9991666666666666,
+      "topk_recall": 0.010635961870813003,
+      "precision_at_budget": 0.9997027443345045,
+      "compression_at_recall_90": 0.6629326624024399,
+      "compression_at_recall_95": 0.699775849904276
+    }
+  },
+  "topk_precision_stats": {
+    "overall": {
+      "test": "paired_t_test_greater",
+      "metric": "topk_precision",
+      "method_a": "Graph-CoLD",
+      "method_b": "CoLD",
+      "pairing_keys": [
+        "dataset",
+        "noise_type",
+        "noise_rate",
+        "graph_beta",
+        "seed"
+      ],
+      "n_pairs": 24,
+      "method_a_mean": 0.9991666666666666,
+      "method_a_std": 0.002823298512866402,
+      "method_b_mean": 0.9991666666666666,
+      "method_b_std": 0.002823298512866402,
+      "mean_diff": 0.0,
+      "effect_size_cohen_dz": Infinity,
+      "t_stat": null,
+      "p_value": null,
+      "significant_p_lt_0_05": false,
+      "extreme_p_value_warning": false,
+      "naive_pooled_test_used": false
+    },
+    "independence_aware": {
+      "overall": {
+        "test": "scenario_level_paired_t_test_greater",
+        "metric": "topk_precision",
+        "method_a": "Graph-CoLD",
+        "method_b": "CoLD",
+        "pairing_keys": [
+          "dataset",
+          "noise_type",
+          "noise_rate",
+          "graph_beta"
+        ],
+        "aggregation": "mean_over_seeds_per_scenario",
+        "effective_n": 8,
+        "n_pairs": 8,
+        "method_a_mean": 0.9991666666666666,
+        "method_a_std": 0.0015430334996209033,
+        "method_b_mean": 0.9991666666666666,
+        "method_b_std": 0.0015430334996209033,
+        "mean_diff": 0.0,
+        "mean_diff_ci95": [
+          0.0,
+          0.0
+        ],
+        "effect_size_cohen_dz": Infinity,
+        "t_stat": null,
+        "p_value": null,
+        "significant_p_lt_0_05": false,
+        "naive_pooled_test_used": false
+      }
+    },
+    "groups": {
+      "cesnet_tls_year22|asymmetric|0.4": {
+        "test": "paired_t_test_greater",
+        "metric": "topk_precision",
+        "method_a": "Graph-CoLD",
+        "method_b": "CoLD",
+        "pairing_keys": [
+          "dataset",
+          "noise_type",
+          "noise_rate",
+          "graph_beta",
+          "seed"
+        ],
+        "n_pairs": 3,
+        "method_a_mean": 1.0,
+        "method_a_std": 0.0,
+        "method_b_mean": 1.0,
+        "method_b_std": 0.0,
+        "mean_diff": 0.0,
+        "effect_size_cohen_dz": Infinity,
+        "t_stat": null,
+        "p_value": null,
+        "significant_p_lt_0_05": false,
+        "extreme_p_value_warning": false,
+        "naive_pooled_test_used": false
+      },
+      "cesnet_tls_year22|clean|0.0": {
+        "test": "paired_t_test_greater",
+        "metric": "topk_precision",
+        "method_a": "Graph-CoLD",
+        "method_b": "CoLD",
+        "pairing_keys": [
+          "dataset",
+          "noise_type",
+          "noise_rate",
+          "graph_beta",
+          "seed"
+        ],
+        "n_pairs": 3,
+        "method_a_mean": 1.0,
+        "method_a_std": 0.0,
+        "method_b_mean": 1.0,
+        "method_b_std": 0.0,
+        "mean_diff": 0.0,
+        "effect_size_cohen_dz": Infinity,
+        "t_stat": null,
+        "p_value": null,
+        "significant_p_lt_0_05": false,
+        "extreme_p_value_warning": false,
+        "naive_pooled_test_used": false
+      },
+      "cesnet_tls_year22|graph_consistency|0.4": {
+        "test": "paired_t_test_greater",
+        "metric": "topk_precision",
+        "method_a": "Graph-CoLD",
+        "method_b": "CoLD",
+        "pairing_keys": [
+          "dataset",
+          "noise_type",
+          "noise_rate",
+          "graph_beta",
+          "seed"
+        ],
+        "n_pairs": 3,
+        "method_a_mean": 1.0,
+        "method_a_std": 0.0,
+        "method_b_mean": 1.0,
+        "method_b_std": 0.0,
+        "mean_diff": 0.0,
+        "effect_size_cohen_dz": Infinity,
+        "t_stat": null,
+        "p_value": null,
+        "significant_p_lt_0_05": false,
+        "extreme_p_value_warning": false,
+        "naive_pooled_test_used": false
+      },
+      "cesnet_tls_year22|symmetric|0.4": {
+        "test": "paired_t_test_greater",
+        "metric": "topk_precision",
+        "method_a": "Graph-CoLD",
+        "method_b": "CoLD",
+        "pairing_keys": [
+          "dataset",
+          "noise_type",
+          "noise_rate",
+          "graph_beta",
+          "seed"
+        ],
+        "n_pairs": 3,
+        "method_a_mean": 1.0,
+        "method_a_std": 0.0,
+        "method_b_mean": 1.0,
+        "method_b_std": 0.0,
+        "mean_diff": 0.0,
+        "effect_size_cohen_dz": Infinity,
+        "t_stat": null,
+        "p_value": null,
+        "significant_p_lt_0_05": false,
+        "extreme_p_value_warning": false,
+        "naive_pooled_test_used": false
+      },
+      "cicids2017|asymmetric|0.4": {
+        "test": "paired_t_test_greater",
+        "metric": "topk_precision",
+        "method_a": "Graph-CoLD",
+        "method_b": "CoLD",
+        "pairing_keys": [
+          "dataset",
+          "noise_type",
+          "noise_rate",
+          "graph_beta",
+          "seed"
+        ],
+        "n_pairs": 3,
+        "method_a_mean": 1.0,
+        "method_a_std": 0.0,
+        "method_b_mean": 1.0,
+        "method_b_std": 0.0,
+        "mean_diff": 0.0,
+        "effect_size_cohen_dz": Infinity,
+        "t_stat": null,
+        "p_value": null,
+        "significant_p_lt_0_05": false,
+        "extreme_p_value_warning": false,
+        "naive_pooled_test_used": false
+      },
+      "cicids2017|clean|0.0": {
+        "test": "paired_t_test_greater",
+        "metric": "topk_precision",
+        "method_a": "Graph-CoLD",
+        "method_b": "CoLD",
+        "pairing_keys": [
+          "dataset",
+          "noise_type",
+          "noise_rate",
+          "graph_beta",
+          "seed"
+        ],
+        "n_pairs": 3,
+        "method_a_mean": 1.0,
+        "method_a_std": 0.0,
+        "method_b_mean": 1.0,
+        "method_b_std": 0.0,
+        "mean_diff": 0.0,
+        "effect_size_cohen_dz": Infinity,
+        "t_stat": null,
+        "p_value": null,
+        "significant_p_lt_0_05": false,
+        "extreme_p_value_warning": false,
+        "naive_pooled_test_used": false
+      },
+      "cicids2017|graph_consistency|0.4": {
+        "test": "paired_t_test_greater",
+        "metric": "topk_precision",
+        "method_a": "Graph-CoLD",
+        "method_b": "CoLD",
+        "pairing_keys": [
+          "dataset",
+          "noise_type",
+          "noise_rate",
+          "graph_beta",
+          "seed"
+        ],
+        "n_pairs": 3,
+        "method_a_mean": 0.9966666666666667,
+        "method_a_std": 0.005773502691896262,
+        "method_b_mean": 0.9966666666666667,
+        "method_b_std": 0.005773502691896262,
+        "mean_diff": 0.0,
+        "effect_size_cohen_dz": Infinity,
+        "t_stat": null,
+        "p_value": null,
+        "significant_p_lt_0_05": false,
+        "extreme_p_value_warning": false,
+        "naive_pooled_test_used": false
+      },
+      "cicids2017|symmetric|0.4": {
+        "test": "paired_t_test_greater",
+        "metric": "topk_precision",
+        "method_a": "Graph-CoLD",
+        "method_b": "CoLD",
+        "pairing_keys": [
+          "dataset",
+          "noise_type",
+          "noise_rate",
+          "graph_beta",
+          "seed"
+        ],
+        "n_pairs": 3,
+        "method_a_mean": 0.9966666666666667,
+        "method_a_std": 0.005773502691896262,
+        "method_b_mean": 0.9966666666666667,
+        "method_b_std": 0.005773502691896262,
+        "mean_diff": 0.0,
+        "effect_size_cohen_dz": Infinity,
+        "t_stat": null,
+        "p_value": null,
+        "significant_p_lt_0_05": false,
+        "extreme_p_value_warning": false,
+        "naive_pooled_test_used": false
+      }
+    },
+    "comparisons": {
+      "Graph-CoLD_vs_CoLD": {
+        "test": "paired_t_test_greater",
+        "metric": "topk_precision",
+        "method_a": "Graph-CoLD",
+        "method_b": "CoLD",
+        "pairing_keys": [
+          "dataset",
+          "noise_type",
+          "noise_rate",
+          "graph_beta",
+          "seed"
+        ],
+        "n_pairs": 24,
+        "method_a_mean": 0.9991666666666666,
+        "method_a_std": 0.002823298512866402,
+        "method_b_mean": 0.9991666666666666,
+        "method_b_std": 0.002823298512866402,
+        "mean_diff": 0.0,
+        "effect_size_cohen_dz": Infinity,
+        "t_stat": null,
+        "p_value": null,
+        "significant_p_lt_0_05": false,
+        "extreme_p_value_warning": false,
+        "naive_pooled_test_used": false,
+        "scenario_level": {
+          "test": "scenario_level_paired_t_test_greater",
+          "metric": "topk_precision",
+          "method_a": "Graph-CoLD",
+          "method_b": "CoLD",
+          "pairing_keys": [
+            "dataset",
+            "noise_type",
+            "noise_rate",
+            "graph_beta"
+          ],
+          "aggregation": "mean_over_seeds_per_scenario",
+          "effective_n": 8,
+          "n_pairs": 8,
+          "method_a_mean": 0.9991666666666666,
+          "method_a_std": 0.0015430334996209033,
+          "method_b_mean": 0.9991666666666666,
+          "method_b_std": 0.0015430334996209033,
+          "mean_diff": 0.0,
+          "mean_diff_ci95": [
+            0.0,
+            0.0
+          ],
+          "effect_size_cohen_dz": Infinity,
+          "t_stat": null,
+          "p_value": null,
+          "significant_p_lt_0_05": false,
+          "naive_pooled_test_used": false
+        }
+      },
+      "Graph-CoLD_vs_Confident-Learning": {
+        "test": "paired_t_test_greater",
+        "metric": "topk_precision",
+        "method_a": "Graph-CoLD",
+        "method_b": "Confident-Learning",
+        "pairing_keys": [
+          "dataset",
+          "noise_type",
+          "noise_rate",
+          "graph_beta",
+          "seed"
+        ],
+        "n_pairs": 24,
+        "method_a_mean": 0.9991666666666666,
+        "method_a_std": 0.002823298512866402,
+        "method_b_mean": 0.9641666666666667,
+        "method_b_std": 0.08203481056799936,
+        "mean_diff": 0.035,
+        "effect_size_cohen_dz": 0.42968945474951536,
+        "t_stat": 2.105039823982069,
+        "p_value": 0.02320753230171593,
+        "significant_p_lt_0_05": true,
+        "extreme_p_value_warning": false,
+        "naive_pooled_test_used": false,
+        "scenario_level": {
+          "test": "scenario_level_paired_t_test_greater",
+          "metric": "topk_precision",
+          "method_a": "Graph-CoLD",
+          "method_b": "Confident-Learning",
+          "pairing_keys": [
+            "dataset",
+            "noise_type",
+            "noise_rate",
+            "graph_beta"
+          ],
+          "aggregation": "mean_over_seeds_per_scenario",
+          "effective_n": 8,
+          "n_pairs": 8,
+          "method_a_mean": 0.9991666666666666,
+          "method_a_std": 0.0015430334996209033,
+          "method_b_mean": 0.9641666666666666,
+          "method_b_std": 0.0766511371435338,
+          "mean_diff": 0.03500000000000002,
+          "mean_diff_ci95": [
+            0.0,
+            0.08792708333333331
+          ],
+          "effect_size_cohen_dz": 0.4645575942649758,
+          "t_stat": 1.3139673006258925,
+          "p_value": 0.11513877465193335,
+          "significant_p_lt_0_05": false,
+          "naive_pooled_test_used": false,
+          "p_value_holm": 0.11513877465193335,
+          "significant_holm_0_05": false
+        },
+        "p_value_holm": 0.11513877465193335,
+        "significant_holm_0_05": false
+      },
+      "Graph-CoLD_vs_ablation_hard": {
+        "test": "paired_t_test_greater",
+        "metric": "topk_precision",
+        "method_a": "Graph-CoLD",
+        "method_b": "ablation_hard",
+        "pairing_keys": [
+          "dataset",
+          "noise_type",
+          "noise_rate",
+          "graph_beta",
+          "seed"
+        ],
+        "n_pairs": 24,
+        "method_a_mean": 0.9991666666666666,
+        "method_a_std": 0.002823298512866402,
+        "method_b_mean": 0.9991666666666666,
+        "method_b_std": 0.002823298512866402,
+        "mean_diff": 0.0,
+        "effect_size_cohen_dz": Infinity,
+        "t_stat": null,
+        "p_value": null,
+        "significant_p_lt_0_05": false,
+        "extreme_p_value_warning": false,
+        "naive_pooled_test_used": false,
+        "scenario_level": {
+          "test": "scenario_level_paired_t_test_greater",
+          "metric": "topk_precision",
+          "method_a": "Graph-CoLD",
+          "method_b": "ablation_hard",
+          "pairing_keys": [
+            "dataset",
+            "noise_type",
+            "noise_rate",
+            "graph_beta"
+          ],
+          "aggregation": "mean_over_seeds_per_scenario",
+          "effective_n": 8,
+          "n_pairs": 8,
+          "method_a_mean": 0.9991666666666666,
+          "method_a_std": 0.0015430334996209033,
+          "method_b_mean": 0.9991666666666666,
+          "method_b_std": 0.0015430334996209033,
+          "mean_diff": 0.0,
+          "mean_diff_ci95": [
+            0.0,
+            0.0
+          ],
+          "effect_size_cohen_dz": Infinity,
+          "t_stat": null,
+          "p_value": null,
+          "significant_p_lt_0_05": false,
+          "naive_pooled_test_used": false
+        }
+      }
+    },
+    "multiple_comparison_correction": {
+      "method": "holm_bonferroni",
+      "family": "Graph-CoLD_vs_each_method"
+    }
+  }
+}

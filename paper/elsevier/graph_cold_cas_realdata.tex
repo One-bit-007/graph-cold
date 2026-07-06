@@ -30,9 +30,9 @@ multi-view representations; scores training samples with a label-space
 Graph-CDM diagnostic; and replaces hard deletion with evidence-preserving soft
 weights. On verified CICIDS-2017 postfilter11 and CESNET-TLS-Year22 postfilter25
 settings, Graph-CoLD improves Macro-F1 over the aligned CoLD baseline by
-1.83 percentage points in a paired scenario-level test
-(p=5.60e-06, Cohen dz=0.458,
-n=102). The main operational signal is evidence retention:
+14.75 percentage points in a paired scenario-level test
+(p=2.75e-09, Cohen dz=0.945,
+n=54). The main operational signal is evidence retention:
 Graph-CoLD raises mean ERR\_final from 0.8953 for hard
 deletion to 1.0000, while reporting compression, runtime,
 and memory costs. The evaluation is intentionally bounded to implemented,
@@ -212,7 +212,7 @@ after removing classes below the minimum count and downsampling the dominant
 class. CESNET-TLS-Year22 uses 61,124
 postfilter25 rows from a deterministic audit-window subset and is not a full-archive evaluation. The row-level result
 source is \texttt{results/table\_main\_expanded.csv} (SHA256 prefix
-97aa2a2c912b9a82). Full dataset and result hashes are recorded in the
+d044d4847edc1706). Full dataset and result hashes are recorded in the
 reproducibility package.
 
 \begin{table}[t]
@@ -245,10 +245,10 @@ noise type, noise rate, graph beta, and seed.
 \subsection{RQ1: Does graph evidence improve noisy-label robustness?}
 Table~\ref{tab:main-performance} aggregates the evaluation matrix by dataset and
 method. Across all paired scenarios, Graph-CoLD obtains Macro-F1
-0.9915, compared with 0.9732 for
+0.9915, compared with 0.8468 for
 CoLD. The paired grouped test reports a mean lift of
-1.83 percentage points (p=5.60e-06,
-dz=0.458, n=102). The result supports a
+14.75 percentage points (p=2.75e-09,
+dz=0.945, n=54). The result supports a
 consistent robustness improvement under the implemented protocol, not a universal
 claim over unimplemented baselines.
 
@@ -269,9 +269,9 @@ claim over unimplemented baselines.
 \subsection{RQ2: What happens under high noise?}
 Table~\ref{tab:high-noise} summarizes rates at or above 0.4 for symmetric,
 asymmetric, and graph-consistency settings. CICIDS-2017 shows the clearest
-high-noise margin: Graph-CoLD exceeds CoLD by 5.19
+high-noise margin: Graph-CoLD exceeds CoLD by 30.51
 percentage points. CESNET-TLS-Year22 has a ceiling effect, with a high-noise
-Macro-F1 lift of 0.00 percentage points; this is
+Macro-F1 lift of 0.25 percentage points; this is
 why the paper interprets CESNET primarily through stability and evidence
 retention rather than classifier margin.
 
@@ -321,8 +321,8 @@ preservation.
 \subsection{RQ5: What is the operational cost?}
 Graph-CoLD is not presented as a free robustness improvement. The mean runtime
 is 4.92s per scenario for Graph-CoLD versus
-4.79s for CoLD, while mean memory is
-138.0 MB versus 159.0 MB.
+4.15s for CoLD, while mean memory is
+138.0 MB versus 157.7 MB.
 Fig.~\ref{fig:runtime} reports these costs alongside baselines. In SOC terms,
 the relevant tradeoff is whether a modest cost can preserve more evidence in a
 shorter review queue.

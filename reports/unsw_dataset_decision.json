@@ -5,7 +5,7 @@
   "source_verified": true,
   "dataset_hash": null,
   "actual_data_path": "E:\\graphcold-data\\unsw_nb15",
-  "external_data_root": "E:\\graphcold-data",
+  "external_data_root": "E:/graphcold-data",
   "selected_policy": "postfilter",
   "min_class_count": 1000,
   "policies": {

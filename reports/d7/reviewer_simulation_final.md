@@ -29,8 +29,8 @@ disabled where data fields are missing.
 
 ## Key numbers
 
-- Graph-CoLD vs CoLD mean Macro-F1 difference: 1.83 pp
-- p-value: 5.60e-06
-- Effect size dz: 0.458
+- Graph-CoLD vs CoLD mean Macro-F1 difference: 14.75 pp
+- p-value: 2.75e-09
+- Effect size dz: 0.945
 - Graph-CoLD ERR_final: 1.0000
 - ablation_hard ERR_final: 0.8953

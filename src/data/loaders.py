@@ -76,8 +76,10 @@ def load_dataset(name: str, cfg: dict) -> Dataset:
         valid_label_mask = (stripped.notna() & (stripped != "") & (stripped.str.lower() != "nan")).to_numpy()
     if timestamps is not None:
         timestamps = timestamps[valid_label_mask]
-    work = df.loc[valid_label_mask].drop(columns=drop_cols, errors="ignore").copy()
-    work = work.drop(columns=[col for col in timestamp_cols if col in work.columns], errors="ignore")
+    df.drop(columns=drop_cols, errors="ignore", inplace=True)
+    df.drop(columns=[col for col in timestamp_cols if col in df.columns], errors="ignore", inplace=True)
+    work = df.loc[valid_label_mask] if not np.all(valid_label_mask) else df
+    del df
 
     if key == "cicids2017":
         min_count = int(ds_cfg.get("min_class_count", 1000))
@@ -285,26 +287,27 @@ def _filter_and_downsample_cicids(
 ) -> tuple[pd.DataFrame, np.ndarray | None]:
     counts = df[label_col].value_counts()
     keep_labels = counts[counts >= min_count].index
-    keep_mask = df[label_col].isin(keep_labels).to_numpy()
-    filtered = df.loc[keep_mask].reset_index(drop=True)
-    if timestamps is not None:
-        timestamps = timestamps[keep_mask]
-
-    counts = filtered[label_col].value_counts()
+    kept_counts = counts.loc[keep_labels]
+    if kept_counts.empty:
+        raise ValueError(f"No CICIDS classes remain after min_class_count={min_count}.")
+    counts = kept_counts
     if len(counts) <= 1:
-        return filtered.reset_index(drop=True), _reset_timestamps(timestamps)
+        keep_mask = df[label_col].isin(keep_labels).to_numpy()
+        out = df.loc[keep_mask].reset_index(drop=True)
+        return out, _reset_timestamps(timestamps[keep_mask] if timestamps is not None else None)
 
     dominant_label = counts.idxmax()
     cap = int(counts.drop(index=dominant_label).max())
     selected_positions: list[np.ndarray] = []
-    for label, group in filtered.groupby(label_col, sort=False):
-        positions = group.index.to_numpy()
+    labels = df[label_col].to_numpy()
+    for label in keep_labels:
+        positions = np.flatnonzero(labels == label)
         if label == dominant_label and len(positions) > cap:
             positions = np.sort(rng.choice(positions, size=cap, replace=False))
         selected_positions.append(positions)
 
     selected = np.sort(np.concatenate(selected_positions))
-    downsampled = filtered.iloc[selected].reset_index(drop=True)
+    downsampled = df.iloc[selected].reset_index(drop=True)
     if timestamps is not None:
         timestamps = timestamps[selected]
     return downsampled, _reset_timestamps(timestamps)
@@ -319,26 +322,25 @@ def _filter_and_downsample_postfilter(
 ) -> tuple[pd.DataFrame, np.ndarray | None]:
     counts = df[label_col].value_counts()
     keep_labels = counts[counts >= min_count].index
-    keep_mask = df[label_col].isin(keep_labels).to_numpy()
-    filtered = df.loc[keep_mask].reset_index(drop=True)
-    if timestamps is not None:
-        timestamps = timestamps[keep_mask]
-    if filtered.empty:
+    kept_counts = counts.loc[keep_labels]
+    if kept_counts.empty:
         raise ValueError(f"No classes remain after postfilter min_class_count={min_count}.")
 
-    counts = filtered[label_col].value_counts()
+    counts = kept_counts
     if len(counts) <= 1:
-        return filtered, _reset_timestamps(timestamps)
+        keep_mask = df[label_col].isin(keep_labels).to_numpy()
+        return df.loc[keep_mask].reset_index(drop=True), _reset_timestamps(timestamps[keep_mask] if timestamps is not None else None)
     dominant_label = counts.idxmax()
     cap = int(counts.drop(index=dominant_label).max())
     selected_positions: list[np.ndarray] = []
-    for label, group in filtered.groupby(label_col, sort=False):
-        positions = group.index.to_numpy()
+    labels = df[label_col].to_numpy()
+    for label in keep_labels:
+        positions = np.flatnonzero(labels == label)
         if label == dominant_label and len(positions) > cap:
             positions = np.sort(rng.choice(positions, size=cap, replace=False))
         selected_positions.append(positions)
     selected = np.sort(np.concatenate(selected_positions))
-    out = filtered.iloc[selected].reset_index(drop=True)
+    out = df.iloc[selected].reset_index(drop=True)
     if timestamps is not None:
         timestamps = timestamps[selected]
     return out, _reset_timestamps(timestamps)

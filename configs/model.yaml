@@ -5,6 +5,17 @@ graph:
   temporal_window: 3600        # seconds per temporal snapshot
   overlap: 0.75                # subset/view overlap (CoLD parameter study best)
   max_subsets: 4               # M (CoLD recommends 4)
+  default:
+    similarity: euclidean      # sklearn NearestNeighbors metric
+    k: 10
+    threshold: null            # optional minimum edge weight after similarity transform
+    edge_budget: null          # optional max directed edges per view
+  per_view:
+    host: {similarity: euclidean, k: 10, threshold: null, edge_budget: null}
+    ip: {similarity: euclidean, k: 10, threshold: null, edge_budget: null}
+    process: {similarity: euclidean, k: 10, threshold: null, edge_budget: null}
+    temporal: {similarity: temporal_window, k: 2, threshold: null, edge_budget: null}
+    threat_intel: {similarity: euclidean, k: 5, threshold: null, edge_budget: null}
 
 encoder:
   type: hgt                    # {hgt, rgcn}

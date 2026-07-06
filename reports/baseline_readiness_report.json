@@ -1,77 +1,49 @@
 {
-  "stage": "baseline readiness audit",
+  "stage": "D5 baseline readiness audit",
+  "Graph-CoLD": {
+    "included": true,
+    "reason": "mandatory implemented and smoke/mini-matrix passed"
+  },
+  "CoLD": {
+    "included": true,
+    "reason": "mandatory self-implemented baseline and smoke/mini-matrix passed"
+  },
+  "ablation_hard": {
+    "included": true,
+    "reason": "mandatory CoLD degeneracy / hard-retention comparator"
+  },
+  "FINE": {
+    "included": true,
+    "reason": "included in D5.5 real-data baseline expansion and smoke-passed on the formal two-dataset scope"
+  },
+  "Co-Teaching": {
+    "included": true,
+    "reason": "included in D5.5 real-data baseline expansion and smoke-passed on the formal two-dataset scope"
+  },
+  "Co-Teaching+": {
+    "included": false,
+    "reason": "not independently implemented as a formal real-data row; represented by Co-Teaching-lite where applicable"
+  },
+  "Decoupling": {
+    "included": true,
+    "reason": "included in D5.5 real-data baseline expansion and smoke-passed on the formal two-dataset scope"
+  },
+  "cleanlab": {
+    "included": false,
+    "reason": "not independently implemented as a formal real-data row; represented by Confident-Learning where applicable"
+  },
+  "MCRe": {
+    "included": true,
+    "reason": "included in D5.5 real-data baseline expansion and smoke-passed on the formal two-dataset scope"
+  },
+  "MORSE": {
+    "included": true,
+    "reason": "included in D5.5 real-data baseline expansion and smoke-passed on the formal two-dataset scope"
+  },
   "methods_in_formal_d5": [
     "Graph-CoLD",
     "CoLD",
     "ablation_hard"
   ],
-  "methods_in_expanded_d5": [
-    "Graph-CoLD",
-    "CoLD",
-    "ablation_hard",
-    "Co-Teaching",
-    "Confident-Learning",
-    "Decoupling",
-    "FINE",
-    "MCRe",
-    "MORSE",
-    "Noisy-Supervised"
-  ],
-  "unimplemented_methods_emit_rows": false,
-  "Graph-CoLD": {
-    "included": true,
-    "reason": "reused from verified real D5 run"
-  },
-  "CoLD": {
-    "included": true,
-    "reason": "reused from verified real D5 run"
-  },
-  "ablation_hard": {
-    "included": true,
-    "reason": "reused from verified real D5 run"
-  },
-  "Co-Teaching": {
-    "included": true,
-    "reason": "verified on CICIDS-2017 and CESNET-TLS-Year22"
-  },
-  "Confident-Learning": {
-    "included": true,
-    "reason": "verified on CICIDS-2017 and CESNET-TLS-Year22"
-  },
-  "Decoupling": {
-    "included": true,
-    "reason": "verified on CICIDS-2017 and CESNET-TLS-Year22"
-  },
-  "FINE": {
-    "included": true,
-    "reason": "verified on CICIDS-2017 and CESNET-TLS-Year22"
-  },
-  "MCRe": {
-    "included": true,
-    "reason": "verified on CICIDS-2017 and CESNET-TLS-Year22"
-  },
-  "MORSE": {
-    "included": true,
-    "reason": "verified on CICIDS-2017 and CESNET-TLS-Year22"
-  },
-  "Noisy-Supervised": {
-    "included": true,
-    "reason": "verified on CICIDS-2017 and CESNET-TLS-Year22"
-  },
-  "Flash": {
-    "included": false,
-    "reason": "excluded: provenance case-study method; no formal two-dataset label-noise implementation"
-  },
-  "Argus": {
-    "included": false,
-    "reason": "excluded: provenance case-study method; no formal two-dataset label-noise implementation"
-  },
-  "cleanlab": {
-    "included": false,
-    "reason": "legacy audit key; official cleanlab is represented by the Confident-Learning method row"
-  },
-  "Co-Teaching+": {
-    "included": false,
-    "reason": "not independently implemented and verified on real data"
-  }
+  "unimplemented_methods_emit_rows": false
 }

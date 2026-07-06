@@ -52,7 +52,13 @@ def test_d8_manuscript_keeps_scope_and_results_traceable():
     assert "CESNET-TLS-Year22" in normalized
     assert "MALTLS-22 is not evaluated" in normalized
     assert "OpTC is not evaluated as a formal enterprise case" in normalized
-    assert "Graph-CoLD improves Macro-F1 over the aligned CoLD baseline by 1.83 percentage points" in normalized
+    stats = json.loads(Path("results/stat_tests_baseline_expansion.json").read_text(encoding="utf-8"))
+    mean_diff_pp = float(stats["independence_aware"]["overall"]["mean_diff"]) * 100.0
+    expected = (
+        "Graph-CoLD improves Macro-F1 over the aligned CoLD baseline by "
+        f"{mean_diff_pp:.2f} percentage points"
+    )
+    assert expected in normalized
     assert "ERR\\_final from 0.8953" in text
 
 

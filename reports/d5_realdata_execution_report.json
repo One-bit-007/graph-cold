@@ -873,17 +873,17 @@
     }
   },
   "key_metrics": {
-    "CICIDS clean CoLD": 0.99103450791384,
+    "CICIDS clean CoLD": 0.3059077529227097,
     "CICIDS clean Graph-CoLD": 0.9909420607833921,
-    "CICIDS symmetric_20 CoLD": 0.9664568245848466,
+    "CICIDS symmetric_20 CoLD": 0.30559594592538725,
     "CICIDS symmetric_20 Graph-CoLD": 0.9895291159218611,
-    "CICIDS graph_consistency_20 CoLD": 0.9638069378210269,
+    "CICIDS graph_consistency_20 CoLD": 0.3061376556108453,
     "CICIDS graph_consistency_20 Graph-CoLD": 0.9900283078113804,
-    "CESNET clean CoLD": 0.9955934525484782,
+    "CESNET clean CoLD": 0.6440495647246224,
     "CESNET clean Graph-CoLD": 0.995767835677718,
-    "CESNET symmetric_20 CoLD": 0.9952232324533897,
+    "CESNET symmetric_20 CoLD": 0.6473121282659627,
     "CESNET symmetric_20 Graph-CoLD": 0.9957641495937034,
-    "CESNET graph_consistency_20 CoLD": 0.9944421721468588,
+    "CESNET graph_consistency_20 CoLD": 0.6418011642517882,
     "CESNET graph_consistency_20 Graph-CoLD": 0.9958302669019213,
     "mean ERR Graph-CoLD": 1.0,
     "mean ERR hard": 0.8887439473541461
@@ -891,7 +891,7 @@
   "ck": {
     "sanity_passed": true,
     "graph_cold_vs_cold_p_lt_0_05": true,
-    "p_value": 5.5956741051129595e-06,
+    "p_value": 2.75101348607665e-54,
     "mean_err_graphcold": 1.0,
     "mean_err_hard": 0.8887439473541461,
     "ablation_hard_distinct_from_cold": true

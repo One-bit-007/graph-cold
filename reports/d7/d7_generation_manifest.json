@@ -2,7 +2,7 @@
   "stage": "D7 real-data manuscript assembly",
   "completed": true,
   "source_csv": "results\\table_main_expanded.csv",
-  "source_sha256": "97aa2a2c912b9a82873fc6ee4a0966f5a185e23fde978867a9f5ba96af35873a",
+  "source_sha256": "d044d4847edc1706fcdf904142085895baca70130287beb9cd2ad8c17d20dfb8",
   "manuscript": "paper\\elsevier\\graph_cold_cas_realdata.tex",
   "pdf": "paper\\elsevier\\graph_cold_cas_realdata.pdf",
   "reports": [

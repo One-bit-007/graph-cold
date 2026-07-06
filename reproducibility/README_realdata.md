@@ -16,9 +16,9 @@ evaluation package.
 
 ## Frozen source artifacts
 
-- `results/table_main_expanded.csv`: `97aa2a2c912b9a82873fc6ee4a0966f5a185e23fde978867a9f5ba96af35873a`
+- `results/table_main_expanded.csv`: `d044d4847edc1706fcdf904142085895baca70130287beb9cd2ad8c17d20dfb8`
 - `results/table_baseline_expansion.csv`: `fd3c0c02d18bf10d30302a1e62cd946036801d5491d0b480e45f600e9bb11c79`
-- `results/stat_tests_baseline_expansion.json`: `2dc3f138d4be7e8d9643d8651215d35130b9511ecca58e6ca535f10601a92882`
+- `results/stat_tests_baseline_expansion.json`: `a8c806847a8849cb094e5aba555a09e3bdfb6ffd873a937fabe7a922bde73abb`
 - `reports/realdata_readiness_report.json`: `3c284a3a4f09b023bac4e20400e589f31c61ecf717caf1886e737e93f0b98e0e`
 
 ## Recreate results

@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from src.analysis.stat_tests import grouped_paired_summary, paired_summary
+from src.analysis.stat_tests import grouped_paired_summary, paired_summary, scenario_level_paired_summary
 
 
 def test_paired_summary_uses_seed_matched_pairs():
@@ -27,7 +27,25 @@ def test_grouped_paired_summary_reports_overall_and_groups():
     report = grouped_paired_summary(pd.DataFrame(rows))
 
     assert report["overall"]["n_pairs"] == 6
+    assert report["independence_aware"]["overall"]["effective_n"] == 2
+    assert "mean_diff_ci95" in report["independence_aware"]["overall"]
+    assert report["comparisons"]["Graph-CoLD_vs_CoLD"]["p_value_holm"] <= 0.05
     assert report["groups"]
+
+
+def test_scenario_level_paired_summary_aggregates_over_seeds():
+    rows = []
+    for rate in (0.1, 0.2):
+        for seed in (0, 1, 2):
+            rows.append({"dataset": "cicids2017", "noise_type": "symmetric", "noise_rate": rate, "graph_beta": "none", "seed": seed, "method": "Graph-CoLD", "macro_f1": 0.90 + seed * 0.01})
+            rows.append({"dataset": "cicids2017", "noise_type": "symmetric", "noise_rate": rate, "graph_beta": "none", "seed": seed, "method": "CoLD", "macro_f1": 0.80 + seed * 0.01})
+
+    report = scenario_level_paired_summary(pd.DataFrame(rows), bootstrap_iters=50)
+
+    assert report["test"] == "scenario_level_paired_t_test_greater"
+    assert report["effective_n"] == 2
+    assert report["aggregation"] == "mean_over_seeds_per_scenario"
+    assert report["mean_diff"] == pytest.approx(0.1)
 
 
 def test_paired_summary_requires_seed_column():

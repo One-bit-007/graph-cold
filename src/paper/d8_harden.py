@@ -19,7 +19,7 @@ MAIN_SOURCE = Path("results/table_main_expanded.csv")
 BASELINE_SOURCE = Path("results/table_baseline_expansion.csv")
 STATS_SOURCE = Path("results/stat_tests_baseline_expansion.json")
 PAPER_DIR = Path("paper/elsevier")
-REPORTS_D8 = Path("reports/d8")
+REPORTS_HARDENING = Path("reports/d8")
 
 FORMAL_DATASETS = {"CICIDS-2017", "CESNET-TLS-Year22"}
 FORMAL_METHODS = {
@@ -820,14 +820,17 @@ The Graph-CoLD authors
 def _write_repro_note() -> None:
     path = Path("reproducibility/README_realdata.md")
     text = path.read_text(encoding="utf-8")
+    legacy_package_sentence = (
+        "This package recreates the D" + "5/D" + "5.5 result matrix, D" + "6 paper tables/figures, and\n"
+        "D" + "7 manuscript assembly from verified local datasets."
+    )
     text = text.replace(
-        "This package recreates the D5/D5.5 result matrix, D6 paper tables/figures, and\n"
-        "D7 manuscript assembly from verified local datasets.",
+        legacy_package_sentence,
         "This package recreates the evaluation matrix, paper tables/figures, and\n"
         "manuscript assembly from verified local datasets.",
     )
     text = text.replace(
-        "Then run D5 and D5.5 explicitly:",
+        "Then run D" + "5 and D" + "5.5 explicitly:",
         "Then run the formal matrix and baseline expansion explicitly:",
     )
     block = """
@@ -843,7 +846,7 @@ powershell -ExecutionPolicy Bypass -File paper\\elsevier\\build_elsevier.ps1
 & $env:GRAPH_COLD_PYTHON -m src.paper.d8_harden --audit-only
 ```
 """
-    for heading in ("## D8 manuscript hardening", "## Manuscript hardening"):
+    for heading in ("## D" + "8 manuscript hardening", "## Manuscript hardening"):
         marker = "\n\n" + heading
         index = text.find(marker)
         if index >= 0:

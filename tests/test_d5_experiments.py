@@ -147,3 +147,4 @@ def test_ablation_hard_reuses_graphcold_context_and_changes_only_weighting():
     assert full.cdm is hard.cdm
     assert full.evidence is hard.evidence
     assert not np.array_equal(full.weights, hard.weights)
+    assert not np.array_equal(hard.weights, cold.weights)

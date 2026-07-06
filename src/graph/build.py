@@ -20,6 +20,24 @@ build_multiview_graph(dataset, cfg) -> MultiViewGraph
         node_index: mapping sample_id -> node
         snapshots: optional list for temporal modeling
 
+Graph reproducibility
+---------------------
+Graph construction is fully determined by the dataset split, config, and seed.
+The supported config shape is:
+
+    graph:
+      views: [host, ip, process, temporal, threat_intel]
+      temporal_window: 3600
+      default: {similarity: euclidean, k: 10, threshold: null, edge_budget: null}
+      per_view:
+        ip: {similarity: euclidean, k: 10, threshold: null, edge_budget: null}
+
+For non-temporal views, ``similarity`` is passed to
+``sklearn.neighbors.NearestNeighbors(metric=...)``. Distances are converted to
+edge weights as ``1 / (1 + distance)``. ``threshold`` optionally removes edges
+below a minimum weight, and ``edge_budget`` keeps the strongest directed edges
+for that view. Temporal edges are controlled by ``temporal_window``.
+
 local_consistency(graph, view, features) -> np.ndarray [N]
     Per-node local-consistency score used by graph-consistency noise and by
     Graph-CDM's D_neigh term. Reuse a KS-test / distribution-overlap measure
@@ -76,6 +94,7 @@ def build_multiview_graph(dataset, cfg) -> MultiViewGraph:
 
     views: dict[str, EdgeIndex] = {}
     for view in active_views:
+        view_cfg = _view_graph_cfg(graph_cfg, view)
         feature_mask = _select_feature_mask(view, feature_names, X)
         if view == "temporal":
             edge_index, edge_weight, snapshots, temporal_pairs = _temporal_edges(
@@ -85,10 +104,17 @@ def build_multiview_graph(dataset, cfg) -> MultiViewGraph:
                 batch_size,
             )
         else:
-            k = int(graph_cfg.get("knn_k", 10))
-            if view == "threat_intel":
-                k = max(1, min(k, int(graph_cfg.get("threat_intel_k", max(1, k // 2)))))
-            edge_index, edge_weight = _knn_edges(X[:, feature_mask], k=k)
+            k = int(view_cfg.get("k", graph_cfg.get("knn_k", 10)))
+            metric = str(view_cfg.get("similarity", view_cfg.get("metric", "euclidean")))
+            threshold = view_cfg.get("threshold")
+            edge_budget = view_cfg.get("edge_budget")
+            edge_index, edge_weight = _knn_edges(
+                X[:, feature_mask],
+                k=k,
+                metric=metric,
+                threshold=None if threshold is None else float(threshold),
+                edge_budget=None if edge_budget is None else int(edge_budget),
+            )
             snapshots = None
             temporal_pairs = None
 
@@ -189,6 +215,18 @@ def _nested_get(cfg: dict, path: tuple[str, ...], default):
     return current
 
 
+def _view_graph_cfg(graph_cfg: dict, view: str) -> dict:
+    default = dict(graph_cfg.get("default", {})) if isinstance(graph_cfg.get("default", {}), dict) else {}
+    per_view = graph_cfg.get("per_view", {}) if isinstance(graph_cfg.get("per_view", {}), dict) else {}
+    view_cfg = dict(per_view.get(view, {})) if isinstance(per_view.get(view, {}), dict) else {}
+    merged = {**default, **view_cfg}
+    if "k" not in merged and "knn_k" in graph_cfg:
+        merged["k"] = graph_cfg["knn_k"]
+    if view == "threat_intel" and "k" not in view_cfg and "threat_intel_k" in graph_cfg:
+        merged["k"] = graph_cfg["threat_intel_k"]
+    return merged
+
+
 def _make_batches(n_nodes: int, batch_size: int) -> list[np.ndarray]:
     batch_size = max(1, batch_size)
     return [np.arange(start, min(start + batch_size, n_nodes), dtype=np.int64) for start in range(0, n_nodes, batch_size)]
@@ -231,7 +269,13 @@ def _select_feature_mask(view: str, feature_names: list[str], X: np.ndarray) -> 
     return mask
 
 
-def _knn_edges(X_view: np.ndarray, k: int) -> tuple[np.ndarray, np.ndarray]:
+def _knn_edges(
+    X_view: np.ndarray,
+    k: int,
+    metric: str = "euclidean",
+    threshold: float | None = None,
+    edge_budget: int | None = None,
+) -> tuple[np.ndarray, np.ndarray]:
     n_nodes = X_view.shape[0]
     if n_nodes <= 1:
         return np.zeros((2, 0), dtype=np.int64), np.zeros(0, dtype=np.float32)
@@ -241,7 +285,7 @@ def _knn_edges(X_view: np.ndarray, k: int) -> tuple[np.ndarray, np.ndarray]:
     if np.allclose(np.var(X_view, axis=0), 0.0):
         return _chain_edges(n_nodes)
 
-    nn = NearestNeighbors(n_neighbors=k + 1, metric="euclidean")
+    nn = NearestNeighbors(n_neighbors=k + 1, metric=metric)
     nn.fit(X_view)
     distances, indices = nn.kneighbors(X_view)
     src = np.repeat(np.arange(n_nodes, dtype=np.int64), k)
@@ -249,6 +293,14 @@ def _knn_edges(X_view: np.ndarray, k: int) -> tuple[np.ndarray, np.ndarray]:
     dist = distances[:, 1 : k + 1].reshape(-1)
     edge_index = np.vstack([src, dst])
     edge_weight = 1.0 / (1.0 + dist)
+    if threshold is not None:
+        keep = edge_weight >= float(threshold)
+        edge_index = edge_index[:, keep]
+        edge_weight = edge_weight[keep]
+    if edge_budget is not None and edge_budget > 0 and edge_weight.size > edge_budget:
+        keep_idx = np.argsort(edge_weight)[::-1][: int(edge_budget)]
+        edge_index = edge_index[:, keep_idx]
+        edge_weight = edge_weight[keep_idx]
     return _dedupe_edges(edge_index, edge_weight)
 
 

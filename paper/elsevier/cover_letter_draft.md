@@ -11,8 +11,8 @@ hard deletion alone.
 
 The evaluation is deliberately bounded to verified real-data baselines.
 Graph-CoLD improves Macro-F1 over the aligned CoLD baseline by
-1.83 percentage points in a paired scenario-level test
-(p=5.60e-06) and improves mean ERR_final by
+14.75 percentage points in a paired scenario-level test
+(p=2.75e-09) and improves mean ERR_final by
 10.47 percentage points over hard deletion.
 
 The manuscript explicitly states that CESNET-TLS-Year22 is a deterministic

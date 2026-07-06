@@ -4,7 +4,7 @@ Source: `results/stat_tests_baseline_expansion.json`.
 
 | Comparison                       | Mean difference | p-value  | Effect size | n   | Test type                                  | Interpretation                               |
 | -------------------------------- | --------------- | -------- | ----------- | --- | ------------------------------------------ | -------------------------------------------- |
-| Graph-CoLD vs CoLD               | 1.83 pp         | 5.60e-06 | 0.458       | 102 | paired grouped t-test, greater alternative | Graph-CoLD higher under paired grouped test. |
+| Graph-CoLD vs CoLD               | 14.75 pp        | 2.75e-09 | 0.945       | 54  | paired grouped t-test, greater alternative | Graph-CoLD higher under paired grouped test. |
 | Graph-CoLD vs ablation_hard      | 1.84 pp         | 4.49e-06 | 0.463       | 102 | paired grouped t-test, greater alternative | Graph-CoLD higher under paired grouped test. |
 | Graph-CoLD vs Noisy-Supervised   | 30.78 pp        | 1.75e-26 | 1.424       | 102 | paired grouped t-test, greater alternative | Graph-CoLD higher under paired grouped test. |
 | Graph-CoLD vs Confident-Learning | 22.35 pp        | 9.24e-25 | 1.342       | 102 | paired grouped t-test, greater alternative | Graph-CoLD higher under paired grouped test. |

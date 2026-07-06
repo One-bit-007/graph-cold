@@ -1,0 +1,62 @@
+{
+  "completed": true,
+  "refreshed_method": "CoLD",
+  "rows_refreshed": 102,
+  "before": {
+    "CoLD": {
+      "macro_f1": 0.9145775107791665,
+      "err_final": 0.826108437411807,
+      "fnr": 0.004547142996914691
+    },
+    "Graph-CoLD": {
+      "macro_f1": 0.9913381705213394,
+      "err_final": 1.0,
+      "fnr": 0.0006313241781812748
+    },
+    "ablation_hard": {
+      "macro_f1": 0.9718091852129992,
+      "err_final": 0.8887439473541461,
+      "fnr": 0.0026182574767778318
+    }
+  },
+  "after": {
+    "CoLD": {
+      "macro_f1": 0.8422581625873912,
+      "err_final": 0.7495220605670916,
+      "fnr": 0.007931488621025962
+    },
+    "Graph-CoLD": {
+      "macro_f1": 0.9913381705213394,
+      "err_final": 1.0,
+      "fnr": 0.0006313241781812748
+    },
+    "ablation_hard": {
+      "macro_f1": 0.9718091852129992,
+      "err_final": 0.8887439473541461,
+      "fnr": 0.0026182574767778318
+    }
+  },
+  "sanity": {
+    "passed": true,
+    "checks": {
+      "no_nan_inf": true,
+      "no_perfect_anomaly": true,
+      "ablation_hard_distinct_from_cold": true,
+      "err_graphcold_gt_hard": true,
+      "beta0_matches_symmetric": true,
+      "active_views_valid": true,
+      "active_views_match_dataset_contract": true,
+      "dataset_names_honest": true,
+      "maltls22_absent_unless_verified": true,
+      "formal_d5_scope_only": true,
+      "no_optc_rows": true,
+      "no_fake_baseline_rows": true,
+      "no_forbidden_result_strings": true,
+      "implementation_status_valid": true,
+      "sample_policy_present": true,
+      "dataset_hash_present": true,
+      "source_verified_true": true
+    },
+    "blocking_reasons": []
+  }
+}

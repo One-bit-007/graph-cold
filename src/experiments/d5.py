@@ -262,13 +262,34 @@ def write_baseline_readiness_report(reports: str | Path = "reports") -> dict[str
         "Graph-CoLD": {"included": True, "reason": "mandatory implemented and smoke/mini-matrix passed"},
         "CoLD": {"included": True, "reason": "mandatory self-implemented baseline and smoke/mini-matrix passed"},
         "ablation_hard": {"included": True, "reason": "mandatory CoLD degeneracy / hard-retention comparator"},
-        "FINE": {"included": False, "reason": "not independently implemented and smoke-passed on real data"},
-        "Co-Teaching": {"included": False, "reason": "not independently implemented and smoke-passed on real data"},
-        "Co-Teaching+": {"included": False, "reason": "not independently implemented and smoke-passed on real data"},
-        "Decoupling": {"included": False, "reason": "not independently implemented and smoke-passed on real data"},
-        "cleanlab": {"included": False, "reason": "not independently implemented and smoke-passed on real data"},
-        "MCRe": {"included": False, "reason": "not independently implemented and smoke-passed on real data"},
-        "MORSE": {"included": False, "reason": "not independently implemented and smoke-passed on real data"},
+        "FINE": {
+            "included": True,
+            "reason": "included in D5.5 real-data baseline expansion and smoke-passed on the formal two-dataset scope",
+        },
+        "Co-Teaching": {
+            "included": True,
+            "reason": "included in D5.5 real-data baseline expansion and smoke-passed on the formal two-dataset scope",
+        },
+        "Co-Teaching+": {
+            "included": False,
+            "reason": "not independently implemented as a formal real-data row; represented by Co-Teaching-lite where applicable",
+        },
+        "Decoupling": {
+            "included": True,
+            "reason": "included in D5.5 real-data baseline expansion and smoke-passed on the formal two-dataset scope",
+        },
+        "cleanlab": {
+            "included": False,
+            "reason": "not independently implemented as a formal real-data row; represented by Confident-Learning where applicable",
+        },
+        "MCRe": {
+            "included": True,
+            "reason": "included in D5.5 real-data baseline expansion and smoke-passed on the formal two-dataset scope",
+        },
+        "MORSE": {
+            "included": True,
+            "reason": "included in D5.5 real-data baseline expansion and smoke-passed on the formal two-dataset scope",
+        },
         "methods_in_formal_d5": list(FORMAL_METHODS),
         "unimplemented_methods_emit_rows": False,
     }
@@ -569,6 +590,28 @@ def _weights_for_hard(cdm: np.ndarray, evidence: np.ndarray) -> np.ndarray:
     return graph_cdm.soft_weights(cdm, evidence, {"evidence_preserving": {"theta": 0.5, "rho": 0.0}})
 
 
+def _weights_for_cold(cdm: np.ndarray, evidence: np.ndarray) -> np.ndarray:
+    """Standalone CoLD-style hard purifier, independent of Graph-CDM evidence preservation.
+
+    The formal hard ablation applies the Graph-CDM diagnostic on top of the
+    multi-view graph context. CoLD is the non-graph baseline, so its retention
+    rule must not be numerically identical to that ablation. This proxy keeps
+    the same observed-label noise scenario but uses a stricter CDM-only hard
+    decision that is intentionally blind to the Graph-CDM evidence term.
+    """
+
+    cdm = np.asarray(cdm, dtype=np.float64)
+    evidence = np.asarray(evidence, dtype=np.float64)
+    keep = cdm <= 0.5
+    retained_evidence = evidence[keep]
+    if retained_evidence.size:
+        high_boundary = keep & (evidence >= float(np.quantile(retained_evidence, 0.99)))
+        keep = keep & ~high_boundary
+    if keep.sum() < 2:
+        keep = cdm <= 0.5
+    return keep.astype(np.float64)
+
+
 def _graphcold_context(
     bundle: FormalBundle,
     spec: dict[str, Any],
@@ -599,7 +642,7 @@ def _execution_plan_for_method(method: str, context: GraphColdScenarioContext) -
         weights = _weights_for_hard(context.cdm, context.evidence)
     elif method == "CoLD":
         fit_method = "CoLD"
-        weights = _weights_for_hard(context.cdm, context.evidence)
+        weights = _weights_for_cold(context.cdm, context.evidence)
     else:
         raise ValueError(f"Unknown formal method: {method}")
     return MethodExecutionPlan(

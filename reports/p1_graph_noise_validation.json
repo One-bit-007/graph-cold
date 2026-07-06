@@ -1,0 +1,21 @@
+{
+  "ratio": 0.3,
+  "betas": [
+    0.0,
+    0.3,
+    0.6,
+    1.0
+  ],
+  "num_classes": 4,
+  "n": 600,
+  "beta0_matches_symmetric": true,
+  "beta0_transition_l1": 0.0,
+  "transition_concentration": {
+    "0.0": 0.4426273090066194,
+    "0.3": 0.5662629399585921,
+    "0.6": 0.7676301958910654,
+    "1.0": 1.0
+  },
+  "concentration_increases": true,
+  "figure": "figures/fig_p1_graph_noise_beta_sweep.pdf"
+}

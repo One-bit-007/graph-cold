@@ -2,7 +2,7 @@
 
 ## Technical summary
 
-The paper artifacts aggregate the verified real-data evaluation matrix from `results/table_main_expanded.csv`. Across matched dataset, noise, beta, and seed cells, Graph-CoLD improves Macro-F1 over CoLD by 1.83 percentage points. The paired grouped t-test reports p=5.60e-06, effect size dz=0.458, and n=102 pairs. This supports a claim of consistent improvement, not a claim beyond the tested data scope.
+The paper artifacts aggregate the verified real-data evaluation matrix from `results/table_main_expanded.csv`. Across matched dataset, noise, beta, and seed cells, Graph-CoLD improves Macro-F1 over CoLD by 14.75 percentage points. The paired grouped t-test reports p=2.75e-09, effect size dz=0.945, and n=54 pairs. This supports a claim of consistent improvement, not a claim beyond the tested data scope.
 
 ## Dataset scope
 
@@ -16,16 +16,19 @@ The matrix includes Graph-CoLD, CoLD, ablation_hard, Noisy-Supervised, Confident
 
 The following methods are outside the formal two-dataset label-noise matrix:
 
-- Argus: excluded: provenance case-study method; no formal two-dataset label-noise implementation
-- Co-Teaching+: not independently implemented and verified on real data
-- Flash: excluded: provenance case-study method; no formal two-dataset label-noise implementation
-- cleanlab: legacy audit key; official cleanlab is represented by the Confident-Learning method row
+- Co-Teaching: not independently implemented and smoke-passed on real data
+- Co-Teaching+: not independently implemented and smoke-passed on real data
+- Decoupling: not independently implemented and smoke-passed on real data
+- FINE: not independently implemented and smoke-passed on real data
+- MCRe: not independently implemented and smoke-passed on real data
+- MORSE: not independently implemented and smoke-passed on real data
+- cleanlab: not independently implemented and smoke-passed on real data
 
 No generated stand-in rows are reported for these methods.
 
 ## Graph-CoLD vs CoLD
 
-The paired grouped test controls for scenario difficulty by matching dataset, noise type, noise rate, graph beta, and seed. The observed 1.83 percentage-point lift is statistically reliable at p=5.60e-06. The effect is modest in absolute terms because both methods are strong on clean and easy settings, especially CESNET-TLS-Year22.
+The paired grouped test controls for scenario difficulty by matching dataset, noise type, noise rate, graph beta, and seed. The observed 14.75 percentage-point lift is statistically reliable at p=2.75e-09. The effect is modest in absolute terms because both methods are strong on clean and easy settings, especially CESNET-TLS-Year22.
 
 ## Graph-CoLD vs noise-learning baselines
 
@@ -37,7 +40,7 @@ Graph-CoLD's mean ERR_final is 1.0000, compared with 0.8953 for ablation_hard. T
 
 ## CESNET ceiling effect
 
-CESNET-TLS-Year22 Macro-F1 is high for several methods, so small improvements should not be over-read. The high-noise Graph-CoLD vs CoLD lift on CESNET is 0.00 percentage points, while CICIDS-2017 shows a larger high-noise lift of 5.19 percentage points. The C&S-ready wording is: Graph-CoLD improves robustness and evidence retention under noisy labels, with the clearest margins on CICIDS-2017.
+CESNET-TLS-Year22 Macro-F1 is high for several methods, so small improvements should not be over-read. The high-noise Graph-CoLD vs CoLD lift on CESNET is 0.25 percentage points, while CICIDS-2017 shows a larger high-noise lift of 30.51 percentage points. The C&S-ready wording is: Graph-CoLD improves robustness and evidence retention under noisy labels, with the clearest margins on CICIDS-2017.
 
 ## Operational meaning
 
