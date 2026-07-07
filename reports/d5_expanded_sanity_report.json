@@ -17,7 +17,8 @@
     "implementation_status_valid": true,
     "sample_policy_present": true,
     "dataset_hash_present": true,
-    "source_verified_true": true
+    "source_verified_true": true,
+    "original_d5_rows_unchanged": true
   },
   "blocking_reasons": []
 }

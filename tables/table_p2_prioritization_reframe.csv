@@ -1,0 +1,4 @@
+comparison,topk_precision_delta,precision_at_budget_delta,compression_at_recall_90_delta,compression_at_recall_95_delta
+Graph-CoLD vs CoLD,0.0,-3.406922867266182e-05,1.631745421981634e-05,1.631745421981634e-05
+Graph-CoLD vs Confident-Learning,0.03499999999999992,0.034025287484619526,-0.06390833098068827,-0.09455354306148445
+Graph-CoLD vs ablation_hard,0.0,0.0,-1.9600618138548853e-06,-1.9600618139659076e-06

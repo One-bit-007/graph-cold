@@ -8,8 +8,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 8.738911600026768,
-      "memory_mb": 246.14312648773193
+      "runtime_sec": 8.415735399990808,
+      "memory_mb": 234.7328052520752
     },
     {
       "dataset": "cicids2017",
@@ -19,8 +19,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 5.434688700013794,
-      "memory_mb": 330.8264799118042
+      "runtime_sec": 8.082272200030275,
+      "memory_mb": 417.4100217819214
     },
     {
       "dataset": "cicids2017",
@@ -30,8 +30,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 9.221123399969656,
-      "memory_mb": 247.2699966430664
+      "runtime_sec": 10.446447199967224,
+      "memory_mb": 255.68110466003418
     },
     {
       "dataset": "cicids2017",
@@ -41,8 +41,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 11.147150999982841,
-      "memory_mb": 243.66637516021729
+      "runtime_sec": 11.372862200019881,
+      "memory_mb": 255.6774196624756
     },
     {
       "dataset": "cicids2017",
@@ -52,8 +52,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 6.249166299996432,
-      "memory_mb": 305.99514961242676
+      "runtime_sec": 9.020302099990658,
+      "memory_mb": 398.9104804992676
     },
     {
       "dataset": "cicids2017",
@@ -63,8 +63,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 9.971181000000797,
-      "memory_mb": 270.70627307891846
+      "runtime_sec": 10.149445299990475,
+      "memory_mb": 239.45314693450928
     },
     {
       "dataset": "cicids2017",
@@ -74,8 +74,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 8.70139509998262,
-      "memory_mb": 250.2656650543213
+      "runtime_sec": 8.374697299965192,
+      "memory_mb": 229.24515342712402
     },
     {
       "dataset": "cicids2017",
@@ -85,8 +85,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 5.2881150000030175,
-      "memory_mb": 257.9700241088867
+      "runtime_sec": 8.399544699990656,
+      "memory_mb": 337.1463232040405
     },
     {
       "dataset": "cicids2017",
@@ -96,8 +96,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 8.714592499949504,
-      "memory_mb": 240.65450477600098
+      "runtime_sec": 8.216952299990226,
+      "memory_mb": 229.83356761932373
     },
     {
       "dataset": "cicids2017",
@@ -107,8 +107,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 6.337341199978255,
-      "memory_mb": 279.725549697876
+      "runtime_sec": 6.600500500004273,
+      "memory_mb": 279.72632789611816
     },
     {
       "dataset": "cicids2017",
@@ -118,8 +118,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 3.8166261999867857,
-      "memory_mb": 206.81561756134033
+      "runtime_sec": 5.386234799982049,
+      "memory_mb": 259.79973888397217
     },
     {
       "dataset": "cicids2017",
@@ -129,8 +129,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 6.524163099995349,
-      "memory_mb": 279.72570991516113
+      "runtime_sec": 6.0609366000280716,
+      "memory_mb": 279.72573375701904
     },
     {
       "dataset": "cicids2017",
@@ -140,8 +140,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 4.635735600022599,
-      "memory_mb": 255.67997550964355
+      "runtime_sec": 4.7191819999716245,
+      "memory_mb": 259.2840852737427
     },
     {
       "dataset": "cicids2017",
@@ -151,8 +151,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 2.320284199959133,
-      "memory_mb": 139.11033535003662
+      "runtime_sec": 3.673401999985799,
+      "memory_mb": 176.5463523864746
     },
     {
       "dataset": "cicids2017",
@@ -162,8 +162,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 4.635100400017109,
-      "memory_mb": 259.2817687988281
+      "runtime_sec": 4.465281400014646,
+      "memory_mb": 250.26370429992676
     },
     {
       "dataset": "cicids2017",
@@ -173,8 +173,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 9.973997700028121,
-      "memory_mb": 244.25571823120117
+      "runtime_sec": 10.06556030001957,
+      "memory_mb": 261.6878089904785
     },
     {
       "dataset": "cicids2017",
@@ -184,8 +184,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 6.2589570999844,
-      "memory_mb": 327.18721866607666
+      "runtime_sec": 8.975125700002536,
+      "memory_mb": 360.55187225341797
     },
     {
       "dataset": "cicids2017",
@@ -195,8 +195,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 9.908941100002266,
-      "memory_mb": 269.50304317474365
+      "runtime_sec": 9.288186400022823,
+      "memory_mb": 243.66677474975586
     },
     {
       "dataset": "cicids2017",
@@ -206,8 +206,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 8.98628379998263,
-      "memory_mb": 269.50297260284424
+      "runtime_sec": 9.573623799951747,
+      "memory_mb": 288.7436857223511
     },
     {
       "dataset": "cicids2017",
@@ -217,8 +217,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 5.334477700002026,
-      "memory_mb": 273.5932664871216
+      "runtime_sec": 7.91213539999444,
+      "memory_mb": 340.9374704360962
     },
     {
       "dataset": "cicids2017",
@@ -228,8 +228,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 8.867449699959252,
-      "memory_mb": 254.47842597961426
+      "runtime_sec": 9.407160799950361,
+      "memory_mb": 250.26454067230225
     },
     {
       "dataset": "cicids2017",
@@ -239,8 +239,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 6.91428409999935,
-      "memory_mb": 229.82799911499023
+      "runtime_sec": 6.944242300000042,
+      "memory_mb": 254.4788818359375
     },
     {
       "dataset": "cicids2017",
@@ -250,8 +250,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 3.9860706999897957,
-      "memory_mb": 203.6017370223999
+      "runtime_sec": 5.801123900047969,
+      "memory_mb": 261.9364767074585
     },
     {
       "dataset": "cicids2017",
@@ -261,8 +261,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 6.771515399974305,
-      "memory_mb": 253.87360858917236
+      "runtime_sec": 7.538142199977301,
+      "memory_mb": 239.453293800354
     },
     {
       "dataset": "cicids2017",
@@ -272,8 +272,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 4.560908799991012,
-      "memory_mb": 251.46700477600098
+      "runtime_sec": 4.551786499971058,
+      "memory_mb": 279.12330055236816
     },
     {
       "dataset": "cicids2017",
@@ -283,8 +283,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 2.689193099969998,
-      "memory_mb": 148.30535888671875
+      "runtime_sec": 3.023529199999757,
+      "memory_mb": 166.60139179229736
     },
     {
       "dataset": "cicids2017",
@@ -294,8 +294,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 4.449606600042898,
-      "memory_mb": 240.65510272979736
+      "runtime_sec": 4.6623321999795735,
+      "memory_mb": 261.688063621521
     },
     {
       "dataset": "cicids2017",
@@ -305,8 +305,8 @@
       "graph_beta": 0.0,
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 10.184469499974512,
-      "memory_mb": 260.4847574234009
+      "runtime_sec": 9.70119789999444,
+      "memory_mb": 259.28310680389404
     },
     {
       "dataset": "cicids2017",
@@ -316,8 +316,8 @@
       "graph_beta": 0.0,
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 6.251776300021447,
-      "memory_mb": 316.1363353729248
+      "runtime_sec": 9.09836450003786,
+      "memory_mb": 389.86160373687744
     },
     {
       "dataset": "cicids2017",
@@ -327,8 +327,8 @@
       "graph_beta": 0.0,
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 9.857260699965991,
-      "memory_mb": 233.43520832061768
+      "runtime_sec": 10.49010570003884,
+      "memory_mb": 253.87820625305176
     },
     {
       "dataset": "cicids2017",
@@ -338,8 +338,8 @@
       "graph_beta": 0.6,
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 8.814028099994175,
-      "memory_mb": 249.0891237258911
+      "runtime_sec": 8.754458100011107,
+      "memory_mb": 226.85143852233887
     },
     {
       "dataset": "cicids2017",
@@ -349,8 +349,8 @@
       "graph_beta": 0.6,
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 6.7309688000241295,
-      "memory_mb": 302.0363178253174
+      "runtime_sec": 9.422584100044332,
+      "memory_mb": 370.1493492126465
     },
     {
       "dataset": "cicids2017",
@@ -360,8 +360,8 @@
       "graph_beta": 0.6,
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 10.238593799993396,
-      "memory_mb": 240.04974842071533
+      "runtime_sec": 9.997024599986617,
+      "memory_mb": 228.6291379928589
     },
     {
       "dataset": "cicids2017",
@@ -371,8 +371,8 @@
       "graph_beta": 0.0,
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 8.81135659996653,
-      "memory_mb": 269.5034303665161
+      "runtime_sec": 8.876221400045324,
+      "memory_mb": 248.47083854675293
     },
     {
       "dataset": "cicids2017",
@@ -382,8 +382,8 @@
       "graph_beta": 0.0,
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 5.3116616000188515,
-      "memory_mb": 255.08775901794434
+      "runtime_sec": 7.8901324000325985,
+      "memory_mb": 352.30280113220215
     },
     {
       "dataset": "cicids2017",
@@ -393,8 +393,8 @@
       "graph_beta": 0.0,
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 8.654485999955796,
-      "memory_mb": 236.45320415496826
+      "runtime_sec": 9.407000499952119,
+      "memory_mb": 260.4843692779541
     },
     {
       "dataset": "cicids2017",
@@ -404,8 +404,8 @@
       "graph_beta": 0.6,
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 7.522768900031224,
-      "memory_mb": 238.27178192138672
+      "runtime_sec": 7.214248900010716,
+      "memory_mb": 224.44848918914795
     },
     {
       "dataset": "cicids2017",
@@ -415,8 +415,8 @@
       "graph_beta": 0.6,
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 5.844158400024753,
-      "memory_mb": 264.05895614624023
+      "runtime_sec": 9.027002699964214,
+      "memory_mb": 331.94399547576904
     },
     {
       "dataset": "cicids2017",
@@ -426,8 +426,8 @@
       "graph_beta": 0.6,
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 9.007252799987327,
-      "memory_mb": 234.63266372680664
+      "runtime_sec": 8.674252500000875,
+      "memory_mb": 235.83627605438232
     },
     {
       "dataset": "cicids2017",
@@ -437,8 +437,8 @@
       "graph_beta": 0.0,
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 6.418761000037193,
-      "memory_mb": 264.0934534072876
+      "runtime_sec": 7.241164700011723,
+      "memory_mb": 270.70520973205566
     },
     {
       "dataset": "cicids2017",
@@ -448,8 +448,8 @@
       "graph_beta": 0.0,
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 4.029892300022766,
-      "memory_mb": 210.60207748413086
+      "runtime_sec": 5.652503400051501,
+      "memory_mb": 240.6311960220337
     },
     {
       "dataset": "cicids2017",
@@ -459,8 +459,8 @@
       "graph_beta": 0.0,
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 6.431136999977753,
-      "memory_mb": 288.74378967285156
+      "runtime_sec": 6.550905199954286,
+      "memory_mb": 269.5026845932007
     },
     {
       "dataset": "cicids2017",
@@ -470,8 +470,8 @@
       "graph_beta": 0.6,
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 5.61623550002696,
-      "memory_mb": 247.88005256652832
+      "runtime_sec": 5.707819700008258,
+      "memory_mb": 273.7391815185547
     },
     {
       "dataset": "cicids2017",
@@ -481,8 +481,8 @@
       "graph_beta": 0.6,
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 3.984167599992361,
-      "memory_mb": 199.21961402893066
+      "runtime_sec": 5.808085499971639,
+      "memory_mb": 243.4586410522461
     },
     {
       "dataset": "cicids2017",
@@ -492,8 +492,8 @@
       "graph_beta": 0.6,
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 6.970055099984165,
-      "memory_mb": 255.07589435577393
+      "runtime_sec": 6.391653000027873,
+      "memory_mb": 258.07930850982666
     },
     {
       "dataset": "cicids2017",
@@ -503,8 +503,8 @@
       "graph_beta": 0.0,
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 4.629678400000557,
-      "memory_mb": 243.05387115478516
+      "runtime_sec": 4.585567099973559,
+      "memory_mb": 249.06235694885254
     },
     {
       "dataset": "cicids2017",
@@ -514,8 +514,8 @@
       "graph_beta": 0.0,
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 2.514987700036727,
-      "memory_mb": 140.90674018859863
+      "runtime_sec": 3.732182500010822,
+      "memory_mb": 164.02524089813232
     },
     {
       "dataset": "cicids2017",
@@ -525,8 +525,8 @@
       "graph_beta": 0.0,
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 4.807011800003238,
-      "memory_mb": 258.07890605926514
+      "runtime_sec": 4.797046499967109,
+      "memory_mb": 240.04446506500244
     },
     {
       "dataset": "cicids2017",
@@ -536,8 +536,8 @@
       "graph_beta": 0.6,
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 3.7311696999822743,
-      "memory_mb": 256.31718349456787
+      "runtime_sec": 3.703370500006713,
+      "memory_mb": 260.5063877105713
     },
     {
       "dataset": "cicids2017",
@@ -547,8 +547,8 @@
       "graph_beta": 0.6,
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 2.2042281999601983,
-      "memory_mb": 128.32332515716553
+      "runtime_sec": 3.3310195000376552,
+      "memory_mb": 172.5195837020874
     },
     {
       "dataset": "cicids2017",
@@ -558,19 +558,8 @@
       "graph_beta": 0.6,
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 4.694434300006833,
-      "memory_mb": 255.6805248260498
-    },
-    {
-      "dataset": "cicids2017",
-      "reported_as": "CICIDS-2017",
-      "noise_type": "clean",
-      "noise_rate": 0.0,
-      "graph_beta": "none",
-      "seed": 1,
-      "method": "Graph-CoLD",
-      "runtime_sec": 8.058984000002965,
-      "memory_mb": 223.82371711730957
+      "runtime_sec": 4.505353400018066,
+      "memory_mb": 253.87130641937256
     },
     {
       "dataset": "cicids2017",
@@ -579,9 +568,20 @@
       "noise_rate": 0.0,
       "graph_beta": "none",
       "seed": 1,
+      "method": "Graph-CoLD",
+      "runtime_sec": 9.037216800032184,
+      "memory_mb": 228.64208889007568
+    },
+    {
+      "dataset": "cicids2017",
+      "reported_as": "CICIDS-2017",
+      "noise_type": "clean",
+      "noise_rate": 0.0,
+      "graph_beta": "none",
+      "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 5.895836199983023,
-      "memory_mb": 344.35311126708984
+      "runtime_sec": 11.863741800014395,
+      "memory_mb": 435.253511428833
     },
     {
       "dataset": "cicids2017",
@@ -591,8 +591,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 11.615697900007945,
-      "memory_mb": 217.8171100616455
+      "runtime_sec": 11.949104400002398,
+      "memory_mb": 251.47856330871582
     },
     {
       "dataset": "cicids2017",
@@ -602,8 +602,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 9.714510699966922,
-      "memory_mb": 228.64030742645264
+      "runtime_sec": 10.499074699997436,
+      "memory_mb": 261.08764934539795
     },
     {
       "dataset": "cicids2017",
@@ -613,8 +613,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 5.6531468000030145,
-      "memory_mb": 309.96129035949707
+      "runtime_sec": 9.910558100033086,
+      "memory_mb": 378.1320581436157
     },
     {
       "dataset": "cicids2017",
@@ -624,8 +624,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 9.717826499952935,
-      "memory_mb": 228.63992595672607
+      "runtime_sec": 10.118033700040542,
+      "memory_mb": 242.45783710479736
     },
     {
       "dataset": "cicids2017",
@@ -635,8 +635,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 8.08800779999001,
-      "memory_mb": 223.80981922149658
+      "runtime_sec": 8.68518580001546,
+      "memory_mb": 252.66979312896729
     },
     {
       "dataset": "cicids2017",
@@ -646,8 +646,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 5.069059600005858,
-      "memory_mb": 261.02641010284424
+      "runtime_sec": 8.647521600010805,
+      "memory_mb": 330.5428476333618
     },
     {
       "dataset": "cicids2017",
@@ -657,8 +657,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 8.19854509999277,
-      "memory_mb": 288.74409198760986
+      "runtime_sec": 9.244781700021122,
+      "memory_mb": 278.5215940475464
     },
     {
       "dataset": "cicids2017",
@@ -668,8 +668,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 6.048186100029852,
-      "memory_mb": 244.2565631866455
+      "runtime_sec": 6.671761600009631,
+      "memory_mb": 264.0963296890259
     },
     {
       "dataset": "cicids2017",
@@ -679,8 +679,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 3.4607950000208803,
-      "memory_mb": 197.87340831756592
+      "runtime_sec": 6.273031599994283,
+      "memory_mb": 244.93861389160156
     },
     {
       "dataset": "cicids2017",
@@ -690,8 +690,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 5.948655999964103,
-      "memory_mb": 288.7433195114136
+      "runtime_sec": 6.63556329999119,
+      "memory_mb": 260.4816007614136
     },
     {
       "dataset": "cicids2017",
@@ -701,8 +701,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 4.145098400011193,
-      "memory_mb": 279.7261619567871
+      "runtime_sec": 4.578571800026111,
+      "memory_mb": 268.30158519744873
     },
     {
       "dataset": "cicids2017",
@@ -712,8 +712,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 2.1667492000269704,
-      "memory_mb": 137.95622158050537
+      "runtime_sec": 3.8395948000252247,
+      "memory_mb": 161.15695476531982
     },
     {
       "dataset": "cicids2017",
@@ -723,8 +723,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 4.089428199979011,
-      "memory_mb": 288.7450313568115
+      "runtime_sec": 4.697386200015899,
+      "memory_mb": 279.7254695892334
     },
     {
       "dataset": "cicids2017",
@@ -734,8 +734,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 9.87640750000719,
-      "memory_mb": 248.4695749282837
+      "runtime_sec": 10.651795200014021,
+      "memory_mb": 235.88487815856934
     },
     {
       "dataset": "cicids2017",
@@ -745,8 +745,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 5.630375700013246,
-      "memory_mb": 308.4305124282837
+      "runtime_sec": 10.213871000043582,
+      "memory_mb": 374.39239501953125
     },
     {
       "dataset": "cicids2017",
@@ -756,8 +756,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 9.477968899998814,
-      "memory_mb": 228.63032341003418
+      "runtime_sec": 10.535852300003171,
+      "memory_mb": 240.67447090148926
     },
     {
       "dataset": "cicids2017",
@@ -767,8 +767,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 8.598349699983373,
-      "memory_mb": 250.2637939453125
+      "runtime_sec": 9.846018899988849,
+      "memory_mb": 270.70640754699707
     },
     {
       "dataset": "cicids2017",
@@ -778,8 +778,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 4.8093559999833815,
-      "memory_mb": 259.88515758514404
+      "runtime_sec": 7.893137399980333,
+      "memory_mb": 358.0004663467407
     },
     {
       "dataset": "cicids2017",
@@ -789,8 +789,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 8.349318300024606,
-      "memory_mb": 246.05650901794434
+      "runtime_sec": 10.032380199991167,
+      "memory_mb": 252.66905117034912
     },
     {
       "dataset": "cicids2017",
@@ -800,8 +800,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 6.400781299977098,
-      "memory_mb": 232.23856449127197
+      "runtime_sec": 6.988709199998993,
+      "memory_mb": 248.46032905578613
     },
     {
       "dataset": "cicids2017",
@@ -811,8 +811,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 3.572271799959708,
-      "memory_mb": 211.9109230041504
+      "runtime_sec": 5.751246300002094,
+      "memory_mb": 246.669695854187
     },
     {
       "dataset": "cicids2017",
@@ -822,8 +822,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 6.204201599990483,
-      "memory_mb": 249.0606336593628
+      "runtime_sec": 7.311008099990431,
+      "memory_mb": 218.41567516326904
     },
     {
       "dataset": "cicids2017",
@@ -833,8 +833,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 4.172704899974633,
-      "memory_mb": 244.85542106628418
+      "runtime_sec": 4.485394300019834,
+      "memory_mb": 243.65795135498047
     },
     {
       "dataset": "cicids2017",
@@ -844,8 +844,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 2.4164670999743976,
-      "memory_mb": 160.39776802062988
+      "runtime_sec": 3.1363120000460185,
+      "memory_mb": 177.48459720611572
     },
     {
       "dataset": "cicids2017",
@@ -855,8 +855,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 3.993902399961371,
-      "memory_mb": 247.27113151550293
+      "runtime_sec": 4.801350400026422,
+      "memory_mb": 225.6299123764038
     },
     {
       "dataset": "cicids2017",
@@ -866,8 +866,8 @@
       "graph_beta": 0.0,
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 9.00394409999717,
-      "memory_mb": 251.4785099029541
+      "runtime_sec": 10.216350000002421,
+      "memory_mb": 229.2761106491089
     },
     {
       "dataset": "cicids2017",
@@ -877,8 +877,8 @@
       "graph_beta": 0.0,
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 5.400197000009939,
-      "memory_mb": 299.00435638427734
+      "runtime_sec": 9.31369049998466,
+      "memory_mb": 376.52487087249756
     },
     {
       "dataset": "cicids2017",
@@ -888,8 +888,8 @@
       "graph_beta": 0.0,
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 9.248695499962196,
-      "memory_mb": 246.0588617324829
+      "runtime_sec": 10.499261000019033,
+      "memory_mb": 225.6770486831665
     },
     {
       "dataset": "cicids2017",
@@ -899,8 +899,8 @@
       "graph_beta": 0.6,
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 7.931183399981819,
-      "memory_mb": 233.46645641326904
+      "runtime_sec": 9.903408600017428,
+      "memory_mb": 239.47402381896973
     },
     {
       "dataset": "cicids2017",
@@ -910,8 +910,8 @@
       "graph_beta": 0.6,
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 6.241193199995905,
-      "memory_mb": 275.72785663604736
+      "runtime_sec": 9.414433599973563,
+      "memory_mb": 371.20274448394775
     },
     {
       "dataset": "cicids2017",
@@ -921,8 +921,8 @@
       "graph_beta": 0.6,
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 9.652239699964412,
-      "memory_mb": 235.23496341705322
+      "runtime_sec": 10.114621400018223,
+      "memory_mb": 253.8749589920044
     },
     {
       "dataset": "cicids2017",
@@ -932,8 +932,8 @@
       "graph_beta": 0.0,
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 8.0989609999815,
-      "memory_mb": 246.0584774017334
+      "runtime_sec": 8.556565200036857,
+      "memory_mb": 264.0933074951172
     },
     {
       "dataset": "cicids2017",
@@ -943,8 +943,8 @@
       "graph_beta": 0.0,
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 4.786867399991024,
-      "memory_mb": 262.83203315734863
+      "runtime_sec": 8.447366099979263,
+      "memory_mb": 321.04038524627686
     },
     {
       "dataset": "cicids2017",
@@ -954,8 +954,8 @@
       "graph_beta": 0.0,
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 7.9778596999822184,
-      "memory_mb": 253.87423419952393
+      "runtime_sec": 8.828310299955774,
+      "memory_mb": 254.4781618118286
     },
     {
       "dataset": "cicids2017",
@@ -965,8 +965,8 @@
       "graph_beta": 0.6,
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 6.854445500008296,
-      "memory_mb": 254.49513244628906
+      "runtime_sec": 8.330930600001011,
+      "memory_mb": 248.49084568023682
     },
     {
       "dataset": "cicids2017",
@@ -976,8 +976,8 @@
       "graph_beta": 0.6,
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 5.097699799982365,
-      "memory_mb": 264.37017250061035
+      "runtime_sec": 8.579447500000242,
+      "memory_mb": 337.14142513275146
     },
     {
       "dataset": "cicids2017",
@@ -987,8 +987,8 @@
       "graph_beta": 0.6,
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 8.531573899963405,
-      "memory_mb": 229.82374000549316
+      "runtime_sec": 9.730008500046097,
+      "memory_mb": 238.239520072937
     },
     {
       "dataset": "cicids2017",
@@ -998,8 +998,8 @@
       "graph_beta": 0.0,
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 5.919229699997231,
-      "memory_mb": 260.48477268218994
+      "runtime_sec": 6.671554299944546,
+      "memory_mb": 249.66336059570312
     },
     {
       "dataset": "cicids2017",
@@ -1009,8 +1009,8 @@
       "graph_beta": 0.0,
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 3.395469299983233,
-      "memory_mb": 206.7957935333252
+      "runtime_sec": 5.709580000024289,
+      "memory_mb": 256.6043930053711
     },
     {
       "dataset": "cicids2017",
@@ -1020,8 +1020,8 @@
       "graph_beta": 0.0,
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 5.862394499999937,
-      "memory_mb": 246.66190719604492
+      "runtime_sec": 6.925820300006308,
+      "memory_mb": 255.07611179351807
     },
     {
       "dataset": "cicids2017",
@@ -1031,8 +1031,8 @@
       "graph_beta": 0.6,
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 4.954018600052223,
-      "memory_mb": 251.50127506256104
+      "runtime_sec": 5.743958100036252,
+      "memory_mb": 229.25215339660645
     },
     {
       "dataset": "cicids2017",
@@ -1042,8 +1042,8 @@
       "graph_beta": 0.6,
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 3.1308207000256516,
-      "memory_mb": 190.52051544189453
+      "runtime_sec": 6.410878400027286,
+      "memory_mb": 264.77549839019775
     },
     {
       "dataset": "cicids2017",
@@ -1053,8 +1053,8 @@
       "graph_beta": 0.6,
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 6.569050799997058,
-      "memory_mb": 279.72403049468994
+      "runtime_sec": 7.018428399984259,
+      "memory_mb": 251.47847270965576
     },
     {
       "dataset": "cicids2017",
@@ -1064,8 +1064,8 @@
       "graph_beta": 0.0,
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 4.1675757999764755,
-      "memory_mb": 270.70679473876953
+      "runtime_sec": 4.775461399985943,
+      "memory_mb": 261.6880626678467
     },
     {
       "dataset": "cicids2017",
@@ -1075,8 +1075,8 @@
       "graph_beta": 0.0,
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 2.202627799997572,
-      "memory_mb": 135.25337314605713
+      "runtime_sec": 4.063406199973542,
+      "memory_mb": 164.2311897277832
     },
     {
       "dataset": "cicids2017",
@@ -1086,8 +1086,8 @@
       "graph_beta": 0.0,
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 4.058380300004501,
-      "memory_mb": 268.9032897949219
+      "runtime_sec": 4.678317899990361,
+      "memory_mb": 264.0948314666748
     },
     {
       "dataset": "cicids2017",
@@ -1097,8 +1097,8 @@
       "graph_beta": 0.6,
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 3.4006931000039913,
-      "memory_mb": 239.46385288238525
+      "runtime_sec": 3.9733295999467373,
+      "memory_mb": 249.68540287017822
     },
     {
       "dataset": "cicids2017",
@@ -1108,8 +1108,8 @@
       "graph_beta": 0.6,
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 1.8646810000063851,
-      "memory_mb": 127.87495231628418
+      "runtime_sec": 3.4930610000155866,
+      "memory_mb": 160.6788845062256
     },
     {
       "dataset": "cicids2017",
@@ -1119,8 +1119,8 @@
       "graph_beta": 0.6,
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 3.905864400032442,
-      "memory_mb": 233.4351100921631
+      "runtime_sec": 4.92514329997357,
+      "memory_mb": 255.07635974884033
     },
     {
       "dataset": "cicids2017",
@@ -1130,8 +1130,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 8.141958300024271,
-      "memory_mb": 225.61652946472168
+      "runtime_sec": 9.963556500035338,
+      "memory_mb": 263.4975519180298
     },
     {
       "dataset": "cicids2017",
@@ -1141,8 +1141,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 4.881539299967699,
-      "memory_mb": 325.8693037033081
+      "runtime_sec": 11.623357600008603,
+      "memory_mb": 432.2780055999756
     },
     {
       "dataset": "cicids2017",
@@ -1152,8 +1152,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 11.893056500004604,
-      "memory_mb": 235.84057998657227
+      "runtime_sec": 11.939377700036857,
+      "memory_mb": 260.4845266342163
     },
     {
       "dataset": "cicids2017",
@@ -1163,8 +1163,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 9.374570599989966,
-      "memory_mb": 258.6818447113037
+      "runtime_sec": 9.94976739998674,
+      "memory_mb": 263.49711322784424
     },
     {
       "dataset": "cicids2017",
@@ -1174,8 +1174,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 5.360268999997061,
-      "memory_mb": 299.05749797821045
+      "runtime_sec": 9.985758299997542,
+      "memory_mb": 370.1362552642822
     },
     {
       "dataset": "cicids2017",
@@ -1185,8 +1185,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 9.087852200027555,
-      "memory_mb": 243.6651487350464
+      "runtime_sec": 9.951041799969971,
+      "memory_mb": 234.64760208129883
     },
     {
       "dataset": "cicids2017",
@@ -1196,8 +1196,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 7.380803600011859,
-      "memory_mb": 251.47765445709229
+      "runtime_sec": 9.348819700011518,
+      "memory_mb": 264.0960941314697
     },
     {
       "dataset": "cicids2017",
@@ -1207,8 +1207,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 4.482132100034505,
-      "memory_mb": 250.78221607208252
+      "runtime_sec": 7.912260700017214,
+      "memory_mb": 344.25624561309814
     },
     {
       "dataset": "cicids2017",
@@ -1218,8 +1218,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 7.8735362000297755,
-      "memory_mb": 273.71686458587646
+      "runtime_sec": 8.858965799969155,
+      "memory_mb": 253.27489757537842
     },
     {
       "dataset": "cicids2017",
@@ -1229,8 +1229,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 5.73762930004159,
-      "memory_mb": 254.47358798980713
+      "runtime_sec": 6.790558300039265,
+      "memory_mb": 241.2454309463501
     },
     {
       "dataset": "cicids2017",
@@ -1240,8 +1240,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 3.4686865999829024,
-      "memory_mb": 197.74880027770996
+      "runtime_sec": 5.925823399971705,
+      "memory_mb": 251.2830047607422
     },
     {
       "dataset": "cicids2017",
@@ -1251,8 +1251,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 5.75916319998214,
-      "memory_mb": 259.8849105834961
+      "runtime_sec": 5.910657599975821,
+      "memory_mb": 244.25526428222656
     },
     {
       "dataset": "cicids2017",
@@ -1262,8 +1262,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 4.366691700008232,
-      "memory_mb": 279.72660064697266
+      "runtime_sec": 3.7455180999822915,
+      "memory_mb": 268.90340518951416
     },
     {
       "dataset": "cicids2017",
@@ -1273,8 +1273,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 2.3093131000059657,
-      "memory_mb": 140.72582149505615
+      "runtime_sec": 3.2299009999842383,
+      "memory_mb": 163.990647315979
     },
     {
       "dataset": "cicids2017",
@@ -1284,8 +1284,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 4.306137599982321,
-      "memory_mb": 288.74153900146484
+      "runtime_sec": 4.5352563000051305,
+      "memory_mb": 279.72450828552246
     },
     {
       "dataset": "cicids2017",
@@ -1295,8 +1295,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 10.588053599989507,
-      "memory_mb": 220.8588047027588
+      "runtime_sec": 9.045028799970169,
+      "memory_mb": 265.90725803375244
     },
     {
       "dataset": "cicids2017",
@@ -1306,8 +1306,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 6.313651100033894,
-      "memory_mb": 300.75361156463623
+      "runtime_sec": 8.2502176000271,
+      "memory_mb": 383.46105766296387
     },
     {
       "dataset": "cicids2017",
@@ -1317,8 +1317,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 10.162083700008225,
-      "memory_mb": 231.6395664215088
+      "runtime_sec": 9.500683300022501,
+      "memory_mb": 244.85525608062744
     },
     {
       "dataset": "cicids2017",
@@ -1328,8 +1328,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 9.422023699968122,
-      "memory_mb": 279.72504234313965
+      "runtime_sec": 8.031254999979865,
+      "memory_mb": 249.06188774108887
     },
     {
       "dataset": "cicids2017",
@@ -1339,8 +1339,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 5.301597400044557,
-      "memory_mb": 267.25110149383545
+      "runtime_sec": 7.679837599978782,
+      "memory_mb": 337.62353706359863
     },
     {
       "dataset": "cicids2017",
@@ -1350,8 +1350,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 8.869909500004724,
-      "memory_mb": 241.2601146697998
+      "runtime_sec": 8.605236699979287,
+      "memory_mb": 235.83801746368408
     },
     {
       "dataset": "cicids2017",
@@ -1361,8 +1361,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 6.992310300003737,
-      "memory_mb": 261.08861541748047
+      "runtime_sec": 6.6213499999721535,
+      "memory_mb": 220.80928993225098
     },
     {
       "dataset": "cicids2017",
@@ -1372,8 +1372,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 3.8674025999498554,
-      "memory_mb": 225.29421997070312
+      "runtime_sec": 4.950765699963085,
+      "memory_mb": 249.5087947845459
     },
     {
       "dataset": "cicids2017",
@@ -1383,8 +1383,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 6.726835300039966,
-      "memory_mb": 263.51459789276123
+      "runtime_sec": 6.220834799984004,
+      "memory_mb": 234.03688716888428
     },
     {
       "dataset": "cicids2017",
@@ -1394,8 +1394,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 4.329018699994776,
-      "memory_mb": 261.0875988006592
+      "runtime_sec": 4.350859600002877,
+      "memory_mb": 236.44127368927002
     },
     {
       "dataset": "cicids2017",
@@ -1405,8 +1405,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 2.6706193000427447,
-      "memory_mb": 164.46659183502197
+      "runtime_sec": 3.179069800011348,
+      "memory_mb": 177.00841331481934
     },
     {
       "dataset": "cicids2017",
@@ -1416,8 +1416,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 4.327478899969719,
-      "memory_mb": 260.4815797805786
+      "runtime_sec": 3.954053599969484,
+      "memory_mb": 228.03187084197998
     },
     {
       "dataset": "cicids2017",
@@ -1427,8 +1427,8 @@
       "graph_beta": 0.0,
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 9.756615700025577,
-      "memory_mb": 273.71880054473877
+      "runtime_sec": 9.14556650002487,
+      "memory_mb": 264.0955457687378
     },
     {
       "dataset": "cicids2017",
@@ -1438,8 +1438,8 @@
       "graph_beta": 0.0,
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 6.13412880001124,
-      "memory_mb": 305.9566173553467
+      "runtime_sec": 8.434192900022026,
+      "memory_mb": 384.5194272994995
     },
     {
       "dataset": "cicids2017",
@@ -1449,8 +1449,8 @@
       "graph_beta": 0.0,
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 11.397675499960314,
-      "memory_mb": 250.8668556213379
+      "runtime_sec": 8.940525699988939,
+      "memory_mb": 239.45295429229736
     },
     {
       "dataset": "cicids2017",
@@ -1460,8 +1460,8 @@
       "graph_beta": 0.6,
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 10.888396899972577,
-      "memory_mb": 254.49951171875
+      "runtime_sec": 7.339256000006571,
+      "memory_mb": 255.09846687316895
     },
     {
       "dataset": "cicids2017",
@@ -1471,8 +1471,8 @@
       "graph_beta": 0.6,
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 6.817639100016095,
-      "memory_mb": 312.2846727371216
+      "runtime_sec": 8.719020900025498,
+      "memory_mb": 370.67188930511475
     },
     {
       "dataset": "cicids2017",
@@ -1482,8 +1482,8 @@
       "graph_beta": 0.6,
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 10.505007500003558,
-      "memory_mb": 255.0744104385376
+      "runtime_sec": 8.918650200008415,
+      "memory_mb": 236.44072341918945
     },
     {
       "dataset": "cicids2017",
@@ -1493,8 +1493,8 @@
       "graph_beta": 0.0,
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 9.19637540000258,
-      "memory_mb": 261.68794441223145
+      "runtime_sec": 7.929097999993246,
+      "memory_mb": 250.264142036438
     },
     {
       "dataset": "cicids2017",
@@ -1504,8 +1504,8 @@
       "graph_beta": 0.0,
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 5.134580099955201,
-      "memory_mb": 266.28621101379395
+      "runtime_sec": 7.597967899986543,
+      "memory_mb": 348.99201583862305
     },
     {
       "dataset": "cicids2017",
@@ -1515,8 +1515,8 @@
       "graph_beta": 0.0,
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 8.513666499988176,
-      "memory_mb": 269.503963470459
+      "runtime_sec": 7.738670599996112,
+      "memory_mb": 246.05381774902344
     },
     {
       "dataset": "cicids2017",
@@ -1526,8 +1526,8 @@
       "graph_beta": 0.6,
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 8.189790400036145,
-      "memory_mb": 250.886155128479
+      "runtime_sec": 6.772403400042094,
+      "memory_mb": 244.2776870727539
     },
     {
       "dataset": "cicids2017",
@@ -1537,8 +1537,8 @@
       "graph_beta": 0.6,
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 5.297970800020266,
-      "memory_mb": 259.2354784011841
+      "runtime_sec": 7.6574884000001475,
+      "memory_mb": 330.542688369751
     },
     {
       "dataset": "cicids2017",
@@ -1548,8 +1548,8 @@
       "graph_beta": 0.6,
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 9.305580899992492,
-      "memory_mb": 238.28329372406006
+      "runtime_sec": 9.003619000024628,
+      "memory_mb": 233.44549655914307
     },
     {
       "dataset": "cicids2017",
@@ -1559,8 +1559,8 @@
       "graph_beta": 0.0,
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 6.759765500028152,
-      "memory_mb": 248.46120262145996
+      "runtime_sec": 5.959623800008558,
+      "memory_mb": 288.74292182922363
     },
     {
       "dataset": "cicids2017",
@@ -1570,8 +1570,8 @@
       "graph_beta": 0.0,
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 4.061406299995724,
-      "memory_mb": 192.8872528076172
+      "runtime_sec": 5.802285400044639,
+      "memory_mb": 253.4089994430542
     },
     {
       "dataset": "cicids2017",
@@ -1581,8 +1581,8 @@
       "graph_beta": 0.0,
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 6.675728500005789,
-      "memory_mb": 258.68309116363525
+      "runtime_sec": 6.209471600013785,
+      "memory_mb": 235.84200859069824
     },
     {
       "dataset": "cicids2017",
@@ -1592,8 +1592,8 @@
       "graph_beta": 0.6,
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 5.310623999976087,
-      "memory_mb": 241.86951351165771
+      "runtime_sec": 5.0107670000288635,
+      "memory_mb": 228.66193675994873
     },
     {
       "dataset": "cicids2017",
@@ -1603,8 +1603,8 @@
       "graph_beta": 0.6,
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 4.064314100018237,
-      "memory_mb": 211.60898685455322
+      "runtime_sec": 5.730250699969474,
+      "memory_mb": 259.0998487472534
     },
     {
       "dataset": "cicids2017",
@@ -1614,8 +1614,8 @@
       "graph_beta": 0.6,
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 7.684036899998318,
-      "memory_mb": 243.65047645568848
+      "runtime_sec": 6.581087499973364,
+      "memory_mb": 252.0838804244995
     },
     {
       "dataset": "cicids2017",
@@ -1625,8 +1625,8 @@
       "graph_beta": 0.0,
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 4.507600600016303,
-      "memory_mb": 279.7245273590088
+      "runtime_sec": 4.366274599975441,
+      "memory_mb": 288.7436685562134
     },
     {
       "dataset": "cicids2017",
@@ -1636,8 +1636,8 @@
       "graph_beta": 0.0,
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 2.485147200000938,
-      "memory_mb": 136.216157913208
+      "runtime_sec": 3.4111432999488898,
+      "memory_mb": 173.4889678955078
     },
     {
       "dataset": "cicids2017",
@@ -1647,8 +1647,8 @@
       "graph_beta": 0.0,
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 4.5387828999664634,
-      "memory_mb": 260.48458194732666
+      "runtime_sec": 4.004661099985242,
+      "memory_mb": 261.68779373168945
     },
     {
       "dataset": "cicids2017",
@@ -1658,8 +1658,8 @@
       "graph_beta": 0.6,
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 4.877142499957699,
-      "memory_mb": 279.7462558746338
+      "runtime_sec": 3.318544599984307,
+      "memory_mb": 243.6742649078369
     },
     {
       "dataset": "cicids2017",
@@ -1669,8 +1669,8 @@
       "graph_beta": 0.6,
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 2.7288855999941006,
-      "memory_mb": 136.0542869567871
+      "runtime_sec": 2.6300097000203095,
+      "memory_mb": 163.04784679412842
     },
     {
       "dataset": "cicids2017",
@@ -1680,8 +1680,8 @@
       "graph_beta": 0.6,
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 5.452621100004762,
-      "memory_mb": 264.0921993255615
+      "runtime_sec": 4.660255900002085,
+      "memory_mb": 253.2755422592163
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -1691,8 +1691,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.5610095000010915,
-      "memory_mb": 22.197165489196777
+      "runtime_sec": 0.42665259999921545,
+      "memory_mb": 22.197535514831543
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -1702,8 +1702,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 0.3943499000160955,
-      "memory_mb": 20.569969177246094
+      "runtime_sec": 0.372228600026574,
+      "memory_mb": 26.308093070983887
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -1713,8 +1713,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 0.5542320999666117,
-      "memory_mb": 20.003562927246094
+      "runtime_sec": 0.4049130999483168,
+      "memory_mb": 21.996347427368164
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -1724,8 +1724,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.5002925000153482,
-      "memory_mb": 21.060731887817383
+      "runtime_sec": 0.3838639000314288,
+      "memory_mb": 22.179879188537598
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -1735,8 +1735,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 0.36753739998675883,
-      "memory_mb": 19.29295539855957
+      "runtime_sec": 0.3654670999967493,
+      "memory_mb": 24.29597282409668
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -1746,8 +1746,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 0.5249845999642275,
-      "memory_mb": 19.939749717712402
+      "runtime_sec": 0.38195940002333373,
+      "memory_mb": 22.367799758911133
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -1757,8 +1757,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.5402022000052966,
-      "memory_mb": 19.946001052856445
+      "runtime_sec": 0.3513414000044577,
+      "memory_mb": 19.93762493133545
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -1768,8 +1768,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 0.3632931999745779,
-      "memory_mb": 16.21760082244873
+      "runtime_sec": 0.3216954999952577,
+      "memory_mb": 21.807717323303223
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -1779,8 +1779,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 0.4747322999755852,
-      "memory_mb": 22.27381706237793
+      "runtime_sec": 0.37014499999349937,
+      "memory_mb": 22.3670597076416
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -1790,8 +1790,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.4482261000084691,
-      "memory_mb": 19.849831581115723
+      "runtime_sec": 0.3371765000047162,
+      "memory_mb": 22.090763092041016
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -1801,8 +1801,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 0.32728080003289506,
-      "memory_mb": 14.176559448242188
+      "runtime_sec": 0.2957318000262603,
+      "memory_mb": 19.36970043182373
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -1812,8 +1812,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 0.4076333000557497,
-      "memory_mb": 20.041719436645508
+      "runtime_sec": 0.33414549997542053,
+      "memory_mb": 22.084397315979004
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -1823,8 +1823,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.3753364000003785,
-      "memory_mb": 22.27462863922119
+      "runtime_sec": 0.2987526999786496,
+      "memory_mb": 19.948716163635254
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -1834,8 +1834,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 0.27153759996872395,
-      "memory_mb": 14.039383888244629
+      "runtime_sec": 0.26228700001956895,
+      "memory_mb": 21.53181552886963
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -1845,8 +1845,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 0.38261620001867414,
-      "memory_mb": 19.94613742828369
+      "runtime_sec": 0.29029269999591634,
+      "memory_mb": 22.368473052978516
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -1856,8 +1856,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.5282722999691032,
-      "memory_mb": 20.12954807281494
+      "runtime_sec": 0.3806127999559976,
+      "memory_mb": 19.946077346801758
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -1867,8 +1867,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 0.4026622000383213,
-      "memory_mb": 19.374707221984863
+      "runtime_sec": 0.34775479999370873,
+      "memory_mb": 23.45913791656494
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -1878,8 +1878,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 0.5393476000172086,
-      "memory_mb": 19.945992469787598
+      "runtime_sec": 0.4017121000215411,
+      "memory_mb": 19.847800254821777
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -1889,8 +1889,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.5217598999734037,
-      "memory_mb": 20.693761825561523
+      "runtime_sec": 0.3650852999999188,
+      "memory_mb": 19.94534969329834
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -1900,8 +1900,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 0.32540929998504,
-      "memory_mb": 16.25372886657715
+      "runtime_sec": 0.3195207000244409,
+      "memory_mb": 20.280202865600586
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -1911,8 +1911,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 0.504261200025212,
-      "memory_mb": 22.178943634033203
+      "runtime_sec": 0.3659528999705799,
+      "memory_mb": 20.04238224029541
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -1922,8 +1922,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.45889060001354665,
-      "memory_mb": 21.599658966064453
+      "runtime_sec": 0.32719010004075244,
+      "memory_mb": 20.034855842590332
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -1933,8 +1933,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 0.32607679994544014,
-      "memory_mb": 14.180612564086914
+      "runtime_sec": 0.2772754999459721,
+      "memory_mb": 21.69919490814209
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -1944,8 +1944,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 0.477260000014212,
-      "memory_mb": 19.94724750518799
+      "runtime_sec": 0.32257030002074316,
+      "memory_mb": 21.9902925491333
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -1955,8 +1955,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.3944502000231296,
-      "memory_mb": 20.139918327331543
+      "runtime_sec": 0.28828630002681166,
+      "memory_mb": 20.10536003112793
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -1966,8 +1966,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 0.7772072000079788,
-      "memory_mb": 14.132662773132324
+      "runtime_sec": 0.23784570000134408,
+      "memory_mb": 21.815353393554688
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -1977,8 +1977,8 @@
       "graph_beta": "none",
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 0.9677717000013217,
-      "memory_mb": 19.94751739501953
+      "runtime_sec": 0.2996960999444127,
+      "memory_mb": 20.2238826751709
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -1988,8 +1988,8 @@
       "graph_beta": 0.0,
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 1.2766354999621399,
-      "memory_mb": 22.357312202453613
+      "runtime_sec": 0.3726034000283107,
+      "memory_mb": 22.27502727508545
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -1999,8 +1999,8 @@
       "graph_beta": 0.0,
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 1.1854415999841876,
-      "memory_mb": 19.02239990234375
+      "runtime_sec": 0.3662694999948144,
+      "memory_mb": 24.33996868133545
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2010,8 +2010,8 @@
       "graph_beta": 0.0,
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 1.5429211999871768,
-      "memory_mb": 22.27376079559326
+      "runtime_sec": 0.36475739994784817,
+      "memory_mb": 19.939258575439453
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2021,8 +2021,8 @@
       "graph_beta": 0.6,
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.9131252999650314,
-      "memory_mb": 20.151338577270508
+      "runtime_sec": 0.3867537999758497,
+      "memory_mb": 20.034350395202637
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2032,8 +2032,8 @@
       "graph_beta": 0.6,
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 0.49270320002688095,
-      "memory_mb": 19.488862991333008
+      "runtime_sec": 0.35418630001368,
+      "memory_mb": 24.543261528015137
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2043,8 +2043,8 @@
       "graph_beta": 0.6,
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 0.8436923999688588,
-      "memory_mb": 19.94151782989502
+      "runtime_sec": 0.35007210000185296,
+      "memory_mb": 19.94598960876465
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2054,8 +2054,8 @@
       "graph_beta": 0.0,
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 1.4326354000368156,
-      "memory_mb": 22.273606300354004
+      "runtime_sec": 0.3645315999747254,
+      "memory_mb": 19.941020965576172
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2065,8 +2065,8 @@
       "graph_beta": 0.0,
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 0.9775380000355653,
-      "memory_mb": 16.195460319519043
+      "runtime_sec": 0.33295880001969635,
+      "memory_mb": 21.19548797607422
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2076,8 +2076,8 @@
       "graph_beta": 0.0,
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 1.2527936000260524,
-      "memory_mb": 19.843551635742188
+      "runtime_sec": 0.34258129994850606,
+      "memory_mb": 19.94306755065918
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2087,8 +2087,8 @@
       "graph_beta": 0.6,
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 1.371000399987679,
-      "memory_mb": 19.84837818145752
+      "runtime_sec": 0.3811563000199385,
+      "memory_mb": 20.039206504821777
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2098,8 +2098,8 @@
       "graph_beta": 0.6,
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 0.5407401999691501,
-      "memory_mb": 16.96525287628174
+      "runtime_sec": 0.32779710000613704,
+      "memory_mb": 22.509565353393555
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2109,8 +2109,8 @@
       "graph_beta": 0.6,
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 0.6142400000244379,
-      "memory_mb": 20.132888793945312
+      "runtime_sec": 0.34062879998236895,
+      "memory_mb": 19.85039520263672
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2120,8 +2120,8 @@
       "graph_beta": 0.0,
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.7589226000127383,
-      "memory_mb": 19.93610668182373
+      "runtime_sec": 0.30992430000333115,
+      "memory_mb": 20.03255271911621
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2131,8 +2131,8 @@
       "graph_beta": 0.0,
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 1.0764529999578372,
-      "memory_mb": 15.5800199508667
+      "runtime_sec": 0.2796921999542974,
+      "memory_mb": 19.744462966918945
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2142,8 +2142,8 @@
       "graph_beta": 0.0,
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 1.379376399971079,
-      "memory_mb": 19.944894790649414
+      "runtime_sec": 0.28597610001452267,
+      "memory_mb": 22.365530014038086
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2153,8 +2153,8 @@
       "graph_beta": 0.6,
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.8289944999851286,
-      "memory_mb": 19.869439125061035
+      "runtime_sec": 0.3119650000007823,
+      "memory_mb": 19.87234592437744
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2164,8 +2164,8 @@
       "graph_beta": 0.6,
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 0.4137668000184931,
-      "memory_mb": 14.18990421295166
+      "runtime_sec": 0.27204559999518096,
+      "memory_mb": 21.60519504547119
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2175,8 +2175,8 @@
       "graph_beta": 0.6,
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 0.5320048999856226,
-      "memory_mb": 20.04062557220459
+      "runtime_sec": 0.33938690001377836,
+      "memory_mb": 20.03555965423584
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2186,8 +2186,8 @@
       "graph_beta": 0.0,
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.39967000001342967,
-      "memory_mb": 19.945093154907227
+      "runtime_sec": 0.2973284999607131,
+      "memory_mb": 20.03669834136963
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2197,8 +2197,8 @@
       "graph_beta": 0.0,
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 0.49635639996267855,
-      "memory_mb": 14.133454322814941
+      "runtime_sec": 0.22991489997366443,
+      "memory_mb": 19.56883144378662
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2208,8 +2208,8 @@
       "graph_beta": 0.0,
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 0.915343499975279,
-      "memory_mb": 20.030406951904297
+      "runtime_sec": 0.27937900001415983,
+      "memory_mb": 22.46296215057373
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2219,8 +2219,8 @@
       "graph_beta": 0.6,
       "seed": 0,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.7963237999938428,
-      "memory_mb": 17.596370697021484
+      "runtime_sec": 0.2733934000134468,
+      "memory_mb": 19.945402145385742
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2230,8 +2230,8 @@
       "graph_beta": 0.6,
       "seed": 0,
       "method": "CoLD",
-      "runtime_sec": 0.4150593000231311,
-      "memory_mb": 15.80902099609375
+      "runtime_sec": 0.2300950000062585,
+      "memory_mb": 21.721574783325195
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2241,8 +2241,8 @@
       "graph_beta": 0.6,
       "seed": 0,
       "method": "ablation_hard",
-      "runtime_sec": 0.45494500000495464,
-      "memory_mb": 22.17202377319336
+      "runtime_sec": 0.3163676999974996,
+      "memory_mb": 20.027213096618652
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2252,8 +2252,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.5379542000009678,
-      "memory_mb": 19.963927268981934
+      "runtime_sec": 0.3870859000016935,
+      "memory_mb": 20.054314613342285
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2263,8 +2263,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 1.183431199984625,
-      "memory_mb": 20.613375663757324
+      "runtime_sec": 0.37957839999580756,
+      "memory_mb": 27.317293167114258
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2274,8 +2274,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 1.338916699984111,
-      "memory_mb": 22.1801815032959
+      "runtime_sec": 0.3888505999930203,
+      "memory_mb": 20.12964916229248
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2285,8 +2285,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 1.256577100022696,
-      "memory_mb": 22.18030834197998
+      "runtime_sec": 0.37190490000648424,
+      "memory_mb": 19.93612766265869
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2296,8 +2296,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 1.0195794999599457,
-      "memory_mb": 19.852635383605957
+      "runtime_sec": 0.3381484999554232,
+      "memory_mb": 24.113767623901367
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2307,8 +2307,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 1.1185323999961838,
-      "memory_mb": 19.93277645111084
+      "runtime_sec": 0.3691824999987148,
+      "memory_mb": 19.851552963256836
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2318,8 +2318,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.5647177000064403,
-      "memory_mb": 19.85228157043457
+      "runtime_sec": 0.33354149997467175,
+      "memory_mb": 20.034940719604492
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2329,8 +2329,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 0.40031239995732903,
-      "memory_mb": 16.823835372924805
+      "runtime_sec": 0.33369080000557005,
+      "memory_mb": 21.099575996398926
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2340,8 +2340,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 0.8296740000369027,
-      "memory_mb": 19.947620391845703
+      "runtime_sec": 0.35422470001503825,
+      "memory_mb": 19.852057456970215
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2351,8 +2351,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.8075129999779165,
-      "memory_mb": 22.27285099029541
+      "runtime_sec": 0.3294074000441469,
+      "memory_mb": 19.94572162628174
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2362,8 +2362,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 0.8067233000183478,
-      "memory_mb": 14.179427146911621
+      "runtime_sec": 0.28011059999698773,
+      "memory_mb": 19.74478244781494
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2373,8 +2373,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 1.1437069000094198,
-      "memory_mb": 20.129572868347168
+      "runtime_sec": 0.3749435999779962,
+      "memory_mb": 20.375516891479492
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2384,8 +2384,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.697726699989289,
-      "memory_mb": 19.945842742919922
+      "runtime_sec": 0.35856439999770373,
+      "memory_mb": 20.193950653076172
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2395,8 +2395,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 0.3167576999985613,
-      "memory_mb": 15.618169784545898
+      "runtime_sec": 0.2620089999982156,
+      "memory_mb": 19.57014560699463
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2406,8 +2406,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 0.43891399999847636,
-      "memory_mb": 20.040825843811035
+      "runtime_sec": 0.32754920003935695,
+      "memory_mb": 20.138931274414062
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2417,8 +2417,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.9319653999991715,
-      "memory_mb": 21.978601455688477
+      "runtime_sec": 0.44501329999184236,
+      "memory_mb": 21.58548927307129
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2428,8 +2428,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 0.8656774999690242,
-      "memory_mb": 18.29659938812256
+      "runtime_sec": 0.3766157999634743,
+      "memory_mb": 24.3320369720459
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2439,8 +2439,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 0.9428038000478409,
-      "memory_mb": 19.94705581665039
+      "runtime_sec": 0.3578137999866158,
+      "memory_mb": 19.943982124328613
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2450,8 +2450,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.5698074999963865,
-      "memory_mb": 20.040861129760742
+      "runtime_sec": 0.39629329997114837,
+      "memory_mb": 20.80463981628418
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2461,8 +2461,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 0.3814928999636322,
-      "memory_mb": 16.59514331817627
+      "runtime_sec": 0.3616283999872394,
+      "memory_mb": 20.608881950378418
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2472,8 +2472,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 1.0126123999943957,
-      "memory_mb": 19.945975303649902
+      "runtime_sec": 0.4044520999887027,
+      "memory_mb": 20.0380277633667
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2483,8 +2483,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.9527535999659449,
-      "memory_mb": 22.08595561981201
+      "runtime_sec": 0.3724062999826856,
+      "memory_mb": 20.04073429107666
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2494,8 +2494,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 0.6578291999758221,
-      "memory_mb": 14.18709945678711
+      "runtime_sec": 0.30113199999323115,
+      "memory_mb": 19.465781211853027
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2505,8 +2505,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 1.1500043999985792,
-      "memory_mb": 20.361169815063477
+      "runtime_sec": 0.35789739998290315,
+      "memory_mb": 20.324706077575684
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2516,8 +2516,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 1.0798675999976695,
-      "memory_mb": 20.023343086242676
+      "runtime_sec": 0.32732010004110634,
+      "memory_mb": 22.273052215576172
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2527,8 +2527,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 0.8148239000001922,
-      "memory_mb": 14.032517433166504
+      "runtime_sec": 0.25539770000614226,
+      "memory_mb": 19.664868354797363
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2538,8 +2538,8 @@
       "graph_beta": "none",
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 0.6134391999803483,
-      "memory_mb": 19.93440818786621
+      "runtime_sec": 0.3076580999768339,
+      "memory_mb": 19.948206901550293
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2549,8 +2549,8 @@
       "graph_beta": 0.0,
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.6101348999654874,
-      "memory_mb": 22.180027961730957
+      "runtime_sec": 0.39318239997373894,
+      "memory_mb": 20.040034294128418
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2560,8 +2560,8 @@
       "graph_beta": 0.0,
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 0.4011686000158079,
-      "memory_mb": 19.068052291870117
+      "runtime_sec": 0.3512176999938674,
+      "memory_mb": 24.34447956085205
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2571,8 +2571,8 @@
       "graph_beta": 0.0,
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 0.49025109998183325,
-      "memory_mb": 22.178704261779785
+      "runtime_sec": 0.36822760000359267,
+      "memory_mb": 19.946919441223145
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2582,8 +2582,8 @@
       "graph_beta": 0.6,
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.41654280002694577,
-      "memory_mb": 22.293235778808594
+      "runtime_sec": 0.38416190003044903,
+      "memory_mb": 20.375048637390137
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2593,8 +2593,8 @@
       "graph_beta": 0.6,
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 0.3145362000213936,
-      "memory_mb": 18.88393497467041
+      "runtime_sec": 0.35799279995262623,
+      "memory_mb": 25.572385787963867
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2604,8 +2604,8 @@
       "graph_beta": 0.6,
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 0.4200315999914892,
-      "memory_mb": 20.328800201416016
+      "runtime_sec": 0.39084320003166795,
+      "memory_mb": 20.02751350402832
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2615,8 +2615,8 @@
       "graph_beta": 0.0,
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.3978161999839358,
-      "memory_mb": 20.039753913879395
+      "runtime_sec": 0.3582009000238031,
+      "memory_mb": 20.8972806930542
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2626,8 +2626,8 @@
       "graph_beta": 0.0,
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 0.29841119999764487,
-      "memory_mb": 17.239866256713867
+      "runtime_sec": 0.3255907000275329,
+      "memory_mb": 21.866994857788086
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2637,8 +2637,8 @@
       "graph_beta": 0.0,
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 0.3802074999548495,
-      "memory_mb": 22.08428955078125
+      "runtime_sec": 0.34075219999067485,
+      "memory_mb": 19.943034172058105
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2648,8 +2648,8 @@
       "graph_beta": 0.6,
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.37877309997566044,
-      "memory_mb": 22.078545570373535
+      "runtime_sec": 0.34655740001471713,
+      "memory_mb": 19.94533061981201
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2659,8 +2659,8 @@
       "graph_beta": 0.6,
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 0.3402036000043154,
-      "memory_mb": 16.027926445007324
+      "runtime_sec": 0.31254079996142536,
+      "memory_mb": 20.71737575531006
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2670,8 +2670,8 @@
       "graph_beta": 0.6,
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 0.3912418999825604,
-      "memory_mb": 19.947050094604492
+      "runtime_sec": 0.3507384999538772,
+      "memory_mb": 22.084087371826172
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2681,8 +2681,8 @@
       "graph_beta": 0.0,
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.35730360000161454,
-      "memory_mb": 20.04038906097412
+      "runtime_sec": 0.31212200003210455,
+      "memory_mb": 20.03379535675049
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2692,8 +2692,8 @@
       "graph_beta": 0.0,
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 0.2534410000080243,
-      "memory_mb": 14.191399574279785
+      "runtime_sec": 0.29604440002003685,
+      "memory_mb": 19.465886116027832
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2703,8 +2703,8 @@
       "graph_beta": 0.0,
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 0.34957029996439815,
-      "memory_mb": 20.134116172790527
+      "runtime_sec": 0.3142443000106141,
+      "memory_mb": 20.316466331481934
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2714,8 +2714,8 @@
       "graph_beta": 0.6,
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.3781165999826044,
-      "memory_mb": 19.94681453704834
+      "runtime_sec": 0.3168559999903664,
+      "memory_mb": 22.183185577392578
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2725,8 +2725,8 @@
       "graph_beta": 0.6,
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 0.2670538000529632,
-      "memory_mb": 14.278219223022461
+      "runtime_sec": 0.31401860003825277,
+      "memory_mb": 19.75162982940674
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2736,8 +2736,8 @@
       "graph_beta": 0.6,
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 0.3324235000181943,
-      "memory_mb": 22.271718978881836
+      "runtime_sec": 0.33040939999045804,
+      "memory_mb": 20.221745491027832
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2747,8 +2747,8 @@
       "graph_beta": 0.0,
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.2993939000298269,
-      "memory_mb": 22.462236404418945
+      "runtime_sec": 0.28141240001423284,
+      "memory_mb": 19.940190315246582
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2758,8 +2758,8 @@
       "graph_beta": 0.0,
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 0.23786470002960414,
-      "memory_mb": 14.040914535522461
+      "runtime_sec": 0.2606367000262253,
+      "memory_mb": 19.662460327148438
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2769,8 +2769,8 @@
       "graph_beta": 0.0,
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 0.2971932999789715,
-      "memory_mb": 19.850041389465332
+      "runtime_sec": 0.2745030999649316,
+      "memory_mb": 20.221921920776367
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2780,8 +2780,8 @@
       "graph_beta": 0.6,
       "seed": 1,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.49853739998070523,
-      "memory_mb": 19.868515968322754
+      "runtime_sec": 0.2802730000112206,
+      "memory_mb": 20.055295944213867
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2791,8 +2791,8 @@
       "graph_beta": 0.6,
       "seed": 1,
       "method": "CoLD",
-      "runtime_sec": 0.6935689999954775,
-      "memory_mb": 14.13312816619873
+      "runtime_sec": 0.2284290000097826,
+      "memory_mb": 19.393657684326172
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2802,8 +2802,8 @@
       "graph_beta": 0.6,
       "seed": 1,
       "method": "ablation_hard",
-      "runtime_sec": 0.7382168999756686,
-      "memory_mb": 19.93300724029541
+      "runtime_sec": 0.2970264999894425,
+      "memory_mb": 20.61574363708496
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2813,8 +2813,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.5556019999785349,
-      "memory_mb": 22.103516578674316
+      "runtime_sec": 0.39687399996910244,
+      "memory_mb": 19.975457191467285
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2824,8 +2824,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 0.37705200002528727,
-      "memory_mb": 20.78564453125
+      "runtime_sec": 0.37856120005017146,
+      "memory_mb": 25.96550178527832
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2835,8 +2835,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 0.4759024000377394,
-      "memory_mb": 22.265220642089844
+      "runtime_sec": 0.3778924000216648,
+      "memory_mb": 19.944716453552246
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2846,8 +2846,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.45067379996180534,
-      "memory_mb": 19.9472074508667
+      "runtime_sec": 0.3753479000297375,
+      "memory_mb": 22.46273708343506
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2857,8 +2857,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 0.3206570000038482,
-      "memory_mb": 18.603290557861328
+      "runtime_sec": 0.35942590003833175,
+      "memory_mb": 25.331235885620117
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2868,8 +2868,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 0.43777089996729046,
-      "memory_mb": 19.94729232788086
+      "runtime_sec": 0.35813509998843074,
+      "memory_mb": 22.0900239944458
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2879,8 +2879,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.41120929998578504,
-      "memory_mb": 22.08513069152832
+      "runtime_sec": 0.37300870002945885,
+      "memory_mb": 20.886510848999023
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2890,8 +2890,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 0.29210199997760355,
-      "memory_mb": 16.698960304260254
+      "runtime_sec": 0.32168300001649186,
+      "memory_mb": 22.75761604309082
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2901,8 +2901,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 0.39174110000021756,
-      "memory_mb": 22.360107421875
+      "runtime_sec": 0.3479159999988042,
+      "memory_mb": 19.94918727874756
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2912,8 +2912,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.35901740001281723,
-      "memory_mb": 20.03786277770996
+      "runtime_sec": 0.32650959998136386,
+      "memory_mb": 19.851433753967285
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2923,8 +2923,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 0.2628510000067763,
-      "memory_mb": 12.867639541625977
+      "runtime_sec": 0.29322619998129085,
+      "memory_mb": 19.656241416931152
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2934,8 +2934,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 0.3522730999975465,
-      "memory_mb": 20.03495216369629
+      "runtime_sec": 0.3184571999590844,
+      "memory_mb": 20.03874683380127
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2945,8 +2945,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.32017749996157363,
-      "memory_mb": 21.991640090942383
+      "runtime_sec": 0.2850013999850489,
+      "memory_mb": 20.034403800964355
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2956,8 +2956,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 0.25542320002568886,
-      "memory_mb": 14.037372589111328
+      "runtime_sec": 0.24897700001019984,
+      "memory_mb": 19.388723373413086
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2967,8 +2967,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 0.33247619995381683,
-      "memory_mb": 19.844923973083496
+      "runtime_sec": 0.3077994000050239,
+      "memory_mb": 22.0900936126709
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2978,8 +2978,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.40016899997135624,
-      "memory_mb": 19.94525146484375
+      "runtime_sec": 0.36147910001454875,
+      "memory_mb": 22.274495124816895
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -2989,8 +2989,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 0.32209440000588074,
-      "memory_mb": 18.178865432739258
+      "runtime_sec": 0.364506000012625,
+      "memory_mb": 23.426677703857422
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3000,8 +3000,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 0.41485060000559315,
-      "memory_mb": 20.228408813476562
+      "runtime_sec": 0.3543544000131078,
+      "memory_mb": 19.85302734375
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3011,8 +3011,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.3892331000533886,
-      "memory_mb": 22.27341651916504
+      "runtime_sec": 0.36274670000420883,
+      "memory_mb": 19.851670265197754
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3022,8 +3022,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 0.2981506999931298,
-      "memory_mb": 16.453124046325684
+      "runtime_sec": 0.34327970002777874,
+      "memory_mb": 22.05729103088379
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3033,8 +3033,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 0.3851268000435084,
-      "memory_mb": 20.027376174926758
+      "runtime_sec": 0.3642962999874726,
+      "memory_mb": 22.17899513244629
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3044,8 +3044,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.35508099995786324,
-      "memory_mb": 22.273457527160645
+      "runtime_sec": 0.3318542999913916,
+      "memory_mb": 22.085529327392578
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3055,8 +3055,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 0.27041180001106113,
-      "memory_mb": 15.67529582977295
+      "runtime_sec": 0.2997863999917172,
+      "memory_mb": 19.65077495574951
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3066,8 +3066,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 0.35191929998109117,
-      "memory_mb": 22.27433204650879
+      "runtime_sec": 0.31539000000339,
+      "memory_mb": 22.270973205566406
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3077,8 +3077,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.3370305999997072,
-      "memory_mb": 19.850656509399414
+      "runtime_sec": 0.3228493999922648,
+      "memory_mb": 20.224496841430664
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3088,8 +3088,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 0.2561664000386372,
-      "memory_mb": 14.228668212890625
+      "runtime_sec": 0.22821750002913177,
+      "memory_mb": 21.532621383666992
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3099,8 +3099,8 @@
       "graph_beta": "none",
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 0.3467867999570444,
-      "memory_mb": 19.8419828414917
+      "runtime_sec": 0.2841282999725081,
+      "memory_mb": 20.31890869140625
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3110,8 +3110,8 @@
       "graph_beta": 0.0,
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 1.140096999995876,
-      "memory_mb": 22.179502487182617
+      "runtime_sec": 0.3572245999821462,
+      "memory_mb": 22.178452491760254
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3121,8 +3121,8 @@
       "graph_beta": 0.0,
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 0.8616402000188828,
-      "memory_mb": 19.02008628845215
+      "runtime_sec": 0.3504986999905668,
+      "memory_mb": 26.221129417419434
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3132,8 +3132,8 @@
       "graph_beta": 0.0,
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 1.0873504999908619,
-      "memory_mb": 17.611971855163574
+      "runtime_sec": 0.38498199998866767,
+      "memory_mb": 22.176936149597168
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3143,8 +3143,8 @@
       "graph_beta": 0.6,
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 1.0822770000086166,
-      "memory_mb": 20.039920806884766
+      "runtime_sec": 0.3521896000020206,
+      "memory_mb": 20.129257202148438
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3154,8 +3154,8 @@
       "graph_beta": 0.6,
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 0.4835865999921225,
-      "memory_mb": 18.139351844787598
+      "runtime_sec": 0.3632344999932684,
+      "memory_mb": 23.904876708984375
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3165,8 +3165,8 @@
       "graph_beta": 0.6,
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 0.5612833999912255,
-      "memory_mb": 19.851547241210938
+      "runtime_sec": 0.36973269999725744,
+      "memory_mb": 20.61574077606201
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3176,8 +3176,8 @@
       "graph_beta": 0.0,
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 1.1119606000138447,
-      "memory_mb": 19.9415340423584
+      "runtime_sec": 0.3551715000066906,
+      "memory_mb": 20.091182708740234
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3187,8 +3187,8 @@
       "graph_beta": 0.0,
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 0.911243399954401,
-      "memory_mb": 15.916242599487305
+      "runtime_sec": 0.3221204000292346,
+      "memory_mb": 21.80836009979248
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3198,8 +3198,8 @@
       "graph_beta": 0.0,
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 1.262779499986209,
-      "memory_mb": 20.12760353088379
+      "runtime_sec": 0.4347925999900326,
+      "memory_mb": 20.31710910797119
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3209,8 +3209,8 @@
       "graph_beta": 0.6,
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.5516392999561504,
-      "memory_mb": 20.03975200653076
+      "runtime_sec": 0.3573495999444276,
+      "memory_mb": 19.930851936340332
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3220,8 +3220,8 @@
       "graph_beta": 0.6,
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 0.3473717999877408,
-      "memory_mb": 15.79598331451416
+      "runtime_sec": 0.3157876000041142,
+      "memory_mb": 21.69293785095215
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3231,8 +3231,8 @@
       "graph_beta": 0.6,
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 0.41978180001024157,
-      "memory_mb": 20.034141540527344
+      "runtime_sec": 0.368131099967286,
+      "memory_mb": 19.850629806518555
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3242,8 +3242,8 @@
       "graph_beta": 0.0,
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.39564969995990396,
-      "memory_mb": 22.082528114318848
+      "runtime_sec": 0.3125412999652326,
+      "memory_mb": 20.2223539352417
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3253,8 +3253,8 @@
       "graph_beta": 0.0,
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 0.2925630999961868,
-      "memory_mb": 14.093814849853516
+      "runtime_sec": 0.28613820002647117,
+      "memory_mb": 19.370765686035156
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3264,8 +3264,8 @@
       "graph_beta": 0.0,
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 0.3733780999900773,
-      "memory_mb": 20.227920532226562
+      "runtime_sec": 0.35316769999917597,
+      "memory_mb": 22.460609436035156
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3275,8 +3275,8 @@
       "graph_beta": 0.6,
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.34294399997452274,
-      "memory_mb": 20.03325653076172
+      "runtime_sec": 0.3101592999882996,
+      "memory_mb": 19.967262268066406
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3286,8 +3286,8 @@
       "graph_beta": 0.6,
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 0.26352029998088256,
-      "memory_mb": 15.676318168640137
+      "runtime_sec": 0.28608180000446737,
+      "memory_mb": 19.557427406311035
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3297,8 +3297,8 @@
       "graph_beta": 0.6,
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 0.37219399999594316,
-      "memory_mb": 19.90604877471924
+      "runtime_sec": 0.34030639997217804,
+      "memory_mb": 22.27290153503418
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3308,8 +3308,8 @@
       "graph_beta": 0.0,
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.32007469999371096,
-      "memory_mb": 19.851430892944336
+      "runtime_sec": 0.282833400007803,
+      "memory_mb": 21.99138641357422
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3319,8 +3319,8 @@
       "graph_beta": 0.0,
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 0.24938180000754073,
-      "memory_mb": 14.038529396057129
+      "runtime_sec": 0.22393040003953502,
+      "memory_mb": 19.39451789855957
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3330,8 +3330,8 @@
       "graph_beta": 0.0,
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 0.319802800018806,
-      "memory_mb": 22.1790828704834
+      "runtime_sec": 0.292777800001204,
+      "memory_mb": 20.034764289855957
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3341,8 +3341,8 @@
       "graph_beta": 0.6,
       "seed": 2,
       "method": "Graph-CoLD",
-      "runtime_sec": 0.31543339998461306,
-      "memory_mb": 20.059038162231445
+      "runtime_sec": 0.2706054000300355,
+      "memory_mb": 22.085683822631836
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3352,8 +3352,8 @@
       "graph_beta": 0.6,
       "seed": 2,
       "method": "CoLD",
-      "runtime_sec": 0.23617569997441024,
-      "memory_mb": 14.120004653930664
+      "runtime_sec": 0.24730310001177713,
+      "memory_mb": 19.391983032226562
     },
     {
       "dataset": "cesnet_tls_year22",
@@ -3363,20 +3363,1703 @@
       "graph_beta": 0.6,
       "seed": 2,
       "method": "ablation_hard",
-      "runtime_sec": 0.3303390999790281,
-      "memory_mb": 22.463467597961426
+      "runtime_sec": 0.315275400003884,
+      "memory_mb": 22.180546760559082
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "clean",
+      "noise_rate": 0.0,
+      "graph_beta": "none",
+      "seed": 0,
+      "method": "Graph-CoLD",
+      "runtime_sec": 2.718160299991723,
+      "memory_mb": 56.96558856964111
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "clean",
+      "noise_rate": 0.0,
+      "graph_beta": "none",
+      "seed": 0,
+      "method": "CoLD",
+      "runtime_sec": 2.6087350999587215,
+      "memory_mb": 176.9823122024536
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "clean",
+      "noise_rate": 0.0,
+      "graph_beta": "none",
+      "seed": 0,
+      "method": "ablation_hard",
+      "runtime_sec": 2.6047573999967426,
+      "memory_mb": 55.78295421600342
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.1,
+      "graph_beta": "none",
+      "seed": 0,
+      "method": "Graph-CoLD",
+      "runtime_sec": 2.5734769999980927,
+      "memory_mb": 54.437992095947266
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.1,
+      "graph_beta": "none",
+      "seed": 0,
+      "method": "CoLD",
+      "runtime_sec": 3.134316799987573,
+      "memory_mb": 157.21391201019287
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.1,
+      "graph_beta": "none",
+      "seed": 0,
+      "method": "ablation_hard",
+      "runtime_sec": 3.103851800027769,
+      "memory_mb": 55.546481132507324
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.2,
+      "graph_beta": "none",
+      "seed": 0,
+      "method": "Graph-CoLD",
+      "runtime_sec": 2.6524405000382103,
+      "memory_mb": 62.10964298248291
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.2,
+      "graph_beta": "none",
+      "seed": 0,
+      "method": "CoLD",
+      "runtime_sec": 2.4229858000180684,
+      "memory_mb": 135.49524021148682
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.2,
+      "graph_beta": "none",
+      "seed": 0,
+      "method": "ablation_hard",
+      "runtime_sec": 2.682624400011264,
+      "memory_mb": 66.38773727416992
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.4,
+      "graph_beta": "none",
+      "seed": 0,
+      "method": "Graph-CoLD",
+      "runtime_sec": 1.9691834999830462,
+      "memory_mb": 63.87739086151123
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.4,
+      "graph_beta": "none",
+      "seed": 0,
+      "method": "CoLD",
+      "runtime_sec": 1.7161943000392057,
+      "memory_mb": 99.03449630737305
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.4,
+      "graph_beta": "none",
+      "seed": 0,
+      "method": "ablation_hard",
+      "runtime_sec": 1.952322600001935,
+      "memory_mb": 60.33967208862305
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.6,
+      "graph_beta": "none",
+      "seed": 0,
+      "method": "Graph-CoLD",
+      "runtime_sec": 1.3969839999917895,
+      "memory_mb": 61.81423473358154
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.6,
+      "graph_beta": "none",
+      "seed": 0,
+      "method": "CoLD",
+      "runtime_sec": 1.301415800000541,
+      "memory_mb": 65.55020809173584
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.6,
+      "graph_beta": "none",
+      "seed": 0,
+      "method": "ablation_hard",
+      "runtime_sec": 1.4705938000115566,
+      "memory_mb": 64.17381763458252
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.1,
+      "graph_beta": "none",
+      "seed": 0,
+      "method": "Graph-CoLD",
+      "runtime_sec": 3.115316100011114,
+      "memory_mb": 58.12806034088135
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.1,
+      "graph_beta": "none",
+      "seed": 0,
+      "method": "CoLD",
+      "runtime_sec": 2.987187599996105,
+      "memory_mb": 153.9422836303711
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.1,
+      "graph_beta": "none",
+      "seed": 0,
+      "method": "ablation_hard",
+      "runtime_sec": 2.9285131000215188,
+      "memory_mb": 53.27303695678711
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.2,
+      "graph_beta": "none",
+      "seed": 0,
+      "method": "Graph-CoLD",
+      "runtime_sec": 2.5307965999818407,
+      "memory_mb": 54.29152584075928
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.2,
+      "graph_beta": "none",
+      "seed": 0,
+      "method": "CoLD",
+      "runtime_sec": 2.2173534000176005,
+      "memory_mb": 134.92574787139893
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.2,
+      "graph_beta": "none",
+      "seed": 0,
+      "method": "ablation_hard",
+      "runtime_sec": 2.3977339999983087,
+      "memory_mb": 58.714781761169434
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.4,
+      "graph_beta": "none",
+      "seed": 0,
+      "method": "Graph-CoLD",
+      "runtime_sec": 2.064462500042282,
+      "memory_mb": 61.36898231506348
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.4,
+      "graph_beta": "none",
+      "seed": 0,
+      "method": "CoLD",
+      "runtime_sec": 1.7037491000373848,
+      "memory_mb": 101.2631607055664
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.4,
+      "graph_beta": "none",
+      "seed": 0,
+      "method": "ablation_hard",
+      "runtime_sec": 1.907283800013829,
+      "memory_mb": 56.51285266876221
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.6,
+      "graph_beta": "none",
+      "seed": 0,
+      "method": "Graph-CoLD",
+      "runtime_sec": 1.185304700047709,
+      "memory_mb": 58.12763786315918
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.6,
+      "graph_beta": "none",
+      "seed": 0,
+      "method": "CoLD",
+      "runtime_sec": 0.8989633999881335,
+      "memory_mb": 68.18761730194092
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.6,
+      "graph_beta": "none",
+      "seed": 0,
+      "method": "ablation_hard",
+      "runtime_sec": 1.1186002000467852,
+      "memory_mb": 58.57735633850098
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.1,
+      "graph_beta": 0.0,
+      "seed": 0,
+      "method": "Graph-CoLD",
+      "runtime_sec": 2.8063053999794647,
+      "memory_mb": 63.58127021789551
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.1,
+      "graph_beta": 0.0,
+      "seed": 0,
+      "method": "CoLD",
+      "runtime_sec": 2.6871735000167973,
+      "memory_mb": 153.83818912506104
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.1,
+      "graph_beta": 0.0,
+      "seed": 0,
+      "method": "ablation_hard",
+      "runtime_sec": 2.741741899983026,
+      "memory_mb": 55.76645851135254
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.1,
+      "graph_beta": 0.6,
+      "seed": 0,
+      "method": "Graph-CoLD",
+      "runtime_sec": 2.5227697999798693,
+      "memory_mb": 59.4889612197876
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.1,
+      "graph_beta": 0.6,
+      "seed": 0,
+      "method": "CoLD",
+      "runtime_sec": 2.873186699987855,
+      "memory_mb": 154.48012351989746
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.1,
+      "graph_beta": 0.6,
+      "seed": 0,
+      "method": "ablation_hard",
+      "runtime_sec": 3.1935809000278823,
+      "memory_mb": 56.365843772888184
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.2,
+      "graph_beta": 0.0,
+      "seed": 0,
+      "method": "Graph-CoLD",
+      "runtime_sec": 2.682918900041841,
+      "memory_mb": 65.05858135223389
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.2,
+      "graph_beta": 0.0,
+      "seed": 0,
+      "method": "CoLD",
+      "runtime_sec": 2.3932461999938823,
+      "memory_mb": 134.44926834106445
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.2,
+      "graph_beta": 0.0,
+      "seed": 0,
+      "method": "ablation_hard",
+      "runtime_sec": 2.5611627000034787,
+      "memory_mb": 59.4548921585083
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.2,
+      "graph_beta": 0.6,
+      "seed": 0,
+      "method": "Graph-CoLD",
+      "runtime_sec": 2.363796000019647,
+      "memory_mb": 57.70942974090576
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.2,
+      "graph_beta": 0.6,
+      "seed": 0,
+      "method": "CoLD",
+      "runtime_sec": 2.280425800010562,
+      "memory_mb": 137.94500541687012
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.2,
+      "graph_beta": 0.6,
+      "seed": 0,
+      "method": "ablation_hard",
+      "runtime_sec": 2.3922687999438494,
+      "memory_mb": 56.80051136016846
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.4,
+      "graph_beta": 0.0,
+      "seed": 0,
+      "method": "Graph-CoLD",
+      "runtime_sec": 1.9108755000052042,
+      "memory_mb": 61.51769733428955
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.4,
+      "graph_beta": 0.0,
+      "seed": 0,
+      "method": "CoLD",
+      "runtime_sec": 1.6131656999932602,
+      "memory_mb": 102.53047752380371
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.4,
+      "graph_beta": 0.0,
+      "seed": 0,
+      "method": "ablation_hard",
+      "runtime_sec": 1.9235822999617085,
+      "memory_mb": 62.698997497558594
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.4,
+      "graph_beta": 0.6,
+      "seed": 0,
+      "method": "Graph-CoLD",
+      "runtime_sec": 1.5237137000076473,
+      "memory_mb": 62.72311496734619
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.4,
+      "graph_beta": 0.6,
+      "seed": 0,
+      "method": "CoLD",
+      "runtime_sec": 1.3540222000447102,
+      "memory_mb": 104.67620754241943
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.4,
+      "graph_beta": 0.6,
+      "seed": 0,
+      "method": "ablation_hard",
+      "runtime_sec": 1.7153606999781914,
+      "memory_mb": 62.11036396026611
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.6,
+      "graph_beta": 0.0,
+      "seed": 0,
+      "method": "Graph-CoLD",
+      "runtime_sec": 1.3972498000366613,
+      "memory_mb": 63.73197364807129
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.6,
+      "graph_beta": 0.0,
+      "seed": 0,
+      "method": "CoLD",
+      "runtime_sec": 1.2899770999792963,
+      "memory_mb": 67.90022945404053
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.6,
+      "graph_beta": 0.0,
+      "seed": 0,
+      "method": "ablation_hard",
+      "runtime_sec": 1.5716978999553248,
+      "memory_mb": 58.75533866882324
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.6,
+      "graph_beta": 0.6,
+      "seed": 0,
+      "method": "Graph-CoLD",
+      "runtime_sec": 1.1589170999941416,
+      "memory_mb": 61.834839820861816
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.6,
+      "graph_beta": 0.6,
+      "seed": 0,
+      "method": "CoLD",
+      "runtime_sec": 0.9872839999734424,
+      "memory_mb": 68.54814529418945
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.6,
+      "graph_beta": 0.6,
+      "seed": 0,
+      "method": "ablation_hard",
+      "runtime_sec": 1.3247947000199929,
+      "memory_mb": 64.9141435623169
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "clean",
+      "noise_rate": 0.0,
+      "graph_beta": "none",
+      "seed": 1,
+      "method": "Graph-CoLD",
+      "runtime_sec": 2.5764041000511497,
+      "memory_mb": 61.53716564178467
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "clean",
+      "noise_rate": 0.0,
+      "graph_beta": "none",
+      "seed": 1,
+      "method": "CoLD",
+      "runtime_sec": 2.7592682000249624,
+      "memory_mb": 176.46026229858398
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "clean",
+      "noise_rate": 0.0,
+      "graph_beta": "none",
+      "seed": 1,
+      "method": "ablation_hard",
+      "runtime_sec": 3.1987987000029534,
+      "memory_mb": 62.7155122756958
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.1,
+      "graph_beta": "none",
+      "seed": 1,
+      "method": "Graph-CoLD",
+      "runtime_sec": 3.0179496000055224,
+      "memory_mb": 63.024468421936035
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.1,
+      "graph_beta": "none",
+      "seed": 1,
+      "method": "CoLD",
+      "runtime_sec": 2.6500108999898657,
+      "memory_mb": 159.3605146408081
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.1,
+      "graph_beta": "none",
+      "seed": 1,
+      "method": "ablation_hard",
+      "runtime_sec": 2.9427039000438526,
+      "memory_mb": 62.86403751373291
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.2,
+      "graph_beta": "none",
+      "seed": 1,
+      "method": "Graph-CoLD",
+      "runtime_sec": 2.567376899998635,
+      "memory_mb": 64.3403959274292
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.2,
+      "graph_beta": "none",
+      "seed": 1,
+      "method": "CoLD",
+      "runtime_sec": 2.3100201999768615,
+      "memory_mb": 136.8306303024292
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.2,
+      "graph_beta": "none",
+      "seed": 1,
+      "method": "ablation_hard",
+      "runtime_sec": 2.5717499000020325,
+      "memory_mb": 60.35624122619629
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.4,
+      "graph_beta": "none",
+      "seed": 1,
+      "method": "Graph-CoLD",
+      "runtime_sec": 2.0520746000111103,
+      "memory_mb": 64.93204689025879
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.4,
+      "graph_beta": "none",
+      "seed": 1,
+      "method": "CoLD",
+      "runtime_sec": 1.7695509000332095,
+      "memory_mb": 100.51074886322021
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.4,
+      "graph_beta": "none",
+      "seed": 1,
+      "method": "ablation_hard",
+      "runtime_sec": 2.3052668999880552,
+      "memory_mb": 58.89026069641113
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.6,
+      "graph_beta": "none",
+      "seed": 1,
+      "method": "Graph-CoLD",
+      "runtime_sec": 1.5730609000311233,
+      "memory_mb": 61.53512954711914
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.6,
+      "graph_beta": "none",
+      "seed": 1,
+      "method": "CoLD",
+      "runtime_sec": 1.2856441999902017,
+      "memory_mb": 69.9494104385376
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.6,
+      "graph_beta": "none",
+      "seed": 1,
+      "method": "ablation_hard",
+      "runtime_sec": 1.543833600007929,
+      "memory_mb": 63.45375347137451
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.1,
+      "graph_beta": "none",
+      "seed": 1,
+      "method": "Graph-CoLD",
+      "runtime_sec": 2.893100300047081,
+      "memory_mb": 57.576720237731934
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.1,
+      "graph_beta": "none",
+      "seed": 1,
+      "method": "CoLD",
+      "runtime_sec": 2.5712442999938503,
+      "memory_mb": 155.95930194854736
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.1,
+      "graph_beta": "none",
+      "seed": 1,
+      "method": "ablation_hard",
+      "runtime_sec": 3.188144099956844,
+      "memory_mb": 58.59415340423584
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.2,
+      "graph_beta": "none",
+      "seed": 1,
+      "method": "Graph-CoLD",
+      "runtime_sec": 2.715014700021129,
+      "memory_mb": 57.8524055480957
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.2,
+      "graph_beta": "none",
+      "seed": 1,
+      "method": "CoLD",
+      "runtime_sec": 2.330844599986449,
+      "memory_mb": 136.90912628173828
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.2,
+      "graph_beta": "none",
+      "seed": 1,
+      "method": "ablation_hard",
+      "runtime_sec": 2.543350099993404,
+      "memory_mb": 56.55397129058838
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.4,
+      "graph_beta": "none",
+      "seed": 1,
+      "method": "Graph-CoLD",
+      "runtime_sec": 1.8579068999970332,
+      "memory_mb": 61.239487648010254
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.4,
+      "graph_beta": "none",
+      "seed": 1,
+      "method": "CoLD",
+      "runtime_sec": 1.4685826000059023,
+      "memory_mb": 99.5589714050293
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.4,
+      "graph_beta": "none",
+      "seed": 1,
+      "method": "ablation_hard",
+      "runtime_sec": 1.7806723999674432,
+      "memory_mb": 59.03430652618408
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.6,
+      "graph_beta": "none",
+      "seed": 1,
+      "method": "Graph-CoLD",
+      "runtime_sec": 1.1404815000132658,
+      "memory_mb": 56.24422359466553
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.6,
+      "graph_beta": "none",
+      "seed": 1,
+      "method": "CoLD",
+      "runtime_sec": 0.9368059999542311,
+      "memory_mb": 67.82241344451904
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.6,
+      "graph_beta": "none",
+      "seed": 1,
+      "method": "ablation_hard",
+      "runtime_sec": 1.2023451999993995,
+      "memory_mb": 58.59510803222656
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.1,
+      "graph_beta": 0.0,
+      "seed": 1,
+      "method": "Graph-CoLD",
+      "runtime_sec": 3.019519300025422,
+      "memory_mb": 57.99613952636719
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.1,
+      "graph_beta": 0.0,
+      "seed": 1,
+      "method": "CoLD",
+      "runtime_sec": 3.025195900001563,
+      "memory_mb": 158.56657791137695
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.1,
+      "graph_beta": 0.0,
+      "seed": 1,
+      "method": "ablation_hard",
+      "runtime_sec": 3.4172636999865063,
+      "memory_mb": 64.92880821228027
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.1,
+      "graph_beta": 0.6,
+      "seed": 1,
+      "method": "Graph-CoLD",
+      "runtime_sec": 3.0882233000011183,
+      "memory_mb": 57.577141761779785
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.1,
+      "graph_beta": 0.6,
+      "seed": 1,
+      "method": "CoLD",
+      "runtime_sec": 2.8218297000275925,
+      "memory_mb": 157.51437282562256
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.1,
+      "graph_beta": 0.6,
+      "seed": 1,
+      "method": "ablation_hard",
+      "runtime_sec": 3.0646485000033863,
+      "memory_mb": 59.02615165710449
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.2,
+      "graph_beta": 0.0,
+      "seed": 1,
+      "method": "Graph-CoLD",
+      "runtime_sec": 2.6210736999637447,
+      "memory_mb": 66.55224895477295
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.2,
+      "graph_beta": 0.0,
+      "seed": 1,
+      "method": "CoLD",
+      "runtime_sec": 2.359456099977251,
+      "memory_mb": 134.58780670166016
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.2,
+      "graph_beta": 0.0,
+      "seed": 1,
+      "method": "ablation_hard",
+      "runtime_sec": 2.707182699989062,
+      "memory_mb": 63.601016998291016
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.2,
+      "graph_beta": 0.6,
+      "seed": 1,
+      "method": "Graph-CoLD",
+      "runtime_sec": 2.0563874000217766,
+      "memory_mb": 60.37674331665039
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.2,
+      "graph_beta": 0.6,
+      "seed": 1,
+      "method": "CoLD",
+      "runtime_sec": 2.156758399971295,
+      "memory_mb": 134.4714117050171
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.2,
+      "graph_beta": 0.6,
+      "seed": 1,
+      "method": "ablation_hard",
+      "runtime_sec": 2.604471000027843,
+      "memory_mb": 63.74860668182373
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.4,
+      "graph_beta": 0.0,
+      "seed": 1,
+      "method": "Graph-CoLD",
+      "runtime_sec": 2.1171434999560006,
+      "memory_mb": 59.94994831085205
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.4,
+      "graph_beta": 0.0,
+      "seed": 1,
+      "method": "CoLD",
+      "runtime_sec": 1.8367640000069514,
+      "memory_mb": 103.91060256958008
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.4,
+      "graph_beta": 0.0,
+      "seed": 1,
+      "method": "ablation_hard",
+      "runtime_sec": 2.26772089995211,
+      "memory_mb": 58.147377014160156
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.4,
+      "graph_beta": 0.6,
+      "seed": 1,
+      "method": "Graph-CoLD",
+      "runtime_sec": 1.8037655999651179,
+      "memory_mb": 55.21125602722168
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.4,
+      "graph_beta": 0.6,
+      "seed": 1,
+      "method": "CoLD",
+      "runtime_sec": 1.8035342000075616,
+      "memory_mb": 100.01883697509766
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.4,
+      "graph_beta": 0.6,
+      "seed": 1,
+      "method": "ablation_hard",
+      "runtime_sec": 1.9701002000365406,
+      "memory_mb": 58.44138050079346
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.6,
+      "graph_beta": 0.0,
+      "seed": 1,
+      "method": "Graph-CoLD",
+      "runtime_sec": 1.3819620999856852,
+      "memory_mb": 60.502333641052246
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.6,
+      "graph_beta": 0.0,
+      "seed": 1,
+      "method": "CoLD",
+      "runtime_sec": 1.1087715000030585,
+      "memory_mb": 69.7999620437622
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.6,
+      "graph_beta": 0.0,
+      "seed": 1,
+      "method": "ablation_hard",
+      "runtime_sec": 1.4099751000176184,
+      "memory_mb": 57.9947395324707
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.6,
+      "graph_beta": 0.6,
+      "seed": 1,
+      "method": "Graph-CoLD",
+      "runtime_sec": 1.1690841999952681,
+      "memory_mb": 65.98338985443115
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.6,
+      "graph_beta": 0.6,
+      "seed": 1,
+      "method": "CoLD",
+      "runtime_sec": 0.8687433999730274,
+      "memory_mb": 67.97563076019287
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.6,
+      "graph_beta": 0.6,
+      "seed": 1,
+      "method": "ablation_hard",
+      "runtime_sec": 1.1789588000392541,
+      "memory_mb": 66.4058666229248
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "clean",
+      "noise_rate": 0.0,
+      "graph_beta": "none",
+      "seed": 2,
+      "method": "Graph-CoLD",
+      "runtime_sec": 2.544253400003072,
+      "memory_mb": 62.11021709442139
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "clean",
+      "noise_rate": 0.0,
+      "graph_beta": "none",
+      "seed": 2,
+      "method": "CoLD",
+      "runtime_sec": 2.9538641000399366,
+      "memory_mb": 170.6999216079712
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "clean",
+      "noise_rate": 0.0,
+      "graph_beta": "none",
+      "seed": 2,
+      "method": "ablation_hard",
+      "runtime_sec": 3.079098999965936,
+      "memory_mb": 61.371188163757324
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.1,
+      "graph_beta": "none",
+      "seed": 2,
+      "method": "Graph-CoLD",
+      "runtime_sec": 2.961936699983198,
+      "memory_mb": 61.665103912353516
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.1,
+      "graph_beta": "none",
+      "seed": 2,
+      "method": "CoLD",
+      "runtime_sec": 2.7726059000124224,
+      "memory_mb": 158.25399017333984
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.1,
+      "graph_beta": "none",
+      "seed": 2,
+      "method": "ablation_hard",
+      "runtime_sec": 3.102583100029733,
+      "memory_mb": 56.511789321899414
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.2,
+      "graph_beta": "none",
+      "seed": 2,
+      "method": "Graph-CoLD",
+      "runtime_sec": 2.9716672000358813,
+      "memory_mb": 59.30519199371338
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.2,
+      "graph_beta": "none",
+      "seed": 2,
+      "method": "CoLD",
+      "runtime_sec": 2.6804976000566967,
+      "memory_mb": 136.41708278656006
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.2,
+      "graph_beta": "none",
+      "seed": 2,
+      "method": "ablation_hard",
+      "runtime_sec": 3.017851900018286,
+      "memory_mb": 60.04744243621826
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.4,
+      "graph_beta": "none",
+      "seed": 2,
+      "method": "Graph-CoLD",
+      "runtime_sec": 1.9709717000368983,
+      "memory_mb": 66.38538837432861
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.4,
+      "graph_beta": "none",
+      "seed": 2,
+      "method": "CoLD",
+      "runtime_sec": 1.7823425999959,
+      "memory_mb": 100.47562408447266
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.4,
+      "graph_beta": "none",
+      "seed": 2,
+      "method": "ablation_hard",
+      "runtime_sec": 1.9975907999905758,
+      "memory_mb": 66.53350353240967
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.6,
+      "graph_beta": "none",
+      "seed": 2,
+      "method": "Graph-CoLD",
+      "runtime_sec": 1.5641504999948665,
+      "memory_mb": 62.43909740447998
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.6,
+      "graph_beta": "none",
+      "seed": 2,
+      "method": "CoLD",
+      "runtime_sec": 1.244138700014446,
+      "memory_mb": 70.47580623626709
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "symmetric",
+      "noise_rate": 0.6,
+      "graph_beta": "none",
+      "seed": 2,
+      "method": "ablation_hard",
+      "runtime_sec": 1.5605481999809854,
+      "memory_mb": 64.91151142120361
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.1,
+      "graph_beta": "none",
+      "seed": 2,
+      "method": "Graph-CoLD",
+      "runtime_sec": 2.803954499948304,
+      "memory_mb": 56.802642822265625
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.1,
+      "graph_beta": "none",
+      "seed": 2,
+      "method": "CoLD",
+      "runtime_sec": 2.6261242000036873,
+      "memory_mb": 155.79232215881348
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.1,
+      "graph_beta": "none",
+      "seed": 2,
+      "method": "ablation_hard",
+      "runtime_sec": 2.935028499981854,
+      "memory_mb": 60.4865665435791
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.2,
+      "graph_beta": "none",
+      "seed": 2,
+      "method": "Graph-CoLD",
+      "runtime_sec": 2.535114300029818,
+      "memory_mb": 61.227333068847656
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.2,
+      "graph_beta": "none",
+      "seed": 2,
+      "method": "CoLD",
+      "runtime_sec": 2.2855694000027142,
+      "memory_mb": 138.0682601928711
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.2,
+      "graph_beta": "none",
+      "seed": 2,
+      "method": "ablation_hard",
+      "runtime_sec": 2.3915247000404634,
+      "memory_mb": 58.27395725250244
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.4,
+      "graph_beta": "none",
+      "seed": 2,
+      "method": "Graph-CoLD",
+      "runtime_sec": 2.026514600031078,
+      "memory_mb": 62.698758125305176
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.4,
+      "graph_beta": "none",
+      "seed": 2,
+      "method": "CoLD",
+      "runtime_sec": 1.6074015999911353,
+      "memory_mb": 99.2786226272583
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.4,
+      "graph_beta": "none",
+      "seed": 2,
+      "method": "ablation_hard",
+      "runtime_sec": 2.0487181000062265,
+      "memory_mb": 64.78808784484863
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.6,
+      "graph_beta": "none",
+      "seed": 2,
+      "method": "Graph-CoLD",
+      "runtime_sec": 1.382587899977807,
+      "memory_mb": 55.48487567901611
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.6,
+      "graph_beta": "none",
+      "seed": 2,
+      "method": "CoLD",
+      "runtime_sec": 1.067564700031653,
+      "memory_mb": 68.20114994049072
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "asymmetric",
+      "noise_rate": 0.6,
+      "graph_beta": "none",
+      "seed": 2,
+      "method": "ablation_hard",
+      "runtime_sec": 1.260199299955275,
+      "memory_mb": 59.45217704772949
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.1,
+      "graph_beta": 0.0,
+      "seed": 2,
+      "method": "Graph-CoLD",
+      "runtime_sec": 2.994438399968203,
+      "memory_mb": 60.79491996765137
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.1,
+      "graph_beta": 0.0,
+      "seed": 2,
+      "method": "CoLD",
+      "runtime_sec": 2.959169399982784,
+      "memory_mb": 153.93875122070312
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.1,
+      "graph_beta": 0.0,
+      "seed": 2,
+      "method": "ablation_hard",
+      "runtime_sec": 3.113665500015486,
+      "memory_mb": 58.56662464141846
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.1,
+      "graph_beta": 0.6,
+      "seed": 2,
+      "method": "Graph-CoLD",
+      "runtime_sec": 2.4593031000113115,
+      "memory_mb": 56.674448013305664
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.1,
+      "graph_beta": 0.6,
+      "seed": 2,
+      "method": "CoLD",
+      "runtime_sec": 2.6247521999757737,
+      "memory_mb": 163.6164035797119
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.1,
+      "graph_beta": 0.6,
+      "seed": 2,
+      "method": "ablation_hard",
+      "runtime_sec": 2.8505725000286475,
+      "memory_mb": 62.69987869262695
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.2,
+      "graph_beta": 0.0,
+      "seed": 2,
+      "method": "Graph-CoLD",
+      "runtime_sec": 2.6922120000235736,
+      "memory_mb": 66.5318431854248
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.2,
+      "graph_beta": 0.0,
+      "seed": 2,
+      "method": "CoLD",
+      "runtime_sec": 2.286057699995581,
+      "memory_mb": 142.35802268981934
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.2,
+      "graph_beta": 0.0,
+      "seed": 2,
+      "method": "ablation_hard",
+      "runtime_sec": 2.616143800027203,
+      "memory_mb": 61.82650089263916
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.2,
+      "graph_beta": 0.6,
+      "seed": 2,
+      "method": "Graph-CoLD",
+      "runtime_sec": 2.4113014999893494,
+      "memory_mb": 56.249112129211426
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.2,
+      "graph_beta": 0.6,
+      "seed": 2,
+      "method": "CoLD",
+      "runtime_sec": 2.509597499971278,
+      "memory_mb": 138.16326713562012
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.2,
+      "graph_beta": 0.6,
+      "seed": 2,
+      "method": "ablation_hard",
+      "runtime_sec": 2.7218061999883503,
+      "memory_mb": 58.87169647216797
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.4,
+      "graph_beta": 0.0,
+      "seed": 2,
+      "method": "Graph-CoLD",
+      "runtime_sec": 2.0750009000184946,
+      "memory_mb": 57.68518352508545
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.4,
+      "graph_beta": 0.0,
+      "seed": 2,
+      "method": "CoLD",
+      "runtime_sec": 1.8958327999571338,
+      "memory_mb": 101.52462863922119
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.4,
+      "graph_beta": 0.0,
+      "seed": 2,
+      "method": "ablation_hard",
+      "runtime_sec": 2.158324400021229,
+      "memory_mb": 66.38594150543213
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.4,
+      "graph_beta": 0.6,
+      "seed": 2,
+      "method": "Graph-CoLD",
+      "runtime_sec": 1.8889513000031002,
+      "memory_mb": 66.11230373382568
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.4,
+      "graph_beta": 0.6,
+      "seed": 2,
+      "method": "CoLD",
+      "runtime_sec": 1.6623270999989472,
+      "memory_mb": 105.09842872619629
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.4,
+      "graph_beta": 0.6,
+      "seed": 2,
+      "method": "ablation_hard",
+      "runtime_sec": 1.8774144999915734,
+      "memory_mb": 57.68553447723389
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.6,
+      "graph_beta": 0.0,
+      "seed": 2,
+      "method": "Graph-CoLD",
+      "runtime_sec": 1.4609362999908626,
+      "memory_mb": 62.70000171661377
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.6,
+      "graph_beta": 0.0,
+      "seed": 2,
+      "method": "CoLD",
+      "runtime_sec": 1.1362451000022702,
+      "memory_mb": 68.93096351623535
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.6,
+      "graph_beta": 0.0,
+      "seed": 2,
+      "method": "ablation_hard",
+      "runtime_sec": 1.377012500015553,
+      "memory_mb": 57.419965744018555
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.6,
+      "graph_beta": 0.6,
+      "seed": 2,
+      "method": "Graph-CoLD",
+      "runtime_sec": 1.0952564000035636,
+      "memory_mb": 61.68604850769043
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.6,
+      "graph_beta": 0.6,
+      "seed": 2,
+      "method": "CoLD",
+      "runtime_sec": 0.8558608000166714,
+      "memory_mb": 67.25128936767578
+    },
+    {
+      "dataset": "unsw_nb15",
+      "reported_as": "UNSW-NB15",
+      "noise_type": "graph_consistency",
+      "noise_rate": 0.6,
+      "graph_beta": 0.6,
+      "seed": 2,
+      "method": "ablation_hard",
+      "runtime_sec": 1.1162285000318661,
+      "memory_mb": 58.8634147644043
     }
   ],
   "summary": {
     "runtime_sec": {
-      "mean": 3.485495936270846,
-      "std": 3.388386749563654,
-      "max": 11.893056500004604
+      "mean": 3.271103769281959,
+      "std": 3.271684203925372,
+      "max": 11.949104400002398
     },
     "memory_mb": {
-      "mean": 133.00222977781607,
-      "std": 117.64740241951117,
-      "max": 344.35311126708984
+      "mean": 122.0642312450866,
+      "std": 110.59081778153237,
+      "max": 435.253511428833
     }
   }
 }

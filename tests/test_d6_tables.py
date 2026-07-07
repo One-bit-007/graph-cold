@@ -31,7 +31,7 @@ def test_table_2_is_grouped_from_expanded_results():
     ).ngroups
 
     assert len(table2) == expected_groups
-    assert set(table2["Dataset"]) == {"CICIDS-2017", "CESNET-TLS-Year22"}
+    assert set(table2["Dataset"]) == {"CICIDS-2017", "CESNET-TLS-Year22", "UNSW-NB15"}
     assert {
         "Graph-CoLD",
         "CoLD",
@@ -51,8 +51,8 @@ def test_dataset_protocol_table_reports_real_scope_and_sample_policy():
     _ensure_d6_outputs()
     table1 = pd.read_csv("tables/table_1_dataset_protocol.csv")
 
-    assert list(table1["Dataset"]) == ["CICIDS-2017", "CESNET-TLS-Year22"]
-    assert set(table1["Reported name"]) == {"CICIDS-2017", "CESNET-TLS-Year22"}
+    assert list(table1["Dataset"]) == ["CICIDS-2017", "CESNET-TLS-Year22", "UNSW-NB15"]
+    assert set(table1["Reported name"]) == {"CICIDS-2017", "CESNET-TLS-Year22", "UNSW-NB15"}
     assert table1["Sample policy"].astype(str).str.len().min() > 0
     assert table1["Source verified"].astype(str).str.lower().eq("true").all()
     assert "MALTLS-22" not in set(table1["Dataset"])

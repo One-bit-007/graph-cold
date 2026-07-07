@@ -3,33 +3,33 @@
 - Completed: True
 - Status: strong
 - Original matrix rows unchanged: True
-- Expanded rows: 1020
-- Added baseline rows: 714
+- Expanded rows: 1530
+- Added baseline rows: 1071
 - Included baselines: Co-Teaching, Confident-Learning, Decoupling, FINE, MCRe, MORSE, Noisy-Supervised
 
 ## Key Metrics
-- Co-Teaching: Macro-F1 mean=0.722969, ERR mean=0.824732, compression mean=0.990124
-- CoLD: Macro-F1 mean=0.973171, ERR mean=0.895288, compression mean=0.990853
-- Confident-Learning: Macro-F1 mean=0.767907, ERR mean=0.824528, compression mean=0.993595
-- Decoupling: Macro-F1 mean=0.644506, ERR mean=0.314434, compression mean=0.989741
-- FINE: Macro-F1 mean=0.619185, ERR mean=0.642386, compression mean=0.998683
-- Graph-CoLD: Macro-F1 mean=0.991457, ERR mean=1.000000, compression mean=0.989613
-- MCRe: Macro-F1 mean=0.680981, ERR mean=0.782408, compression mean=0.989121
-- MORSE: Macro-F1 mean=0.671961, ERR mean=0.947247, compression mean=0.998129
-- Noisy-Supervised: Macro-F1 mean=0.683640, ERR mean=1.000000, compression mean=0.997891
-- ablation_hard: Macro-F1 mean=0.973074, ERR mean=0.895288, compression mean=0.990762
+- Co-Teaching: Macro-F1 mean=0.704563, ERR mean=0.599736, compression mean=0.925580
+- CoLD: Macro-F1 mean=0.762342, ERR mean=0.763609, compression mean=0.914903
+- Confident-Learning: Macro-F1 mean=0.672665, ERR mean=0.706523, compression mean=0.920199
+- Decoupling: Macro-F1 mean=0.563241, ERR mean=0.375693, compression mean=0.944462
+- FINE: Macro-F1 mean=0.563424, ERR mean=0.679688, compression mean=0.973892
+- Graph-CoLD: Macro-F1 mean=0.854647, ERR mean=1.000000, compression mean=0.907017
+- MCRe: Macro-F1 mean=0.620243, ERR mean=0.755938, compression mean=0.931545
+- MORSE: Macro-F1 mean=0.619660, ERR mean=0.938089, compression mean=0.929598
+- Noisy-Supervised: Macro-F1 mean=0.613149, ERR mean=1.000000, compression mean=0.972850
+- ablation_hard: Macro-F1 mean=0.842201, ERR mean=0.887910, compression mean=0.916426
 
 ## Statistical Comparisons
-- Graph-CoLD_vs_Co-Teaching: n=102, diff=0.26848801850783116, dz=2.193328480661416, p=7.326753454118152e-41
-- Graph-CoLD_vs_CoLD: n=102, diff=0.018285494916563578, dz=0.4577987163803332, p=5.5956741051131204e-06
-- Graph-CoLD_vs_Confident-Learning: n=102, diff=0.22354953239876246, dz=1.3418402035755759, p=9.240692796934754e-25
-- Graph-CoLD_vs_Decoupling: n=102, diff=0.3469510333717703, dz=2.7745797788978304, p=9.786881880399386e-50
-- Graph-CoLD_vs_FINE: n=102, diff=0.3722718904140924, dz=1.6937231984683854, p=6.732317201503154e-32
-- Graph-CoLD_vs_MCRe: n=102, diff=0.3104762631231711, dz=1.6782312981541738, p=1.3430412425030052e-31
-- Graph-CoLD_vs_MORSE: n=102, diff=0.31949565833774196, dz=1.7241813565492767, p=1.7475480709545108e-32
-- Graph-CoLD_vs_Noisy-Supervised: n=102, diff=0.30781666442762434, dz=1.4238327525681225, p=1.7529374305140513e-26
-- Graph-CoLD_vs_ablation_hard: n=102, diff=0.018382631348990538, dz=0.46324647084918513, p=4.49238347554102e-06
+- Graph-CoLD_vs_Co-Teaching: n=153, diff=0.1500842494096197, dz=1.0603581078215287, p=4.5735427982828894e-27
+- Graph-CoLD_vs_CoLD: n=153, diff=0.09230590126329832, dz=0.6503353634133742, p=1.1449023614620517e-13
+- Graph-CoLD_vs_Confident-Learning: n=153, diff=0.18198209754020353, dz=1.1954256618648096, p=1.5899060767748167e-31
+- Graph-CoLD_vs_Decoupling: n=153, diff=0.291406333519473, dz=2.21184068567874, p=6.725689618398308e-61
+- Graph-CoLD_vs_FINE: n=153, diff=0.2912232607142284, dz=1.3838270993812145, p=1.3929962421954552e-37
+- Graph-CoLD_vs_MCRe: n=153, diff=0.23440467850184085, dz=1.1446768223196138, p=7.382210894709315e-30
+- Graph-CoLD_vs_MORSE: n=153, diff=0.23498750005667637, dz=1.1169285454846283, p=6.085981822411748e-29
+- Graph-CoLD_vs_Noisy-Supervised: n=153, diff=0.24149821777589753, dz=1.170372507334095, p=1.053678302771617e-30
+- Graph-CoLD_vs_ablation_hard: n=153, diff=0.012446625088628855, dz=0.3717444744348079, p=4.454008545799064e-06
 
 ## Excluded
-- Flash: excluded: provenance case-study method; no formal two-dataset label-noise implementation
-- Argus: excluded: provenance case-study method; no formal two-dataset label-noise implementation
+- Flash: excluded: provenance case-study method; no formal real-data label-noise implementation
+- Argus: excluded: provenance case-study method; no formal real-data label-noise implementation

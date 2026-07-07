@@ -14,4 +14,4 @@ Co-Teaching-lite is not a complete deep Co-Teaching reproduction. It is named li
 
 ## Risk 4 - Ceiling effect
 
-CESNET-TLS-Year22 Macro-F1 is close to 0.995 for the strongest methods. The paper should not overstate Macro-F1 margins on this dataset; the safer emphasis is stability and ERR.
+CESNET-TLS-Year22 Macro-F1 is close to 0.995 for the strongest methods. UNSW-NB15 is included as a verified classifier dataset with temporal and process/feature-block views, not as an enterprise provenance case study. The paper should not overstate Macro-F1 margins on high-ceiling datasets; the safer emphasis is stability and ERR.

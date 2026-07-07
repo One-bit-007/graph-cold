@@ -1,0 +1,29 @@
+{
+  "source": "results/table_main_expanded.csv",
+  "rows": [
+    {
+      "method": "MCRe",
+      "clean_macro_f1_before": 0.8279737619001271,
+      "low_noise_macro_f1_before": 0.6756385720500302,
+      "macro_f1_margin_before": 0.31047626312317117
+    },
+    {
+      "method": "MORSE",
+      "clean_macro_f1_before": 0.7911179508030877,
+      "low_noise_macro_f1_before": 0.6317545678640141,
+      "macro_f1_margin_before": 0.3194956583377419
+    },
+    {
+      "method": "FINE",
+      "clean_macro_f1_before": 0.9884112006729447,
+      "low_noise_macro_f1_before": 0.707953806070389,
+      "macro_f1_margin_before": 0.3722718904140923
+    },
+    {
+      "method": "Co-Teaching",
+      "clean_macro_f1_before": 0.7223025491222331,
+      "low_noise_macro_f1_before": 0.6403608584683704,
+      "macro_f1_margin_before": 0.26848801850783116
+    }
+  ]
+}

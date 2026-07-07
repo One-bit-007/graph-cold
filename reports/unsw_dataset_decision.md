@@ -4,21 +4,20 @@
 - Reported as: UNSW-NB15
 - Source verified: True
 - Selected policy: `postfilter`
-- Ready for smoke: False
-- Ready for D5 component: False
-- Active views: ip | temporal
+- Ready for smoke: True
+- Ready for D5 component: True
+- Layout: partition
+- Active views: temporal | process
+- Detected files: 2
 
 ## Raw Class Policy
-- Classes: 0
+- Classes: 10
 - Suitable: False
 
 ## Postfilter Policy
-- Classes: 0
-- Removed classes: {}
-- Downsample rule: No dominant-class downsampling needed.
+- Classes: 9
+- Removed classes: {"Worms": 174}
+- Downsample rule: Downsample dominant class 'Normal' to 58871 samples.
 
 ## Blocking Reasons
-- dataset root does not exist: E:\graphcold-data\unsw_nb15
-- label column missing: contract label candidate
-- required column groups missing: label, ip_or_flow, numeric_features
-- row count 0 below min_samples 10000
+- none

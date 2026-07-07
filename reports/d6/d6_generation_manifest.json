@@ -2,13 +2,14 @@
   "stage": "D6 real-data paper prep",
   "completed": true,
   "source_csv": "results/table_main_expanded.csv",
-  "source_sha256": "d044d4847edc1706fcdf904142085895baca70130287beb9cd2ad8c17d20dfb8",
+  "source_sha256": "125ce9e63442e82deced11caf3391dd9b4ac103a6f1f3c1a7776ca7499d493cf",
   "tables": [
     "tables/table_1_dataset_protocol.csv",
     "tables/table_2_main_performance.csv",
     "tables/table_3_high_noise_summary.csv",
     "tables/table_4_ablation_evidence.csv",
-    "tables/table_5_statistical_tests.csv"
+    "tables/table_5_statistical_tests.csv",
+    "tables/table_p2_canonical_headline.csv"
   ],
   "figures": [
     "figures/fig2_macro_f1_vs_noise_rate.png",
@@ -73,16 +74,18 @@
         "blocking_reasons": []
       },
       "unsw_nb15": {
-        "available": false,
-        "audit_passed": false,
-        "ready_for_smoke": false,
-        "ready_for_d5": false,
-        "ready_for_d5_component": false,
-        "blocking_reasons": [
-          "dataset root does not exist: data/unsw_nb15",
-          "label column missing: contract label candidate",
-          "required column groups missing: label, ip_or_flow, numeric_features",
-          "row count 0 below min_samples 10000"
+        "available": true,
+        "audit_passed": true,
+        "ready_for_smoke": true,
+        "ready_for_d5": true,
+        "ready_for_d5_component": true,
+        "blocking_reasons": [],
+        "source_verified": true,
+        "reported_as": "UNSW-NB15",
+        "actual_data_path": "E:\\graphcold-data\\unsw_nb15",
+        "active_views": [
+          "temporal",
+          "process"
         ]
       },
       "ustc_tfc2016": {
@@ -118,7 +121,6 @@
     },
     "next_actions": [
       "MALTLS-22 remains unevaluated unless source verification changes.",
-      "Resolve unsw_nb15: dataset root does not exist: data/unsw_nb15; label column missing: contract label candidate; required column groups missing: label, ip_or_flow, numeric_features; row count 0 below min_samples 10000",
       "Resolve ustc_tfc2016: dataset root does not exist: data/ustc_tfc2016; label column missing: contract label candidate; required column groups missing: label, flow_or_payload; row count 0 below min_samples 10000; dataset source is not verified; do not report this dataset",
       "OpTC unavailable; keep it out of formal experiments or provide real events.csv."
     ],
@@ -127,7 +129,8 @@
     "d7_allowed": true,
     "d5_scope": [
       "CICIDS-2017",
-      "CESNET-TLS-Year22"
+      "CESNET-TLS-Year22",
+      "UNSW-NB15"
     ],
     "d5_baseline_expansion_completed": true,
     "d6_completed": true

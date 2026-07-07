@@ -13,7 +13,8 @@ import yaml
 
 from src.data.audit import audit_dataset
 from src.data.contracts import UNSW_NB15_CONTRACT
-from src.data.paths import resolve_dataset_path
+from src.data.loaders import _detect_unsw_layout
+from src.data.paths import get_data_root, resolve_dataset_path
 
 
 SELECTED_POLICY = "postfilter"
@@ -27,11 +28,13 @@ def audit_policies(
 ) -> dict[str, Any]:
     cfg = yaml.safe_load((Path(configs) / "datasets.yaml").read_text(encoding="utf-8"))
     ds_cfg = dict(cfg.get("unsw_nb15", {}))
-    root = resolve_dataset_path("unsw_nb15", data_root) if data_root else Path(ds_cfg.get("path", UNSW_NB15_CONTRACT.root))
+    data_root_path = Path(data_root) if data_root else get_data_root(configs=configs)
+    root = resolve_dataset_path("unsw_nb15", data_root_path)
     label_col = str(ds_cfg.get("label_col", "attack_cat"))
     min_count = int(ds_cfg.get("min_class_count", 1000))
-    contract = replace(UNSW_NB15_CONTRACT, root=str(root)) if data_root else UNSW_NB15_CONTRACT
+    contract = replace(UNSW_NB15_CONTRACT, root=str(root))
     audit = audit_dataset(contract)
+    layout = _detect_unsw_layout(root)
     raw_counts: dict[str, int] = {}
     if root.exists():
         try:
@@ -46,7 +49,7 @@ def audit_policies(
         "source_verified": True,
         "dataset_hash": audit.dataset_hash,
         "actual_data_path": str(root),
-        "external_data_root": str(data_root) if data_root else None,
+        "external_data_root": str(data_root_path),
         "selected_policy": SELECTED_POLICY,
         "min_class_count": min_count,
         "policies": {
@@ -68,11 +71,14 @@ def audit_policies(
                 "suitable_for_experiment": bool(post_counts) and len(post_counts) >= 2,
             },
         },
-        "active_views": ["ip", "temporal"],
-        "unsupported_views": ["host", "process", "threat_intel"],
-        "ready_for_smoke": bool(audit.ready_for_smoke),
-        "ready_for_d5_component": bool(audit.ready_for_d5),
-        "blocking_reasons": audit.blocking_reasons,
+        "layout": layout["layout"],
+        "detected_files": layout.get("files", []),
+        "detected_columns": layout.get("columns", []),
+        "active_views": _active_views_for_layout(layout),
+        "unsupported_views": _unsupported_views_for_layout(layout),
+        "ready_for_smoke": bool(audit.ready_for_smoke and layout["layout"] in {"partition", "full_csv"}),
+        "ready_for_d5_component": bool(audit.ready_for_d5 and layout["layout"] in {"partition", "full_csv"}),
+        "blocking_reasons": _blocking_reasons(audit.blocking_reasons, layout),
     }
     if reports is not None:
         write_policy_reports(report, reports)
@@ -96,6 +102,7 @@ def write_policy_reports(report: dict[str, Any], reports: str | Path = "reports"
     out = Path(reports)
     out.mkdir(parents=True, exist_ok=True)
     (out / "unsw_dataset_decision.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
+    (out / "unsw_ingest.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
     lines = [
         "# UNSW-NB15 Dataset Decision",
         "",
@@ -105,7 +112,9 @@ def write_policy_reports(report: dict[str, Any], reports: str | Path = "reports"
         f"- Selected policy: `{report['selected_policy']}`",
         f"- Ready for smoke: {report['ready_for_smoke']}",
         f"- Ready for D5 component: {report['ready_for_d5_component']}",
+        f"- Layout: {report['layout']}",
         f"- Active views: {' | '.join(report['active_views'])}",
+        f"- Detected files: {len(report['detected_files'])}",
         "",
         "## Raw Class Policy",
         f"- Classes: {report['policies']['raw']['num_classes']}",
@@ -120,7 +129,36 @@ def write_policy_reports(report: dict[str, Any], reports: str | Path = "reports"
     ]
     lines.extend([f"- {reason}" for reason in report.get("blocking_reasons", [])] or ["- none"])
     lines.append("")
-    (out / "unsw_dataset_decision.md").write_text("\n".join(lines), encoding="utf-8")
+    text = "\n".join(lines)
+    (out / "unsw_dataset_decision.md").write_text(text, encoding="utf-8")
+    (out / "unsw_ingest.md").write_text(text.replace("# UNSW-NB15 Dataset Decision", "# UNSW-NB15 Ingest Report"), encoding="utf-8")
+
+
+def _active_views_for_layout(layout: dict[str, Any]) -> list[str]:
+    columns = {str(col).strip().lower() for col in layout.get("columns", [])}
+    has_ip = bool(columns.intersection({"srcip", "dstip", "saddr", "daddr", "source ip", "destination ip"}))
+    if layout.get("layout") == "partition" and not has_ip:
+        return ["temporal", "process"]
+    if has_ip:
+        return ["host", "ip", "temporal"]
+    return ["temporal", "process"] if layout.get("layout") in {"partition", "full_csv"} else []
+
+
+def _unsupported_views_for_layout(layout: dict[str, Any]) -> list[str]:
+    active = set(_active_views_for_layout(layout))
+    return [view for view in ["host", "ip", "temporal", "process", "threat_intel"] if view not in active]
+
+
+def _blocking_reasons(existing: list[str], layout: dict[str, Any]) -> list[str]:
+    reasons = list(existing)
+    if layout.get("layout") == "absent":
+        reasons.append("UNSW-NB15 root is absent; place files under E:\\graphcold-data\\unsw_nb15")
+    elif layout.get("layout") == "unknown":
+        reasons.append(
+            "UNSW-NB15 layout not recognized; expected partition files "
+            "UNSW_NB15_training-set.csv/UNSW_NB15_testing-set.csv or full UNSW-NB15_1..4.csv files"
+        )
+    return list(dict.fromkeys(reasons))
 
 
 def _read_label_counts(root: Path, label_col: str) -> dict[str, int]:

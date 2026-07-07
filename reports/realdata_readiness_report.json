@@ -38,16 +38,18 @@
       "blocking_reasons": []
     },
     "unsw_nb15": {
-      "available": false,
-      "audit_passed": false,
-      "ready_for_smoke": false,
-      "ready_for_d5": false,
-      "ready_for_d5_component": false,
-      "blocking_reasons": [
-        "dataset root does not exist: data/unsw_nb15",
-        "label column missing: contract label candidate",
-        "required column groups missing: label, ip_or_flow, numeric_features",
-        "row count 0 below min_samples 10000"
+      "available": true,
+      "audit_passed": true,
+      "ready_for_smoke": true,
+      "ready_for_d5": true,
+      "ready_for_d5_component": true,
+      "blocking_reasons": [],
+      "source_verified": true,
+      "reported_as": "UNSW-NB15",
+      "actual_data_path": "E:\\graphcold-data\\unsw_nb15",
+      "active_views": [
+        "temporal",
+        "process"
       ]
     },
     "ustc_tfc2016": {
@@ -83,7 +85,6 @@
   },
   "next_actions": [
     "MALTLS-22 remains unevaluated unless source verification changes.",
-    "Resolve unsw_nb15: dataset root does not exist: data/unsw_nb15; label column missing: contract label candidate; required column groups missing: label, ip_or_flow, numeric_features; row count 0 below min_samples 10000",
     "Resolve ustc_tfc2016: dataset root does not exist: data/ustc_tfc2016; label column missing: contract label candidate; required column groups missing: label, flow_or_payload; row count 0 below min_samples 10000; dataset source is not verified; do not report this dataset",
     "OpTC unavailable; keep it out of formal experiments or provide real events.csv."
   ],
@@ -92,7 +93,8 @@
   "d7_allowed": true,
   "d5_scope": [
     "CICIDS-2017",
-    "CESNET-TLS-Year22"
+    "CESNET-TLS-Year22",
+    "UNSW-NB15"
   ],
   "d5_baseline_expansion_completed": true,
   "d6_completed": true

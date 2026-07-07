@@ -11,7 +11,7 @@ import pandas as pd
 
 
 HONEST_DATASETS = {"cicids2017", "cesnet_tls_year22", "unsw_nb15", "ustc_tfc2016"}
-FORMAL_D5_DATASETS = {"cicids2017", "cesnet_tls_year22"}
+FORMAL_D5_DATASETS = {"cicids2017", "cesnet_tls_year22", "unsw_nb15"}
 FORMAL_D5_METHODS = {"Graph-CoLD", "CoLD", "ablation_hard"}
 EXPANDED_D5_METHODS = {
     "Noisy-Supervised",
@@ -28,6 +28,7 @@ FORBIDDEN_RESULT_TERMS = ("synthetic", "fallback", "emulation", "dummy", "placeh
 EXPECTED_ACTIVE_VIEWS = {
     "cicids2017": "host|ip|temporal",
     "cesnet_tls_year22": "ip|temporal",
+    "unsw_nb15": "temporal|process",
 }
 VALID_VIEWS = {"host", "ip", "process", "temporal", "threat_intel"}
 

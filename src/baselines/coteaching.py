@@ -7,6 +7,7 @@ classifiers because the project evaluates fixed tabular flow features.
 from __future__ import annotations
 
 import numpy as np
+from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.linear_model import SGDClassifier
 from sklearn.preprocessing import StandardScaler
 
@@ -18,11 +19,19 @@ class CoTeachingBaseline:
     method_family = "co_teaching"
     implementation_status = "verified_implementation"
 
-    def __init__(self, seed: int = 0, noise_rate: float = 0.0, epochs: int = 6, batch_size: int = 4096):
+    def __init__(
+        self,
+        seed: int = 0,
+        noise_rate: float = 0.0,
+        epochs: int = 6,
+        batch_size: int = 4096,
+        n_estimators: int = 32,
+    ):
         self.seed = int(seed)
         self.noise_rate = float(noise_rate)
         self.epochs = int(epochs)
         self.batch_size = int(batch_size)
+        self.n_estimators = int(n_estimators)
 
     def fit_predict(self, X_train, y_noisy, X_test, num_classes: int, **kwargs) -> BaselineResult:
         del kwargs
@@ -70,9 +79,25 @@ class CoTeachingBaseline:
             exchanged_counts.append(int((mask_a & mask_b).sum()))
 
         retained = ensure_class_coverage(mask_a & mask_b, confidence, y_noisy)
+        final_a = ExtraTreesClassifier(
+            n_estimators=self.n_estimators,
+            random_state=self.seed + 20_003,
+            class_weight="balanced",
+            n_jobs=-1,
+        )
+        final_b = ExtraTreesClassifier(
+            n_estimators=self.n_estimators,
+            random_state=self.seed + 30_007,
+            class_weight="balanced",
+            n_jobs=-1,
+        )
+        train_a = ensure_class_coverage(mask_b, confidence, y_noisy)
+        train_b = ensure_class_coverage(mask_a, confidence, y_noisy)
+        final_a.fit(X_scaled[train_a], y_noisy[train_a])
+        final_b.fit(X_scaled[train_b], y_noisy[train_b])
         test_proba = 0.5 * (
-            _aligned_proba(clf_a, X_test_scaled, num_classes)
-            + _aligned_proba(clf_b, X_test_scaled, num_classes)
+            _aligned_tree_proba(final_a, X_test_scaled, num_classes)
+            + _aligned_tree_proba(final_b, X_test_scaled, num_classes)
         )
         y_pred = np.argmax(test_proba, axis=1).astype(np.int64)
         return BaselineResult(
@@ -84,7 +109,8 @@ class CoTeachingBaseline:
             weights=retained.astype(np.float64),
             retained_mask=retained,
             details={
-                "classifier": "two SGDClassifier(log_loss)",
+                "classifier": "two SGDClassifier(log_loss) selectors + two ExtraTreesClassifier heads",
+                "n_estimators": self.n_estimators,
                 "trained_on": "noisy_y_train",
                 "train_label_source": "noisy_y_train",
                 "eval_label_source": "clean_y_test",
@@ -133,6 +159,21 @@ def _small_loss_mask(loss: np.ndarray, keep_n: int) -> np.ndarray:
 
 
 def _aligned_proba(model: SGDClassifier, X, num_classes: int) -> np.ndarray:
+    raw = model.predict_proba(X)
+    out = np.zeros((X.shape[0], num_classes), dtype=np.float64)
+    for col_idx, label in enumerate(getattr(model, "classes_", np.arange(raw.shape[1]))):
+        label_idx = int(label)
+        if 0 <= label_idx < num_classes:
+            out[:, label_idx] = raw[:, col_idx]
+    row_sum = out.sum(axis=1, keepdims=True)
+    zero = row_sum[:, 0] <= 1e-12
+    if np.any(zero):
+        out[zero, :] = 1.0 / max(num_classes, 1)
+        row_sum = out.sum(axis=1, keepdims=True)
+    return out / np.maximum(row_sum, 1e-12)
+
+
+def _aligned_tree_proba(model: ExtraTreesClassifier, X, num_classes: int) -> np.ndarray:
     raw = model.predict_proba(X)
     out = np.zeros((X.shape[0], num_classes), dtype=np.float64)
     for col_idx, label in enumerate(getattr(model, "classes_", np.arange(raw.shape[1]))):

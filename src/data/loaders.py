@@ -55,8 +55,16 @@ def load_dataset(name: str, cfg: dict) -> Dataset:
     seed = int(ds_cfg.get("seed", cfg.get("seed", 0) if isinstance(cfg, dict) else 0))
     rng = np.random.default_rng(seed)
     sample_rows = ds_cfg.get("sample_rows")
-    df = _read_dataset_frame(ds_cfg["path"], sample_rows=int(sample_rows) if sample_rows is not None else None)
+    unsw_layout: dict[str, Any] | None = None
+    if key == "unsw_nb15":
+        unsw_layout = _detect_unsw_layout(Path(ds_cfg["path"]))
+        if unsw_layout["layout"] == "partition":
+            return _load_unsw_partition_dataset(ds_cfg, seed, rng, unsw_layout)
+        df = _read_unsw_frame(ds_cfg["path"], sample_rows=int(sample_rows) if sample_rows is not None else None)
+    else:
+        df = _read_dataset_frame(ds_cfg["path"], sample_rows=int(sample_rows) if sample_rows is not None else None)
     df.columns = [str(col).strip() for col in df.columns]
+    source_columns = list(df.columns)
     if sample_rows is not None:
         sample_rows = int(sample_rows)
         if sample_rows > 0 and len(df) > sample_rows:
@@ -123,6 +131,7 @@ def load_dataset(name: str, cfg: dict) -> Dataset:
         timestamp_test = None
 
     class_counts = {class_names[idx]: int(count) for idx, count in enumerate(np.bincount(y))}
+    view_support = _expected_view_support(key, source_columns, unsw_layout)
     meta = {
         "dataset": key,
         "dataset_name": key,
@@ -132,7 +141,7 @@ def load_dataset(name: str, cfg: dict) -> Dataset:
         "label_column": label_col,
         "num_classes": len(class_names),
         "class_policy": str(ds_cfg.get("class_policy", "postfilter11" if key == "cicids2017" else "raw")),
-        "active_views": [view for view, enabled in _expected_view_support(key).items() if enabled],
+        "active_views": [view for view, enabled in view_support.items() if enabled],
         "source_verified": bool(ds_cfg.get("source_verified", key != "maltls22")),
         "replacement_for": ds_cfg.get("replacement_for"),
         "reported_as": ds_cfg.get("reported_as", key),
@@ -145,7 +154,8 @@ def load_dataset(name: str, cfg: dict) -> Dataset:
         "timestamps": {"train": timestamp_train, "test": timestamp_test},
         "scaler": scaler,
         "benign_class": _benign_class_index(class_names),
-        "expected_view_support": _expected_view_support(key),
+        "expected_view_support": view_support,
+        "layout": unsw_layout["layout"] if unsw_layout else None,
     }
 
     return Dataset(
@@ -202,6 +212,122 @@ def load_unsw_nb15(cfg: dict) -> Dataset:
     return load_dataset("unsw_nb15", cfg)
 
 
+def _load_unsw_partition_dataset(
+    ds_cfg: dict,
+    seed: int,
+    rng: np.random.Generator,
+    layout: dict[str, Any],
+) -> Dataset:
+    del seed
+    train_path = Path(layout["train_file"])
+    test_path = Path(layout["test_file"])
+    train_df = _read_table(train_path)
+    test_df = _read_table(test_path)
+    train_df.columns = [str(col).strip() for col in train_df.columns]
+    test_df.columns = [str(col).strip() for col in test_df.columns]
+    source_columns = sorted({*train_df.columns, *test_df.columns})
+    train_df["__graphcold_split"] = "train"
+    test_df["__graphcold_split"] = "test"
+    df = pd.concat([train_df, test_df], axis=0, ignore_index=True, sort=False)
+    label_col = _resolve_loader_label_column("unsw_nb15", df, ds_cfg)
+    if not label_col or label_col not in df.columns:
+        raise ValueError(f"UNSW-NB15 partition layout requires label_col '{label_col}'.")
+
+    timestamp_cols = _timestamp_columns(df.columns)
+    timestamps = _coalesce_timestamps(df, timestamp_cols)
+    stripped = df[label_col].astype("string").str.strip()
+    valid = (stripped.notna() & (stripped != "") & (stripped.str.lower() != "nan")).to_numpy()
+    split = df["__graphcold_split"].to_numpy()[valid]
+    if timestamps is not None:
+        timestamps = timestamps[valid]
+
+    drop_cols = [col for col in ds_cfg.get("drop_cols", []) if col in df.columns]
+    df.drop(columns=[*drop_cols, "__graphcold_split"], errors="ignore", inplace=True)
+    df.drop(columns=[col for col in timestamp_cols if col in df.columns], errors="ignore", inplace=True)
+    work = df.loc[valid].reset_index(drop=True)
+    del df
+
+    if str(ds_cfg.get("class_policy", "postfilter")) == "postfilter":
+        min_count = int(ds_cfg.get("min_class_count", 1000))
+        counts = work[label_col].value_counts()
+        keep_labels = counts[counts >= min_count].index
+        kept_counts = counts.loc[keep_labels]
+        if kept_counts.empty:
+            raise ValueError(f"No UNSW-NB15 classes remain after min_class_count={min_count}.")
+        if len(kept_counts) <= 1:
+            selected = np.flatnonzero(work[label_col].isin(keep_labels).to_numpy())
+        else:
+            dominant_label = kept_counts.idxmax()
+            cap = int(kept_counts.drop(index=dominant_label).max())
+            labels = work[label_col].to_numpy()
+            selected_parts: list[np.ndarray] = []
+            for label in keep_labels:
+                positions = np.flatnonzero(labels == label)
+                if label == dominant_label and len(positions) > cap:
+                    positions = np.sort(rng.choice(positions, size=cap, replace=False))
+                selected_parts.append(positions)
+            selected = np.sort(np.concatenate(selected_parts))
+        work = work.iloc[selected].reset_index(drop=True)
+        split = split[selected]
+        if timestamps is not None:
+            timestamps = timestamps[selected]
+
+    labels_raw = work[label_col].astype(str).to_numpy()
+    class_names = _ordered_class_names(labels_raw)
+    label_mapping = {label: idx for idx, label in enumerate(class_names)}
+    y = np.array([label_mapping[label] for label in labels_raw], dtype=np.int64)
+    features = _build_feature_frame(work.drop(columns=[label_col]))
+    feature_names = list(features.columns)
+    X = features.to_numpy(dtype=np.float32)
+    train_idx = np.flatnonzero(split == "train")
+    test_idx = np.flatnonzero(split == "test")
+    if train_idx.size == 0 or test_idx.size == 0:
+        raise ValueError("UNSW-NB15 partition layout must contain non-empty train and test splits.")
+
+    scaler = StandardScaler()
+    X_train = scaler.fit_transform(X[train_idx]).astype(np.float32)
+    X_test = scaler.transform(X[test_idx]).astype(np.float32)
+    view_support = _expected_view_support("unsw_nb15", source_columns, layout)
+    class_counts = {class_names[idx]: int(count) for idx, count in enumerate(np.bincount(y, minlength=len(class_names)))}
+    meta = {
+        "dataset": "unsw_nb15",
+        "dataset_name": "unsw_nb15",
+        "data_source": str(Path(ds_cfg["path"]).resolve()),
+        "data_version": str(ds_cfg.get("version", "real-local")),
+        "dataset_hash": ds_cfg.get("dataset_hash"),
+        "label_column": label_col,
+        "num_classes": len(class_names),
+        "class_policy": str(ds_cfg.get("class_policy", "postfilter")),
+        "active_views": [view for view, enabled in view_support.items() if enabled],
+        "source_verified": bool(ds_cfg.get("source_verified", True)),
+        "replacement_for": ds_cfg.get("replacement_for"),
+        "reported_as": ds_cfg.get("reported_as", "UNSW-NB15"),
+        "feature_names": feature_names,
+        "class_names": class_names,
+        "label_mapping": label_mapping,
+        "class_counts": class_counts,
+        "train_indices": train_idx,
+        "test_indices": test_idx,
+        "timestamps": {
+            "train": timestamps[train_idx] if timestamps is not None else None,
+            "test": timestamps[test_idx] if timestamps is not None else None,
+        },
+        "scaler": scaler,
+        "benign_class": _benign_class_index(class_names),
+        "expected_view_support": view_support,
+        "layout": layout["layout"],
+        "layout_files": layout["files"],
+    }
+    return Dataset(
+        X_train=X_train,
+        y_train=y[train_idx],
+        X_test=X_test,
+        y_test=y[test_idx],
+        num_classes=len(class_names),
+        meta=meta,
+    )
+
+
 def _resolve_loader_label_column(key: str, df: pd.DataFrame, ds_cfg: dict) -> str | None:
     requested = ds_cfg.get("label_col")
     if requested and requested in df.columns:
@@ -215,6 +341,66 @@ def _resolve_loader_label_column(key: str, df: pd.DataFrame, ds_cfg: dict) -> st
                 if str(col).strip().lower() == candidate.lower():
                     return str(col).strip()
     return requested
+
+
+def _detect_unsw_layout(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return {"layout": "absent", "files": [], "columns": []}
+    files = [path] if path.is_file() else sorted(path.rglob("*.csv"))
+    by_name = {file.name.lower(): file for file in files}
+    train = by_name.get("unsw_nb15_training-set.csv")
+    test = by_name.get("unsw_nb15_testing-set.csv")
+    if train is not None and test is not None:
+        columns = sorted({*_safe_columns(train), *_safe_columns(test)})
+        return {
+            "layout": "partition",
+            "train_file": str(train),
+            "test_file": str(test),
+            "files": [str(train), str(test)],
+            "columns": columns,
+        }
+    full = [
+        file
+        for file in files
+        if file.name.lower().startswith("unsw-nb15_")
+        and file.name.lower().endswith(".csv")
+        and "features" not in file.name.lower()
+    ]
+    if full:
+        columns = _safe_columns(full[0])
+        features = [str(file) for file in files if "features" in file.name.lower()]
+        return {
+            "layout": "full_csv",
+            "files": [str(file) for file in sorted(full)],
+            "features_file": features[0] if features else None,
+            "columns": columns,
+        }
+    return {"layout": "unknown", "files": [str(file) for file in files], "columns": _safe_columns(files[0]) if files else []}
+
+
+def _read_unsw_frame(path_value: str | Path, sample_rows: int | None = None) -> pd.DataFrame:
+    path = Path(path_value)
+    layout = _detect_unsw_layout(path)
+    if layout["layout"] == "full_csv":
+        frames = []
+        remaining = sample_rows if sample_rows and sample_rows > 0 else None
+        for file_value in layout["files"]:
+            file = Path(file_value)
+            frame = _read_table(file, nrows=remaining if remaining is not None else None)
+            frames.append(frame)
+            if remaining is not None:
+                remaining -= len(frame)
+                if remaining <= 0:
+                    break
+        return pd.concat(frames, axis=0, ignore_index=True)
+    return _read_dataset_frame(path, sample_rows=sample_rows)
+
+
+def _safe_columns(path: Path) -> list[str]:
+    try:
+        return [str(col).strip() for col in pd.read_csv(path, nrows=0, low_memory=False).columns]
+    except Exception:
+        return []
 
 
 def _read_dataset_frame(path_value: str | Path, sample_rows: int | None = None) -> pd.DataFrame:
@@ -417,8 +603,34 @@ def _can_stratify(y: np.ndarray) -> bool:
     return len(counts) > 1 and bool(np.all(counts >= 2))
 
 
-def _expected_view_support(key: str) -> dict[str, bool]:
-    if key in {"cesnet_tls_year22", "unsw_nb15"}:
+def _expected_view_support(
+    key: str,
+    columns: list[str] | None = None,
+    layout: dict[str, Any] | None = None,
+) -> dict[str, bool]:
+    if key == "unsw_nb15":
+        lowered = {str(col).strip().lower() for col in (columns or [])}
+        has_ip = bool(lowered.intersection({"srcip", "dstip", "saddr", "daddr", "source ip", "destination ip"}))
+        has_time = bool(lowered.intersection({"stime", "ltime", "timestamp", "time", "ts"})) or any(
+            "time" in col for col in lowered
+        )
+        layout_name = (layout or {}).get("layout")
+        if layout_name == "partition" and not has_ip:
+            return {
+                "host": False,
+                "ip": False,
+                "temporal": True,
+                "process": True,
+                "threat_intel": False,
+            }
+        return {
+            "host": has_ip,
+            "ip": has_ip,
+            "temporal": bool(has_time or layout_name in {"partition", "full_csv"}),
+            "process": not has_ip,
+            "threat_intel": False,
+        }
+    if key == "cesnet_tls_year22":
         return {
             "host": False,
             "ip": True,

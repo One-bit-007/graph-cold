@@ -1,0 +1,38 @@
+{
+  "table": "tables/table_p2_prioritization_reframe.csv",
+  "claim": "rescoped_to_evidence_retention_not_raw_topk_priority",
+  "topk_advantage_found": false,
+  "compression_advantage_found": false,
+  "operational_delta_threshold": 0.001,
+  "secondary_advantage_vs_weaker_baselines": true,
+  "summary": [
+    {
+      "method": "CoLD",
+      "topk_precision": 0.9991666666666666,
+      "precision_at_budget": 0.9997368135631771,
+      "compression_at_recall_90": 0.6629143848864062,
+      "compression_at_recall_95": 0.6997575723882422
+    },
+    {
+      "method": "Confident-Learning",
+      "topk_precision": 0.9641666666666667,
+      "precision_at_budget": 0.9656774568498849,
+      "compression_at_recall_90": 0.7268390333213143,
+      "compression_at_recall_95": 0.7943274329039465
+    },
+    {
+      "method": "Graph-CoLD",
+      "topk_precision": 0.9991666666666666,
+      "precision_at_budget": 0.9997027443345045,
+      "compression_at_recall_90": 0.662930702340626,
+      "compression_at_recall_95": 0.699773889842462
+    },
+    {
+      "method": "ablation_hard",
+      "topk_precision": 0.9991666666666666,
+      "precision_at_budget": 0.9997027443345045,
+      "compression_at_recall_90": 0.6629326624024399,
+      "compression_at_recall_95": 0.699775849904276
+    }
+  ]
+}

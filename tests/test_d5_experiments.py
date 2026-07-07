@@ -10,7 +10,7 @@ from src.experiments import d5
 from src.experiments.d5 import FIELDNAMES, FORMAL_METHODS, run_d5_experiments
 
 
-def test_d5_required_real_two_dataset_outputs_and_guards_exist():
+def test_d5_required_real_dataset_outputs_and_guards_exist():
     out = Path("results")
     reports = Path("reports")
     if not (out / "table_main.csv").exists():
@@ -40,8 +40,8 @@ def test_d5_required_real_two_dataset_outputs_and_guards_exist():
 
     main = pd.read_csv(out / "table_main.csv")
     assert set(FIELDNAMES).issubset(main.columns)
-    assert set(main["dataset"]) == {"cicids2017", "cesnet_tls_year22"}
-    assert set(main["reported_as"]) == {"CICIDS-2017", "CESNET-TLS-Year22"}
+    assert set(main["dataset"]) == {"cicids2017", "cesnet_tls_year22", "unsw_nb15"}
+    assert set(main["reported_as"]) == {"CICIDS-2017", "CESNET-TLS-Year22", "UNSW-NB15"}
     assert set(main["method"]) == set(FORMAL_METHODS)
     assert "MALTLS-22" not in set(main["reported_as"])
     assert "optc" not in set(main["dataset"])
@@ -50,6 +50,7 @@ def test_d5_required_real_two_dataset_outputs_and_guards_exist():
     assert main["sample_policy"].astype(str).str.len().min() > 0
     assert set(main[main["dataset"] == "cicids2017"]["active_views"]) == {"host|ip|temporal"}
     assert set(main[main["dataset"] == "cesnet_tls_year22"]["active_views"]) == {"ip|temporal"}
+    assert set(main[main["dataset"] == "unsw_nb15"]["active_views"]) == {"temporal|process"}
 
     baseline = json.loads((reports / "baseline_readiness_report.json").read_text(encoding="utf-8"))
     assert baseline["methods_in_formal_d5"] == list(FORMAL_METHODS)

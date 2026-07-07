@@ -1,9 +1,10 @@
-"""D5 real two-dataset experimental matrix.
+"""D5 real-data experimental matrix.
 
 This runner is deliberately scoped to the verified D5 gate:
 
 * CICIDS-2017 postfilter11.
 * CESNET-TLS-Year22 postfilter25, reported under its true dataset name.
+* Optional UNSW-NB15 when real local files pass the ingest gate.
 
 It never writes OpTC rows, paper tables, paper figures, or manuscript assets.
 Only independently runnable methods enter the formal matrix.
@@ -27,6 +28,7 @@ from src.analysis.stat_tests import grouped_paired_summary
 from src.analysis.evidence_downstream import tail_class_recall
 from src.data.loaders import Dataset, load_dataset
 from src.data.noise import inject_asymmetric, inject_graph_consistency, inject_symmetric
+from src.data.unsw_policy import audit_policies as audit_unsw_policies
 from src.experiments import cicids_mini_matrix
 from src.experiments.second_dataset_selection import select_second_dataset
 from src.metrics import evidence_retention_components, false_negative_rate, false_positive_rate, macro_f1
@@ -36,7 +38,9 @@ from src.ranking.prioritize import alert_compression_ratio, priority_scores
 
 
 SEEDS = (0, 1, 2)
-FORMAL_DATASETS = ("cicids2017", "cesnet_tls_year22")
+BASE_FORMAL_DATASETS = ("cicids2017", "cesnet_tls_year22")
+OPTIONAL_FORMAL_DATASETS = ("unsw_nb15",)
+FORMAL_DATASETS = BASE_FORMAL_DATASETS
 FORMAL_METHODS = ("Graph-CoLD", "CoLD", "ablation_hard")
 NOISE_RATES = (0.1, 0.2, 0.4, 0.6)
 GRAPH_BETAS = (0.0, 0.6)
@@ -134,13 +138,11 @@ class MethodExecutionPlan:
 
 
 def run_d5_experiments(out_dir: str | Path = "results", configs_dir: str | Path = "configs") -> dict[str, Any]:
-    """Run the formal D5 matrix after the two-dataset readiness gate passes."""
+    """Run the formal D5 matrix after the real-data readiness gate passes."""
     configs = Path(configs_dir)
     reports = configs.parent / "reports"
     out = Path(out_dir)
     dataset_scope = _readiness_guard(configs)
-    if tuple(dataset_scope) != FORMAL_DATASETS:
-        raise RuntimeError(f"D5 formal scope must be {FORMAL_DATASETS}, got {dataset_scope}.")
 
     out.mkdir(parents=True, exist_ok=True)
     reports.mkdir(parents=True, exist_ok=True)
@@ -242,18 +244,37 @@ def _readiness_guard(configs_dir: str | Path = "configs") -> tuple[str, ...]:
             "Run dataset audit and second-dataset selection before D5."
         )
     if not bool(gate.get("d5_allowed", False)):
-        reasons = "; ".join(gate.get("blocking_reasons") or ["two-dataset readiness gate is false"])
+        reasons = "; ".join(gate.get("blocking_reasons") or ["real-data readiness gate is false"])
         raise RuntimeError(f"D5 readiness guard blocked: {reasons}")
     scope = tuple(_normalize_scope_name(name) for name in gate.get("d5_scope", []))
-    forbidden = {"maltls22", "optc", "unsw_nb15", "ustc_tfc2016"}
+    forbidden = {"maltls22", "optc", "ustc_tfc2016"}
     if not scope or any(name in forbidden for name in scope):
         raise RuntimeError(
             f"D5 readiness guard blocked: invalid d5_scope={list(scope)}; "
-            "MALTLS-22, OpTC, UNSW-NB15, and USTC-TFC2016 are not allowed in this formal run."
+            "MALTLS-22, OpTC, and USTC-TFC2016 are not allowed in this formal run."
         )
-    if scope != FORMAL_DATASETS:
-        raise RuntimeError(f"D5 readiness guard blocked: expected d5_scope={FORMAL_DATASETS}, got {scope}.")
+    if scope != BASE_FORMAL_DATASETS and scope != (*BASE_FORMAL_DATASETS, "unsw_nb15"):
+        raise RuntimeError(f"D5 readiness guard blocked: expected d5_scope={BASE_FORMAL_DATASETS} plus optional UNSW, got {scope}.")
+    if "unsw_nb15" not in scope and _unsw_ready_for_matrix(configs_dir, reports_dir):
+        scope = (*scope, "unsw_nb15")
     return scope
+
+
+def _unsw_ready_for_matrix(configs_dir: str | Path, reports_dir: str | Path) -> bool:
+    try:
+        report = audit_unsw_policies(configs=configs_dir, reports=reports_dir)
+    except Exception as exc:
+        out = Path(reports_dir)
+        out.mkdir(parents=True, exist_ok=True)
+        report = {
+            "dataset": "unsw_nb15",
+            "reported_as": "UNSW-NB15",
+            "ready_for_d5_component": False,
+            "blocking_reasons": [str(exc)],
+        }
+        (out / "unsw_ingest.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
+        (out / "unsw_ingest.md").write_text("# UNSW-NB15 Ingest Report\n\n- Ready for D5 component: False\n- " + str(exc) + "\n", encoding="utf-8")
+    return bool(report.get("ready_for_d5_component", False))
 
 
 def write_baseline_readiness_report(reports: str | Path = "reports") -> dict[str, Any]:
@@ -264,11 +285,11 @@ def write_baseline_readiness_report(reports: str | Path = "reports") -> dict[str
         "ablation_hard": {"included": True, "reason": "mandatory CoLD degeneracy / hard-retention comparator"},
         "FINE": {
             "included": True,
-            "reason": "included in D5.5 real-data baseline expansion and smoke-passed on the formal two-dataset scope",
+            "reason": "included in D5.5 real-data baseline expansion and smoke-passed on the active formal scope",
         },
         "Co-Teaching": {
             "included": True,
-            "reason": "included in D5.5 real-data baseline expansion and smoke-passed on the formal two-dataset scope",
+            "reason": "included in D5.5 real-data baseline expansion and smoke-passed on the active formal scope",
         },
         "Co-Teaching+": {
             "included": False,
@@ -276,7 +297,7 @@ def write_baseline_readiness_report(reports: str | Path = "reports") -> dict[str
         },
         "Decoupling": {
             "included": True,
-            "reason": "included in D5.5 real-data baseline expansion and smoke-passed on the formal two-dataset scope",
+            "reason": "included in D5.5 real-data baseline expansion and smoke-passed on the active formal scope",
         },
         "cleanlab": {
             "included": False,
@@ -284,11 +305,11 @@ def write_baseline_readiness_report(reports: str | Path = "reports") -> dict[str
         },
         "MCRe": {
             "included": True,
-            "reason": "included in D5.5 real-data baseline expansion and smoke-passed on the formal two-dataset scope",
+            "reason": "included in D5.5 real-data baseline expansion and smoke-passed on the active formal scope",
         },
         "MORSE": {
             "included": True,
-            "reason": "included in D5.5 real-data baseline expansion and smoke-passed on the formal two-dataset scope",
+            "reason": "included in D5.5 real-data baseline expansion and smoke-passed on the active formal scope",
         },
         "methods_in_formal_d5": list(FORMAL_METHODS),
         "unimplemented_methods_emit_rows": False,
@@ -319,6 +340,14 @@ def write_scale_policy_report(reports: str | Path = "reports") -> dict[str, Any]
                 "sampling_stratified": True,
                 "claim_guard": "Do not describe this as full CESNET evaluation.",
             },
+            "unsw_nb15": {
+                "reported_as": "UNSW-NB15",
+                "class_policy": "postfilter",
+                "sample_policy": "auto_detected_layout_then_postfilter_stratified_protocol",
+                "sample_rows": None,
+                "sampling_stratified": True,
+                "claim_guard": "Include only when reports/unsw_ingest.json marks the real local files ready.",
+            },
         },
     }
     out = Path(reports)
@@ -343,6 +372,12 @@ def _load_formal_dataset(dataset_name: str, seed: int, configs_dir: Path, scale_
         protocol = _read_json(configs_dir.parent / "reports" / "cicids_final_protocol.json")
         cfg[dataset_name]["dataset_hash"] = protocol.get("dataset_hash")
         cfg[dataset_name]["reported_as"] = "CICIDS-2017"
+        cfg[dataset_name]["source_verified"] = True
+    elif dataset_name == "unsw_nb15":
+        audit = _read_json(configs_dir.parent / "reports" / "unsw_ingest.json")
+        cfg[dataset_name]["path"] = audit.get("actual_data_path", cfg[dataset_name]["path"])
+        cfg[dataset_name]["dataset_hash"] = audit.get("dataset_hash")
+        cfg[dataset_name]["reported_as"] = "UNSW-NB15"
         cfg[dataset_name]["source_verified"] = True
 
     dataset = load_dataset(dataset_name, cfg)
@@ -476,7 +511,8 @@ def _evaluate_method(
 def _run_ablation_matrix(bundles: dict[tuple[str, int], FormalBundle]) -> pd.DataFrame:
     rows: list[dict[str, Any]] = []
     spec = {"noise_type": "graph_consistency", "noise_rate": 0.6, "graph_beta": 0.6}
-    for dataset_name in FORMAL_DATASETS:
+    dataset_names = tuple(dict.fromkeys(dataset for dataset, _seed in bundles))
+    for dataset_name in dataset_names:
         for seed in SEEDS:
             bundle = bundles[(dataset_name, seed)]
             anomaly = cicids_mini_matrix.smoke_realdata._feature_anomaly(bundle.dataset.X_train, bundle.dataset.y_train)
@@ -719,12 +755,16 @@ def _execution_report(
     scenario_hashes: dict[str, dict[str, str]],
 ) -> dict[str, Any]:
     noisy = main[main["noise_type"] != "clean"]
+    dataset_labels = sorted({str(value) for value in main["reported_as"].dropna().unique()})
+    excluded = ["MALTLS-22", "OpTC", "USTC-TFC2016"]
+    if "UNSW-NB15" not in dataset_labels:
+        excluded.append("UNSW-NB15")
     return {
-        "stage": "D5 real two-dataset matrix",
+        "stage": "D5 real-data matrix",
         "completed": bool(sanity["passed"] and stat_tests.get("overall", {}).get("significant_p_lt_0_05", False)),
         "scope": {
-            "datasets": ["CICIDS-2017", "CESNET-TLS-Year22"],
-            "excluded": ["MALTLS-22", "OpTC", "UNSW-NB15", "USTC-TFC2016"],
+            "datasets": dataset_labels,
+            "excluded": excluded,
         },
         "outputs": {
             "table_main": "results/table_main.csv",
@@ -795,6 +835,15 @@ def _key_metrics(frame: pd.DataFrame) -> dict[str, Any]:
 def _update_readiness_after_d5(reports: Path) -> None:
     path = reports / "realdata_readiness_report.json"
     readiness = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+    d5_scope = ["CICIDS-2017", "CESNET-TLS-Year22"]
+    unsw_path = reports / "unsw_ingest.json"
+    if unsw_path.exists():
+        try:
+            unsw = json.loads(unsw_path.read_text(encoding="utf-8"))
+            if unsw.get("ready_for_d5_component"):
+                d5_scope.append("UNSW-NB15")
+        except json.JSONDecodeError:
+            pass
     readiness.update(
         {
             "d5_completed": True,
@@ -803,11 +852,36 @@ def _update_readiness_after_d5(reports: Path) -> None:
             "d7_allowed": False,
             "d6_d7_allowed": False,
             "submission_ready": False,
-            "d5_scope": ["CICIDS-2017", "CESNET-TLS-Year22"],
+            "d5_scope": d5_scope,
         }
     )
+    _merge_unsw_readiness(readiness, reports)
     path.write_text(json.dumps(readiness, indent=2), encoding="utf-8")
     (reports / "realdata_readiness_report.md").write_text(_readiness_markdown(readiness), encoding="utf-8")
+
+
+def _merge_unsw_readiness(readiness: dict[str, Any], reports: Path) -> None:
+    unsw_path = reports / "unsw_ingest.json"
+    if not unsw_path.exists():
+        return
+    try:
+        unsw = json.loads(unsw_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return
+    datasets = readiness.setdefault("datasets", {})
+    datasets["unsw_nb15"] = {
+        **datasets.get("unsw_nb15", {}),
+        "available": bool(unsw.get("ready_for_smoke") or unsw.get("ready_for_d5_component")),
+        "audit_passed": bool(unsw.get("ready_for_d5_component")),
+        "ready_for_smoke": bool(unsw.get("ready_for_smoke")),
+        "ready_for_d5": bool(unsw.get("ready_for_d5_component")),
+        "ready_for_d5_component": bool(unsw.get("ready_for_d5_component")),
+        "source_verified": bool(unsw.get("source_verified", True)),
+        "reported_as": unsw.get("reported_as", "UNSW-NB15"),
+        "actual_data_path": unsw.get("actual_data_path"),
+        "active_views": unsw.get("active_views", []),
+        "blocking_reasons": unsw.get("blocking_reasons", []),
+    }
 
 
 def _normalize_scope_name(name: str) -> str:
@@ -823,6 +897,8 @@ def _normalize_scope_name(name: str) -> str:
 def _dataset_hash_from_reports(dataset_name: str, reports: Path) -> str:
     if dataset_name == "cicids2017":
         return str(_read_json(reports / "cicids_final_protocol.json").get("dataset_hash", ""))
+    if dataset_name == "unsw_nb15":
+        return str(_read_json(reports / "unsw_ingest.json").get("dataset_hash", ""))
     return str(_read_json(reports / "cesnet_audit_report.json").get("dataset_hash", ""))
 
 
@@ -938,7 +1014,8 @@ def _execution_markdown(report: dict[str, Any], main: pd.DataFrame, ablation: pd
         f"- Main rows: {len(main)}",
         f"- Ablation rows: {len(ablation)}",
         f"- Methods included: {', '.join(report['methods_included'])}",
-        "- Excluded datasets: MALTLS-22, OpTC, UNSW-NB15, USTC-TFC2016",
+        f"- Datasets: {', '.join(report['scope']['datasets'])}",
+        f"- Excluded datasets: {', '.join(report['scope']['excluded'])}",
         "",
         "## Key Metrics",
     ]

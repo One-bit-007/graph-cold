@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 
+import pandas as pd
 from pypdf import PdfReader
 
 from src.paper.d8_harden import run_d8_hardening
@@ -59,7 +60,9 @@ def test_d8_manuscript_keeps_scope_and_results_traceable():
         f"{mean_diff_pp:.2f} percentage points"
     )
     assert expected in normalized
-    assert "ERR\\_final from 0.8953" in text
+    headline = pd.read_csv("tables/table_p2_canonical_headline.csv").set_index("method")
+    hard_err = float(headline.loc["ablation_hard", "err_final_mean"])
+    assert f"ERR\\_final from {hard_err:.4f}" in text
 
 
 def test_d8_audit_and_pdf_are_ready_for_v1_review():

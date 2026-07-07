@@ -15,6 +15,14 @@
       "sample_rows": 100000,
       "sampling_stratified": true,
       "claim_guard": "Do not describe this as full CESNET evaluation."
+    },
+    "unsw_nb15": {
+      "reported_as": "UNSW-NB15",
+      "class_policy": "postfilter",
+      "sample_policy": "auto_detected_layout_then_postfilter_stratified_protocol",
+      "sample_rows": null,
+      "sampling_stratified": true,
+      "claim_guard": "Include only when reports/unsw_ingest.json marks the real local files ready."
     }
   }
 }

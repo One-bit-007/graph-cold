@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import numpy as np
 from sklearn.decomposition import TruncatedSVD
+from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.linear_model import SGDClassifier
 from sklearn.preprocessing import StandardScaler
 
@@ -23,6 +24,7 @@ class MORSEBaseline:
         pseudo_threshold: float = 0.6,
         min_clean_fraction: float = 0.25,
         max_iter: int = 5,
+        n_estimators: int = 32,
     ):
         self.seed = int(seed)
         self.noise_rate = float(noise_rate)
@@ -30,6 +32,7 @@ class MORSEBaseline:
         self.pseudo_threshold = float(pseudo_threshold)
         self.min_clean_fraction = float(min_clean_fraction)
         self.max_iter = int(max_iter)
+        self.n_estimators = int(n_estimators)
 
     def fit_predict(self, X_train, y_noisy, X_test, num_classes: int, **kwargs) -> BaselineResult:
         del kwargs
@@ -70,12 +73,11 @@ class MORSEBaseline:
         final_mask = ensure_class_coverage(final_mask, confidence, y)
         sample_weight[final_mask & (sample_weight <= 0)] = 0.25
 
-        clf = SGDClassifier(
-            loss="log_loss",
-            max_iter=self.max_iter,
-            tol=1e-3,
+        clf = ExtraTreesClassifier(
+            n_estimators=self.n_estimators,
             random_state=self.seed + 17,
-            class_weight=None,
+            class_weight="balanced",
+            n_jobs=-1,
         )
         clf.fit(X_scaled[final_mask], train_labels[final_mask], sample_weight=sample_weight[final_mask])
         proba = aligned_proba(clf, X_test_scaled, num_classes)
@@ -102,8 +104,9 @@ class MORSEBaseline:
                 "pseudo_labeled_fraction": float(np.mean(pseudo_mask)) if pseudo_mask.size else 0.0,
                 "retained_fraction": float(np.mean(final_mask)) if final_mask.size else 0.0,
                 "pseudo_threshold": self.pseudo_threshold,
-                "classifier": "teacher_final_SGDClassifier",
+                "classifier": "teacher_SGDClassifier_final_ExtraTreesClassifier",
                 "max_iter": self.max_iter,
+                "n_estimators": self.n_estimators,
             },
         )
 

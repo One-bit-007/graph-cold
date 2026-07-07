@@ -38,7 +38,7 @@ def test_unsw_loader_multiclass_attack_cat_filters_empty_labels(tmp_path: Path):
     assert dataset.num_classes == 2
     assert set(dataset.meta["class_names"]) == {"Normal", "Exploits"}
     assert dataset.meta["reported_as"] == "unsw_nb15"
-    assert dataset.meta["active_views"] == ["ip", "temporal"]
+    assert dataset.meta["active_views"] == ["host", "ip", "temporal"]
     assert dataset.X_train.shape[1] == dataset.X_test.shape[1]
     assert len(dataset.y_train) + len(dataset.y_test) == 4
 
@@ -59,3 +59,41 @@ def test_load_unsw_nb15_wrapper_uses_standard_loader(tmp_path: Path):
     dataset = load_unsw_nb15(cfg)
 
     assert dataset.num_classes == 2
+
+
+def test_unsw_partition_layout_preserves_official_train_test_and_disables_ip_without_ip_columns(tmp_path: Path):
+    train = pd.DataFrame(
+        [
+            {"id": 1, "dur": 0.1, "proto": "tcp", "service": "http", "state": "FIN", "sbytes": 10, "attack_cat": "Normal"},
+            {"id": 2, "dur": 0.2, "proto": "udp", "service": "dns", "state": "CON", "sbytes": 20, "attack_cat": "Normal"},
+            {"id": 3, "dur": 0.3, "proto": "tcp", "service": "ssh", "state": "INT", "sbytes": 30, "attack_cat": "Exploits"},
+            {"id": 4, "dur": 0.4, "proto": "tcp", "service": "ftp", "state": "INT", "sbytes": 40, "attack_cat": "Exploits"},
+        ]
+    )
+    test = pd.DataFrame(
+        [
+            {"id": 5, "dur": 0.5, "proto": "tcp", "service": "http", "state": "FIN", "sbytes": 50, "attack_cat": "Normal"},
+            {"id": 6, "dur": 0.6, "proto": "tcp", "service": "ftp", "state": "INT", "sbytes": 60, "attack_cat": "Exploits"},
+        ]
+    )
+    train.to_csv(tmp_path / "UNSW_NB15_training-set.csv", index=False)
+    test.to_csv(tmp_path / "UNSW_NB15_testing-set.csv", index=False)
+
+    dataset = load_dataset(
+        "unsw_nb15",
+        {
+            "unsw_nb15": {
+                "path": str(tmp_path),
+                "label_col": "attack_cat",
+                "class_policy": "postfilter",
+                "min_class_count": 1,
+                "drop_cols": ["id"],
+                "seed": 11,
+            }
+        },
+    )
+
+    assert dataset.meta["layout"] == "partition"
+    assert dataset.meta["active_views"] == ["temporal", "process"]
+    assert len(dataset.y_train) == 4
+    assert len(dataset.y_test) == 2

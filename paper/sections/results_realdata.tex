@@ -1,8 +1,8 @@
 \section{Real-data Results}
-Table~\ref{tab:main-performance} summarizes the evaluation matrix. Averaged over all verified scenarios, Graph-CoLD obtains Macro-F1 0.9915, while CoLD obtains 0.8468. The paired grouped comparison reports a mean difference of 14.75 pp with p=2.75e-09 and effect size 0.945.
+Table~\ref{tab:main-performance} summarizes the evaluation matrix. Averaged over all verified scenarios, Graph-CoLD obtains Macro-F1 0.8546, while CoLD obtains 0.7623. The paired grouped comparison reports a mean difference of 9.23 pp with p=1.38e-05 and effect size 0.646.
 
 High-noise settings show the clearest robustness pattern. Table~\ref{tab:high-noise} aggregates noise rates at or above 0.4 for symmetric, asymmetric, and graph-consistency corruption. Graph-CoLD maintains high Macro-F1 while improving evidence retention relative to ablation_hard.
 
-Evidence retention is central to the structured-denoising contribution. Mean ERR_final is 1.0000 for Graph-CoLD and 0.8953 for ablation_hard, indicating that soft evidence-preserving weights retain more clean informative samples than hard deletion. Table~\ref{tab:ablation} shows that removing Graph-CDM terms or evidence weighting reduces either Macro-F1 or retention quality.
+Evidence retention is central to the structured-denoising contribution. Mean ERR_final is 1.0000 for Graph-CoLD and 0.8879 for ablation_hard, indicating that soft evidence-preserving weights retain more clean informative samples than hard deletion. Table~\ref{tab:ablation} shows that removing Graph-CDM terms or evidence weighting reduces either Macro-F1 or retention quality.
 
-Runtime results are reported as operational cost rather than as a primary optimization target. Graph-CoLD averages 4.92s per scenario versus 4.15s for CoLD in the evaluation matrix, with the added cost interpreted alongside robustness and retention gains.
+Runtime results are reported as operational cost rather than as a primary optimization target. Graph-CoLD averages 3.29s per scenario versus 3.07s for CoLD in the evaluation matrix, with the added cost interpreted alongside robustness and retention gains.

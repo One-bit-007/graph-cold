@@ -28,12 +28,12 @@ two-stage graph extension of CoLD for noisy-label intrusion detection. The metho
 builds dataset-specific host, IP, and temporal graph views; learns CoLD-aligned
 multi-view representations; scores training samples with a label-space
 Graph-CDM diagnostic; and replaces hard deletion with evidence-preserving soft
-weights. On verified CICIDS-2017 postfilter11 and CESNET-TLS-Year22 postfilter25
-settings, Graph-CoLD improves Macro-F1 over the aligned CoLD baseline by
-14.75 percentage points in a paired scenario-level test
-(p=2.75e-09, Cohen dz=0.945,
-n=54). The main operational signal is evidence retention:
-Graph-CoLD raises mean ERR\_final from 0.8953 for hard
+weights. On verified CICIDS-2017 postfilter11, CESNET-TLS-Year22 postfilter25,
+and UNSW-NB15 partition settings, Graph-CoLD improves Macro-F1 over the aligned
+CoLD baseline by 9.23 percentage points in a paired scenario-level test
+(p=1.38e-05, Cohen dz=0.646,
+n=51). The main operational signal is evidence retention:
+Graph-CoLD raises mean ERR\_final from 0.8879 for hard
 deletion to 1.0000, while reporting compression, runtime,
 and memory costs. The evaluation is intentionally bounded to implemented,
 real-data baselines and avoids claims for unavailable datasets or enterprise
@@ -235,7 +235,7 @@ The formal baselines and ablations include Graph-CoLD, the aligned CoLD
 baseline, a hard-deletion ablation, noisy supervised learning, confidence
 learning, Co-Teaching, Decoupling, FINE, MCRe, and MORSE. FINE, MCRe, and MORSE
 are verified adapters in the same real-data label-noise matrix, not paper-only
-placeholders. Methods outside this formal two-dataset matrix are
+placeholders. Methods outside this formal real-data matrix are
 Flash, Argus; each targets a provenance-oriented evaluation setting rather
 than this classifier matrix. Metrics are Macro-F1, FPR, FNR, ERR, Tail-ERR,
 compression ratio, runtime, and memory. Statistical tests are paired by dataset,
@@ -245,10 +245,10 @@ noise type, noise rate, graph beta, and seed.
 \subsection{RQ1: Does graph evidence improve noisy-label robustness?}
 Table~\ref{tab:main-performance} aggregates the evaluation matrix by dataset and
 method. Across all paired scenarios, Graph-CoLD obtains Macro-F1
-0.9915, compared with 0.8468 for
+0.8546, compared with 0.7623 for
 CoLD. The paired grouped test reports a mean lift of
-14.75 percentage points (p=2.75e-09,
-dz=0.945, n=54). The result supports a
+9.23 percentage points (p=1.38e-05,
+dz=0.646, n=51). The result supports a
 consistent robustness improvement under the implemented protocol, not a universal
 claim over unimplemented baselines.
 
@@ -273,7 +273,10 @@ high-noise margin: Graph-CoLD exceeds CoLD by 30.51
 percentage points. CESNET-TLS-Year22 has a ceiling effect, with a high-noise
 Macro-F1 lift of 0.25 percentage points; this is
 why the paper interprets CESNET primarily through stability and evidence
-retention rather than classifier margin.
+retention rather than classifier margin. UNSW-NB15 adds a verified partition
+layout check with temporal and process views; its high-noise lift is slightly
+negative (-0.71 percentage points), so it is reported as a robustness boundary
+rather than a headline-margin dataset.
 
 \begin{table}[t]
 \centering
@@ -285,7 +288,7 @@ retention rather than classifier margin.
 \subsection{RQ3: Does soft weighting preserve evidence?}
 Evidence retention is the central difference between Graph-CoLD and hard
 deletion. Mean ERR\_final is 1.0000 for Graph-CoLD and
-0.8953 for ablation\_hard, a gap of 10.47
+0.8879 for ablation\_hard, a gap of 11.21
 percentage points. Fig.~\ref{fig:err-retention} shows that this gap remains
 visible under increasing noise, especially where clean informative samples are
 likely to lie near class boundaries.

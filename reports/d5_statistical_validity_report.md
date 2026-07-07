@@ -2,13 +2,13 @@
 
 - Overall test: paired_t_test_greater
 - Pairing keys: dataset, noise_type, noise_rate, graph_beta, seed
-- Pairs: 102
-- Mean diff: 0.5166230100068427
-- Effect size Cohen dz: 3.1144044071450967
-- p-value: 2.75101348607665e-54
+- Pairs: 153
+- Mean diff: 0.09230590126329834
+- Effect size Cohen dz: 0.6503353634133743
+- p-value: 1.1449023614620408e-13
 - Significant p<0.05: True
-- Extreme p-value warning: True
+- Extreme p-value warning: False
 
 ## Comparisons
-- Graph-CoLD_vs_CoLD: n=102, diff=0.5166230100068427, p=2.75101348607665e-54
-- Graph-CoLD_vs_ablation_hard: n=102, diff=0.01838263134899055, p=4.492383475540967e-06
+- Graph-CoLD_vs_CoLD: n=153, diff=0.09230590126329834, p=1.1449023614620408e-13
+- Graph-CoLD_vs_ablation_hard: n=153, diff=0.012446625088628864, p=4.454008545798999e-06

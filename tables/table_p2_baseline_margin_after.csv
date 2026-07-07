@@ -1,0 +1,5 @@
+baseline,paired_rows,macro_f1_margin_graphcold_minus_baseline
+MCRe,153,0.23440467850184085
+MORSE,153,0.23498750005667637
+FINE,153,0.2912232607142284
+Co-Teaching,153,0.1500842494096197

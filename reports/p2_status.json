@@ -1,0 +1,418 @@
+{
+  "stage": "P2",
+  "p1_gate": {
+    "A1": {
+      "passed": true,
+      "evidence": {
+        "Graph-CoLD": {
+          "macro_f1": 0.8545440670330817,
+          "err_final": 1.0
+        },
+        "ablation_hard": {
+          "macro_f1": 0.8412705685037982,
+          "err_final": 0.8809047394709622
+        },
+        "CoLD": {
+          "macro_f1": 0.7591699312276443,
+          "err_final": 0.7488344227479083
+        }
+      }
+    },
+    "A2": {
+      "passed": true,
+      "rows": 96
+    },
+    "A3": {
+      "passed": true,
+      "evidence": {
+        "test": "scenario_level_paired_t_test_greater",
+        "metric": "macro_f1",
+        "method_a": "Graph-CoLD",
+        "method_b": "CoLD",
+        "pairing_keys": [
+          "dataset",
+          "noise_type",
+          "noise_rate",
+          "graph_beta"
+        ],
+        "aggregation": "mean_over_seeds_per_scenario",
+        "effective_n": 51,
+        "n_pairs": 51,
+        "method_a_mean": 0.8546474750918766,
+        "method_a_std": 0.1954653233124737,
+        "method_b_mean": 0.7623415738285781,
+        "method_b_std": 0.1738276244118039,
+        "mean_diff": 0.09230590126329834,
+        "mean_diff_ci95": [
+          0.05479050860211299,
+          0.13135732241128378
+        ],
+        "effect_size_cohen_dz": 0.6462789945002151,
+        "t_stat": 4.615355184093925,
+        "p_value": 1.3821341559761935e-05,
+        "significant_p_lt_0_05": true,
+        "naive_pooled_test_used": false
+      }
+    },
+    "A4": {
+      "passed": true,
+      "evidence": {
+        "ratio": 0.3,
+        "betas": [
+          0.0,
+          0.3,
+          0.6,
+          1.0
+        ],
+        "num_classes": 4,
+        "n": 600,
+        "beta0_matches_symmetric": true,
+        "beta0_transition_l1": 0.0,
+        "transition_concentration": {
+          "0.0": 0.4426273090066194,
+          "0.3": 0.5662629399585921,
+          "0.6": 0.7676301958910654,
+          "1.0": 1.0
+        },
+        "concentration_increases": true,
+        "figure": "figures/fig_p1_graph_noise_beta_sweep.pdf"
+      }
+    },
+    "grep": {
+      "passed": true,
+      "evidence": "no matches"
+    }
+  },
+  "p2": {
+    "G1": {
+      "status": "completed",
+      "protocol_id": "p2_canonical_scenario_mean_v1",
+      "source_sha256": "125ce9e63442e82deced11caf3391dd9b4ac103a6f1f3c1a7776ca7499d493cf",
+      "headline_csv": "tables/table_p2_canonical_headline.csv",
+      "passed": true,
+      "checks": [
+        {
+          "table": "table_2_main_performance",
+          "method": "Co-Teaching",
+          "passed": true,
+          "canonical_macro_f1": 0.7045632256822567,
+          "observed_unique": [
+            0.704563
+          ]
+        },
+        {
+          "table": "table_2_main_performance",
+          "method": "CoLD",
+          "passed": true,
+          "canonical_macro_f1": 0.762341573828578,
+          "observed_unique": [
+            0.762342
+          ]
+        },
+        {
+          "table": "table_2_main_performance",
+          "method": "Confident-Learning",
+          "passed": true,
+          "canonical_macro_f1": 0.6726653775516728,
+          "observed_unique": [
+            0.672665
+          ]
+        },
+        {
+          "table": "table_2_main_performance",
+          "method": "Decoupling",
+          "passed": true,
+          "canonical_macro_f1": 0.5632411415724035,
+          "observed_unique": [
+            0.563241
+          ]
+        },
+        {
+          "table": "table_2_main_performance",
+          "method": "FINE",
+          "passed": true,
+          "canonical_macro_f1": 0.563424214377648,
+          "observed_unique": [
+            0.563424
+          ]
+        },
+        {
+          "table": "table_2_main_performance",
+          "method": "Graph-CoLD",
+          "passed": true,
+          "canonical_macro_f1": 0.8546474750918764,
+          "observed_unique": [
+            0.854647
+          ]
+        },
+        {
+          "table": "table_2_main_performance",
+          "method": "MCRe",
+          "passed": true,
+          "canonical_macro_f1": 0.6202427965900356,
+          "observed_unique": [
+            0.620243
+          ]
+        },
+        {
+          "table": "table_2_main_performance",
+          "method": "MORSE",
+          "passed": true,
+          "canonical_macro_f1": 0.6196599750352,
+          "observed_unique": [
+            0.61966
+          ]
+        },
+        {
+          "table": "table_2_main_performance",
+          "method": "Noisy-Supervised",
+          "passed": true,
+          "canonical_macro_f1": 0.6131492573159789,
+          "observed_unique": [
+            0.613149
+          ]
+        },
+        {
+          "table": "table_2_main_performance",
+          "method": "ablation_hard",
+          "passed": true,
+          "canonical_macro_f1": 0.8422008500032475,
+          "observed_unique": [
+            0.842201
+          ]
+        },
+        {
+          "table": "table_3_high_noise_summary",
+          "method": "Co-Teaching",
+          "passed": true,
+          "canonical_macro_f1": 0.7045632256822567,
+          "observed_unique": [
+            0.704563
+          ]
+        },
+        {
+          "table": "table_3_high_noise_summary",
+          "method": "CoLD",
+          "passed": true,
+          "canonical_macro_f1": 0.762341573828578,
+          "observed_unique": [
+            0.762342
+          ]
+        },
+        {
+          "table": "table_3_high_noise_summary",
+          "method": "Confident-Learning",
+          "passed": true,
+          "canonical_macro_f1": 0.6726653775516728,
+          "observed_unique": [
+            0.672665
+          ]
+        },
+        {
+          "table": "table_3_high_noise_summary",
+          "method": "Decoupling",
+          "passed": true,
+          "canonical_macro_f1": 0.5632411415724035,
+          "observed_unique": [
+            0.563241
+          ]
+        },
+        {
+          "table": "table_3_high_noise_summary",
+          "method": "FINE",
+          "passed": true,
+          "canonical_macro_f1": 0.563424214377648,
+          "observed_unique": [
+            0.563424
+          ]
+        },
+        {
+          "table": "table_3_high_noise_summary",
+          "method": "Graph-CoLD",
+          "passed": true,
+          "canonical_macro_f1": 0.8546474750918764,
+          "observed_unique": [
+            0.854647
+          ]
+        },
+        {
+          "table": "table_3_high_noise_summary",
+          "method": "MCRe",
+          "passed": true,
+          "canonical_macro_f1": 0.6202427965900356,
+          "observed_unique": [
+            0.620243
+          ]
+        },
+        {
+          "table": "table_3_high_noise_summary",
+          "method": "MORSE",
+          "passed": true,
+          "canonical_macro_f1": 0.6196599750352,
+          "observed_unique": [
+            0.61966
+          ]
+        },
+        {
+          "table": "table_3_high_noise_summary",
+          "method": "Noisy-Supervised",
+          "passed": true,
+          "canonical_macro_f1": 0.6131492573159789,
+          "observed_unique": [
+            0.613149
+          ]
+        },
+        {
+          "table": "table_3_high_noise_summary",
+          "method": "ablation_hard",
+          "passed": true,
+          "canonical_macro_f1": 0.8422008500032475,
+          "observed_unique": [
+            0.842201
+          ]
+        }
+      ]
+    },
+    "G2": {
+      "status": "completed",
+      "passed": true,
+      "table": "tables/table_p2_baseline_sanity.csv",
+      "margin_table": "tables/table_p2_baseline_margin_after.csv",
+      "before_snapshot": {
+        "source": "results/table_main_expanded.csv",
+        "rows": [
+          {
+            "method": "MCRe",
+            "clean_macro_f1_before": 0.8279737619001271,
+            "low_noise_macro_f1_before": 0.6756385720500302,
+            "macro_f1_margin_before": 0.31047626312317117
+          },
+          {
+            "method": "MORSE",
+            "clean_macro_f1_before": 0.7911179508030877,
+            "low_noise_macro_f1_before": 0.6317545678640141,
+            "macro_f1_margin_before": 0.3194956583377419
+          },
+          {
+            "method": "FINE",
+            "clean_macro_f1_before": 0.9884112006729447,
+            "low_noise_macro_f1_before": 0.707953806070389,
+            "macro_f1_margin_before": 0.3722718904140923
+          },
+          {
+            "method": "Co-Teaching",
+            "clean_macro_f1_before": 0.7223025491222331,
+            "low_noise_macro_f1_before": 0.6403608584683704,
+            "macro_f1_margin_before": 0.26848801850783116
+          }
+        ]
+      },
+      "rows": [
+        {
+          "method": "MCRe",
+          "clean_macro_f1": 0.9898189740261958,
+          "low_noise_macro_f1": 0.7285135647712923,
+          "clean_floor": 0.85,
+          "passes_clean_floor": true,
+          "low_noise_note": "reported for context; clean-label floor is the hard P2 gate"
+        },
+        {
+          "method": "MORSE",
+          "clean_macro_f1": 0.9894133108774689,
+          "low_noise_macro_f1": 0.7328944196377997,
+          "clean_floor": 0.85,
+          "passes_clean_floor": true,
+          "low_noise_note": "reported for context; clean-label floor is the hard P2 gate"
+        },
+        {
+          "method": "FINE",
+          "clean_macro_f1": 0.9898189740261958,
+          "low_noise_macro_f1": 0.7120566700107259,
+          "clean_floor": 0.85,
+          "passes_clean_floor": true,
+          "low_noise_note": "reported for context; clean-label floor is the hard P2 gate"
+        },
+        {
+          "method": "Co-Teaching",
+          "clean_macro_f1": 0.9903543511264892,
+          "low_noise_macro_f1": 0.801427511411291,
+          "clean_floor": 0.85,
+          "passes_clean_floor": true,
+          "low_noise_note": "reported for context; clean-label floor is the hard P2 gate"
+        }
+      ]
+    },
+    "G3": {
+      "status": "completed",
+      "ready_for_d5_component": true,
+      "layout": "partition",
+      "active_views": [
+        "temporal",
+        "process"
+      ],
+      "blocking_reasons": [],
+      "report": "reports/unsw_ingest.md",
+      "user_command": "python -m src.data.unsw_policy --data-root E:/graphcold-data --out reports"
+    },
+    "G4": {
+      "status": "completed",
+      "table": "tables/table_p2_prioritization_reframe.csv",
+      "claim": "rescoped_to_evidence_retention_not_raw_topk_priority",
+      "topk_advantage_found": false,
+      "compression_advantage_found": false,
+      "operational_delta_threshold": 0.001,
+      "secondary_advantage_vs_weaker_baselines": true,
+      "summary": [
+        {
+          "method": "CoLD",
+          "topk_precision": 0.9991666666666666,
+          "precision_at_budget": 0.9997368135631771,
+          "compression_at_recall_90": 0.6629143848864062,
+          "compression_at_recall_95": 0.6997575723882422
+        },
+        {
+          "method": "Confident-Learning",
+          "topk_precision": 0.9641666666666667,
+          "precision_at_budget": 0.9656774568498849,
+          "compression_at_recall_90": 0.7268390333213143,
+          "compression_at_recall_95": 0.7943274329039465
+        },
+        {
+          "method": "Graph-CoLD",
+          "topk_precision": 0.9991666666666666,
+          "precision_at_budget": 0.9997027443345045,
+          "compression_at_recall_90": 0.662930702340626,
+          "compression_at_recall_95": 0.699773889842462
+        },
+        {
+          "method": "ablation_hard",
+          "topk_precision": 0.9991666666666666,
+          "precision_at_budget": 0.9997027443345045,
+          "compression_at_recall_90": 0.6629326624024399,
+          "compression_at_recall_95": 0.699775849904276
+        }
+      ]
+    },
+    "G5": {
+      "status": "completed",
+      "table": "tables/table_p2_contribution_decomposition.csv",
+      "figure": "figures/fig_p2_contribution_decomposition.pdf",
+      "macro_f1_evidence_gain": 0.012446625088628815,
+      "err_evidence_gain": 0.11208965696850626
+    }
+  },
+  "post_p2_risk": {
+    "estimated_reject_risk_after_p2": "approximately 25-35%",
+    "remaining_weaknesses": [
+      "Direct Top-K prioritization remains tied; manuscript claims should emphasize evidence-aware retention/compression."
+    ]
+  },
+  "reproduction_commands": [
+    "python -m src.data.unsw_policy --data-root E:/graphcold-data --out reports",
+    "python -m src.experiments.d5 --out results --configs configs",
+    "python -m src.experiments.d5_baseline_expansion --out results --configs configs --reports reports",
+    "python -m src.paper.d6_prep",
+    "python -m src.analysis.prioritization --out results --configs configs --reports reports --figure figures/fig_p1_queue_load_curve.pdf",
+    "python -m src.paper.p2_status --results results --reports reports --tables tables --figures figures"
+  ]
+}

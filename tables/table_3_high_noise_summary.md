@@ -2,25 +2,35 @@
 
 Source: `results/table_main_expanded.csv`.
 
-| Dataset           | Method             | Macro-F1 mean | FPR mean | FNR mean | ERR mean | Compression ratio mean | Scenario count |
-| ----------------- | ------------------ | ------------- | -------- | -------- | -------- | ---------------------- | -------------- |
-| CICIDS-2017       | Graph-CoLD         | 0.9852        | 0.0021   | 0.0016   | 1.0000   | 0.9970                 | 24             |
-| CICIDS-2017       | CoLD               | 0.6801        | 0.0014   | 0.0187   | 0.6092   | 0.9997                 | 24             |
-| CICIDS-2017       | ablation_hard      | 0.9333        | 0.0021   | 0.0061   | 0.8228   | 0.9991                 | 24             |
-| CICIDS-2017       | Noisy-Supervised   | 0.4082        | 0.2585   | 0.2183   | 1.0000   | 1.0000                 | 24             |
-| CICIDS-2017       | Confident-Learning | 0.5576        | 0.2002   | 0.1021   | 0.6819   | 0.9995                 | 24             |
-| CICIDS-2017       | Co-Teaching        | 0.5645        | 0.2844   | 0.0762   | 0.6327   | 0.9939                 | 24             |
-| CICIDS-2017       | Decoupling         | 0.5097        | 0.3096   | 0.0371   | 0.2807   | 0.9830                 | 24             |
-| CICIDS-2017       | FINE               | 0.3402        | 0.3457   | 0.2431   | 0.3370   | 1.0000                 | 24             |
-| CICIDS-2017       | MCRe               | 0.4066        | 0.4376   | 0.1175   | 0.4594   | 0.9974                 | 24             |
-| CICIDS-2017       | MORSE              | 0.4105        | 0.4893   | 0.0846   | 0.8246   | 0.9996                 | 24             |
-| CESNET-TLS-Year22 | Graph-CoLD         | 0.9945        | 0.0130   | 0.0001   | 1.0000   | 0.9821                 | 24             |
-| CESNET-TLS-Year22 | CoLD               | 0.9920        | 0.0139   | 0.0001   | 0.8732   | 0.9841                 | 24             |
-| CESNET-TLS-Year22 | ablation_hard      | 0.9942        | 0.0131   | 0.0001   | 0.9459   | 0.9846                 | 24             |
-| CESNET-TLS-Year22 | Noisy-Supervised   | 0.5891        | 0.2120   | 0.1619   | 1.0000   | 0.9999                 | 24             |
-| CESNET-TLS-Year22 | Confident-Learning | 0.8434        | 0.0598   | 0.0374   | 0.8444   | 0.9952                 | 24             |
-| CESNET-TLS-Year22 | Co-Teaching        | 0.8102        | 0.2003   | 0.0062   | 0.8304   | 0.9923                 | 24             |
-| CESNET-TLS-Year22 | Decoupling         | 0.7068        | 0.2774   | 0.0223   | 0.3913   | 0.9952                 | 24             |
-| CESNET-TLS-Year22 | FINE               | 0.5791        | 0.2511   | 0.1549   | 0.5037   | 0.9995                 | 24             |
-| CESNET-TLS-Year22 | MCRe               | 0.7773        | 0.1490   | 0.0799   | 0.7900   | 0.9990                 | 24             |
-| CESNET-TLS-Year22 | MORSE              | 0.7837        | 0.2161   | 0.0541   | 0.9820   | 0.9999                 | 24             |
+| Dataset           | Method             | Canonical Macro-F1 headline | Canonical protocol            | Macro-F1 mean | FPR mean | FNR mean | ERR mean | Compression ratio mean | Scenario count |
+| ----------------- | ------------------ | --------------------------- | ----------------------------- | ------------- | -------- | -------- | -------- | ---------------------- | -------------- |
+| CICIDS-2017       | Graph-CoLD         | 0.854647                    | p2_canonical_scenario_mean_v1 | 0.9852        | 0.0021   | 0.0016   | 1.0000   | 0.9970                 | 24             |
+| CICIDS-2017       | CoLD               | 0.762342                    | p2_canonical_scenario_mean_v1 | 0.6801        | 0.0014   | 0.0187   | 0.6092   | 0.9997                 | 24             |
+| CICIDS-2017       | ablation_hard      | 0.842201                    | p2_canonical_scenario_mean_v1 | 0.9333        | 0.0021   | 0.0061   | 0.8228   | 0.9991                 | 24             |
+| CICIDS-2017       | Noisy-Supervised   | 0.613149                    | p2_canonical_scenario_mean_v1 | 0.4082        | 0.2585   | 0.2183   | 1.0000   | 1.0000                 | 24             |
+| CICIDS-2017       | Confident-Learning | 0.672665                    | p2_canonical_scenario_mean_v1 | 0.5576        | 0.2002   | 0.1021   | 0.6819   | 0.9995                 | 24             |
+| CICIDS-2017       | Co-Teaching        | 0.704563                    | p2_canonical_scenario_mean_v1 | 0.5869        | 0.1702   | 0.0985   | 0.5264   | 0.9973                 | 24             |
+| CICIDS-2017       | Decoupling         | 0.563241                    | p2_canonical_scenario_mean_v1 | 0.5097        | 0.3096   | 0.0371   | 0.2807   | 0.9830                 | 24             |
+| CICIDS-2017       | FINE               | 0.563424                    | p2_canonical_scenario_mean_v1 | 0.3535        | 0.3499   | 0.2255   | 0.3400   | 1.0000                 | 24             |
+| CICIDS-2017       | MCRe               | 0.620243                    | p2_canonical_scenario_mean_v1 | 0.3727        | 0.4199   | 0.1502   | 0.4595   | 0.9999                 | 24             |
+| CICIDS-2017       | MORSE              | 0.619660                    | p2_canonical_scenario_mean_v1 | 0.3578        | 0.4403   | 0.1448   | 0.8232   | 0.9999                 | 24             |
+| CESNET-TLS-Year22 | Graph-CoLD         | 0.854647                    | p2_canonical_scenario_mean_v1 | 0.9945        | 0.0130   | 0.0001   | 1.0000   | 0.9821                 | 24             |
+| CESNET-TLS-Year22 | CoLD               | 0.762342                    | p2_canonical_scenario_mean_v1 | 0.9920        | 0.0139   | 0.0001   | 0.8732   | 0.9841                 | 24             |
+| CESNET-TLS-Year22 | ablation_hard      | 0.842201                    | p2_canonical_scenario_mean_v1 | 0.9942        | 0.0131   | 0.0001   | 0.9459   | 0.9846                 | 24             |
+| CESNET-TLS-Year22 | Noisy-Supervised   | 0.613149                    | p2_canonical_scenario_mean_v1 | 0.5891        | 0.2120   | 0.1619   | 1.0000   | 0.9999                 | 24             |
+| CESNET-TLS-Year22 | Confident-Learning | 0.672665                    | p2_canonical_scenario_mean_v1 | 0.8434        | 0.0598   | 0.0374   | 0.8444   | 0.9952                 | 24             |
+| CESNET-TLS-Year22 | Co-Teaching        | 0.704563                    | p2_canonical_scenario_mean_v1 | 0.8534        | 0.0795   | 0.0317   | 0.5739   | 0.9929                 | 24             |
+| CESNET-TLS-Year22 | Decoupling         | 0.563241                    | p2_canonical_scenario_mean_v1 | 0.7068        | 0.2774   | 0.0223   | 0.3913   | 0.9952                 | 24             |
+| CESNET-TLS-Year22 | FINE               | 0.563424                    | p2_canonical_scenario_mean_v1 | 0.6073        | 0.2324   | 0.1432   | 0.5037   | 0.9995                 | 24             |
+| CESNET-TLS-Year22 | MCRe               | 0.620243                    | p2_canonical_scenario_mean_v1 | 0.8040        | 0.0355   | 0.1368   | 0.7900   | 0.9993                 | 24             |
+| CESNET-TLS-Year22 | MORSE              | 0.619660                    | p2_canonical_scenario_mean_v1 | 0.8040        | 0.1067   | 0.1236   | 0.9820   | 0.9996                 | 24             |
+| UNSW-NB15         | Graph-CoLD         | 0.854647                    | p2_canonical_scenario_mean_v1 | 0.5775        | 0.0000   | 0.0000   | 1.0000   | 0.7349                 | 24             |
+| UNSW-NB15         | CoLD               | 0.762342                    | p2_canonical_scenario_mean_v1 | 0.5846        | 0.0000   | 0.0000   | 0.7384   | 0.7780                 | 24             |
+| UNSW-NB15         | ablation_hard      | 0.842201                    | p2_canonical_scenario_mean_v1 | 0.5774        | 0.0000   | 0.0000   | 0.8598   | 0.7534                 | 24             |
+| UNSW-NB15         | Noisy-Supervised   | 0.613149                    | p2_canonical_scenario_mean_v1 | 0.3888        | 0.1198   | 0.1291   | 1.0000   | 0.9600                 | 24             |
+| UNSW-NB15         | Confident-Learning | 0.672665                    | p2_canonical_scenario_mean_v1 | 0.4364        | 0.0198   | 0.1085   | 0.4305   | 0.8149                 | 24             |
+| UNSW-NB15         | Co-Teaching        | 0.704563                    | p2_canonical_scenario_mean_v1 | 0.4326        | 0.0712   | 0.0982   | 0.2187   | 0.8427                 | 24             |
+| UNSW-NB15         | Decoupling         | 0.563241                    | p2_canonical_scenario_mean_v1 | 0.3731        | 0.1346   | 0.0689   | 0.4929   | 0.9365                 | 24             |
+| UNSW-NB15         | FINE               | 0.563424                    | p2_canonical_scenario_mean_v1 | 0.3282        | 0.2421   | 0.2008   | 0.5680   | 0.9630                 | 24             |
+| UNSW-NB15         | MCRe               | 0.620243                    | p2_canonical_scenario_mean_v1 | 0.3628        | 0.2573   | 0.1108   | 0.4906   | 0.8442                 | 24             |
+| UNSW-NB15         | MORSE              | 0.619660                    | p2_canonical_scenario_mean_v1 | 0.3614        | 0.2471   | 0.1192   | 0.8847   | 0.8310                 | 24             |

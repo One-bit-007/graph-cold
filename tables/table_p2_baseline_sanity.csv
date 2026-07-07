@@ -1,0 +1,5 @@
+method,clean_macro_f1,low_noise_macro_f1,clean_floor,passes_clean_floor,low_noise_note
+MCRe,0.9898189740261958,0.7285135647712923,0.85,True,reported for context; clean-label floor is the hard P2 gate
+MORSE,0.9894133108774689,0.7328944196377997,0.85,True,reported for context; clean-label floor is the hard P2 gate
+FINE,0.9898189740261958,0.7120566700107259,0.85,True,reported for context; clean-label floor is the hard P2 gate
+Co-Teaching,0.9903543511264892,0.801427511411291,0.85,True,reported for context; clean-label floor is the hard P2 gate

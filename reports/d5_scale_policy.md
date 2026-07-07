@@ -13,3 +13,9 @@
 - Class policy: `postfilter`
 - Sample policy: `deterministic_audit_window_100000_then_postfilter25_stratified_split`
 - Sampling stratified: True
+
+## UNSW-NB15
+- Dataset key: `unsw_nb15`
+- Class policy: `postfilter`
+- Sample policy: `auto_detected_layout_then_postfilter_stratified_protocol`
+- Sampling stratified: True

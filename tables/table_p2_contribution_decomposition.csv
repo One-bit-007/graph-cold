@@ -1,0 +1,5 @@
+metric,graph_representation_gain,evidence_preservation_gain,direction
+macro_f1,0.07985927617466948,0.012446625088628815,higher_is_better
+err_final,0.1243014745628741,0.11208965696850626,higher_is_better
+tail_recall,0.12040243559611119,0.03161569844376744,higher_is_better
+fnr,0.0034844088502002,0.0012439888428374304,lower_is_better_reported_as_reduction

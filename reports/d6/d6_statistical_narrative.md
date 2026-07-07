@@ -2,11 +2,11 @@
 
 ## Technical summary
 
-The paper artifacts aggregate the verified real-data evaluation matrix from `results/table_main_expanded.csv`. Across matched dataset, noise, beta, and seed cells, Graph-CoLD improves Macro-F1 over CoLD by 14.75 percentage points. The paired grouped t-test reports p=2.75e-09, effect size dz=0.945, and n=54 pairs. This supports a claim of consistent improvement, not a claim beyond the tested data scope.
+The paper artifacts aggregate the verified real-data evaluation matrix from `results/table_main_expanded.csv`. Across matched dataset, noise, beta, and seed cells, Graph-CoLD improves Macro-F1 over CoLD by 9.23 percentage points. The paired grouped t-test reports p=1.14e-13, effect size dz=0.650, and n=153 pairs. This supports a claim of consistent improvement, not a claim beyond the tested data scope.
 
 ## Dataset scope
 
-The formal result scope is CICIDS-2017 postfilter11 and CESNET-TLS-Year22 postfilter25. The sample policy is explicit in every row: CICIDS-2017 uses the full postfilter11 protocol after minimum-count filtering and dominant-class downsampling, while CESNET-TLS-Year22 uses a deterministic audit-window subset followed by postfilter25 stratified splitting.
+    The formal result scope is CICIDS-2017, CESNET-TLS-Year22, UNSW-NB15. The sample policy is explicit in every row: CICIDS-2017 uses the full postfilter11 protocol after minimum-count filtering and dominant-class downsampling, CESNET-TLS-Year22 uses a deterministic audit-window subset followed by postfilter25 stratified splitting, and UNSW-NB15 uses the verified local partition layout with postfilter class policy.
 
 ## Method scope
 
@@ -14,21 +14,18 @@ The matrix includes Graph-CoLD, CoLD, ablation_hard, Noisy-Supervised, Confident
 
 ## Excluded baselines
 
-The following methods are outside the formal two-dataset label-noise matrix:
+    The following methods are outside the formal real-data label-noise matrix:
 
-- Co-Teaching: not independently implemented and smoke-passed on real data
-- Co-Teaching+: not independently implemented and smoke-passed on real data
-- Decoupling: not independently implemented and smoke-passed on real data
-- FINE: not independently implemented and smoke-passed on real data
-- MCRe: not independently implemented and smoke-passed on real data
-- MORSE: not independently implemented and smoke-passed on real data
-- cleanlab: not independently implemented and smoke-passed on real data
+- Argus: excluded: provenance case-study method; no formal real-data label-noise implementation
+- Co-Teaching+: not independently implemented and verified on real data
+- Flash: excluded: provenance case-study method; no formal real-data label-noise implementation
+- cleanlab: legacy audit key; official cleanlab is represented by the Confident-Learning method row
 
 No generated stand-in rows are reported for these methods.
 
 ## Graph-CoLD vs CoLD
 
-The paired grouped test controls for scenario difficulty by matching dataset, noise type, noise rate, graph beta, and seed. The observed 14.75 percentage-point lift is statistically reliable at p=2.75e-09. The effect is modest in absolute terms because both methods are strong on clean and easy settings, especially CESNET-TLS-Year22.
+The paired grouped test controls for scenario difficulty by matching dataset, noise type, noise rate, graph beta, and seed. The observed 9.23 percentage-point lift is statistically reliable at p=1.14e-13. The effect is modest in absolute terms because both methods are strong on clean and easy settings, especially CESNET-TLS-Year22.
 
 ## Graph-CoLD vs noise-learning baselines
 
@@ -36,11 +33,15 @@ Relative to Noisy-Supervised, Confident-Learning, Co-Teaching, Decoupling, FINE,
 
 ## ERR interpretation
 
-Graph-CoLD's mean ERR_final is 1.0000, compared with 0.8953 for ablation_hard. The 10.47 percentage-point gap supports the evidence retention claim: soft weights preserve clean informative evidence better than hard deletion in the evaluated scenarios.
+Graph-CoLD's mean ERR_final is 1.0000, compared with 0.8879 for ablation_hard. The 11.21 percentage-point gap supports the evidence retention claim: soft weights preserve clean informative evidence better than hard deletion in the evaluated scenarios.
 
 ## CESNET ceiling effect
 
-CESNET-TLS-Year22 Macro-F1 is high for several methods, so small improvements should not be over-read. The high-noise Graph-CoLD vs CoLD lift on CESNET is 0.25 percentage points, while CICIDS-2017 shows a larger high-noise lift of 30.51 percentage points. The C&S-ready wording is: Graph-CoLD improves robustness and evidence retention under noisy labels, with the clearest margins on CICIDS-2017.
+    CESNET-TLS-Year22 Macro-F1 is high for several methods, so small improvements should not be over-read. The high-noise Graph-CoLD vs CoLD lift on CESNET is 0.25 percentage points, while CICIDS-2017 shows a larger high-noise lift of 30.51 percentage points. The C&S-ready wording is: Graph-CoLD improves robustness and evidence retention under noisy labels, with the clearest margins on CICIDS-2017.
+
+    ## UNSW-NB15 extension
+
+    UNSW-NB15 contributes a verified third dataset using temporal and process/feature-block views. Its high-noise Graph-CoLD vs CoLD lift is -0.71 percentage points; this should be described as an additional robustness check, not as a provenance-graph SOC case study.
 
 ## Operational meaning
 
@@ -48,7 +49,7 @@ Compression ratio is an operational alert reduction proxy. Combined with ERR, it
 
 ## Caution against overclaiming
 
-The results are traceable to two verified real datasets and the implemented baselines. The paper should avoid universal superiority language and should state that omitted provenance systems require separate future evaluation before formal comparison.
+    The results are traceable to the verified real datasets in scope and the implemented baselines. The paper should avoid universal superiority language and should state that omitted provenance systems require separate future evaluation before formal comparison.
 
 ## Conclusion-ready insight block
 
@@ -57,3 +58,4 @@ The results are traceable to two verified real datasets and the implemented base
 - Evidence retention improves over hard deletion, supporting the use of soft weights for preserving clean informative alerts.
 - Compression ratio is reported as an operational alert reduction proxy rather than a direct SOC labor measurement.
 - CESNET-TLS-Year22 should be interpreted as a high-ceiling, verified TLS application-classification subset.
+- UNSW-NB15 adds a third verified real-data partition with temporal and process/feature-block views.

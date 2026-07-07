@@ -1,0 +1,116 @@
+{
+  "protocol_id": "p2_canonical_scenario_mean_v1",
+  "source_csv": "results/table_main_expanded.csv",
+  "source_sha256": "125ce9e63442e82deced11caf3391dd9b4ac103a6f1f3c1a7776ca7499d493cf",
+  "scenario_keys": [
+    "dataset",
+    "reported_as",
+    "noise_type",
+    "noise_rate",
+    "graph_beta"
+  ],
+  "seed_aggregation": "mean_over_seeds_per_scenario",
+  "headline_aggregation": "equal_weight_mean_over_scenarios",
+  "metrics": [
+    "macro_f1",
+    "fpr",
+    "fnr",
+    "err_final",
+    "compression_ratio",
+    "runtime_sec",
+    "memory_mb"
+  ],
+  "headline_csv": "tables/table_p2_canonical_headline.csv",
+  "method_headlines": {
+    "Co-Teaching": {
+      "macro_f1": 0.7045632256822567,
+      "fpr": 0.06409663887528909,
+      "fnr": 0.04412534165203152,
+      "err_final": 0.5997363804149554,
+      "compression_ratio": 0.9255801365597919,
+      "runtime_sec": 6.071137085620898,
+      "memory_mb": 349.9275146933163
+    },
+    "CoLD": {
+      "macro_f1": 0.762341573828578,
+      "fpr": 0.004587150316442808,
+      "fnr": 0.005150447197062612,
+      "err_final": 0.7636088684686195,
+      "compression_ratio": 0.9149033739377013,
+      "runtime_sec": 3.0663950196109724,
+      "memory_mb": 144.68059266158957
+    },
+    "Confident-Learning": {
+      "macro_f1": 0.6726653775516728,
+      "fpr": 0.06774891472701394,
+      "fnr": 0.04393504481594439,
+      "err_final": 0.7065232831651137,
+      "compression_ratio": 0.9201987435168666,
+      "runtime_sec": 21.288390699348884,
+      "memory_mb": 167.93726179334854
+    },
+    "Decoupling": {
+      "macro_f1": 0.5632411415724035,
+      "fpr": 0.2054022268580764,
+      "fnr": 0.029236911250605423,
+      "err_final": 0.37569264481959647,
+      "compression_ratio": 0.9444622291500442,
+      "runtime_sec": 8.335853115685536,
+      "memory_mb": 233.6886148577422
+    },
+    "FINE": {
+      "macro_f1": 0.563424214377648,
+      "fpr": 0.16784344769587015,
+      "fnr": 0.12073232741443651,
+      "err_final": 0.6796875851313732,
+      "compression_ratio": 0.9738922978916488,
+      "runtime_sec": 2.4031008993468728,
+      "memory_mb": 273.0353618384966
+    },
+    "Graph-CoLD": {
+      "macro_f1": 0.8546474750918764,
+      "fpr": 0.0044726879411642485,
+      "fnr": 0.00042204950402498025,
+      "err_final": 1.0,
+      "compression_ratio": 0.9070173921076584,
+      "runtime_sec": 3.289883591505939,
+      "memory_mb": 111.66542743234073
+    },
+    "MCRe": {
+      "macro_f1": 0.6202427965900356,
+      "fpr": 0.15141218723565908,
+      "fnr": 0.08597243757468885,
+      "err_final": 0.755937964891572,
+      "compression_ratio": 0.9315451162186537,
+      "runtime_sec": 1.9994815732044278,
+      "memory_mb": 407.758233238669
+    },
+    "MORSE": {
+      "macro_f1": 0.6196599750352,
+      "fpr": 0.16495051152222887,
+      "fnr": 0.08303704633297583,
+      "err_final": 0.9380886944481069,
+      "compression_ratio": 0.929597529050704,
+      "runtime_sec": 6.53359833399018,
+      "memory_mb": 469.9835978364633
+    },
+    "Noisy-Supervised": {
+      "macro_f1": 0.6131492573159789,
+      "fpr": 0.10859617539538576,
+      "fnr": 0.09509120814181495,
+      "err_final": 1.0,
+      "compression_ratio": 0.97284969878464,
+      "runtime_sec": 2.203843698694007,
+      "memory_mb": 107.25206079670028
+    },
+    "ablation_hard": {
+      "macro_f1": 0.8422008500032475,
+      "fpr": 0.004847947055606716,
+      "fnr": 0.0016660383468624109,
+      "err_final": 0.8879103430314939,
+      "compression_ratio": 0.9164257108981786,
+      "runtime_sec": 3.457032696728966,
+      "memory_mb": 109.8466736413295
+    }
+  }
+}

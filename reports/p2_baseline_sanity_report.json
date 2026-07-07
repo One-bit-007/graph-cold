@@ -1,0 +1,68 @@
+{
+  "passed": true,
+  "table": "tables/table_p2_baseline_sanity.csv",
+  "margin_table": "tables/table_p2_baseline_margin_after.csv",
+  "before_snapshot": {
+    "source": "results/table_main_expanded.csv",
+    "rows": [
+      {
+        "method": "MCRe",
+        "clean_macro_f1_before": 0.8279737619001271,
+        "low_noise_macro_f1_before": 0.6756385720500302,
+        "macro_f1_margin_before": 0.31047626312317117
+      },
+      {
+        "method": "MORSE",
+        "clean_macro_f1_before": 0.7911179508030877,
+        "low_noise_macro_f1_before": 0.6317545678640141,
+        "macro_f1_margin_before": 0.3194956583377419
+      },
+      {
+        "method": "FINE",
+        "clean_macro_f1_before": 0.9884112006729447,
+        "low_noise_macro_f1_before": 0.707953806070389,
+        "macro_f1_margin_before": 0.3722718904140923
+      },
+      {
+        "method": "Co-Teaching",
+        "clean_macro_f1_before": 0.7223025491222331,
+        "low_noise_macro_f1_before": 0.6403608584683704,
+        "macro_f1_margin_before": 0.26848801850783116
+      }
+    ]
+  },
+  "rows": [
+    {
+      "method": "MCRe",
+      "clean_macro_f1": 0.9898189740261958,
+      "low_noise_macro_f1": 0.7285135647712923,
+      "clean_floor": 0.85,
+      "passes_clean_floor": true,
+      "low_noise_note": "reported for context; clean-label floor is the hard P2 gate"
+    },
+    {
+      "method": "MORSE",
+      "clean_macro_f1": 0.9894133108774689,
+      "low_noise_macro_f1": 0.7328944196377997,
+      "clean_floor": 0.85,
+      "passes_clean_floor": true,
+      "low_noise_note": "reported for context; clean-label floor is the hard P2 gate"
+    },
+    {
+      "method": "FINE",
+      "clean_macro_f1": 0.9898189740261958,
+      "low_noise_macro_f1": 0.7120566700107259,
+      "clean_floor": 0.85,
+      "passes_clean_floor": true,
+      "low_noise_note": "reported for context; clean-label floor is the hard P2 gate"
+    },
+    {
+      "method": "Co-Teaching",
+      "clean_macro_f1": 0.9903543511264892,
+      "low_noise_macro_f1": 0.801427511411291,
+      "clean_floor": 0.85,
+      "passes_clean_floor": true,
+      "low_noise_note": "reported for context; clean-label floor is the hard P2 gate"
+    }
+  ]
+}

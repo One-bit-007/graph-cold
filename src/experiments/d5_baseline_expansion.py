@@ -114,7 +114,7 @@ def run_d5_baseline_expansion(
     original_hash = _file_hash(original_path)
     original_main = pd.read_csv(original_path, keep_default_na=False)
     original_expanded = _annotate_original_rows(original_main)
-    _assert_original_d5_scope(original_expanded)
+    dataset_scope = _assert_original_d5_scope(original_expanded)
 
     scale_policy = _read_scale_policy(reports)
     verification = _load_or_run_verification_gate(configs, reports, scale_policy)
@@ -123,13 +123,21 @@ def run_d5_baseline_expansion(
     baseline_rows: list[dict[str, Any]] = []
     runtime_records: list[dict[str, Any]] = []
     baseline_csv = out / "table_baseline_expansion.csv"
+    existing_baseline = pd.DataFrame(columns=EXPANDED_FIELDNAMES)
     if baseline_csv.exists():
         existing_baseline = pd.read_csv(baseline_csv, keep_default_na=False)
-        if _baseline_frame_complete(existing_baseline, passed_methods):
+        if _baseline_frame_complete(existing_baseline, passed_methods, dataset_scope):
             baseline_rows = existing_baseline.to_dict(orient="records")
             runtime_records = _runtime_records_from_frame(existing_baseline)
     if not baseline_rows and passed_methods:
-        baseline_rows, runtime_records = _run_expanded_matrix(out, configs, scale_policy, passed_methods)
+        baseline_rows, runtime_records = _run_expanded_matrix(
+            out,
+            configs,
+            scale_policy,
+            passed_methods,
+            dataset_scope,
+            seed_frame=existing_baseline,
+        )
 
     baseline_frame = pd.DataFrame(baseline_rows, columns=EXPANDED_FIELDNAMES)
     baseline_frame.to_csv(out / "table_baseline_expansion.csv", index=False)
@@ -169,7 +177,7 @@ def run_d5_baseline_expansion(
     _write_baseline_readiness_report(reports, verification, passed_methods)
 
     if sanity["passed"]:
-        _update_readiness(reports)
+        _update_readiness(reports, dataset_scope)
 
     _assert_no_forbidden_artifacts_created(forbidden_before)
     return {
@@ -243,6 +251,7 @@ def _run_verification_gate(configs: Path, reports: Path, scale_policy: dict[str,
     excluded = _excluded_baselines(passed, failures)
     report = {
         "stage": "baseline verification gate",
+        "p2_baseline_calibration": True,
         "seed": VERIFY_SEED,
         "datasets": list(VERIFY_DATASETS),
         "settings": ["clean", "symmetric_20"],
@@ -272,7 +281,11 @@ def _load_or_run_verification_gate(configs: Path, reports: Path, scale_policy: d
     if path.exists():
         report = json.loads(path.read_text(encoding="utf-8"))
         rows = report.get("rows", [])
-        if report.get("passed_baselines") and len(rows) >= len(VERIFY_DATASETS) * len(VERIFY_SPECS):
+        if (
+            report.get("p2_baseline_calibration") is True
+            and report.get("passed_baselines")
+            and len(rows) >= len(VERIFY_DATASETS) * len(VERIFY_SPECS)
+        ):
             return report
     return _run_verification_gate(configs, reports, scale_policy)
 
@@ -282,18 +295,28 @@ def _run_expanded_matrix(
     configs: Path,
     scale_policy: dict[str, Any],
     passed_methods: tuple[str, ...],
+    dataset_scope: tuple[str, ...],
+    seed_frame: pd.DataFrame | None = None,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     partial_path = out / "table_baseline_expansion.partial.csv"
     existing = _load_partial_baseline_rows(partial_path, passed_methods)
+    seeded = _usable_existing_baseline_rows(seed_frame, passed_methods, dataset_scope)
+    if not seeded.empty:
+        existing = pd.concat([seeded, existing], ignore_index=True)
+        existing = _deduplicate_baseline_rows(existing)
     rows: list[dict[str, Any]] = existing.to_dict(orient="records") if not existing.empty else []
     runtime_records: list[dict[str, Any]] = _runtime_records_from_frame(existing) if not existing.empty else []
     done = {_row_key(row) for row in rows}
-    for dataset_name in d5.FORMAL_DATASETS:
+    for dataset_name in dataset_scope:
         for seed in d5.SEEDS:
+            if _all_expected_keys_done(dataset_name, seed, passed_methods, done):
+                continue
             bundle = d5._load_formal_dataset(dataset_name, seed, configs, scale_policy)
             evidence = _evidence(bundle)
             graph_cache: dict[float, Any] = {}
             for spec in d5._noise_specs():
+                if _all_spec_keys_done(dataset_name, seed, spec, passed_methods, done):
+                    continue
                 noisy, flip = d5._inject_noise(bundle.dataset, spec, seed, graph_cache)
                 for baseline in _baseline_candidates(seed, float(spec["noise_rate"])):
                     if _candidate_method_name(baseline) not in passed_methods:
@@ -334,7 +357,76 @@ def _run_expanded_matrix(
                             "memory_mb": row["memory_mb"],
                         }
                     )
+    if partial_path.exists():
+        partial_path.unlink()
     return rows, runtime_records
+
+
+def _all_expected_keys_done(dataset_name: str, seed: int, methods: tuple[str, ...], done: set[tuple[str, str, str, str, str, str]]) -> bool:
+    expected = {
+        _row_key(
+            {
+                "dataset": dataset_name,
+                "noise_type": spec["noise_type"],
+                "noise_rate": spec["noise_rate"],
+                "graph_beta": spec["graph_beta"],
+                "seed": seed,
+                "method": method,
+            }
+        )
+        for spec in d5._noise_specs()
+        for method in methods
+    }
+    return bool(expected.issubset(done))
+
+
+def _all_spec_keys_done(
+    dataset_name: str,
+    seed: int,
+    spec: dict[str, Any],
+    methods: tuple[str, ...],
+    done: set[tuple[str, str, str, str, str, str]],
+) -> bool:
+    expected = {
+        _row_key(
+            {
+                "dataset": dataset_name,
+                "noise_type": spec["noise_type"],
+                "noise_rate": spec["noise_rate"],
+                "graph_beta": spec["graph_beta"],
+                "seed": seed,
+                "method": method,
+            }
+        )
+        for method in methods
+    }
+    return bool(expected.issubset(done))
+
+
+def _usable_existing_baseline_rows(
+    frame: pd.DataFrame | None,
+    passed_methods: tuple[str, ...],
+    dataset_scope: tuple[str, ...],
+) -> pd.DataFrame:
+    if frame is None or frame.empty or not set(EXPANDED_FIELDNAMES).issubset(frame.columns):
+        return pd.DataFrame(columns=EXPANDED_FIELDNAMES)
+    out = frame.reindex(columns=EXPANDED_FIELDNAMES).copy()
+    out = out[out["method"].astype(str).isin(set(passed_methods))]
+    out = out[out["dataset"].astype(str).isin(set(dataset_scope))]
+    numeric = out.select_dtypes(include=[np.number])
+    if not numeric.empty:
+        finite = np.isfinite(numeric.to_numpy(dtype=float)).all(axis=1)
+        out = out.loc[finite]
+    return _deduplicate_baseline_rows(out)
+
+
+def _deduplicate_baseline_rows(frame: pd.DataFrame) -> pd.DataFrame:
+    if frame.empty:
+        return frame.reindex(columns=EXPANDED_FIELDNAMES)
+    work = frame.reindex(columns=EXPANDED_FIELDNAMES).copy()
+    work["__row_key"] = [_row_key(row) for row in work.to_dict(orient="records")]
+    work = work.drop_duplicates("__row_key", keep="last").drop(columns=["__row_key"])
+    return work.reindex(columns=EXPANDED_FIELDNAMES)
 
 
 def _load_partial_baseline_rows(path: Path, passed_methods: tuple[str, ...]) -> pd.DataFrame:
@@ -368,11 +460,11 @@ def _baseline_candidates(seed: int, noise_rate: float):
     return (
         NoisySupervisedBaseline(seed=seed),
         ConfidentLearningBaseline(seed=seed, noise_rate=noise_rate),
-        CoTeachingBaseline(seed=seed, noise_rate=noise_rate, epochs=3, batch_size=8192),
+        CoTeachingBaseline(seed=seed, noise_rate=noise_rate, epochs=1, batch_size=8192, n_estimators=8),
         DecouplingBaseline(seed=seed, epochs=3, batch_size=8192),
-        FINEBaseline(seed=seed, noise_rate=noise_rate, n_components=8, n_estimators=4),
-        MCReBaseline(seed=seed, noise_rate=noise_rate, n_components=0, max_iter=4),
-        MORSEBaseline(seed=seed, noise_rate=noise_rate, n_components=0, max_iter=4),
+        FINEBaseline(seed=seed, noise_rate=noise_rate, n_components=8, n_estimators=8),
+        MCReBaseline(seed=seed, noise_rate=noise_rate, n_components=0, max_iter=4, n_estimators=8),
+        MORSEBaseline(seed=seed, noise_rate=noise_rate, n_components=0, max_iter=4, n_estimators=8),
     )
 
 
@@ -480,16 +572,19 @@ def _annotate_original_rows(frame: pd.DataFrame) -> pd.DataFrame:
     return out.reindex(columns=EXPANDED_FIELDNAMES)
 
 
-def _assert_original_d5_scope(frame: pd.DataFrame) -> None:
+def _assert_original_d5_scope(frame: pd.DataFrame) -> tuple[str, ...]:
     datasets = {str(value) for value in frame["dataset"].unique()}
     methods = {str(value) for value in frame["method"].unique()}
-    if datasets != set(d5.FORMAL_DATASETS):
+    allowed = set(d5.BASE_FORMAL_DATASETS) | {"unsw_nb15"}
+    required = set(d5.BASE_FORMAL_DATASETS)
+    if not required.issubset(datasets) or not datasets.issubset(allowed):
         raise RuntimeError(f"Original D5 scope mismatch: {datasets}")
     if methods != set(d5.FORMAL_METHODS):
         raise RuntimeError(f"Original D5 methods mismatch: {methods}")
     forbidden = {"maltls22", "optc"}
     if datasets.intersection(forbidden):
         raise RuntimeError(f"Forbidden original D5 datasets found: {datasets.intersection(forbidden)}")
+    return tuple(dataset for dataset in (*d5.BASE_FORMAL_DATASETS, "unsw_nb15") if dataset in datasets)
 
 
 def _read_scale_policy(reports: Path) -> dict[str, Any]:
@@ -515,8 +610,8 @@ def _seen_all_verification_rows(rows: list[dict[str, Any]], method: str) -> bool
 
 def _excluded_baselines(passed: list[str], failures: dict[str, list[str]]) -> dict[str, str]:
     excluded = {
-        "Flash": "excluded: provenance case-study method; no formal two-dataset label-noise implementation",
-        "Argus": "excluded: provenance case-study method; no formal two-dataset label-noise implementation",
+        "Flash": "excluded: provenance case-study method; no formal real-data label-noise implementation",
+        "Argus": "excluded: provenance case-study method; no formal real-data label-noise implementation",
     }
     for name, reasons in failures.items():
         if name not in passed:
@@ -545,11 +640,13 @@ def _runtime_json(runtime: pd.DataFrame, verification: dict[str, Any]) -> dict[s
     }
 
 
-def _baseline_frame_complete(frame: pd.DataFrame, passed_methods: tuple[str, ...]) -> bool:
+def _baseline_frame_complete(frame: pd.DataFrame, passed_methods: tuple[str, ...], dataset_scope: tuple[str, ...]) -> bool:
     if frame.empty or not set(EXPANDED_FIELDNAMES).issubset(frame.columns):
         return False
-    expected = len(d5.FORMAL_DATASETS) * len(d5.SEEDS) * len(d5._noise_specs()) * len(passed_methods)
+    expected = len(dataset_scope) * len(d5.SEEDS) * len(d5._noise_specs()) * len(passed_methods)
     if len(frame) != expected:
+        return False
+    if set(frame["dataset"].astype(str).unique()) != set(dataset_scope):
         return False
     if set(frame["method"].astype(str).unique()) != set(passed_methods):
         return False
@@ -635,7 +732,10 @@ def _write_baseline_readiness_report(reports: Path, verification: dict[str, Any]
     for method in d5.FORMAL_METHODS:
         report[method] = {"included": True, "reason": "reused from verified real D5 run"}
     for method in passed_methods:
-        report[method] = {"included": True, "reason": "verified on CICIDS-2017 and CESNET-TLS-Year22"}
+        report[method] = {
+            "included": True,
+            "reason": "verified on mandatory real datasets and run on the active formal scope",
+        }
     for method, reason in verification.get("excluded", {}).items():
         report[method] = {"included": False, "reason": reason}
     legacy_aliases = {
@@ -648,9 +748,14 @@ def _write_baseline_readiness_report(reports: Path, verification: dict[str, Any]
     (reports / "baseline_readiness_report.md").write_text(_baseline_markdown(report), encoding="utf-8")
 
 
-def _update_readiness(reports: Path) -> None:
+def _update_readiness(reports: Path, dataset_scope: tuple[str, ...]) -> None:
     path = reports / "realdata_readiness_report.json"
     readiness = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+    labels = {
+        "cicids2017": "CICIDS-2017",
+        "cesnet_tls_year22": "CESNET-TLS-Year22",
+        "unsw_nb15": "UNSW-NB15",
+    }
     readiness.update(
         {
             "d5_completed": True,
@@ -660,11 +765,37 @@ def _update_readiness(reports: Path) -> None:
             "d7_allowed": False,
             "d6_d7_allowed": False,
             "submission_ready": False,
-            "d5_scope": ["CICIDS-2017", "CESNET-TLS-Year22"],
+            "d5_scope": [labels.get(name, name) for name in dataset_scope],
         }
     )
+    if "unsw_nb15" in dataset_scope:
+        _merge_unsw_readiness(readiness, reports)
     path.write_text(json.dumps(readiness, indent=2), encoding="utf-8")
     (reports / "realdata_readiness_report.md").write_text(_readiness_markdown(readiness), encoding="utf-8")
+
+
+def _merge_unsw_readiness(readiness: dict[str, Any], reports: Path) -> None:
+    unsw_path = reports / "unsw_ingest.json"
+    if not unsw_path.exists():
+        return
+    try:
+        unsw = json.loads(unsw_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return
+    datasets = readiness.setdefault("datasets", {})
+    datasets["unsw_nb15"] = {
+        **datasets.get("unsw_nb15", {}),
+        "available": bool(unsw.get("ready_for_smoke") or unsw.get("ready_for_d5_component")),
+        "audit_passed": bool(unsw.get("ready_for_d5_component")),
+        "ready_for_smoke": bool(unsw.get("ready_for_smoke")),
+        "ready_for_d5": bool(unsw.get("ready_for_d5_component")),
+        "ready_for_d5_component": bool(unsw.get("ready_for_d5_component")),
+        "source_verified": bool(unsw.get("source_verified", True)),
+        "reported_as": unsw.get("reported_as", "UNSW-NB15"),
+        "actual_data_path": unsw.get("actual_data_path"),
+        "active_views": unsw.get("active_views", []),
+        "blocking_reasons": unsw.get("blocking_reasons", []),
+    }
 
 
 def _file_hash(path: Path) -> str:

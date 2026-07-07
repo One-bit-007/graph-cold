@@ -1,14 +1,16 @@
 {
   "stage": "D6",
   "source_csv": "results/table_main_expanded.csv",
-  "source_sha256": "d044d4847edc1706fcdf904142085895baca70130287beb9cd2ad8c17d20dfb8",
+  "source_sha256": "125ce9e63442e82deced11caf3391dd9b4ac103a6f1f3c1a7776ca7499d493cf",
   "dataset_scope": [
     "CICIDS-2017",
-    "CESNET-TLS-Year22"
+    "CESNET-TLS-Year22",
+    "UNSW-NB15"
   ],
   "sample_policy": {
     "CICIDS-2017": "full_postfilter11_after_min_count_and_dominant_downsample",
-    "CESNET-TLS-Year22": "deterministic_audit_window_100000_then_postfilter25_stratified_split"
+    "CESNET-TLS-Year22": "deterministic_audit_window_100000_then_postfilter25_stratified_split",
+    "UNSW-NB15": "auto_detected_layout_then_postfilter_stratified_protocol"
   },
   "method_scope": [
     "Graph-CoLD",
@@ -23,81 +25,78 @@
     "MORSE"
   ],
   "excluded_baselines": {
-    "FINE": "not independently implemented and smoke-passed on real data",
-    "Co-Teaching": "not independently implemented and smoke-passed on real data",
-    "Co-Teaching+": "not independently implemented and smoke-passed on real data",
-    "Decoupling": "not independently implemented and smoke-passed on real data",
-    "cleanlab": "not independently implemented and smoke-passed on real data",
-    "MCRe": "not independently implemented and smoke-passed on real data",
-    "MORSE": "not independently implemented and smoke-passed on real data"
+    "Flash": "excluded: provenance case-study method; no formal real-data label-noise implementation",
+    "Argus": "excluded: provenance case-study method; no formal real-data label-noise implementation",
+    "cleanlab": "legacy audit key; official cleanlab is represented by the Confident-Learning method row",
+    "Co-Teaching+": "not independently implemented and verified on real data"
   },
   "graph_cold_vs_cold": {
-    "mean_difference_pp": 14.748943631910585,
-    "p_value": 2.7548517818673647e-09,
-    "effect_size": 0.9452293038402645,
-    "n_pairs": 54,
+    "mean_difference_pp": 9.230590126329833,
+    "p_value": 1.1449023614620517e-13,
+    "effect_size": 0.6503353634133742,
+    "n_pairs": 153,
     "test": "paired grouped t-test, greater alternative"
   },
   "method_means": {
     "Co-Teaching": {
-      "macro_f1_mean": 0.7229687859964034,
-      "err_final_mean": 0.8247316950634399,
-      "compression_ratio_mean": 0.9901239075374372,
-      "runtime_sec_mean": 10.986523021568942
+      "macro_f1_mean": 0.7045632256822567,
+      "err_final_mean": 0.5997363804149554,
+      "compression_ratio_mean": 0.9255801365597918,
+      "runtime_sec_mean": 6.071137085620898
     },
     "CoLD": {
-      "macro_f1_mean": 0.8467678751043091,
-      "err_final_mean": 0.7642560570043213,
-      "compression_ratio_mean": 0.9905480120224311,
-      "runtime_sec_mean": 4.153816080398803
+      "macro_f1_mean": 0.7623415738285781,
+      "err_final_mean": 0.7636088684686195,
+      "compression_ratio_mean": 0.9149033739377013,
+      "runtime_sec_mean": 3.0663950196109724
     },
     "Confident-Learning": {
-      "macro_f1_mean": 0.7679072721054718,
-      "err_final_mean": 0.8245275987520679,
-      "compression_ratio_mean": 0.9935948503689103,
-      "runtime_sec_mean": 22.488114982353483
+      "macro_f1_mean": 0.6726653775516729,
+      "err_final_mean": 0.7065232831651137,
+      "compression_ratio_mean": 0.9201987435168668,
+      "runtime_sec_mean": 21.288390699348884
     },
     "Decoupling": {
-      "macro_f1_mean": 0.6445057711324641,
-      "err_final_mean": 0.31443365598599105,
-      "compression_ratio_mean": 0.9897412498679518,
-      "runtime_sec_mean": 8.971172250979055
+      "macro_f1_mean": 0.5632411415724035,
+      "err_final_mean": 0.3756926448195964,
+      "compression_ratio_mean": 0.9444622291500443,
+      "runtime_sec_mean": 8.335853115685536
     },
     "FINE": {
-      "macro_f1_mean": 0.619184914090142,
-      "err_final_mean": 0.642385822889732,
-      "compression_ratio_mean": 0.9986829386545809,
-      "runtime_sec_mean": 2.727387440200283
+      "macro_f1_mean": 0.563424214377648,
+      "err_final_mean": 0.6796875851313732,
+      "compression_ratio_mean": 0.9738922978916488,
+      "runtime_sec_mean": 2.4031008993468728
     },
     "Graph-CoLD": {
-      "macro_f1_mean": 0.9914568045042343,
+      "macro_f1_mean": 0.8546474750918764,
       "err_final_mean": 1.0,
-      "compression_ratio_mean": 0.9896126907522377,
-      "runtime_sec_mean": 4.917658931371989
+      "compression_ratio_mean": 0.9070173921076583,
+      "runtime_sec_mean": 3.2898835915059395
     },
     "MCRe": {
-      "macro_f1_mean": 0.6809805413810633,
-      "err_final_mean": 0.7824077369256476,
-      "compression_ratio_mean": 0.9891209303237972,
-      "runtime_sec_mean": 4.9700869137264885
+      "macro_f1_mean": 0.6202427965900356,
+      "err_final_mean": 0.755937964891572,
+      "compression_ratio_mean": 0.9315451162186537,
+      "runtime_sec_mean": 1.9994815732044278
     },
     "MORSE": {
-      "macro_f1_mean": 0.6719611461664923,
-      "err_final_mean": 0.9472472769452392,
-      "compression_ratio_mean": 0.9981293926978781,
-      "runtime_sec_mean": 10.709405354899241
+      "macro_f1_mean": 0.6196599750352,
+      "err_final_mean": 0.9380886944481069,
+      "compression_ratio_mean": 0.9295975290507041,
+      "runtime_sec_mean": 6.53359833399018
     },
     "Noisy-Supervised": {
-      "macro_f1_mean": 0.6836401400766101,
+      "macro_f1_mean": 0.6131492573159788,
       "err_final_mean": 1.0,
-      "compression_ratio_mean": 0.9978914304710599,
-      "runtime_sec_mean": 2.703673292157713
+      "compression_ratio_mean": 0.9728496987846399,
+      "runtime_sec_mean": 2.203843698694007
     },
     "ablation_hard": {
-      "macro_f1_mean": 0.9730741731552438,
-      "err_final_mean": 0.8952884210391961,
-      "compression_ratio_mean": 0.9907622723811581,
-      "runtime_sec_mean": 5.184165422549567
+      "macro_f1_mean": 0.8422008500032476,
+      "err_final_mean": 0.8879103430314937,
+      "compression_ratio_mean": 0.9164257108981785,
+      "runtime_sec_mean": 3.457032696728966
     }
   },
   "high_noise_summary": {
@@ -138,11 +137,11 @@
         "compression_ratio_mean": 0.9995
       },
       "Co-Teaching": {
-        "macro_f1_mean": 0.5645,
-        "fpr_mean": 0.2844,
-        "fnr_mean": 0.0762,
-        "err_mean": 0.6327,
-        "compression_ratio_mean": 0.9939
+        "macro_f1_mean": 0.5869,
+        "fpr_mean": 0.1702,
+        "fnr_mean": 0.0985,
+        "err_mean": 0.5264,
+        "compression_ratio_mean": 0.9973
       },
       "Decoupling": {
         "macro_f1_mean": 0.5097,
@@ -152,25 +151,25 @@
         "compression_ratio_mean": 0.983
       },
       "FINE": {
-        "macro_f1_mean": 0.3402,
-        "fpr_mean": 0.3457,
-        "fnr_mean": 0.2431,
-        "err_mean": 0.337,
+        "macro_f1_mean": 0.3535,
+        "fpr_mean": 0.3499,
+        "fnr_mean": 0.2255,
+        "err_mean": 0.34,
         "compression_ratio_mean": 1.0
       },
       "MCRe": {
-        "macro_f1_mean": 0.4066,
-        "fpr_mean": 0.4376,
-        "fnr_mean": 0.1175,
-        "err_mean": 0.4594,
-        "compression_ratio_mean": 0.9974
+        "macro_f1_mean": 0.3727,
+        "fpr_mean": 0.4199,
+        "fnr_mean": 0.1502,
+        "err_mean": 0.4595,
+        "compression_ratio_mean": 0.9999
       },
       "MORSE": {
-        "macro_f1_mean": 0.4105,
-        "fpr_mean": 0.4893,
-        "fnr_mean": 0.0846,
-        "err_mean": 0.8246,
-        "compression_ratio_mean": 0.9996
+        "macro_f1_mean": 0.3578,
+        "fpr_mean": 0.4403,
+        "fnr_mean": 0.1448,
+        "err_mean": 0.8232,
+        "compression_ratio_mean": 0.9999
       }
     },
     "CESNET-TLS-Year22": {
@@ -210,11 +209,11 @@
         "compression_ratio_mean": 0.9952
       },
       "Co-Teaching": {
-        "macro_f1_mean": 0.8102,
-        "fpr_mean": 0.2003,
-        "fnr_mean": 0.0062,
-        "err_mean": 0.8304,
-        "compression_ratio_mean": 0.9923
+        "macro_f1_mean": 0.8534,
+        "fpr_mean": 0.0795,
+        "fnr_mean": 0.0317,
+        "err_mean": 0.5739,
+        "compression_ratio_mean": 0.9929
       },
       "Decoupling": {
         "macro_f1_mean": 0.7068,
@@ -224,32 +223,104 @@
         "compression_ratio_mean": 0.9952
       },
       "FINE": {
-        "macro_f1_mean": 0.5791,
-        "fpr_mean": 0.2511,
-        "fnr_mean": 0.1549,
+        "macro_f1_mean": 0.6073,
+        "fpr_mean": 0.2324,
+        "fnr_mean": 0.1432,
         "err_mean": 0.5037,
         "compression_ratio_mean": 0.9995
       },
       "MCRe": {
-        "macro_f1_mean": 0.7773,
-        "fpr_mean": 0.149,
-        "fnr_mean": 0.0799,
+        "macro_f1_mean": 0.804,
+        "fpr_mean": 0.0355,
+        "fnr_mean": 0.1368,
         "err_mean": 0.79,
-        "compression_ratio_mean": 0.999
+        "compression_ratio_mean": 0.9993
       },
       "MORSE": {
-        "macro_f1_mean": 0.7837,
-        "fpr_mean": 0.2161,
-        "fnr_mean": 0.0541,
+        "macro_f1_mean": 0.804,
+        "fpr_mean": 0.1067,
+        "fnr_mean": 0.1236,
         "err_mean": 0.982,
-        "compression_ratio_mean": 0.9999
+        "compression_ratio_mean": 0.9996
+      }
+    },
+    "UNSW-NB15": {
+      "Graph-CoLD": {
+        "macro_f1_mean": 0.5775,
+        "fpr_mean": 0.0,
+        "fnr_mean": 0.0,
+        "err_mean": 1.0,
+        "compression_ratio_mean": 0.7349
+      },
+      "CoLD": {
+        "macro_f1_mean": 0.5846,
+        "fpr_mean": 0.0,
+        "fnr_mean": 0.0,
+        "err_mean": 0.7384,
+        "compression_ratio_mean": 0.778
+      },
+      "ablation_hard": {
+        "macro_f1_mean": 0.5774,
+        "fpr_mean": 0.0,
+        "fnr_mean": 0.0,
+        "err_mean": 0.8598,
+        "compression_ratio_mean": 0.7534
+      },
+      "Noisy-Supervised": {
+        "macro_f1_mean": 0.3888,
+        "fpr_mean": 0.1198,
+        "fnr_mean": 0.1291,
+        "err_mean": 1.0,
+        "compression_ratio_mean": 0.96
+      },
+      "Confident-Learning": {
+        "macro_f1_mean": 0.4364,
+        "fpr_mean": 0.0198,
+        "fnr_mean": 0.1085,
+        "err_mean": 0.4305,
+        "compression_ratio_mean": 0.8149
+      },
+      "Co-Teaching": {
+        "macro_f1_mean": 0.4326,
+        "fpr_mean": 0.0712,
+        "fnr_mean": 0.0982,
+        "err_mean": 0.2187,
+        "compression_ratio_mean": 0.8427
+      },
+      "Decoupling": {
+        "macro_f1_mean": 0.3731,
+        "fpr_mean": 0.1346,
+        "fnr_mean": 0.0689,
+        "err_mean": 0.4929,
+        "compression_ratio_mean": 0.9365
+      },
+      "FINE": {
+        "macro_f1_mean": 0.3282,
+        "fpr_mean": 0.2421,
+        "fnr_mean": 0.2008,
+        "err_mean": 0.568,
+        "compression_ratio_mean": 0.963
+      },
+      "MCRe": {
+        "macro_f1_mean": 0.3628,
+        "fpr_mean": 0.2573,
+        "fnr_mean": 0.1108,
+        "err_mean": 0.4906,
+        "compression_ratio_mean": 0.8442
+      },
+      "MORSE": {
+        "macro_f1_mean": 0.3614,
+        "fpr_mean": 0.2471,
+        "fnr_mean": 0.1192,
+        "err_mean": 0.8847,
+        "compression_ratio_mean": 0.831
       }
     }
   },
   "err_interpretation": {
     "graph_cold_err_final_mean": 1.0,
-    "ablation_hard_err_final_mean": 0.8952884210391961,
-    "difference_pp": 10.471157896080385
+    "ablation_hard_err_final_mean": 0.8879103430314937,
+    "difference_pp": 11.208965696850626
   },
   "dataset_specific_notes": {
     "CICIDS-2017": {
@@ -259,89 +330,111 @@
     "CESNET-TLS-Year22": {
       "high_noise_macro_f1_lift_pp": 0.24957427220365647,
       "interpretation": "CESNET has a ceiling effect; Macro-F1 changes are small, so ERR and stability carry more of the evidence."
+    },
+    "UNSW-NB15": {
+      "high_noise_macro_f1_lift_pp": -0.7088538851633186,
+      "interpretation": "UNSW-NB15 is included through the verified local partition layout with temporal and process/feature-block views; it broadens the robustness check beyond the original two datasets."
     }
   },
   "statistical_table": [
     {
       "Comparison": "Graph-CoLD vs CoLD",
-      "Mean difference": "14.75 pp",
-      "p-value": "2.75e-09",
-      "Effect size": "0.945",
-      "n": 54,
-      "Test type": "paired grouped t-test, greater alternative",
-      "Interpretation": "Graph-CoLD higher under paired grouped test."
+      "Mean difference": "9.23 pp",
+      "95% CI": "[5.48, 13.14] pp",
+      "p-value": "1.38e-05",
+      "Holm p-value": "2.76e-05",
+      "Effect size": "0.646",
+      "n": 51,
+      "Test type": "paired grouped scenario-level t-test with Holm correction",
+      "Interpretation": "Graph-CoLD higher under scenario-level paired test after correction."
     },
     {
       "Comparison": "Graph-CoLD vs ablation_hard",
-      "Mean difference": "1.84 pp",
-      "p-value": "4.49e-06",
-      "Effect size": "0.463",
-      "n": 102,
-      "Test type": "paired grouped t-test, greater alternative",
-      "Interpretation": "Graph-CoLD higher under paired grouped test."
+      "Mean difference": "1.24 pp",
+      "95% CI": "[0.56, 2.31] pp",
+      "p-value": "5.47e-03",
+      "Holm p-value": "5.47e-03",
+      "Effect size": "0.370",
+      "n": 51,
+      "Test type": "paired grouped scenario-level t-test with Holm correction",
+      "Interpretation": "Graph-CoLD higher under scenario-level paired test after correction."
     },
     {
       "Comparison": "Graph-CoLD vs Noisy-Supervised",
-      "Mean difference": "30.78 pp",
-      "p-value": "1.75e-26",
-      "Effect size": "1.424",
-      "n": 102,
-      "Test type": "paired grouped t-test, greater alternative",
-      "Interpretation": "Graph-CoLD higher under paired grouped test."
+      "Mean difference": "24.15 pp",
+      "95% CI": "[18.57, 29.82] pp",
+      "p-value": "2.83e-11",
+      "Holm p-value": "1.70e-10",
+      "Effect size": "1.163",
+      "n": 51,
+      "Test type": "paired grouped scenario-level t-test with Holm correction",
+      "Interpretation": "Graph-CoLD higher under scenario-level paired test after correction."
     },
     {
       "Comparison": "Graph-CoLD vs Confident-Learning",
-      "Mean difference": "22.35 pp",
-      "p-value": "9.24e-25",
-      "Effect size": "1.342",
-      "n": 102,
-      "Test type": "paired grouped t-test, greater alternative",
-      "Interpretation": "Graph-CoLD higher under paired grouped test."
+      "Mean difference": "18.20 pp",
+      "95% CI": "[14.31, 22.59] pp",
+      "p-value": "1.09e-11",
+      "Holm p-value": "7.60e-11",
+      "Effect size": "1.201",
+      "n": 51,
+      "Test type": "paired grouped scenario-level t-test with Holm correction",
+      "Interpretation": "Graph-CoLD higher under scenario-level paired test after correction."
     },
     {
       "Comparison": "Graph-CoLD vs Co-Teaching",
-      "Mean difference": "26.85 pp",
-      "p-value": "7.33e-41",
-      "Effect size": "2.193",
-      "n": 102,
-      "Test type": "paired grouped t-test, greater alternative",
-      "Interpretation": "Graph-CoLD higher under paired grouped test."
+      "Mean difference": "15.01 pp",
+      "95% CI": "[11.32, 18.94] pp",
+      "p-value": "3.71e-10",
+      "Holm p-value": "1.11e-09",
+      "Effect size": "1.062",
+      "n": 51,
+      "Test type": "paired grouped scenario-level t-test with Holm correction",
+      "Interpretation": "Graph-CoLD higher under scenario-level paired test after correction."
     },
     {
       "Comparison": "Graph-CoLD vs Decoupling",
-      "Mean difference": "34.70 pp",
-      "p-value": "9.79e-50",
-      "Effect size": "2.775",
-      "n": 102,
-      "Test type": "paired grouped t-test, greater alternative",
-      "Interpretation": "Graph-CoLD higher under paired grouped test."
+      "Mean difference": "29.14 pp",
+      "95% CI": "[25.84, 32.50] pp",
+      "p-value": "2.66e-22",
+      "Holm p-value": "2.39e-21",
+      "Effect size": "2.327",
+      "n": 51,
+      "Test type": "paired grouped scenario-level t-test with Holm correction",
+      "Interpretation": "Graph-CoLD higher under scenario-level paired test after correction."
     },
     {
       "Comparison": "Graph-CoLD vs FINE",
-      "Mean difference": "37.23 pp",
-      "p-value": "6.73e-32",
-      "Effect size": "1.694",
-      "n": 102,
-      "Test type": "paired grouped t-test, greater alternative",
-      "Interpretation": "Graph-CoLD higher under paired grouped test."
+      "Mean difference": "29.12 pp",
+      "95% CI": "[23.55, 35.01] pp",
+      "p-value": "1.47e-13",
+      "Holm p-value": "1.18e-12",
+      "Effect size": "1.375",
+      "n": 51,
+      "Test type": "paired grouped scenario-level t-test with Holm correction",
+      "Interpretation": "Graph-CoLD higher under scenario-level paired test after correction."
     },
     {
       "Comparison": "Graph-CoLD vs MCRe",
-      "Mean difference": "31.05 pp",
-      "p-value": "1.34e-31",
-      "Effect size": "1.678",
-      "n": 102,
-      "Test type": "paired grouped t-test, greater alternative",
-      "Interpretation": "Graph-CoLD higher under paired grouped test."
+      "Mean difference": "23.44 pp",
+      "95% CI": "[18.09, 29.28] pp",
+      "p-value": "5.36e-11",
+      "Holm p-value": "2.68e-10",
+      "Effect size": "1.137",
+      "n": 51,
+      "Test type": "paired grouped scenario-level t-test with Holm correction",
+      "Interpretation": "Graph-CoLD higher under scenario-level paired test after correction."
     },
     {
       "Comparison": "Graph-CoLD vs MORSE",
-      "Mean difference": "31.95 pp",
-      "p-value": "1.75e-32",
-      "Effect size": "1.724",
-      "n": 102,
-      "Test type": "paired grouped t-test, greater alternative",
-      "Interpretation": "Graph-CoLD higher under paired grouped test."
+      "Mean difference": "23.50 pp",
+      "95% CI": "[18.03, 29.49] pp",
+      "p-value": "1.07e-10",
+      "Holm p-value": "4.28e-10",
+      "Effect size": "1.110",
+      "n": 51,
+      "Test type": "paired grouped scenario-level t-test with Holm correction",
+      "Interpretation": "Graph-CoLD higher under scenario-level paired test after correction."
     }
   ],
   "required_language": [
@@ -350,5 +443,5 @@
     "evidence retention",
     "operational alert reduction proxy"
   ],
-  "caution": "Claims are limited to the verified CICIDS-2017 and CESNET-TLS-Year22 evaluation matrix."
+  "caution": "Claims are limited to the verified CICIDS-2017, CESNET-TLS-Year22, UNSW-NB15 evaluation matrix."
 }

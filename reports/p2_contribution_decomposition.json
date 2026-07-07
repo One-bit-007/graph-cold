@@ -1,0 +1,6 @@
+{
+  "table": "tables/table_p2_contribution_decomposition.csv",
+  "figure": "figures/fig_p2_contribution_decomposition.pdf",
+  "macro_f1_evidence_gain": 0.012446625088628815,
+  "err_evidence_gain": 0.11208965696850626
+}

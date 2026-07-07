@@ -23,6 +23,8 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
+from src.analysis.protocol import PROTOCOL_ID, method_headline_map, write_protocol_artifacts
+
 
 MAIN_SOURCE = "results/table_main_expanded.csv"
 ORIGINAL_MAIN_SOURCE = "results/table_main.csv"
@@ -30,8 +32,8 @@ ABLATION_SOURCE = "results/table_ablation.csv"
 BASELINE_SOURCE = "results/table_baseline_expansion.csv"
 STATS_SOURCE = "results/stat_tests_baseline_expansion.json"
 
-DATASET_ORDER = ["CICIDS-2017", "CESNET-TLS-Year22"]
-FORMAL_DATASETS = {"CICIDS-2017", "CESNET-TLS-Year22"}
+DATASET_ORDER = ["CICIDS-2017", "CESNET-TLS-Year22", "UNSW-NB15"]
+FORMAL_DATASETS = {"CICIDS-2017", "CESNET-TLS-Year22", "UNSW-NB15"}
 MAIN_METHODS = [
     "Graph-CoLD",
     "CoLD",
@@ -120,6 +122,7 @@ def run_d6_realdata_prep(
     table3 = _table_high_noise(main)
     table4 = _table_ablation(ablation)
     table5 = _table_stats(stats)
+    write_protocol_artifacts(results / "table_main_expanded.csv", tables / "table_p2_canonical_headline.csv", reports / "p2_number_consistency.json")
     _write_table_pair(table1, tables / "table_1_dataset_protocol.csv", tables / "table_1_dataset_protocol.md", "Table 1. Dataset and protocol summary", MAIN_SOURCE)
     _write_table_pair(table2, tables / "table_2_main_performance.csv", tables / "table_2_main_performance.md", "Table 2. Main performance by dataset and noise setting", MAIN_SOURCE)
     _write_table_pair(table3, tables / "table_3_high_noise_summary.csv", tables / "table_3_high_noise_summary.md", "Table 3. High-noise robustness summary", MAIN_SOURCE)
@@ -154,6 +157,7 @@ def run_d6_realdata_prep(
             "tables/table_3_high_noise_summary.csv",
             "tables/table_4_ablation_evidence.csv",
             "tables/table_5_statistical_tests.csv",
+            "tables/table_p2_canonical_headline.csv",
         ],
         "figures": [
             "figures/fig2_macro_f1_vs_noise_rate.png",
@@ -304,6 +308,7 @@ def _table_dataset_protocol(main: pd.DataFrame) -> pd.DataFrame:
 
 
 def _table_main_performance(main: pd.DataFrame) -> pd.DataFrame:
+    headlines = method_headline_map(main, metric="macro_f1")
     grouped = (
         main.groupby(["reported_as", "noise_type", "noise_rate", "graph_beta", "method"], dropna=False)
         .agg(
@@ -333,6 +338,8 @@ def _table_main_performance(main: pd.DataFrame) -> pd.DataFrame:
             "Noise rate": grouped["noise_rate"].map(_rate),
             "Graph beta": grouped["graph_beta"].astype(str),
             "Method": grouped["method"],
+            "Canonical Macro-F1 headline": grouped["method"].map(lambda method: f"{headlines[str(method)]:.6f}"),
+            "Canonical protocol": PROTOCOL_ID,
             "Macro-F1 mean +/- std": _fmt_mean_std(grouped, "macro_f1"),
             "FPR mean +/- std": _fmt_mean_std(grouped, "fpr"),
             "FNR mean +/- std": _fmt_mean_std(grouped, "fnr"),
@@ -344,6 +351,7 @@ def _table_main_performance(main: pd.DataFrame) -> pd.DataFrame:
 
 
 def _table_high_noise(main: pd.DataFrame) -> pd.DataFrame:
+    headlines = method_headline_map(main, metric="macro_f1")
     rates = pd.to_numeric(main["noise_rate"], errors="coerce")
     high = main[
         (rates >= 0.4)
@@ -369,6 +377,8 @@ def _table_high_noise(main: pd.DataFrame) -> pd.DataFrame:
         {
             "Dataset": grouped["reported_as"],
             "Method": grouped["method"],
+            "Canonical Macro-F1 headline": grouped["method"].map(lambda method: f"{headlines[str(method)]:.6f}"),
+            "Canonical protocol": PROTOCOL_ID,
             "Macro-F1 mean": grouped["macro_f1_mean"].map(lambda v: f"{v:.4f}"),
             "FPR mean": grouped["fpr_mean"].map(lambda v: f"{v:.4f}"),
             "FNR mean": grouped["fnr_mean"].map(lambda v: f"{v:.4f}"),
@@ -434,16 +444,22 @@ def _table_stats(stats: dict[str, Any]) -> pd.DataFrame:
         item = comparisons.get(key)
         if not item:
             raise ValueError(f"Missing statistical comparison: {key}")
-        p_value = item.get("p_value")
+        scenario = item.get("scenario_level", {}) if isinstance(item.get("scenario_level"), dict) else {}
+        effective = scenario if scenario and not scenario.get("skipped") else item
+        p_value = effective.get("p_value")
+        holm = item.get("p_value_holm", scenario.get("p_value_holm"))
+        ci = effective.get("mean_diff_ci95")
         rows.append(
             {
                 "Comparison": label,
-                "Mean difference": f"{item['mean_diff'] * 100:.2f} pp",
+                "Mean difference": f"{effective['mean_diff'] * 100:.2f} pp",
+                "95% CI": _ci_pp(ci),
                 "p-value": _p_value(p_value),
-                "Effect size": f"{item['effect_size_cohen_dz']:.3f}",
-                "n": int(item["n_pairs"]),
-                "Test type": "paired grouped t-test, greater alternative",
-                "Interpretation": _stat_interpretation(item),
+                "Holm p-value": _p_value(holm),
+                "Effect size": f"{effective['effect_size_cohen_dz']:.3f}",
+                "n": int(effective.get("effective_n", effective["n_pairs"])),
+                "Test type": "paired grouped scenario-level t-test with Holm correction",
+                "Interpretation": _stat_interpretation({**item, **effective, "p_value_holm": holm}),
             }
         )
     return pd.DataFrame(rows)
@@ -451,12 +467,13 @@ def _table_stats(stats: dict[str, Any]) -> pd.DataFrame:
 
 def _write_fig2(main: pd.DataFrame, out_dir: Path) -> None:
     _theme()
-    fig, axes = plt.subplots(2, 2, figsize=(11.4, 7.4), sharey=True)
+    datasets = [dataset for dataset in DATASET_ORDER if dataset in set(main["reported_as"].astype(str))]
+    fig, axes = plt.subplots(len(datasets), 2, figsize=(11.4, 2.55 * len(datasets) + 1.6), sharey=True)
+    axes = np.asarray(axes).reshape(len(datasets), 2)
     panels = [
-        ("CICIDS-2017", "symmetric", None, axes[0, 0]),
-        ("CICIDS-2017", "graph_consistency", "0.6", axes[0, 1]),
-        ("CESNET-TLS-Year22", "symmetric", None, axes[1, 0]),
-        ("CESNET-TLS-Year22", "graph_consistency", "0.6", axes[1, 1]),
+        (dataset, noise_type, beta, axes[row_idx, col_idx])
+        for row_idx, dataset in enumerate(datasets)
+        for col_idx, (noise_type, beta) in enumerate((("symmetric", None), ("graph_consistency", "0.6")))
     ]
     for dataset, noise_type, beta, ax in panels:
         part = main[
@@ -497,12 +514,13 @@ def _write_fig2(main: pd.DataFrame, out_dir: Path) -> None:
 def _write_fig3(main: pd.DataFrame, out_dir: Path) -> None:
     _theme()
     methods = ["Graph-CoLD", "ablation_hard", "Confident-Learning"]
-    fig, axes = plt.subplots(2, 2, figsize=(11.2, 7.2), sharey=True)
+    datasets = [dataset for dataset in DATASET_ORDER if dataset in set(main["reported_as"].astype(str))]
+    fig, axes = plt.subplots(len(datasets), 2, figsize=(11.2, 2.45 * len(datasets) + 1.6), sharey=True)
+    axes = np.asarray(axes).reshape(len(datasets), 2)
     panels = [
-        ("CICIDS-2017", "symmetric", None, axes[0, 0]),
-        ("CICIDS-2017", "graph_consistency", "0.6", axes[0, 1]),
-        ("CESNET-TLS-Year22", "symmetric", None, axes[1, 0]),
-        ("CESNET-TLS-Year22", "graph_consistency", "0.6", axes[1, 1]),
+        (dataset, noise_type, beta, axes[row_idx, col_idx])
+        for row_idx, dataset in enumerate(datasets)
+        for col_idx, (noise_type, beta) in enumerate((("symmetric", None), ("graph_consistency", "0.6")))
     ]
     for dataset, noise_type, beta, ax in panels:
         part = main[
@@ -629,14 +647,16 @@ def _narrative_json(
     high = _high_noise_metric_map(table3)
     cicids_high_diff = _paired_diff(main, "CICIDS-2017", high_noise=True)
     cesnet_high_diff = _paired_diff(main, "CESNET-TLS-Year22", high_noise=True)
+    unsw_high_diff = _paired_diff(main, "UNSW-NB15", high_noise=True)
     graph_err = float(main[main["method"] == "Graph-CoLD"]["err_final"].mean())
     hard_err = float(main[main["method"] == "ablation_hard"]["err_final"].mean())
     baseline_readiness = sources["baseline_readiness"]
+    dataset_scope = table1["Dataset"].tolist()
     return {
         "stage": "D6",
         "source_csv": MAIN_SOURCE,
         "source_sha256": _sha256(Path(MAIN_SOURCE)),
-        "dataset_scope": table1["Dataset"].tolist(),
+            "dataset_scope": dataset_scope,
         "sample_policy": dict(zip(table1["Dataset"], table1["Sample policy"])),
         "method_scope": MAIN_METHODS,
         "excluded_baselines": {
@@ -658,16 +678,20 @@ def _narrative_json(
             "ablation_hard_err_final_mean": hard_err,
             "difference_pp": (graph_err - hard_err) * 100,
         },
-        "dataset_specific_notes": {
+            "dataset_specific_notes": {
             "CICIDS-2017": {
                 "high_noise_macro_f1_lift_pp": cicids_high_diff * 100,
                 "interpretation": "Graph-CoLD gains are larger on CICIDS noisy settings, where CoLD is more sensitive to corrupted labels.",
             },
-            "CESNET-TLS-Year22": {
-                "high_noise_macro_f1_lift_pp": cesnet_high_diff * 100,
-                "interpretation": "CESNET has a ceiling effect; Macro-F1 changes are small, so ERR and stability carry more of the evidence.",
+                "CESNET-TLS-Year22": {
+                    "high_noise_macro_f1_lift_pp": cesnet_high_diff * 100,
+                    "interpretation": "CESNET has a ceiling effect; Macro-F1 changes are small, so ERR and stability carry more of the evidence.",
+                },
+                "UNSW-NB15": {
+                    "high_noise_macro_f1_lift_pp": unsw_high_diff * 100,
+                    "interpretation": "UNSW-NB15 is included through the verified local partition layout with temporal and process/feature-block views; it broadens the robustness check beyond the original two datasets.",
+                },
             },
-        },
         "statistical_table": table5.to_dict(orient="records"),
         "required_language": [
             "consistent improvement",
@@ -675,8 +699,8 @@ def _narrative_json(
             "evidence retention",
             "operational alert reduction proxy",
         ],
-        "caution": "Claims are limited to the verified CICIDS-2017 and CESNET-TLS-Year22 evaluation matrix.",
-    }
+            "caution": f"Claims are limited to the verified {', '.join(dataset_scope)} evaluation matrix.",
+        }
 
 
 def _narrative_md(report: dict[str, Any]) -> str:
@@ -684,6 +708,8 @@ def _narrative_md(report: dict[str, Any]) -> str:
     err = report["err_interpretation"]
     cicids = report["dataset_specific_notes"]["CICIDS-2017"]
     cesnet = report["dataset_specific_notes"]["CESNET-TLS-Year22"]
+    unsw = report["dataset_specific_notes"].get("UNSW-NB15", {})
+    scope_text = ", ".join(report["dataset_scope"])
     excluded = report["excluded_baselines"]
     excluded_lines = "\n".join(f"- {name}: {reason}" for name, reason in sorted(excluded.items()))
     claims = [
@@ -692,6 +718,7 @@ def _narrative_md(report: dict[str, Any]) -> str:
         "Evidence retention improves over hard deletion, supporting the use of soft weights for preserving clean informative alerts.",
         "Compression ratio is reported as an operational alert reduction proxy rather than a direct SOC labor measurement.",
         "CESNET-TLS-Year22 should be interpreted as a high-ceiling, verified TLS application-classification subset.",
+        "UNSW-NB15 adds a third verified real-data partition with temporal and process/feature-block views.",
     ]
     return f"""# Statistical Narrative
 
@@ -701,7 +728,7 @@ The paper artifacts aggregate the verified real-data evaluation matrix from `{re
 
 ## Dataset scope
 
-The formal result scope is CICIDS-2017 postfilter11 and CESNET-TLS-Year22 postfilter25. The sample policy is explicit in every row: CICIDS-2017 uses the full postfilter11 protocol after minimum-count filtering and dominant-class downsampling, while CESNET-TLS-Year22 uses a deterministic audit-window subset followed by postfilter25 stratified splitting.
+    The formal result scope is {scope_text}. The sample policy is explicit in every row: CICIDS-2017 uses the full postfilter11 protocol after minimum-count filtering and dominant-class downsampling, CESNET-TLS-Year22 uses a deterministic audit-window subset followed by postfilter25 stratified splitting, and UNSW-NB15 uses the verified local partition layout with postfilter class policy.
 
 ## Method scope
 
@@ -709,7 +736,7 @@ The matrix includes Graph-CoLD, CoLD, ablation_hard, Noisy-Supervised, Confident
 
 ## Excluded baselines
 
-The following methods are outside the formal two-dataset label-noise matrix:
+    The following methods are outside the formal real-data label-noise matrix:
 
 {excluded_lines}
 
@@ -729,7 +756,11 @@ Graph-CoLD's mean ERR_final is {err['graph_cold_err_final_mean']:.4f}, compared 
 
 ## CESNET ceiling effect
 
-CESNET-TLS-Year22 Macro-F1 is high for several methods, so small improvements should not be over-read. The high-noise Graph-CoLD vs CoLD lift on CESNET is {cesnet['high_noise_macro_f1_lift_pp']:.2f} percentage points, while CICIDS-2017 shows a larger high-noise lift of {cicids['high_noise_macro_f1_lift_pp']:.2f} percentage points. The C&S-ready wording is: Graph-CoLD improves robustness and evidence retention under noisy labels, with the clearest margins on CICIDS-2017.
+    CESNET-TLS-Year22 Macro-F1 is high for several methods, so small improvements should not be over-read. The high-noise Graph-CoLD vs CoLD lift on CESNET is {cesnet['high_noise_macro_f1_lift_pp']:.2f} percentage points, while CICIDS-2017 shows a larger high-noise lift of {cicids['high_noise_macro_f1_lift_pp']:.2f} percentage points. The C&S-ready wording is: Graph-CoLD improves robustness and evidence retention under noisy labels, with the clearest margins on CICIDS-2017.
+
+    ## UNSW-NB15 extension
+
+    UNSW-NB15 contributes a verified third dataset using temporal and process/feature-block views. Its high-noise Graph-CoLD vs CoLD lift is {unsw.get('high_noise_macro_f1_lift_pp', 0.0):.2f} percentage points; this should be described as an additional robustness check, not as a provenance-graph SOC case study.
 
 ## Operational meaning
 
@@ -737,7 +768,7 @@ Compression ratio is an operational alert reduction proxy. Combined with ERR, it
 
 ## Caution against overclaiming
 
-The results are traceable to two verified real datasets and the implemented baselines. The paper should avoid universal superiority language and should state that omitted provenance systems require separate future evaluation before formal comparison.
+    The results are traceable to the verified real datasets in scope and the implemented baselines. The paper should avoid universal superiority language and should state that omitted provenance systems require separate future evaluation before formal comparison.
 
 ## Conclusion-ready insight block
 
@@ -765,16 +796,17 @@ def _write_paper_sections(
     )
     graph_runtime = float(runtime.loc["Graph-CoLD", "runtime"])
     cold_runtime = float(runtime.loc["CoLD", "runtime"])
+    dataset_scope = ", ".join([dataset for dataset in DATASET_ORDER if dataset in set(main["reported_as"].astype(str))])
 
     (sections / "experiments_realdata.tex").write_text(
         rf"""\section{{Real-data Experimental Protocol}}
-We evaluate Graph-CoLD on two verified real datasets: CICIDS-2017 postfilter11 and CESNET-TLS-Year22 postfilter25. CICIDS-2017 uses the full postfilter11 protocol after removing classes below the minimum-count threshold and downsampling the dominant class. CESNET-TLS-Year22 uses a deterministic audit-window subset followed by postfilter25 stratified splitting; we do not describe it as a full-archive evaluation.
+We evaluate Graph-CoLD on verified real datasets in the formal scope: {dataset_scope}. CICIDS-2017 uses the full postfilter11 protocol after removing classes below the minimum-count threshold and downsampling the dominant class. CESNET-TLS-Year22 uses a deterministic audit-window subset followed by postfilter25 stratified splitting; we do not describe it as a full-archive evaluation. UNSW-NB15 uses the verified local partition layout with postfilter class policy and temporal plus process/feature-block views.
 
-Each result row records source verification, dataset hash, sample policy, split id, noise seed, model seed, and active views. CICIDS-2017 uses host, IP, and temporal views. CESNET-TLS-Year22 uses IP and temporal views; process and threat-intelligence views are not claimed for this dataset.
+Each result row records source verification, dataset hash, sample policy, split id, noise seed, model seed, and active views. CICIDS-2017 uses host, IP, and temporal views. CESNET-TLS-Year22 uses IP and temporal views; process and threat-intelligence views are not claimed for this dataset. UNSW-NB15 uses temporal and process/feature-block views because the local partition files do not include source/destination IP columns.
 
 Noise models include clean labels, symmetric label noise, asymmetric label noise, and graph-consistency noise. Noise is injected only into training labels. Graph-consistency rows use the beta values present in the evaluation matrix, and the beta=0 rows are retained to verify consistency with symmetric corruption.
 
-The formal baselines are CoLD, ablation_hard, Noisy-Supervised, Confident-Learning, Co-Teaching, Decoupling, FINE, MCRe, and MORSE. Flash and Argus are not included because they target provenance case-study workflows rather than the two-dataset label-noise matrix. We report Macro-F1, FPR, FNR, tail-class recall, ERR, Tail-ERR, compression ratio, runtime, and memory. Statistical tests are paired by dataset, noise type, noise rate, graph beta, and seed, avoiding unpaired pooled tests.
+The formal baselines are CoLD, ablation_hard, Noisy-Supervised, Confident-Learning, Co-Teaching, Decoupling, FINE, MCRe, and MORSE. Flash and Argus are not included because they target provenance case-study workflows rather than the formal label-noise matrix. We report Macro-F1, FPR, FNR, tail-class recall, ERR, Tail-ERR, compression ratio, runtime, and memory. Statistical tests are paired by dataset, noise type, noise rate, graph beta, and seed, avoiding unpaired pooled tests.
 """,
         encoding="utf-8",
     )
@@ -796,13 +828,13 @@ The CESNET-TLS-Year22 results exhibit a ceiling effect: several methods already 
 
 ERR matters for SOC alert triage because high Macro-F1 alone does not show whether retained alerts preserve useful evidence. Compression ratio approximates review workload, while ERR measures whether clean informative evidence survives filtering. Together they describe the detection-versus-review tradeoff.
 
-The expanded comparison includes verified adapters for Co-Teaching, Decoupling, FINE, MCRe, and MORSE under the same real-data splits and noise settings. MALTLS-22 is not included because the available source could not be verified under the project audit gate. OpTC is not included as a formal experiment because no verified local provenance event table is available; it remains future work for a real enterprise case study.
+The expanded comparison includes verified adapters for Co-Teaching, Decoupling, FINE, MCRe, and MORSE under the same real-data splits and noise settings. UNSW-NB15 broadens the formal classifier matrix but is not treated as an enterprise provenance case study. MALTLS-22 is not included because the available source could not be verified under the project audit gate. OpTC is not included as a formal experiment because no verified local provenance event table is available; it remains future work for a real enterprise case study.
 """,
         encoding="utf-8",
     )
     (sections / "limitations_realdata.tex").write_text(
         r"""\section{Limitations}
-The CESNET-TLS-Year22 evaluation uses a deterministic audit-window subset and postfilter25 class policy. The manuscript must not present this as a full-archive result. Flash and Argus are excluded from the formal label-noise matrix because they target provenance-oriented enterprise workflows rather than the two-dataset classifier setting.
+The CESNET-TLS-Year22 evaluation uses a deterministic audit-window subset and postfilter25 class policy. The manuscript must not present this as a full-archive result. UNSW-NB15 is evaluated from the local partition CSV layout and therefore does not claim host/IP views. Flash and Argus are excluded from the formal label-noise matrix because they target provenance-oriented enterprise workflows rather than the classifier setting.
 
 The current package does not include a real OpTC case study and does not report OpTC experiment results. MALTLS-22 is also absent because the source verification gate failed. Future work should add verified provenance SOC datasets before expanding the formal comparison set.
 """,
@@ -840,7 +872,7 @@ Co-Teaching-lite is not a complete deep Co-Teaching reproduction. It is named li
 
 ## Risk 4 - Ceiling effect
 
-CESNET-TLS-Year22 Macro-F1 is close to 0.995 for the strongest methods. The paper should not overstate Macro-F1 margins on this dataset; the safer emphasis is stability and ERR.
+CESNET-TLS-Year22 Macro-F1 is close to 0.995 for the strongest methods. UNSW-NB15 is included as a verified classifier dataset with temporal and process/feature-block views, not as an enterprise provenance case study. The paper should not overstate Macro-F1 margins on high-ceiling datasets; the safer emphasis is stability and ERR.
 """
     _assert_no_terms(text, FORBIDDEN_OUTPUT_TERMS)
     (reports_d6 / "reviewer_risk_notes.md").write_text(text, encoding="utf-8")
@@ -899,6 +931,11 @@ def _update_readiness(reports: Path, checklist: dict[str, bool]) -> dict[str, An
             "submission_ready": False,
         }
     )
+    unsw = readiness.get("datasets", {}).get("unsw_nb15", {})
+    if unsw.get("ready_for_d5_component"):
+        readiness["next_actions"] = [
+            action for action in readiness.get("next_actions", []) if "unsw_nb15" not in str(action).lower()
+        ]
     path.write_text(json.dumps(readiness, indent=2), encoding="utf-8")
     md = f"""# Real-data Readiness Report
 
@@ -906,6 +943,7 @@ def _update_readiness(reports: Path, checklist: dict[str, bool]) -> dict[str, An
 - d6_completed: {str(readiness.get('d6_completed')).lower()}
 - d7_allowed: {str(readiness.get('d7_allowed')).lower()}
 - submission_ready: false
+- d5_scope: {', '.join(readiness.get('d5_scope', []))}
 
 D7 allowed means the manuscript can be assembled from D6 artifacts. It does not mean the package is ready for journal submission.
 """
@@ -979,6 +1017,8 @@ def _dataset_class_policy(dataset: str, part: pd.DataFrame) -> str:
 def _replacement_note(dataset: str) -> str:
     if dataset == "cesnet_tls_year22":
         return "Verified TLS replacement for unavailable MALTLS-22; deterministic postfilter25 evaluation subset, not full archive."
+    if dataset == "unsw_nb15":
+        return "Verified local UNSW-NB15 partition layout; temporal plus process/feature-block views, no host/IP claims."
     return "Primary CICIDS-2017 postfilter11 protocol."
 
 
@@ -1019,9 +1059,16 @@ def _p_value(value: Any) -> str:
     return f"{float(value):.2e}"
 
 
+def _ci_pp(value: Any) -> str:
+    if not isinstance(value, (list, tuple)) or len(value) != 2:
+        return "NA"
+    return f"[{float(value[0]) * 100:.2f}, {float(value[1]) * 100:.2f}] pp"
+
+
 def _stat_interpretation(item: dict[str, Any]) -> str:
-    if item["mean_diff"] > 0 and item.get("significant_p_lt_0_05"):
-        return "Graph-CoLD higher under paired grouped test."
+    significant = item.get("significant_holm_0_05", item.get("significant_p_lt_0_05"))
+    if item["mean_diff"] > 0 and significant:
+        return "Graph-CoLD higher under scenario-level paired test after correction."
     if item["mean_diff"] > 0:
         return "Positive difference, not significant at 0.05."
     return "No positive Graph-CoLD difference in this comparison."

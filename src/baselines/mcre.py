@@ -5,7 +5,7 @@ from typing import Any
 
 import numpy as np
 from sklearn.decomposition import TruncatedSVD
-from sklearn.linear_model import SGDClassifier
+from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.preprocessing import StandardScaler
 
 from src.baselines.base import BaselineResult, aligned_proba, array_hash, ensure_class_coverage
@@ -24,12 +24,14 @@ class MCReBaseline:
         n_components: int = 32,
         min_retain_fraction: float = 0.25,
         max_iter: int = 5,
+        n_estimators: int = 32,
     ):
         self.seed = int(seed)
         self.noise_rate = float(noise_rate)
         self.n_components = int(n_components)
         self.min_retain_fraction = float(min_retain_fraction)
         self.max_iter = int(max_iter)
+        self.n_estimators = int(n_estimators)
 
     def fit_predict(self, X_train, y_noisy, X_test, num_classes: int, **kwargs) -> BaselineResult:
         del kwargs
@@ -49,12 +51,11 @@ class MCReBaseline:
         )
         retained = ensure_class_coverage(retained, confidence, y)
 
-        clf = SGDClassifier(
-            loss="log_loss",
-            max_iter=self.max_iter,
-            tol=1e-3,
+        clf = ExtraTreesClassifier(
+            n_estimators=self.n_estimators,
             random_state=self.seed,
             class_weight="balanced",
+            n_jobs=-1,
         )
         clf.fit(X_scaled[retained], y[retained])
         proba = aligned_proba(clf, X_test_scaled, num_classes)
@@ -79,8 +80,8 @@ class MCReBaseline:
                 "retain_fraction": float(np.mean(retained)) if retained.size else 0.0,
                 "target_retain_fraction": float(np.clip(max(self.min_retain_fraction, 1.0 - self.noise_rate), self.min_retain_fraction, 1.0)),
                 "class_retain_fraction": per_class,
-                "classifier": "SGDClassifier(log_loss)",
-                "max_iter": self.max_iter,
+                "classifier": "ExtraTreesClassifier",
+                "n_estimators": self.n_estimators,
             },
         )
 
