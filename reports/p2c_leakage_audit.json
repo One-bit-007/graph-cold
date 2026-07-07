@@ -1,0 +1,129 @@
+{
+  "stage": "P2c-G1",
+  "dataset": "CICIDS-2017 postfilter11",
+  "verdict": {
+    "leakage_found_in_frozen_cicids_results": true,
+    "current_d5_runner_fixed": true,
+    "split_crossing_edges_zero": true,
+    "test_labels_seen_by_graph_cdm": false,
+    "primary_cause": "flip_mask_oracle_and_clean_label_graph_evidence_in_pre_P2c_runner",
+    "canonical_cicids_claims_valid": false
+  },
+  "split_boundary": {
+    "node_domain": "train_only",
+    "test_nodes_in_graph": 0,
+    "views": [
+      {
+        "view": "host",
+        "edge_count": 500000,
+        "crossing_edges": 0,
+        "reason": "D5 graph is constructed over training nodes only; test nodes are never in edge_index."
+      },
+      {
+        "view": "ip",
+        "edge_count": 500000,
+        "crossing_edges": 0,
+        "reason": "D5 graph is constructed over training nodes only; test nodes are never in edge_index."
+      },
+      {
+        "view": "temporal",
+        "edge_count": 500000,
+        "crossing_edges": 0,
+        "reason": "D5 graph is constructed over training nodes only; test nodes are never in edge_index."
+      }
+    ],
+    "total_crossing_edges": 0
+  },
+  "duplicates": {
+    "train_rows": 630399,
+    "test_rows": 157600,
+    "exact_duplicate_train_rows": 152201,
+    "exact_duplicate_train_rate": 0.24143597943524656,
+    "exact_duplicate_test_rows": 24650,
+    "exact_duplicate_test_rate": 0.15640862944162437,
+    "exact_duplicate_cross_split_test_rows": 38366,
+    "exact_duplicate_cross_split_test_rate": 0.24343908629441624,
+    "near_duplicate_sample": {
+      "train_sample_rows": 5000,
+      "test_sample_rows": 2000,
+      "threshold": 0.0001,
+      "train_near_duplicate_rows": 454,
+      "train_near_duplicate_rate": 0.0908,
+      "cross_split_near_duplicate_test_rows": 180,
+      "cross_split_near_duplicate_test_rate": 0.09,
+      "median_cross_split_nearest_distance": 0.0441718865185976
+    },
+    "same_flow_or_session_audit": {
+      "available": false,
+      "reason": "CICIDS identifiers and timestamps are dropped from classification features and retained only as meta; no stable flow-id/session key is available after loader normalization."
+    },
+    "graph_edges_checked": 500000,
+    "graph_edges_connecting_exact_duplicate_rows": 41432,
+    "graph_edges_connecting_near_duplicate_rows_threshold_1e_4": 57172
+  },
+  "source_audit": {
+    "d5_cdm_reads_flip": false,
+    "d5_context_accepts_noisy_observed_labels": true,
+    "d5_lightweight_graph_reads_clean_y": false,
+    "legacy_smoke_cdm_reads_flip": true,
+    "legacy_mini_graph_reads_clean_y": true
+  },
+  "frozen_result_signature": {
+    "graphcold_high_noise_macro_f1_mean": 0.9852397490169542,
+    "cold_high_noise_macro_f1_mean": 0.680110835765651,
+    "graphcold_err_final_mean": 1.0,
+    "flat_high_noise_red_flag": true
+  },
+  "neighborhood_denoising_sanity": {
+    "formal_d5_pre_p2c_d_neigh_separable": false,
+    "same_underlying_record_benefit_quantified": "not_applicable_no_real_D_neigh_in_pre_P2c_runner",
+    "benefit_attributed_to": "flip_mask_oracle_dominates; duplicate_edges_are_present_and_removed_in_p2c_audit_ablation"
+  },
+  "deleaked_audit": {
+    "rows": 153,
+    "audit_scope": [
+      "real_stratified_train_3000_dedup_2818_test_8000",
+      "real_stratified_train_3000_dedup_2824_test_8000",
+      "real_stratified_train_3000_dedup_2848_test_8000"
+    ],
+    "mean_exact_duplicate_train_rows_removed": 170.0,
+    "mean_near_duplicate_graph_edges_removed": 210.66666666666666,
+    "noisy_means": {
+      "CoLD": {
+        "macro_f1": 0.5243185233257414,
+        "err_final": 0.6760522103559343,
+        "fnr": 0.1793487878251637
+      },
+      "Graph-CoLD": {
+        "macro_f1": 0.5866884825759885,
+        "err_final": 0.8807079246594273,
+        "fnr": 0.17444552586562848
+      },
+      "ablation_hard": {
+        "macro_f1": 0.5879738058708563,
+        "err_final": 0.8807079246594273,
+        "fnr": 0.17438285259246153
+      }
+    },
+    "high_noise_means": {
+      "CoLD": {
+        "macro_f1": 0.37445356263717594,
+        "err_final": 0.6374510241335496,
+        "fnr": 0.2752610157494249
+      },
+      "Graph-CoLD": {
+        "macro_f1": 0.4104288653850168,
+        "err_final": 0.8196979702440829,
+        "fnr": 0.27327021766059106
+      },
+      "ablation_hard": {
+        "macro_f1": 0.41190173889627374,
+        "err_final": 0.8196979702440829,
+        "fnr": 0.2733218309443756
+      }
+    },
+    "graphcold_minus_cold_macro_f1_noisy": 0.06236995925024713,
+    "graphcold_minus_cold_macro_f1_high_noise": 0.03597530274784083,
+    "flat_099_survives": false
+  }
+}

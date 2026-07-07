@@ -18,10 +18,12 @@ from pathlib import Path
 import time
 import tracemalloc
 from typing import Any
+from types import SimpleNamespace
 
 import numpy as np
 import pandas as pd
 import yaml
+from sklearn.neighbors import NearestNeighbors
 
 from src.analysis.result_sanity import check_results
 from src.analysis.stat_tests import grouped_paired_summary
@@ -160,17 +162,17 @@ def run_d5_experiments(out_dir: str | Path = "results", configs_dir: str | Path 
         for seed in SEEDS:
             bundle = _load_formal_dataset(dataset_name, seed, configs, scale_policy)
             bundles[(dataset_name, seed)] = bundle
-            anomaly = cicids_mini_matrix.smoke_realdata._feature_anomaly(bundle.dataset.X_train, bundle.dataset.y_train)
-            evidence = compute_evidence(
-                bundle.dataset.y_train,
-                {"evidence_preserving": {"freq_protect": "log", "gamma_anomaly": 1.0}},
-                anomaly=anomaly,
-            )
+            anomaly = _unsupervised_feature_anomaly(bundle.dataset.X_train)
             graph_cache: dict[float, Any] = {}
             for spec in _noise_specs():
                 noisy, flip = _inject_noise(bundle.dataset, spec, seed, graph_cache)
+                evidence = compute_evidence(
+                    noisy,
+                    {"evidence_preserving": {"freq_protect": "log", "gamma_anomaly": 1.0}},
+                    anomaly=anomaly,
+                )
                 scenario_hashes[_scenario_key(dataset_name, spec, seed)] = _scenario_hash(bundle, noisy, flip, seed)
-                context = _graphcold_context(bundle, spec, seed, flip, evidence, graph_cache)
+                context = _graphcold_context(bundle, spec, seed, flip, evidence, graph_cache, noisy=noisy)
                 predictions: dict[str, np.ndarray] = {}
                 for method in FORMAL_METHODS:
                     row, prediction = _evaluate_method(bundle, spec, seed, method, noisy, flip, context, predictions)
@@ -428,7 +430,7 @@ def _inject_noise(dataset: Dataset, spec: dict[str, Any], seed: int, graph_cache
         benign = dataset.meta.get("benign_class", 0)
         return inject_asymmetric(dataset.y_train, spec["noise_rate"], benign if benign is not None else 0, rng)
     beta = float(spec["graph_beta"])
-    graph = None if np.isclose(beta, 0.0) else graph_cache.setdefault(beta, _lightweight_graph(dataset))
+    graph = None if np.isclose(beta, 0.0) else _cached_lightweight_graph(dataset, graph_cache, beta)
     return inject_graph_consistency(
         dataset.y_train,
         spec["noise_rate"],
@@ -515,14 +517,14 @@ def _run_ablation_matrix(bundles: dict[tuple[str, int], FormalBundle]) -> pd.Dat
     for dataset_name in dataset_names:
         for seed in SEEDS:
             bundle = bundles[(dataset_name, seed)]
-            anomaly = cicids_mini_matrix.smoke_realdata._feature_anomaly(bundle.dataset.X_train, bundle.dataset.y_train)
+            anomaly = _unsupervised_feature_anomaly(bundle.dataset.X_train)
+            noisy, flip = _inject_noise(bundle.dataset, spec, seed, {})
             evidence = compute_evidence(
-                bundle.dataset.y_train,
+                noisy,
                 {"evidence_preserving": {"freq_protect": "log", "gamma_anomaly": 1.0}},
                 anomaly=anomaly,
             )
-            noisy, flip = _inject_noise(bundle.dataset, spec, seed, {})
-            context = _graphcold_context(bundle, spec, seed, flip, evidence, {})
+            context = _graphcold_context(bundle, spec, seed, flip, evidence, {}, noisy=noisy)
             for variant in ABLATION_VARIANTS:
                 weights = _weights_for_ablation(variant, context.cdm, context.evidence)
                 method_for_fit = "Graph-CoLD"
@@ -655,16 +657,18 @@ def _graphcold_context(
     flip: np.ndarray,
     evidence: np.ndarray,
     graph_cache: dict[float, Any],
+    noisy: np.ndarray | None = None,
 ) -> GraphColdScenarioContext:
     """Return the shared graph/representation/CDM/evidence context for one scenario."""
 
-    del seed
+    del seed, flip
     graph_key = float(spec["graph_beta"]) if spec["noise_type"] == "graph_consistency" and spec["graph_beta"] != "none" else -1.0
-    graph = graph_cache.setdefault(graph_key, _lightweight_graph(bundle.dataset))
+    graph = _cached_lightweight_graph(bundle.dataset, graph_cache, graph_key)
+    observed = bundle.dataset.y_train if noisy is None else np.asarray(noisy)
     return GraphColdScenarioContext(
         graph=graph,
         representation=bundle.dataset.X_train,
-        cdm=_cdm_from_scenario(flip, evidence),
+        cdm=_cdm_from_observed_labels(observed, evidence, graph, bundle.dataset.num_classes),
         evidence=evidence,
     )
 
@@ -707,7 +711,17 @@ def _weights_for_ablation(variant: str, cdm: np.ndarray, evidence: np.ndarray) -
 
 
 def _cdm_from_scenario(flip: np.ndarray, evidence: np.ndarray) -> np.ndarray:
-    return cicids_mini_matrix.smoke_realdata._smoke_cdm(flip, evidence)
+    """Legacy score helper kept for external callers.
+
+    Older D5 code paths passed the true flip mask here, which made Graph-CDM an
+    oracle. P2c intentionally removes that behavior: this compatibility helper
+    now ignores the flip mask and returns an evidence-only non-oracle score.
+    Use :func:`_cdm_from_observed_labels` for the current formal runner.
+    """
+
+    del flip
+    evidence = np.asarray(evidence, dtype=np.float64)
+    return np.clip(0.25 + 0.25 * _minmax(evidence), 0.0, 1.0)
 
 
 def _err(weights: np.ndarray, evidence: np.ndarray, flip: np.ndarray, y: np.ndarray) -> dict[str, float]:
@@ -720,10 +734,89 @@ def _lightweight_graph(dataset: Dataset):
     active = [part for part in dataset.meta.get("active_views", []) if part]
     if not active:
         active = ["ip", "temporal"]
-    graph = cicids_mini_matrix._lightweight_active_graph(dataset.y_train)
+    graph = _feature_neighbor_edge(dataset.X_train)
     first_edge = next(iter(graph.views.values()))
     graph.views = {view: first_edge for view in active}
     return graph
+
+
+def _cached_lightweight_graph(dataset: Dataset, graph_cache: dict[float, Any], graph_key: float):
+    if graph_key not in graph_cache:
+        graph_cache[graph_key] = _lightweight_graph(dataset)
+    return graph_cache[graph_key]
+
+
+def _cdm_from_observed_labels(
+    observed: np.ndarray,
+    evidence: np.ndarray,
+    graph: Any,
+    num_classes: int,
+) -> np.ndarray:
+    """Compute a non-oracle label-space CDM from observed labels and graph neighbors."""
+
+    observed = np.asarray(observed, dtype=np.int64)
+    evidence = np.asarray(evidence, dtype=np.float64)
+    if observed.shape[0] != evidence.shape[0]:
+        raise ValueError("observed labels and evidence must have the same length.")
+    if observed.size == 0:
+        return evidence.copy()
+    probs = np.full((observed.shape[0], int(num_classes)), 1e-6, dtype=np.float64)
+    valid = (observed >= 0) & (observed < int(num_classes))
+    probs[np.arange(observed.shape[0])[valid], observed[valid]] = 1.0
+    probs = probs / probs.sum(axis=1, keepdims=True)
+    neigh = graph_cdm._neighbor_soft_mean(probs, graph)
+    d_neigh = graph_cdm._d_neigh(probs, neigh)
+    return np.clip(0.80 * d_neigh + 0.20 * _minmax(evidence), 0.0, 1.0)
+
+
+def _feature_neighbor_edge(X_train: np.ndarray, k: int = 5, sample_limit: int = 50000):
+    """Build feature-neighborhood edges without using labels or flip masks."""
+
+    X = np.asarray(X_train, dtype=np.float32)
+    n = X.shape[0]
+    if n <= 1:
+        edge = SimpleNamespace(edge_index=np.zeros((2, 0), dtype=np.int64), edge_weight=np.zeros(0, dtype=np.float32))
+        return SimpleNamespace(views={"feature": edge})
+    rng = np.random.default_rng(42)
+    if n > sample_limit:
+        anchors = np.sort(rng.choice(n, size=sample_limit, replace=False))
+        fit_X = X[anchors]
+        nn = NearestNeighbors(n_neighbors=min(k + 1, fit_X.shape[0]), algorithm="auto", n_jobs=-1)
+        nn.fit(fit_X)
+        neigh_local = nn.kneighbors(fit_X, return_distance=False)[:, 1:]
+        src = np.repeat(anchors, neigh_local.shape[1])
+        dst = anchors[neigh_local.reshape(-1)]
+    else:
+        nn = NearestNeighbors(n_neighbors=min(k + 1, n), algorithm="auto", n_jobs=-1)
+        nn.fit(X)
+        neigh = nn.kneighbors(X, return_distance=False)[:, 1:]
+        src = np.repeat(np.arange(n, dtype=np.int64), neigh.shape[1])
+        dst = neigh.reshape(-1).astype(np.int64)
+    edge_index = np.vstack([src, dst]).astype(np.int64)
+    if edge_index.size:
+        edge_index = np.hstack([edge_index, edge_index[::-1]])
+    edge_weight = np.ones(edge_index.shape[1], dtype=np.float32)
+    edge = SimpleNamespace(edge_index=edge_index, edge_weight=edge_weight)
+    return SimpleNamespace(views={"feature": edge})
+
+
+def _unsupervised_feature_anomaly(X_train: np.ndarray) -> np.ndarray:
+    X = np.asarray(X_train, dtype=np.float64)
+    if X.size == 0:
+        return np.zeros(X.shape[0], dtype=np.float64)
+    center = np.median(X, axis=0)
+    dist = np.linalg.norm(X - center, axis=1)
+    return _minmax(dist)
+
+
+def _minmax(values: np.ndarray) -> np.ndarray:
+    values = np.asarray(values, dtype=np.float64)
+    if values.size == 0:
+        return values.copy()
+    span = float(values.max() - values.min())
+    if span <= 1e-12:
+        return np.zeros_like(values, dtype=np.float64)
+    return (values - values.min()) / span
 
 
 def _ablation_compression(variant: str) -> float:

@@ -204,10 +204,11 @@ def _run_verification_gate(configs: Path, reports: Path, scale_policy: dict[str,
     passed_by_method: dict[str, bool] = {}
     for dataset_name in VERIFY_DATASETS:
         bundle = d5._load_formal_dataset(dataset_name, VERIFY_SEED, configs, scale_policy)
-        evidence = _evidence(bundle)
+        anomaly = d5._unsupervised_feature_anomaly(bundle.dataset.X_train)
         graph_cache: dict[float, Any] = {}
         for spec in VERIFY_SPECS:
             noisy, flip = d5._inject_noise(bundle.dataset, spec, VERIFY_SEED, graph_cache)
+            evidence = _evidence(bundle, observed=noisy, anomaly=anomaly)
             for baseline in _baseline_candidates(VERIFY_SEED, float(spec["noise_rate"])):
                 print(f"[baseline-verify] {dataset_name} {spec['noise_type']} {_candidate_method_name(baseline)}", flush=True)
                 try:
@@ -312,12 +313,13 @@ def _run_expanded_matrix(
             if _all_expected_keys_done(dataset_name, seed, passed_methods, done):
                 continue
             bundle = d5._load_formal_dataset(dataset_name, seed, configs, scale_policy)
-            evidence = _evidence(bundle)
+            anomaly = d5._unsupervised_feature_anomaly(bundle.dataset.X_train)
             graph_cache: dict[float, Any] = {}
             for spec in d5._noise_specs():
                 if _all_spec_keys_done(dataset_name, seed, spec, passed_methods, done):
                     continue
                 noisy, flip = d5._inject_noise(bundle.dataset, spec, seed, graph_cache)
+                evidence = _evidence(bundle, observed=noisy, anomaly=anomaly)
                 for baseline in _baseline_candidates(seed, float(spec["noise_rate"])):
                     if _candidate_method_name(baseline) not in passed_methods:
                         continue
@@ -555,10 +557,16 @@ def _metrics_from_result(
     }
 
 
-def _evidence(bundle: d5.FormalBundle) -> np.ndarray:
-    anomaly = cicids_mini_matrix.smoke_realdata._feature_anomaly(bundle.dataset.X_train, bundle.dataset.y_train)
+def _evidence(
+    bundle: d5.FormalBundle,
+    observed: np.ndarray | None = None,
+    anomaly: np.ndarray | None = None,
+) -> np.ndarray:
+    labels = bundle.dataset.y_train if observed is None else np.asarray(observed)
+    if anomaly is None:
+        anomaly = d5._unsupervised_feature_anomaly(bundle.dataset.X_train)
     return compute_evidence(
-        bundle.dataset.y_train,
+        labels,
         {"evidence_preserving": {"freq_protect": "log", "gamma_anomaly": 1.0}},
         anomaly=anomaly,
     )

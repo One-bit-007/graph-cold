@@ -53,11 +53,16 @@ def run_prioritization_evaluation(
     for dataset_name in dataset_scope:
         for seed in d5.SEEDS:
             bundle = _load_priority_bundle(dataset_name, seed, configs, scale_policy)
-            evidence = _evidence(bundle)
+            anomaly = d5._unsupervised_feature_anomaly(bundle.dataset.X_train)
             graph_cache: dict[float, Any] = {}
             for spec in PRIORITIZATION_SPECS:
                 noisy, flip = d5._inject_noise(bundle.dataset, spec, seed, graph_cache)
-                context = d5._graphcold_context(bundle, spec, seed, flip, evidence, graph_cache)
+                evidence = compute_evidence(
+                    noisy,
+                    {"evidence_preserving": {"freq_protect": "log", "gamma_anomaly": 1.0}},
+                    anomaly=anomaly,
+                )
+                context = d5._graphcold_context(bundle, spec, seed, flip, evidence, graph_cache, noisy=noisy)
                 for method in METHODS:
                     y_pred, scores = _predict_and_score(method, bundle, spec, seed, noisy, flip, evidence, context)
                     metrics = ranking_metrics(
@@ -219,10 +224,11 @@ def _load_priority_bundle(dataset_name: str, seed: int, configs_dir: Path, scale
     )
 
 
-def _evidence(bundle: d5.FormalBundle) -> np.ndarray:
-    anomaly = cicids_mini_matrix.smoke_realdata._feature_anomaly(bundle.dataset.X_train, bundle.dataset.y_train)
+def _evidence(bundle: d5.FormalBundle, observed: np.ndarray | None = None) -> np.ndarray:
+    labels = bundle.dataset.y_train if observed is None else np.asarray(observed)
+    anomaly = d5._unsupervised_feature_anomaly(bundle.dataset.X_train)
     return compute_evidence(
-        bundle.dataset.y_train,
+        labels,
         {"evidence_preserving": {"freq_protect": "log", "gamma_anomaly": 1.0}},
         anomaly=anomaly,
     )

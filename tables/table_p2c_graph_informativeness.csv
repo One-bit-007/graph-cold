@@ -1,0 +1,4 @@
+dataset,active_views,view_coverage,feature_knn_label_homophily,legacy_label_graph_edge_purity,informativeness_score,cold_macro_f1_mean,ceiling_effect,formal_graphcold_minus_cold_macro_f1,post_p2c_graphcold_minus_cold_macro_f1,interpretation
+CICIDS-2017,host|ip|temporal,0.6,0.9507333333333333,0.0,0.57044,0.7011620364896978,False,0.2866530143370063,0.06670218584427655,positive_when_views_have_structural_signal
+CESNET-TLS-Year22,ip|temporal,0.4,0.9341333333333334,0.0,0.3736533333333334,0.9923737137189204,True,0.002724844462844319,0.002724844462844319,ceiling_case_graph_signal_cannot_create_large_macro_f1_lift
+UNSW-NB15,temporal|process,0.4,0.7205333333333334,0.187,0.2882133333333334,0.593488971277116,False,-0.01246015500995569,-0.01246015500995569,boundary_case_low_view_support_no_positive_margin

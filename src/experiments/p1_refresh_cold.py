@@ -11,7 +11,6 @@ import pandas as pd
 from src.analysis.result_sanity import check_results
 from src.analysis.stat_tests import grouped_paired_summary
 from src.experiments import cicids_mini_matrix, d5
-from src.models.evidence import compute as compute_evidence
 
 
 def refresh_cold_rows(out_dir: str | Path = "results", configs_dir: str | Path = "configs", reports_dir: str | Path = "reports") -> dict:
@@ -30,16 +29,16 @@ def refresh_cold_rows(out_dir: str | Path = "results", configs_dir: str | Path =
     for dataset_name in d5.FORMAL_DATASETS:
         for seed in d5.SEEDS:
             bundle = d5._load_formal_dataset(dataset_name, seed, configs, scale_policy)
-            anomaly = cicids_mini_matrix.smoke_realdata._feature_anomaly(bundle.dataset.X_train, bundle.dataset.y_train)
-            evidence = compute_evidence(
-                bundle.dataset.y_train,
-                {"evidence_preserving": {"freq_protect": "log", "gamma_anomaly": 1.0}},
-                anomaly=anomaly,
-            )
+            anomaly = d5._unsupervised_feature_anomaly(bundle.dataset.X_train)
             graph_cache: dict[float, object] = {}
             for spec in d5._noise_specs():
                 noisy, flip = d5._inject_noise(bundle.dataset, spec, seed, graph_cache)
-                context = d5._graphcold_context(bundle, spec, seed, flip, evidence, graph_cache)
+                evidence = d5.compute_evidence(
+                    noisy,
+                    {"evidence_preserving": {"freq_protect": "log", "gamma_anomaly": 1.0}},
+                    anomaly=anomaly,
+                )
+                context = d5._graphcold_context(bundle, spec, seed, flip, evidence, graph_cache, noisy=noisy)
                 row, _pred = d5._evaluate_method(bundle, spec, seed, "CoLD", noisy, flip, context, {})
                 replacement_rows.append(row)
 

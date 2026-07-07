@@ -1,0 +1,71 @@
+{
+  "stage": "P2c",
+  "protocol_id": "p2_canonical_scenario_mean_v1",
+  "source_csv": "results/table_main_expanded.csv",
+  "source_sha256": "125ce9e63442e82deced11caf3391dd9b4ac103a6f1f3c1a7776ca7499d493cf",
+  "p2b_gate": {
+    "regenerated": true,
+    "outcome": "B_protocol_explained",
+    "result_numbers_changed": false,
+    "canonical_tables_updated": false,
+    "number_consistency_green": true,
+    "frozen_hash_intact": true
+  },
+  "g1_leakage_verdict": {
+    "leakage_found_in_frozen_cicids_results": true,
+    "current_d5_runner_fixed": true,
+    "split_crossing_edges_zero": true,
+    "test_labels_seen_by_graph_cdm": false,
+    "primary_cause": "flip_mask_oracle_and_clean_label_graph_evidence_in_pre_P2c_runner",
+    "canonical_cicids_claims_valid": false
+  },
+  "g1_leakage_audit": "reports/p2c_leakage_audit.md",
+  "g1_deleaked_cicids_table": "tables/table_p2c_cicids_deleaked_per_rate.csv",
+  "g2_per_dataset_table": "tables/table_p2c_per_dataset_vs_cold.csv",
+  "g3_informativeness_table": "tables/table_p2c_graph_informativeness.csv",
+  "g3_informativeness_figure": "figures/fig_p2c_informativeness_margin.pdf",
+  "g3_correlation": {
+    "pearson_r": 0.993055437739235,
+    "figure": "figures/fig_p2c_informativeness_margin.pdf",
+    "n_datasets": 3
+  },
+  "g4_claims_input_table": "tables/table_p2c_corrected_claims_input.csv",
+  "canonical_numbers": {
+    "old_cicids_rows_valid_for_claims": false,
+    "reason": "Frozen CICIDS rows show an oracle signature and were produced before the P2c-safe D5 runner removed flip-mask and clean-label graph/evidence paths.",
+    "corrected_formal_matrix_required": true,
+    "corrected_formal_matrix_written": false,
+    "corrected_claims_use": "tables/table_p2c_corrected_claims_input.csv"
+  },
+  "claims_input": [
+    {
+      "dataset": "CICIDS-2017",
+      "graphcold_minus_cold_macro_f1": 0.06670218584427655,
+      "source_for_delta": "P2c de-oracle CICIDS audit sample",
+      "informativeness_score": 0.57044,
+      "claim_framing": "Do not use old +28 pp CICIDS headline; rerun formal matrix with P2c-safe D5 before submission."
+    },
+    {
+      "dataset": "CESNET-TLS-Year22",
+      "graphcold_minus_cold_macro_f1": 0.002724844462844319,
+      "source_for_delta": "formal D5.5 frozen matrix",
+      "informativeness_score": 0.3736533333333334,
+      "claim_framing": "ceiling_case_graph_signal_cannot_create_large_macro_f1_lift"
+    },
+    {
+      "dataset": "UNSW-NB15",
+      "graphcold_minus_cold_macro_f1": -0.01246015500995569,
+      "source_for_delta": "formal D5.5 frozen matrix",
+      "informativeness_score": 0.2882133333333334,
+      "claim_framing": "boundary_case_low_view_support_no_positive_margin"
+    }
+  ],
+  "post_p2c_reject_risk": {
+    "estimate": "medium-high until formal D5 is rerun with the P2c-safe runner",
+    "primary_residual_weakness": "CICIDS correction is an audit ablation on real stratified data, not a full replacement for the frozen D5 all-dataset matrix."
+  },
+  "reproduction_commands": [
+    "python -m src.paper.p2c_leakage_perdataset --configs configs --reports reports --tables tables --figures figures",
+    "python -m pytest tests/test_p2c_leakage_perdataset.py tests/test_p2b_baseline_fidelity.py tests/test_number_consistency.py -q"
+  ]
+}

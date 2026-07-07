@@ -1,0 +1,4 @@
+dataset,graphcold_minus_cold_macro_f1,source_for_delta,informativeness_score,claim_framing
+CICIDS-2017,0.06670218584427655,P2c de-oracle CICIDS audit sample,0.57044,Do not use old +28 pp CICIDS headline; rerun formal matrix with P2c-safe D5 before submission.
+CESNET-TLS-Year22,0.002724844462844319,formal D5.5 frozen matrix,0.3736533333333334,ceiling_case_graph_signal_cannot_create_large_macro_f1_lift
+UNSW-NB15,-0.01246015500995569,formal D5.5 frozen matrix,0.2882133333333334,boundary_case_low_view_support_no_positive_margin
