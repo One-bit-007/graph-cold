@@ -1,187 +1,187 @@
 {
   "protocol_id": "p2_canonical_scenario_mean_v1",
-  "source_sha256": "125ce9e63442e82deced11caf3391dd9b4ac103a6f1f3c1a7776ca7499d493cf",
-  "headline_csv": "tables/table_p2_canonical_headline.csv",
   "passed": true,
+  "source_sha256": "b9a7f26563e27bced0c2e77b8864bcfe19521bbe1cda7424afad261e63c113a9",
+  "headline_rows": 10,
   "checks": [
     {
       "table": "table_2_main_performance",
       "method": "Co-Teaching",
       "passed": true,
-      "canonical_macro_f1": 0.7045632256822567,
+      "canonical_macro_f1": 0.5862722982851202,
       "observed_unique": [
-        0.704563
+        0.586272
       ]
     },
     {
       "table": "table_2_main_performance",
       "method": "CoLD",
       "passed": true,
-      "canonical_macro_f1": 0.762341573828578,
+      "canonical_macro_f1": 0.5728041409766085,
       "observed_unique": [
-        0.762342
+        0.572804
       ]
     },
     {
       "table": "table_2_main_performance",
       "method": "Confident-Learning",
       "passed": true,
-      "canonical_macro_f1": 0.6726653775516728,
+      "canonical_macro_f1": 0.5185237145497602,
       "observed_unique": [
-        0.672665
+        0.518524
       ]
     },
     {
       "table": "table_2_main_performance",
       "method": "Decoupling",
       "passed": true,
-      "canonical_macro_f1": 0.5632411415724035,
+      "canonical_macro_f1": 0.4016408960481938,
       "observed_unique": [
-        0.563241
+        0.401641
       ]
     },
     {
       "table": "table_2_main_performance",
       "method": "FINE",
       "passed": true,
-      "canonical_macro_f1": 0.563424214377648,
+      "canonical_macro_f1": 0.5278033312191533,
       "observed_unique": [
-        0.563424
+        0.527803
       ]
     },
     {
       "table": "table_2_main_performance",
       "method": "Graph-CoLD",
       "passed": true,
-      "canonical_macro_f1": 0.8546474750918764,
+      "canonical_macro_f1": 0.5944796314135768,
       "observed_unique": [
-        0.854647
+        0.59448
       ]
     },
     {
       "table": "table_2_main_performance",
       "method": "MCRe",
       "passed": true,
-      "canonical_macro_f1": 0.6202427965900356,
+      "canonical_macro_f1": 0.5681328762907628,
       "observed_unique": [
-        0.620243
+        0.568133
       ]
     },
     {
       "table": "table_2_main_performance",
       "method": "MORSE",
       "passed": true,
-      "canonical_macro_f1": 0.6196599750352,
+      "canonical_macro_f1": 0.5582905594509723,
       "observed_unique": [
-        0.61966
+        0.558291
       ]
     },
     {
       "table": "table_2_main_performance",
       "method": "Noisy-Supervised",
       "passed": true,
-      "canonical_macro_f1": 0.6131492573159789,
+      "canonical_macro_f1": 0.5245744863276722,
       "observed_unique": [
-        0.613149
+        0.524574
       ]
     },
     {
       "table": "table_2_main_performance",
       "method": "ablation_hard",
       "passed": true,
-      "canonical_macro_f1": 0.8422008500032475,
+      "canonical_macro_f1": 0.5950424228783148,
       "observed_unique": [
-        0.842201
+        0.595042
       ]
     },
     {
       "table": "table_3_high_noise_summary",
       "method": "Co-Teaching",
       "passed": true,
-      "canonical_macro_f1": 0.7045632256822567,
+      "canonical_macro_f1": 0.5862722982851202,
       "observed_unique": [
-        0.704563
+        0.586272
       ]
     },
     {
       "table": "table_3_high_noise_summary",
       "method": "CoLD",
       "passed": true,
-      "canonical_macro_f1": 0.762341573828578,
+      "canonical_macro_f1": 0.5728041409766085,
       "observed_unique": [
-        0.762342
+        0.572804
       ]
     },
     {
       "table": "table_3_high_noise_summary",
       "method": "Confident-Learning",
       "passed": true,
-      "canonical_macro_f1": 0.6726653775516728,
+      "canonical_macro_f1": 0.5185237145497602,
       "observed_unique": [
-        0.672665
+        0.518524
       ]
     },
     {
       "table": "table_3_high_noise_summary",
       "method": "Decoupling",
       "passed": true,
-      "canonical_macro_f1": 0.5632411415724035,
+      "canonical_macro_f1": 0.4016408960481938,
       "observed_unique": [
-        0.563241
+        0.401641
       ]
     },
     {
       "table": "table_3_high_noise_summary",
       "method": "FINE",
       "passed": true,
-      "canonical_macro_f1": 0.563424214377648,
+      "canonical_macro_f1": 0.5278033312191533,
       "observed_unique": [
-        0.563424
+        0.527803
       ]
     },
     {
       "table": "table_3_high_noise_summary",
       "method": "Graph-CoLD",
       "passed": true,
-      "canonical_macro_f1": 0.8546474750918764,
+      "canonical_macro_f1": 0.5944796314135768,
       "observed_unique": [
-        0.854647
+        0.59448
       ]
     },
     {
       "table": "table_3_high_noise_summary",
       "method": "MCRe",
       "passed": true,
-      "canonical_macro_f1": 0.6202427965900356,
+      "canonical_macro_f1": 0.5681328762907628,
       "observed_unique": [
-        0.620243
+        0.568133
       ]
     },
     {
       "table": "table_3_high_noise_summary",
       "method": "MORSE",
       "passed": true,
-      "canonical_macro_f1": 0.6196599750352,
+      "canonical_macro_f1": 0.5582905594509723,
       "observed_unique": [
-        0.61966
+        0.558291
       ]
     },
     {
       "table": "table_3_high_noise_summary",
       "method": "Noisy-Supervised",
       "passed": true,
-      "canonical_macro_f1": 0.6131492573159789,
+      "canonical_macro_f1": 0.5245744863276722,
       "observed_unique": [
-        0.613149
+        0.524574
       ]
     },
     {
       "table": "table_3_high_noise_summary",
       "method": "ablation_hard",
       "passed": true,
-      "canonical_macro_f1": 0.8422008500032475,
+      "canonical_macro_f1": 0.5950424228783148,
       "observed_unique": [
-        0.842201
+        0.595042
       ]
     }
   ]

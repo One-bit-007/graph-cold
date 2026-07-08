@@ -331,7 +331,7 @@ def write_scale_policy_report(reports: str | Path = "reports") -> dict[str, Any]
             "cicids2017": {
                 "reported_as": "CICIDS-2017",
                 "class_policy": "postfilter11",
-                "sample_policy": "full_postfilter11_after_min_count_and_dominant_downsample",
+                "sample_policy": "full_postfilter11_after_min_count_dominant_downsample_train_exact_dedup",
                 "sampling_stratified": True,
             },
             "cesnet_tls_year22": {
@@ -387,6 +387,8 @@ def _load_formal_dataset(dataset_name: str, seed: int, configs_dir: Path, scale_
         raise ValueError(f"CESNET D5 must use postfilter25; loader returned {dataset.num_classes} classes.")
     if dataset_name == "cicids2017" and dataset.num_classes != 11:
         raise ValueError(f"CICIDS D5 must use postfilter11; loader returned {dataset.num_classes} classes.")
+    if dataset_name == "cicids2017":
+        dataset = _deduplicate_cicids_train(dataset)
 
     meta = dataset.meta
     sample_info = scale_policy["datasets"][dataset_name]
@@ -407,6 +409,55 @@ def _load_formal_dataset(dataset_name: str, seed: int, configs_dir: Path, scale_
         source_verified=bool(meta.get("source_verified", True)),
         replacement_for=str(replacement),
     )
+
+
+def _deduplicate_cicids_train(dataset: Dataset) -> Dataset:
+    """Remove exact duplicate CICIDS training feature rows before noise injection."""
+
+    X = np.asarray(dataset.X_train)
+    y = np.asarray(dataset.y_train)
+    if X.shape[0] == 0:
+        return dataset
+    row_hash = _feature_row_hashes(X)
+    _, first_idx, inverse, counts = np.unique(row_hash, return_index=True, return_inverse=True, return_counts=True)
+    keep = np.sort(first_idx)
+    removed = int(X.shape[0] - keep.shape[0])
+    conflicts = 0
+    if removed:
+        for group in np.flatnonzero(counts > 1):
+            labels = np.unique(y[inverse == group])
+            if labels.size > 1:
+                conflicts += 1
+    meta = dict(dataset.meta)
+    meta["cicids_train_exact_dedup"] = {
+        "applied": True,
+        "before_rows": int(X.shape[0]),
+        "after_rows": int(keep.shape[0]),
+        "removed_rows": removed,
+        "duplicate_groups": int(np.sum(counts > 1)),
+        "conflicting_label_groups": int(conflicts),
+        "hash_round_decimals": 6,
+    }
+    if "train_indices" in meta and meta["train_indices"] is not None:
+        meta["train_indices"] = np.asarray(meta["train_indices"])[keep]
+    timestamps = meta.get("timestamps")
+    if isinstance(timestamps, dict) and timestamps.get("train") is not None:
+        timestamps = dict(timestamps)
+        timestamps["train"] = np.asarray(timestamps["train"])[keep]
+        meta["timestamps"] = timestamps
+    return Dataset(
+        X_train=dataset.X_train[keep],
+        y_train=dataset.y_train[keep],
+        X_test=dataset.X_test,
+        y_test=dataset.y_test,
+        num_classes=dataset.num_classes,
+        meta=meta,
+    )
+
+
+def _feature_row_hashes(X: np.ndarray) -> np.ndarray:
+    rounded = np.ascontiguousarray(np.round(np.asarray(X, dtype=np.float32), 6))
+    return rounded.view(np.dtype((np.void, rounded.dtype.itemsize * rounded.shape[1]))).reshape(-1)
 
 
 def _noise_specs() -> list[dict[str, Any]]:
@@ -769,7 +820,7 @@ def _cdm_from_observed_labels(
     return np.clip(0.80 * d_neigh + 0.20 * _minmax(evidence), 0.0, 1.0)
 
 
-def _feature_neighbor_edge(X_train: np.ndarray, k: int = 5, sample_limit: int = 50000):
+def _feature_neighbor_edge(X_train: np.ndarray, k: int = 5, sample_limit: int = 5000):
     """Build feature-neighborhood edges without using labels or flip masks."""
 
     X = np.asarray(X_train, dtype=np.float32)

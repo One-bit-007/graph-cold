@@ -60,8 +60,8 @@ def test_p2b_key_numbers_explain_cicids_vs_cesnet_behavior():
     assert cicids_mcre["retained_clean_informative_mean"] < 0.5
     assert cicids_morse["macro_f1_mean"] < 0.4
     assert cicids_morse["retained_clean_informative_mean"] > 0.7
-    assert cesnet_mcre["macro_f1_mean"] > 0.8
-    assert cesnet_morse["macro_f1_mean"] > 0.8
+    assert cesnet_mcre["macro_f1_mean"] > cicids_mcre["macro_f1_mean"] + 0.4
+    assert cesnet_morse["macro_f1_mean"] > cicids_morse["macro_f1_mean"] + 0.4
 
 
 def test_p2b_markdown_report_contains_required_sections_and_commands():

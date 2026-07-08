@@ -5,7 +5,7 @@
 ## CICIDS-2017
 - Dataset key: `cicids2017`
 - Class policy: `postfilter11`
-- Sample policy: `full_postfilter11_after_min_count_and_dominant_downsample`
+- Sample policy: `full_postfilter11_after_min_count_dominant_downsample_train_exact_dedup`
 - Sampling stratified: True
 
 ## CESNET-TLS-Year22

@@ -2,7 +2,7 @@
   "stage": "P2b",
   "protocol_id": "p2_canonical_scenario_mean_v1",
   "source_csv": "results/table_main_expanded.csv",
-  "source_sha256": "125ce9e63442e82deced11caf3391dd9b4ac103a6f1f3c1a7776ca7499d493cf",
+  "source_sha256": "b9a7f26563e27bced0c2e77b8864bcfe19521bbe1cda7424afad261e63c113a9",
   "robustness_table": "tables/table_p2b_baseline_noise_robustness.csv",
   "outcome": "B_protocol_explained",
   "result_numbers_changed": false,
@@ -17,113 +17,113 @@
     "key_numbers": {
       "cicids_symmetric_60": {
         "MCRe": {
-          "macro_f1_mean": 0.25153293006498706,
-          "fnr_mean": 0.026152534003680866,
-          "err_tail_mean": 0.2868758342393929,
-          "retained_clean_informative_mean": 0.42668675972927234,
-          "macro_f1_delta_vs_cold": -0.4582680353464645
+          "macro_f1_mean": 0.24093175211887238,
+          "fnr_mean": 0.05323418319169024,
+          "err_tail_mean": 0.1857162164180101,
+          "retained_clean_informative_mean": 0.38000000000000006,
+          "macro_f1_delta_vs_cold": -0.12142743686060428
         },
         "MORSE": {
-          "macro_f1_mean": 0.23931494475393336,
-          "fnr_mean": 0.013793000254372934,
-          "err_tail_mean": 0.8245421075862462,
-          "retained_clean_informative_mean": 0.7877009306260575,
-          "macro_f1_delta_vs_cold": -0.4704860206575182
+          "macro_f1_mean": 0.2361193709639802,
+          "fnr_mean": 0.015344664778092466,
+          "err_tail_mean": 0.4388476398809587,
+          "retained_clean_informative_mean": 0.8377777777777777,
+          "macro_f1_delta_vs_cold": -0.12623981801549647
         },
         "CoLD": {
-          "macro_f1_mean": 0.7098009654114515,
-          "fnr_mean": 0.011991441097694134,
-          "err_tail_mean": 0.5029594723843226,
-          "retained_clean_informative_mean": 0.9401967005076143,
+          "macro_f1_mean": 0.36235918897947667,
+          "fnr_mean": 0.09549102927289889,
+          "err_tail_mean": 0.6427327056017759,
+          "retained_clean_informative_mean": 0.8799999999999999,
           "macro_f1_delta_vs_cold": 0.0
         },
         "Co-Teaching": {
-          "macro_f1_mean": 0.4698815114926987,
-          "fnr_mean": 0.010043243405006634,
-          "err_tail_mean": 0.2777162785365218,
-          "retained_clean_informative_mean": 0.7228214890016921,
-          "macro_f1_delta_vs_cold": -0.23991945391875286
+          "macro_f1_mean": 0.2987768801524293,
+          "fnr_mean": 0.09289423984891403,
+          "err_tail_mean": 0.35328466725286695,
+          "retained_clean_informative_mean": 0.43999999999999995,
+          "macro_f1_delta_vs_cold": -0.06358230882704735
         },
         "Graph-CoLD": {
-          "macro_f1_mean": 0.9858162090401511,
-          "fnr_mean": 0.0011820861576214,
-          "err_tail_mean": 1.0,
-          "retained_clean_informative_mean": 1.0,
-          "macro_f1_delta_vs_cold": 0.27601524362869956
+          "macro_f1_mean": 0.3690265943872079,
+          "fnr_mean": 0.08593012275731816,
+          "err_tail_mean": 0.6679734291899235,
+          "retained_clean_informative_mean": 0.9,
+          "macro_f1_delta_vs_cold": 0.006667405407731253
         }
       },
       "cesnet_symmetric_60": {
         "MCRe": {
-          "macro_f1_mean": 0.8218785912119086,
-          "fnr_mean": 0.03187016481668343,
-          "err_tail_mean": 0.9671494456968818,
-          "retained_clean_informative_mean": 0.9114315197726275,
-          "macro_f1_delta_vs_cold": -0.1696797792360597
+          "macro_f1_mean": 0.7982774442760224,
+          "fnr_mean": 0.015159301130524133,
+          "err_tail_mean": 0.9692811287066886,
+          "retained_clean_informative_mean": 0.9295378528197603,
+          "macro_f1_delta_vs_cold": 0.01261145976893463
         },
         "MORSE": {
-          "macro_f1_mean": 0.8170144720648097,
-          "fnr_mean": 0.02990806144186563,
-          "err_tail_mean": 0.9901649376224047,
-          "retained_clean_informative_mean": 0.9877955530311139,
-          "macro_f1_delta_vs_cold": -0.17454389838315865
+          "macro_f1_mean": 0.7464060788147768,
+          "fnr_mean": 0.016529633436108235,
+          "err_tail_mean": 0.9919204547330708,
+          "retained_clean_informative_mean": 0.9834841453354777,
+          "macro_f1_delta_vs_cold": -0.03925990569231097
         },
         "CoLD": {
-          "macro_f1_mean": 0.9915583704479684,
-          "fnr_mean": 8.409014463501626e-05,
-          "err_tail_mean": 0.8781914913828328,
-          "retained_clean_informative_mean": 0.9586278640598284,
+          "macro_f1_mean": 0.7856659845070878,
+          "fnr_mean": 0.008393285371702567,
+          "err_tail_mean": 0.835097333990587,
+          "retained_clean_informative_mean": 0.8716948164353494,
           "macro_f1_delta_vs_cold": 0.0
         },
         "Co-Teaching": {
-          "macro_f1_mean": 0.7682338217409027,
-          "fnr_mean": 0.012865792129162399,
-          "err_tail_mean": 0.4748885201013129,
-          "retained_clean_informative_mean": 0.45944175264070436,
-          "macro_f1_delta_vs_cold": -0.22332454870706564
+          "macro_f1_mean": 0.6163505717406245,
+          "fnr_mean": 0.019355943816375433,
+          "err_tail_mean": 0.4532118702277724,
+          "retained_clean_informative_mean": 0.43795312042156365,
+          "macro_f1_delta_vs_cold": -0.16931541276646334
         },
         "Graph-CoLD": {
-          "macro_f1_mean": 0.9936722985924314,
-          "fnr_mean": 5.606009642336585e-05,
-          "err_tail_mean": 1.0,
-          "retained_clean_informative_mean": 1.0,
-          "macro_f1_delta_vs_cold": 0.0021139281444630953
+          "macro_f1_mean": 0.7934689833321941,
+          "fnr_mean": 0.0085645769099006,
+          "err_tail_mean": 0.895021468613403,
+          "retained_clean_informative_mean": 0.8985468738624419,
+          "macro_f1_delta_vs_cold": 0.0078029988251062665
         }
       },
       "unsw_symmetric_60": {
         "MCRe": {
-          "macro_f1_mean": 0.36352631853242445,
-          "fnr_mean": 0.0006771477359712334,
-          "err_tail_mean": 0.4001223159855897,
-          "retained_clean_informative_mean": 0.46875605748049026,
-          "macro_f1_delta_vs_cold": -0.2237723516549971
+          "macro_f1_mean": 0.31047585117944376,
+          "fnr_mean": 0.003925801254888967,
+          "err_tail_mean": 0.5172600643281077,
+          "retained_clean_informative_mean": 0.5258452168746287,
+          "macro_f1_delta_vs_cold": -0.0633399642721964
         },
         "MORSE": {
-          "macro_f1_mean": 0.35374628211820514,
-          "fnr_mean": 0.00018400753694869997,
-          "err_tail_mean": 0.9194885033453334,
-          "retained_clean_informative_mean": 0.8619236571077905,
-          "macro_f1_delta_vs_cold": -0.2335523880692164
+          "macro_f1_mean": 0.2979319146714146,
+          "fnr_mean": 0.0059558491381413664,
+          "err_tail_mean": 0.7892699655863455,
+          "retained_clean_informative_mean": 0.7724491235888294,
+          "macro_f1_delta_vs_cold": -0.07588390078022555
         },
         "CoLD": {
-          "macro_f1_mean": 0.5872986701874215,
-          "fnr_mean": 2.2080904433845612e-05,
-          "err_tail_mean": 0.7452223377154191,
-          "retained_clean_informative_mean": 0.9458278508899857,
+          "macro_f1_mean": 0.37381581545164017,
+          "fnr_mean": 0.03646245646070953,
+          "err_tail_mean": 0.4901297699200022,
+          "retained_clean_informative_mean": 0.6754077540106952,
           "macro_f1_delta_vs_cold": 0.0
         },
         "Co-Teaching": {
-          "macro_f1_mean": 0.4237812595097574,
-          "fnr_mean": 0.009170935641523834,
-          "err_tail_mean": 0.18213418981625762,
-          "retained_clean_informative_mean": 0.2832640591120644,
-          "macro_f1_delta_vs_cold": -0.16351741067766412
+          "macro_f1_mean": 0.3214005307220156,
+          "fnr_mean": 0.0302736084217395,
+          "err_tail_mean": 0.5343152852243009,
+          "retained_clean_informative_mean": 0.4106799613784908,
+          "macro_f1_delta_vs_cold": -0.05241528472962459
         },
         "Graph-CoLD": {
-          "macro_f1_mean": 0.5708025712205234,
-          "fnr_mean": 0.0,
-          "err_tail_mean": 1.0,
-          "retained_clean_informative_mean": 1.0,
-          "macro_f1_delta_vs_cold": -0.016496098966898187
+          "macro_f1_mean": 0.36949845730285485,
+          "fnr_mean": 0.043816608059484397,
+          "err_tail_mean": 0.5836337215681167,
+          "retained_clean_informative_mean": 0.7005005941770648,
+          "macro_f1_delta_vs_cold": -0.004317358148785311
         }
       }
     },
@@ -131,8 +131,8 @@
   },
   "manuscript_caveat": "MCRe and MORSE are reported as faithful tabular adapters in this real-data label-noise protocol, but their noise robustness is not claimed to reproduce the original papers because centroid-based purification degrades on CICIDS/UNSW high-noise tabular class geometry while remaining strong on CESNET symmetric and graph-noise settings.",
   "graphcold_margins": {
-    "graphcold_minus_mcre_macro_f1": 0.23440467850184088,
-    "graphcold_minus_morse_macro_f1": 0.23498750005667646
+    "graphcold_minus_mcre_macro_f1": 0.026346755122814036,
+    "graphcold_minus_morse_macro_f1": 0.03618907196260457
   },
   "reproduction_commands": [
     "python -m src.paper.p2b_baseline_fidelity",

@@ -30,14 +30,16 @@ multi-view representations; scores training samples with a label-space
 Graph-CDM diagnostic; and replaces hard deletion with evidence-preserving soft
 weights. On verified CICIDS-2017 postfilter11, CESNET-TLS-Year22 postfilter25,
 and UNSW-NB15 partition settings, Graph-CoLD improves Macro-F1 over the aligned
-CoLD baseline by 9.23 percentage points in a paired scenario-level test
-(p=1.38e-05, Cohen dz=0.646,
-n=51). The main operational signal is evidence retention:
-Graph-CoLD raises mean ERR\_final from 0.8879 for hard
-deletion to 1.0000, while reporting compression, runtime,
-and memory costs. The evaluation is intentionally bounded to implemented,
-real-data baselines and avoids claims for unavailable datasets or enterprise
-case studies.
+CoLD baseline by
+2.17 percentage points in a paired scenario-level test
+(p=1.27e-04, Cohen dz=0.552,
+n=51). The evidence-retention result is reported directly:
+ERR\_final from 0.7894 for hard deletion to
+0.7894 for Graph-CoLD, a 0.00
+percentage-point gap. This clean rerun therefore supports a robustness claim
+but not a positive ERR-retention claim. The evaluation is intentionally bounded
+to implemented, real-data baselines and avoids claims for unavailable datasets
+or enterprise case studies.
 \end{abstract}
 \begin{keyword}
 intrusion detection \sep noisy labels \sep graph learning \sep evidence retention \sep SOC alert prioritization
@@ -81,7 +83,7 @@ neighborhood KL divergence, view-mode disagreement, and optional temporal-chain
 consistency.
 \item An evidence-preserving weighting rule that keeps clean informative samples
 visible and is compared directly with the hard-deletion ablation.
-\item A reproducible two-dataset evaluation with paired statistical tests,
+\item A reproducible three-dataset evaluation with paired statistical tests,
 explicit baseline exclusions, and C\&S-oriented limitations.
 \end{enumerate}
 
@@ -107,6 +109,8 @@ each active view is a graph over the same sample set, and unsupported views are
 disabled rather than invented. CICIDS-2017 activates host, IP, and temporal
 views. CESNET-TLS-Year22 activates IP and temporal views because process lineage
 and threat-intelligence fields are not present in the verified local contract.
+UNSW-NB15 activates temporal and process/feature-block views under its verified
+local partition layout.
 
 \subsection{Datasets and SOC-oriented evaluation}
 CICIDS-2017 is widely used for intrusion-detection evaluation and provides
@@ -141,9 +145,9 @@ blocks. A host view connects samples sharing endpoint identifiers or host-like
 fields. An IP view uses communication statistics, ports, protocol fields, TLS
 metadata, and flow features. A temporal view connects samples within the
 configured ordering or time window. Process and threat-intelligence views are
-available in the design but are disabled for the formal CICIDS/CESNET evaluation
-when the required fields are absent. This view mask is part of the reproducible
-dataset contract rather than a post-hoc modeling choice.
+available in the design but are disabled for a formal dataset when the required
+fields are absent. This view mask is part of the reproducible dataset contract
+rather than a post-hoc modeling choice.
 
 \subsection{CoLD-aligned representation learning}
 The representation module keeps the contrastive objective fixed. Each active
@@ -207,13 +211,15 @@ and evidence retention. We do not claim an analyst-in-the-loop deployment study.
 \section{Experimental Design}
 \subsection{Datasets and scope}
 Table~\ref{tab:dataset-protocol} summarizes the formal datasets. CICIDS-2017
-uses 787,999 postfilter11 rows
+uses 5,500 postfilter11 rows
 after removing classes below the minimum count and downsampling the dominant
-class. CESNET-TLS-Year22 uses 61,124
-postfilter25 rows from a deterministic audit-window subset and is not a full-archive evaluation. The row-level result
-source is \texttt{results/table\_main\_expanded.csv} (SHA256 prefix
-d044d4847edc1706). Full dataset and result hashes are recorded in the
-reproducibility package.
+class. CESNET-TLS-Year22 uses 5,500
+postfilter25 rows from a deterministic audit-window subset and is not a
+full-archive evaluation. UNSW-NB15 uses 5,500
+verified local partition rows with temporal and process/feature-block views.
+The row-level result source is \texttt{results/table\_main\_expanded.csv}
+(SHA256 prefix b9a7f26563e27bce). Full dataset and result hashes are recorded in
+the reproducibility package.
 
 \begin{table}[t]
 \centering
@@ -235,7 +241,7 @@ The formal baselines and ablations include Graph-CoLD, the aligned CoLD
 baseline, a hard-deletion ablation, noisy supervised learning, confidence
 learning, Co-Teaching, Decoupling, FINE, MCRe, and MORSE. FINE, MCRe, and MORSE
 are verified adapters in the same real-data label-noise matrix, not paper-only
-placeholders. Methods outside this formal real-data matrix are
+placeholders. Methods outside this formal classifier matrix are
 Flash, Argus; each targets a provenance-oriented evaluation setting rather
 than this classifier matrix. Metrics are Macro-F1, FPR, FNR, ERR, Tail-ERR,
 compression ratio, runtime, and memory. Statistical tests are paired by dataset,
@@ -245,10 +251,10 @@ noise type, noise rate, graph beta, and seed.
 \subsection{RQ1: Does graph evidence improve noisy-label robustness?}
 Table~\ref{tab:main-performance} aggregates the evaluation matrix by dataset and
 method. Across all paired scenarios, Graph-CoLD obtains Macro-F1
-0.8546, compared with 0.7623 for
+0.5945, compared with 0.5728 for
 CoLD. The paired grouped test reports a mean lift of
-9.23 percentage points (p=1.38e-05,
-dz=0.646, n=51). The result supports a
+2.17 percentage points (p=1.27e-04,
+dz=0.552, n=51). The result supports a
 consistent robustness improvement under the implemented protocol, not a universal
 claim over unimplemented baselines.
 
@@ -269,14 +275,13 @@ claim over unimplemented baselines.
 \subsection{RQ2: What happens under high noise?}
 Table~\ref{tab:high-noise} summarizes rates at or above 0.4 for symmetric,
 asymmetric, and graph-consistency settings. CICIDS-2017 shows the clearest
-high-noise margin: Graph-CoLD exceeds CoLD by 30.51
+high-noise margin: Graph-CoLD exceeds CoLD by 2.24
 percentage points. CESNET-TLS-Year22 has a ceiling effect, with a high-noise
-Macro-F1 lift of 0.25 percentage points; this is
+Macro-F1 lift of 0.60 percentage points; this is
 why the paper interprets CESNET primarily through stability and evidence
-retention rather than classifier margin. UNSW-NB15 adds a verified partition
-layout check with temporal and process views; its high-noise lift is slightly
-negative (-0.71 percentage points), so it is reported as a robustness boundary
-rather than a headline-margin dataset.
+retention rather than classifier margin. UNSW-NB15 has a high-noise lift of
+0.23 percentage points and is reported as a
+boundary-case partition rather than an enterprise provenance study.
 
 \begin{table}[t]
 \centering
@@ -287,11 +292,11 @@ rather than a headline-margin dataset.
 
 \subsection{RQ3: Does soft weighting preserve evidence?}
 Evidence retention is the central difference between Graph-CoLD and hard
-deletion. Mean ERR\_final is 1.0000 for Graph-CoLD and
-0.8879 for ablation\_hard, a gap of 11.21
-percentage points. Fig.~\ref{fig:err-retention} shows that this gap remains
-visible under increasing noise, especially where clean informative samples are
-likely to lie near class boundaries.
+deletion in the method design, but the P2d clean rerun does not show a positive
+retention gap. ERR\_final from 0.7894 for ablation\_hard to
+0.7894 for Graph-CoLD gives a 0.00
+percentage-point difference. Fig.~\ref{fig:err-retention} is therefore read as
+an audit of evidence retention and claim scope, not as proof of retention lift.
 
 \begin{figure}[t]
 \centering
@@ -323,9 +328,9 @@ preservation.
 
 \subsection{RQ5: What is the operational cost?}
 Graph-CoLD is not presented as a free robustness improvement. The mean runtime
-is 4.92s per scenario for Graph-CoLD versus
-4.15s for CoLD, while mean memory is
-138.0 MB versus 157.7 MB.
+is 0.16s per scenario for Graph-CoLD versus
+0.16s for CoLD, while mean memory is
+4.1 MB versus 3.9 MB.
 Fig.~\ref{fig:runtime} reports these costs alongside baselines. In SOC terms,
 the relevant tradeoff is whether a modest cost can preserve more evidence in a
 shorter review queue.
@@ -347,19 +352,21 @@ shorter review queue.
 \clearpage
 \section{Discussion}
 The results support a bounded but useful claim: graph-structured label-space
-consistency improves robustness and evidence retention in the verified
-two-dataset setting. The strongest classifier margins appear on CICIDS-2017
-under high noise, where graph-local label inconsistency is more damaging. CESNET
-is harder to improve in Macro-F1 because the top methods already sit near a high
-performance ceiling; its contribution is therefore a stability and scope check,
-not a dramatic margin claim.
+consistency improves Macro-F1 robustness in the verified clean rerun, while the
+ERR-retention advantage over hard deletion vanishes. The strongest classifier
+margins appear on CICIDS-2017 under high noise, where graph-local label
+inconsistency is more damaging. CESNET is harder to improve in Macro-F1 because
+the top methods already sit near a high performance ceiling; its contribution is
+therefore a stability and scope check, not a dramatic margin claim. UNSW-NB15 is
+kept as a boundary-case partition with weaker graph semantics.
 
 ERR gives the SOC-facing interpretation. Macro-F1 can remain high while a
 purifier discards low-frequency evidence. By evaluating retained clean
 informative samples, ERR asks whether denoising keeps the material an analyst may
 need later. Compression ratio complements this view by approximating review-load
-reduction. Together, these metrics frame Graph-CoLD as a retention-aware
-denoising method rather than just another classifier.
+reduction. In this rerun, these metrics frame Graph-CoLD as a retention-audited
+denoising method rather than a method with a demonstrated ERR advantage over
+hard deletion.
 
 \section{Threats to Validity}
 \textbf{Internal validity.} The experiments are deterministic over the recorded
@@ -367,10 +374,11 @@ seeds and paired by scenario, but the implementation is still a research
 prototype. Provenance systems need a separate verified evaluation before broader
 comparison.
 
-\textbf{External validity.} CICIDS-2017 and CESNET-TLS-Year22 are useful
-benchmarks, but neither is a complete SOC deployment. CESNET is an audit-window
-subset, not a full archive. OpTC is not reported because the verified provenance
-events table is unavailable.
+\textbf{External validity.} CICIDS-2017, CESNET-TLS-Year22, and UNSW-NB15 are
+useful benchmarks, but none is a complete SOC deployment. CESNET is an
+audit-window subset, not a full archive. UNSW-NB15 is evaluated from a verified
+local partition layout and does not supply host/IP graph claims. OpTC is not
+reported because the verified provenance events table is unavailable.
 
 \textbf{Construct validity.} Compression ratio is an operational proxy rather
 than a direct analyst-hours measurement. ERR measures evidence retention on clean
@@ -381,18 +389,20 @@ not replace incident-level investigation outcomes.
 MALTLS-22 is not evaluated because the project does not have a verified source
 and license path. OpTC is not evaluated as a formal enterprise case because
 verified provenance events are absent. Process and threat-intelligence views are
-disabled in formal results when the underlying fields are unavailable. The
-current reference implementation should therefore be read as a real-data
-methodological validation, not as a complete enterprise deployment package.
+disabled in formal results when the underlying fields are unavailable. UNSW-NB15
+uses temporal plus process/feature-block views only. The current reference
+implementation should therefore be read as a real-data methodological
+validation, not as a complete enterprise deployment package.
 
 \section{Conclusion}
 Graph-CoLD extends CoLD-style noisy-label intrusion detection with multi-view
 graph context, a label-space consistency diagnostic, and evidence-preserving
-soft weights. In the verified CICIDS-2017 and CESNET-TLS-Year22 settings,
-Graph-CoLD improves paired Macro-F1 over CoLD and preserves more clean
-informative evidence than hard deletion. The next step toward final journal
+soft weights. In the verified CICIDS-2017, CESNET-TLS-Year22, and UNSW-NB15
+settings, Graph-CoLD improves paired Macro-F1 over CoLD, while ERR retention
+matches hard deletion in the clean rerun. The next step toward final journal
 submission is not more polishing of these numbers, but broader faithful baseline
-coverage and a verified enterprise provenance case.
+coverage, a verified enterprise provenance case, and a clearer treatment of when
+soft evidence weights improve retention.
 
 \section*{Acknowledgements}
 The authors thank the maintainers of the public datasets and open-source

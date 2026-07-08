@@ -1,0 +1,305 @@
+{
+  "stage": "P2d",
+  "completed": true,
+  "scope": {
+    "scale_policy": "real_data_deterministic_audit_window_train_1500_test_4000",
+    "datasets": [
+      "CICIDS-2017",
+      "CESNET-TLS-Year22",
+      "UNSW-NB15"
+    ],
+    "noise_specs": 17,
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "methods": [
+      "Graph-CoLD",
+      "CoLD",
+      "ablation_hard",
+      "Noisy-Supervised",
+      "Confident-Learning",
+      "Co-Teaching",
+      "Decoupling",
+      "FINE",
+      "MCRe",
+      "MORSE"
+    ]
+  },
+  "p2c_gate": {
+    "cdm_legacy_ignores_flip": true,
+    "graph_ignores_y_train": true,
+    "evidence_source": "observed_noisy_labels_plus_unsupervised_feature_anomaly",
+    "cicids_exact_dedup_removed": 107054,
+    "split_crossing_edges": 0,
+    "graph_views": {
+      "host": 50000,
+      "ip": 50000,
+      "temporal": 50000
+    },
+    "passed": true
+  },
+  "outputs": {
+    "table_main": "results/table_main.csv",
+    "table_main_expanded": "results/table_main_expanded.csv",
+    "table_ablation": "results/table_ablation.csv",
+    "canonical_headline": "tables/table_p2_canonical_headline.csv",
+    "per_dataset": "tables/table_p2d_per_dataset_vs_cold.csv",
+    "core_contribution": "tables/table_p2d_core_contribution.csv",
+    "graph_informativeness": "tables/table_p2d_graph_informativeness.csv",
+    "claims_input": "tables/table_p2d_final_claims_input.csv"
+  },
+  "hashes": {
+    "table_main_expanded_sha256": "b9a7f26563e27bced0c2e77b8864bcfe19521bbe1cda7424afad261e63c113a9",
+    "canonical_protocol_source_sha256": "b9a7f26563e27bced0c2e77b8864bcfe19521bbe1cda7424afad261e63c113a9"
+  },
+  "stale_tables_superseded": [
+    "results/table_main.csv",
+    "results/table_main_expanded.csv",
+    "results/table_ablation.csv",
+    "tables/table_p2_canonical_headline.csv",
+    "tables/table_2_main_performance.csv",
+    "tables/table_3_high_noise_summary.csv"
+  ],
+  "number_consistency": {
+    "protocol_id": "p2_canonical_scenario_mean_v1",
+    "passed": true,
+    "source_sha256": "b9a7f26563e27bced0c2e77b8864bcfe19521bbe1cda7424afad261e63c113a9",
+    "headline_rows": 10,
+    "checks": [
+      {
+        "table": "table_2_main_performance",
+        "method": "Co-Teaching",
+        "passed": true,
+        "canonical_macro_f1": 0.5862722982851202,
+        "observed_unique": [
+          0.586272
+        ]
+      },
+      {
+        "table": "table_2_main_performance",
+        "method": "CoLD",
+        "passed": true,
+        "canonical_macro_f1": 0.5728041409766085,
+        "observed_unique": [
+          0.572804
+        ]
+      },
+      {
+        "table": "table_2_main_performance",
+        "method": "Confident-Learning",
+        "passed": true,
+        "canonical_macro_f1": 0.5185237145497602,
+        "observed_unique": [
+          0.518524
+        ]
+      },
+      {
+        "table": "table_2_main_performance",
+        "method": "Decoupling",
+        "passed": true,
+        "canonical_macro_f1": 0.4016408960481938,
+        "observed_unique": [
+          0.401641
+        ]
+      },
+      {
+        "table": "table_2_main_performance",
+        "method": "FINE",
+        "passed": true,
+        "canonical_macro_f1": 0.5278033312191533,
+        "observed_unique": [
+          0.527803
+        ]
+      },
+      {
+        "table": "table_2_main_performance",
+        "method": "Graph-CoLD",
+        "passed": true,
+        "canonical_macro_f1": 0.5944796314135768,
+        "observed_unique": [
+          0.59448
+        ]
+      },
+      {
+        "table": "table_2_main_performance",
+        "method": "MCRe",
+        "passed": true,
+        "canonical_macro_f1": 0.5681328762907628,
+        "observed_unique": [
+          0.568133
+        ]
+      },
+      {
+        "table": "table_2_main_performance",
+        "method": "MORSE",
+        "passed": true,
+        "canonical_macro_f1": 0.5582905594509723,
+        "observed_unique": [
+          0.558291
+        ]
+      },
+      {
+        "table": "table_2_main_performance",
+        "method": "Noisy-Supervised",
+        "passed": true,
+        "canonical_macro_f1": 0.5245744863276722,
+        "observed_unique": [
+          0.524574
+        ]
+      },
+      {
+        "table": "table_2_main_performance",
+        "method": "ablation_hard",
+        "passed": true,
+        "canonical_macro_f1": 0.5950424228783148,
+        "observed_unique": [
+          0.595042
+        ]
+      },
+      {
+        "table": "table_3_high_noise_summary",
+        "method": "Co-Teaching",
+        "passed": true,
+        "canonical_macro_f1": 0.5862722982851202,
+        "observed_unique": [
+          0.586272
+        ]
+      },
+      {
+        "table": "table_3_high_noise_summary",
+        "method": "CoLD",
+        "passed": true,
+        "canonical_macro_f1": 0.5728041409766085,
+        "observed_unique": [
+          0.572804
+        ]
+      },
+      {
+        "table": "table_3_high_noise_summary",
+        "method": "Confident-Learning",
+        "passed": true,
+        "canonical_macro_f1": 0.5185237145497602,
+        "observed_unique": [
+          0.518524
+        ]
+      },
+      {
+        "table": "table_3_high_noise_summary",
+        "method": "Decoupling",
+        "passed": true,
+        "canonical_macro_f1": 0.4016408960481938,
+        "observed_unique": [
+          0.401641
+        ]
+      },
+      {
+        "table": "table_3_high_noise_summary",
+        "method": "FINE",
+        "passed": true,
+        "canonical_macro_f1": 0.5278033312191533,
+        "observed_unique": [
+          0.527803
+        ]
+      },
+      {
+        "table": "table_3_high_noise_summary",
+        "method": "Graph-CoLD",
+        "passed": true,
+        "canonical_macro_f1": 0.5944796314135768,
+        "observed_unique": [
+          0.59448
+        ]
+      },
+      {
+        "table": "table_3_high_noise_summary",
+        "method": "MCRe",
+        "passed": true,
+        "canonical_macro_f1": 0.5681328762907628,
+        "observed_unique": [
+          0.568133
+        ]
+      },
+      {
+        "table": "table_3_high_noise_summary",
+        "method": "MORSE",
+        "passed": true,
+        "canonical_macro_f1": 0.5582905594509723,
+        "observed_unique": [
+          0.558291
+        ]
+      },
+      {
+        "table": "table_3_high_noise_summary",
+        "method": "Noisy-Supervised",
+        "passed": true,
+        "canonical_macro_f1": 0.5245744863276722,
+        "observed_unique": [
+          0.524574
+        ]
+      },
+      {
+        "table": "table_3_high_noise_summary",
+        "method": "ablation_hard",
+        "passed": true,
+        "canonical_macro_f1": 0.5950424228783148,
+        "observed_unique": [
+          0.595042
+        ]
+      }
+    ]
+  },
+  "core_verdict": {
+    "verdict": "benefit_vanishes",
+    "pooled_err_delta_vs_hard": 0.0,
+    "pooled_tail_recall_delta_vs_hard": 0.002746633323539994,
+    "pooled_fnr_delta_vs_hard": -0.0007207116506235327,
+    "err_not_trivially_one": true
+  },
+  "claims_input": [
+    {
+      "dataset": "CICIDS-2017",
+      "macro_f1_delta_vs_cold_mean": 0.057218548718590834,
+      "err_delta_vs_hard_mean": 0.0,
+      "tail_recall_delta_vs_hard_mean": 0.005363036303630363,
+      "fnr_delta_vs_hard_mean": -0.0030394239848914105,
+      "framing": "Evidence-preservation gain vanishes here; rescope the claim."
+    },
+    {
+      "dataset": "CESNET-TLS-Year22",
+      "macro_f1_delta_vs_cold_mean": 0.004551435122435878,
+      "err_delta_vs_hard_mean": 0.0,
+      "tail_recall_delta_vs_hard_mean": 0.0004186763129689341,
+      "fnr_delta_vs_hard_mean": 0.000353288797533405,
+      "framing": "Detection is near ceiling; emphasize retention/operational metrics rather than Macro-F1."
+    },
+    {
+      "dataset": "UNSW-NB15",
+      "macro_f1_delta_vs_cold_mean": 0.003256487469878493,
+      "err_delta_vs_hard_mean": 0.0,
+      "tail_recall_delta_vs_hard_mean": 0.0024581873540206888,
+      "fnr_delta_vs_hard_mean": 0.0005240002354874168,
+      "framing": "Weak process/temporal-only views are a boundary case; do not claim universal gains."
+    },
+    {
+      "dataset": "pooled",
+      "macro_f1_delta_vs_cold_mean": 0.0216754904369684,
+      "err_delta_vs_hard_mean": 0.0,
+      "tail_recall_delta_vs_hard_mean": 0.002746633323539994,
+      "fnr_delta_vs_hard_mean": -0.0007207116506235327,
+      "framing": "Evidence-preservation gain vanishes here; rescope the claim."
+    }
+  ],
+  "post_p2d_reject_risk": {
+    "estimate": "high",
+    "residual_weaknesses": [
+      "P2d matrix uses deterministic real-data audit windows for tractability; do not call it raw full-CICIDS exhaustive.",
+      "UNSW no longer shows a negative mean margin in this clean run."
+    ]
+  },
+  "reproduction_commands": [
+    "python -m src.paper.p2d_clean_rerun --configs configs --out results --reports reports --tables tables --figures figures",
+    "python -m pytest tests/test_no_oracle_leakage.py tests/test_number_consistency.py -q"
+  ]
+}

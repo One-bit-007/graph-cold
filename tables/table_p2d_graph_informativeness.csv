@@ -1,0 +1,4 @@
+dataset,active_views,view_coverage,feature_knn_label_homophily,informativeness_score,graphcold_minus_cold_macro_f1,interpretation
+CICIDS-2017,host|ip|temporal,0.6,0.9305333333333333,0.5583199999999999,0.057218548718590855,positive_when_graph_views_are_informative
+CESNET-TLS-Year22,ip|temporal,0.4,0.9182666666666667,0.36730666666666667,0.004551435122435883,ceiling_or_neutral_case
+UNSW-NB15,temporal|process,0.4,0.7025333333333333,0.28101333333333334,0.003256487469878496,weak_view_boundary_result

@@ -1,8 +1,8 @@
 \section{Real-data Results}
-Table~\ref{tab:main-performance} summarizes the evaluation matrix. Averaged over all verified scenarios, Graph-CoLD obtains Macro-F1 0.8546, while CoLD obtains 0.7623. The paired grouped comparison reports a mean difference of 9.23 pp with p=1.38e-05 and effect size 0.646.
+Table~\ref{tab:main-performance} summarizes the evaluation matrix. Averaged over all verified scenarios, Graph-CoLD obtains Macro-F1 0.5945, while CoLD obtains 0.5728. The paired grouped comparison reports a mean difference of 2.17 pp with p=1.27e-04 and effect size 0.552.
 
-High-noise settings show the clearest robustness pattern. Table~\ref{tab:high-noise} aggregates noise rates at or above 0.4 for symmetric, asymmetric, and graph-consistency corruption. Graph-CoLD maintains high Macro-F1 while improving evidence retention relative to ablation_hard.
+High-noise settings show the clearest robustness pattern. Table~\ref{tab:high-noise} aggregates noise rates at or above 0.4 for symmetric, asymmetric, and graph-consistency corruption. Graph-CoLD maintains Macro-F1 robustness, while ERR retention is reported conservatively against ablation_hard.
 
-Evidence retention is central to the structured-denoising contribution. Mean ERR_final is 1.0000 for Graph-CoLD and 0.8879 for ablation_hard, indicating that soft evidence-preserving weights retain more clean informative samples than hard deletion. Table~\ref{tab:ablation} shows that removing Graph-CDM terms or evidence weighting reduces either Macro-F1 or retention quality.
+Evidence retention is central to the structured-denoising contribution, but the clean rerun must be interpreted conservatively. Mean ERR_final is 0.7894 for Graph-CoLD and 0.7894 for ablation_hard, so the current matrix does not show a positive ERR retention gap over hard deletion. Table~\ref{tab:ablation} should therefore be read as an ablation and risk-control view, not as proof of a retention lift.
 
-Runtime results are reported as operational cost rather than as a primary optimization target. Graph-CoLD averages 3.29s per scenario versus 3.07s for CoLD in the evaluation matrix, with the added cost interpreted alongside robustness and retention gains.
+Runtime results are reported as operational cost rather than as a primary optimization target. Graph-CoLD averages 0.16s per scenario versus 0.16s for CoLD in the evaluation matrix, with the added cost interpreted alongside robustness and retention-audit outcomes.

@@ -3,7 +3,7 @@
 ## Per-rate Table
 - Table: `tables/table_p2b_baseline_noise_robustness.csv`
 - Source: `results/table_main_expanded.csv`
-- Source SHA-256: `125ce9e63442e82deced11caf3391dd9b4ac103a6f1f3c1a7776ca7499d493cf`
+- Source SHA-256: `b9a7f26563e27bced0c2e77b8864bcfe19521bbe1cda7424afad261e63c113a9`
 
 ## Key Numbers
 
@@ -11,28 +11,28 @@
 
 | noise_rate | MCRe | MORSE | CoLD | Co-Teaching | Graph-CoLD |
 | --- | --- | --- | --- | --- | --- |
-| 0.1000 | 0.6290 | 0.6379 | 0.7092 | 0.7644 | 0.9903 |
-| 0.2000 | 0.5110 | 0.5132 | 0.7071 | 0.6998 | 0.9895 |
-| 0.4000 | 0.3562 | 0.3617 | 0.7082 | 0.5829 | 0.9886 |
-| 0.6000 | 0.2515 | 0.2393 | 0.7098 | 0.4699 | 0.9858 |
+| 0.1000 | 0.6191 | 0.5861 | 0.6789 | 0.6620 | 0.7705 |
+| 0.2000 | 0.4815 | 0.4886 | 0.6325 | 0.5730 | 0.6805 |
+| 0.4000 | 0.3436 | 0.3410 | 0.5420 | 0.4260 | 0.5497 |
+| 0.6000 | 0.2409 | 0.2361 | 0.3624 | 0.2988 | 0.3690 |
 
 ### CESNET-TLS-Year22 symmetric
 
 | noise_rate | MCRe | MORSE | CoLD | Co-Teaching | Graph-CoLD |
 | --- | --- | --- | --- | --- | --- |
-| 0.1000 | 0.9740 | 0.9713 | 0.9921 | 0.9898 | 0.9956 |
-| 0.2000 | 0.9383 | 0.9394 | 0.9926 | 0.9685 | 0.9958 |
-| 0.4000 | 0.8687 | 0.8675 | 0.9916 | 0.9052 | 0.9950 |
-| 0.6000 | 0.8219 | 0.8170 | 0.9916 | 0.7682 | 0.9937 |
+| 0.1000 | 0.9433 | 0.9402 | 0.9561 | 0.9440 | 0.9676 |
+| 0.2000 | 0.9053 | 0.9024 | 0.9544 | 0.8965 | 0.9527 |
+| 0.4000 | 0.8603 | 0.8199 | 0.8990 | 0.8050 | 0.8966 |
+| 0.6000 | 0.7983 | 0.7464 | 0.7857 | 0.6164 | 0.7935 |
 
 ### UNSW-NB15 symmetric
 
 | noise_rate | MCRe | MORSE | CoLD | Co-Teaching | Graph-CoLD |
 | --- | --- | --- | --- | --- | --- |
-| 0.1000 | 0.4822 | 0.5153 | 0.6029 | 0.5638 | 0.5844 |
-| 0.2000 | 0.4606 | 0.4691 | 0.6007 | 0.5448 | 0.5843 |
-| 0.4000 | 0.3983 | 0.4192 | 0.5939 | 0.4896 | 0.5785 |
-| 0.6000 | 0.3635 | 0.3537 | 0.5873 | 0.4238 | 0.5708 |
+| 0.1000 | 0.4799 | 0.4842 | 0.4846 | 0.4854 | 0.4841 |
+| 0.2000 | 0.4674 | 0.4471 | 0.4797 | 0.4722 | 0.4872 |
+| 0.4000 | 0.3792 | 0.3761 | 0.4431 | 0.4370 | 0.4430 |
+| 0.6000 | 0.3105 | 0.2979 | 0.3738 | 0.3214 | 0.3695 |
 
 ## Diagnosis
 - Outcome: `B_protocol_explained`
@@ -48,8 +48,8 @@ MCRe/MORSE are not globally broken: clean-label sanity passes and CESNET symmetr
 MCRe and MORSE are reported as faithful tabular adapters in this real-data label-noise protocol, but their noise robustness is not claimed to reproduce the original papers because centroid-based purification degrades on CICIDS/UNSW high-noise tabular class geometry while remaining strong on CESNET symmetric and graph-noise settings.
 
 ## Updated Canonical Margins
-- Graph-CoLD minus MCRe Macro-F1: 0.2344
-- Graph-CoLD minus MORSE Macro-F1: 0.2350
+- Graph-CoLD minus MCRe Macro-F1: 0.0263
+- Graph-CoLD minus MORSE Macro-F1: 0.0362
 
 ## Reproduction Commands
 - `python -m src.paper.p2b_baseline_fidelity`

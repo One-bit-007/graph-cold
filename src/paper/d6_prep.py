@@ -642,7 +642,7 @@ def _narrative_json(
     stats: dict[str, Any],
     sources: dict[str, Any],
 ) -> dict[str, Any]:
-    overall = stats["comparisons"]["Graph-CoLD_vs_CoLD"]
+    overall = stats.get("independence_aware", {}).get("overall") or stats["comparisons"]["Graph-CoLD_vs_CoLD"]
     methods = _method_means(main)
     high = _high_noise_metric_map(table3)
     cicids_high_diff = _paired_diff(main, "CICIDS-2017", high_noise=True)
@@ -712,10 +712,38 @@ def _narrative_md(report: dict[str, Any]) -> str:
     scope_text = ", ".join(report["dataset_scope"])
     excluded = report["excluded_baselines"]
     excluded_lines = "\n".join(f"- {name}: {reason}" for name, reason in sorted(excluded.items()))
+    err_gap = float(err["difference_pp"])
+    if err_gap > 1e-6:
+        err_claim = "Evidence retention improves over hard deletion, supporting the use of soft weights for preserving clean informative alerts."
+        err_paragraph = (
+            f"Graph-CoLD's mean ERR_final is {err['graph_cold_err_final_mean']:.4f}, compared with "
+            f"{err['ablation_hard_err_final_mean']:.4f} for ablation_hard. The {err_gap:.2f} "
+            "percentage-point gap supports the evidence retention claim: soft weights preserve clean "
+            "informative evidence better than hard deletion in the evaluated scenarios."
+        )
+        err_wording = "Graph-CoLD improves robustness and evidence retention under noisy labels, with the clearest margins on CICIDS-2017."
+    elif err_gap < -1e-6:
+        err_claim = "Evidence retention is weaker than hard deletion in this clean rerun, so the evidence-preservation claim must be narrowed."
+        err_paragraph = (
+            f"Graph-CoLD's mean ERR_final is {err['graph_cold_err_final_mean']:.4f}, compared with "
+            f"{err['ablation_hard_err_final_mean']:.4f} for ablation_hard. The {err_gap:.2f} "
+            "percentage-point gap is negative, so the current results do not support an ERR-based "
+            "evidence-retention improvement claim."
+        )
+        err_wording = "Graph-CoLD improves Macro-F1 under noisy labels, but the ERR evidence-retention claim must be treated as unresolved."
+    else:
+        err_claim = "Evidence retention matches hard deletion in this clean rerun, so the evidence-preservation claim must be scoped as unresolved rather than positive."
+        err_paragraph = (
+            f"Graph-CoLD's mean ERR_final is {err['graph_cold_err_final_mean']:.4f}, matching "
+            f"{err['ablation_hard_err_final_mean']:.4f} for ablation_hard. The {err_gap:.2f} "
+            "percentage-point gap means the clean rerun does not show an ERR-based retention gain "
+            "over hard deletion."
+        )
+        err_wording = "Graph-CoLD improves Macro-F1 under noisy labels, while ERR retention is tied with hard deletion in the clean rerun."
     claims = [
         "Graph-CoLD shows consistent improvement over CoLD in paired scenario-level testing while remaining close to CoLD on clean labels.",
         "The largest practical gains occur under CICIDS-2017 noisy settings, where structured label-space consistency helps absorb corrupted training labels.",
-        "Evidence retention improves over hard deletion, supporting the use of soft weights for preserving clean informative alerts.",
+        err_claim,
         "Compression ratio is reported as an operational alert reduction proxy rather than a direct SOC labor measurement.",
         "CESNET-TLS-Year22 should be interpreted as a high-ceiling, verified TLS application-classification subset.",
         "UNSW-NB15 adds a third verified real-data partition with temporal and process/feature-block views.",
@@ -752,11 +780,11 @@ Relative to Noisy-Supervised, Confident-Learning, Co-Teaching, Decoupling, FINE,
 
 ## ERR interpretation
 
-Graph-CoLD's mean ERR_final is {err['graph_cold_err_final_mean']:.4f}, compared with {err['ablation_hard_err_final_mean']:.4f} for ablation_hard. The {err['difference_pp']:.2f} percentage-point gap supports the evidence retention claim: soft weights preserve clean informative evidence better than hard deletion in the evaluated scenarios.
+{err_paragraph}
 
 ## CESNET ceiling effect
 
-    CESNET-TLS-Year22 Macro-F1 is high for several methods, so small improvements should not be over-read. The high-noise Graph-CoLD vs CoLD lift on CESNET is {cesnet['high_noise_macro_f1_lift_pp']:.2f} percentage points, while CICIDS-2017 shows a larger high-noise lift of {cicids['high_noise_macro_f1_lift_pp']:.2f} percentage points. The C&S-ready wording is: Graph-CoLD improves robustness and evidence retention under noisy labels, with the clearest margins on CICIDS-2017.
+    CESNET-TLS-Year22 Macro-F1 is high for several methods, so small improvements should not be over-read. The high-noise Graph-CoLD vs CoLD lift on CESNET is {cesnet['high_noise_macro_f1_lift_pp']:.2f} percentage points, while CICIDS-2017 shows a larger high-noise lift of {cicids['high_noise_macro_f1_lift_pp']:.2f} percentage points. The C&S-ready wording is: {err_wording}
 
     ## UNSW-NB15 extension
 
@@ -814,11 +842,11 @@ The formal baselines are CoLD, ablation_hard, Noisy-Supervised, Confident-Learni
         rf"""\section{{Real-data Results}}
 Table~\ref{{tab:main-performance}} summarizes the evaluation matrix. Averaged over all verified scenarios, Graph-CoLD obtains Macro-F1 {graph_mean:.4f}, while CoLD obtains {cold_mean:.4f}. The paired grouped comparison reports a mean difference of {stats['Mean difference']} with p={stats['p-value']} and effect size {stats['Effect size']}.
 
-High-noise settings show the clearest robustness pattern. Table~\ref{{tab:high-noise}} aggregates noise rates at or above 0.4 for symmetric, asymmetric, and graph-consistency corruption. Graph-CoLD maintains high Macro-F1 while improving evidence retention relative to ablation_hard.
+High-noise settings show the clearest robustness pattern. Table~\ref{{tab:high-noise}} aggregates noise rates at or above 0.4 for symmetric, asymmetric, and graph-consistency corruption. Graph-CoLD maintains Macro-F1 robustness, while ERR retention is reported conservatively against ablation_hard.
 
-Evidence retention is central to the structured-denoising contribution. Mean ERR_final is {graph_err:.4f} for Graph-CoLD and {hard_err:.4f} for ablation_hard, indicating that soft evidence-preserving weights retain more clean informative samples than hard deletion. Table~\ref{{tab:ablation}} shows that removing Graph-CDM terms or evidence weighting reduces either Macro-F1 or retention quality.
+Evidence retention is central to the structured-denoising contribution, but the clean rerun must be interpreted conservatively. Mean ERR_final is {graph_err:.4f} for Graph-CoLD and {hard_err:.4f} for ablation_hard, so the current matrix does not show a positive ERR retention gap over hard deletion. Table~\ref{{tab:ablation}} should therefore be read as an ablation and risk-control view, not as proof of a retention lift.
 
-Runtime results are reported as operational cost rather than as a primary optimization target. Graph-CoLD averages {graph_runtime:.2f}s per scenario versus {cold_runtime:.2f}s for CoLD in the evaluation matrix, with the added cost interpreted alongside robustness and retention gains.
+Runtime results are reported as operational cost rather than as a primary optimization target. Graph-CoLD averages {graph_runtime:.2f}s per scenario versus {cold_runtime:.2f}s for CoLD in the evaluation matrix, with the added cost interpreted alongside robustness and retention-audit outcomes.
 """,
         encoding="utf-8",
     )

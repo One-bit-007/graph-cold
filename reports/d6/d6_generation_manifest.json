@@ -2,7 +2,7 @@
   "stage": "D6 real-data paper prep",
   "completed": true,
   "source_csv": "results/table_main_expanded.csv",
-  "source_sha256": "125ce9e63442e82deced11caf3391dd9b4ac103a6f1f3c1a7776ca7499d493cf",
+  "source_sha256": "b9a7f26563e27bced0c2e77b8864bcfe19521bbe1cda7424afad261e63c113a9",
   "tables": [
     "tables/table_1_dataset_protocol.csv",
     "tables/table_2_main_performance.csv",

@@ -5,7 +5,7 @@
     "cicids2017": {
       "reported_as": "CICIDS-2017",
       "class_policy": "postfilter11",
-      "sample_policy": "full_postfilter11_after_min_count_and_dominant_downsample",
+      "sample_policy": "full_postfilter11_after_min_count_dominant_downsample_train_exact_dedup",
       "sampling_stratified": true
     },
     "cesnet_tls_year22": {

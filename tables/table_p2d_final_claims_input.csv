@@ -1,0 +1,5 @@
+dataset,macro_f1_delta_vs_cold_mean,err_delta_vs_hard_mean,tail_recall_delta_vs_hard_mean,fnr_delta_vs_hard_mean,framing
+CICIDS-2017,0.057218548718590834,0.0,0.005363036303630363,-0.0030394239848914105,Evidence-preservation gain vanishes here; rescope the claim.
+CESNET-TLS-Year22,0.004551435122435878,0.0,0.0004186763129689341,0.000353288797533405,Detection is near ceiling; emphasize retention/operational metrics rather than Macro-F1.
+UNSW-NB15,0.003256487469878493,0.0,0.0024581873540206888,0.0005240002354874168,Weak process/temporal-only views are a boundary case; do not claim universal gains.
+pooled,0.0216754904369684,0.0,0.002746633323539994,-0.0007207116506235327,Evidence-preservation gain vanishes here; rescope the claim.

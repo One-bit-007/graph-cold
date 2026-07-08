@@ -23,7 +23,7 @@ EXPANDED_D5_METHODS = {
     "MCRe",
     "MORSE",
 }
-VALID_IMPLEMENTATION_STATUSES = {"reused_verified_d5", "verified_implementation"}
+VALID_IMPLEMENTATION_STATUSES = {"reused_verified_d5", "verified_implementation", "p2d_deoracled"}
 FORBIDDEN_RESULT_TERMS = ("synthetic", "fallback", "emulation", "dummy", "placeholder")
 EXPECTED_ACTIVE_VIEWS = {
     "cicids2017": "host|ip|temporal",
