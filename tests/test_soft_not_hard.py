@@ -37,7 +37,7 @@ def test_degree_err_rewards_soft_evidence_rescue_over_hard_deletion():
     assert 0.0 < soft_err <= 1.0
 
 
-def test_rare_evidence_recovery_rate_distinguishes_soft_from_hard():
+def test_rare_evidence_recovery_rate_is_not_retention_gate():
     y_true = np.array([1, 1, 2, 0], dtype=int)
     y_pred = np.array([1, 0, 2, 0], dtype=int)
     clean = np.array([True, True, True, True])
@@ -49,6 +49,7 @@ def test_rare_evidence_recovery_rate_distinguishes_soft_from_hard():
     hard_recovery = rare_evidence_recovery_rate(hard, y_true, y_pred, clean, suspicious, tail_labels)
     soft_recovery = rare_evidence_recovery_rate(soft, y_true, y_pred, clean, suspicious, tail_labels)
 
-    assert hard_recovery["rare_recovery_rate"] == 0.0
+    assert hard_recovery["rare_recovery_rate"] == 0.5
     assert soft_recovery["rare_recovery_rate"] == 0.5
+    assert hard_recovery["rare_retained_rate"] == 0.0
     assert soft_recovery["rare_retained_rate"] == 1.0

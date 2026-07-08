@@ -19,7 +19,8 @@ degree_evidence_retention_components(weights, evidence, clean_mask, y) -> dict
     the numerator instead of a hard retained/not-retained indicator.
 
 rare_evidence_recovery_rate(weights, y_true, y_pred, clean_mask, suspicious_mask, tail_labels) -> dict
-    Recovery rate for clean rare/tail samples that Graph-CDM marks suspicious.
+    Non-tautological recovery rate for clean rare/tail samples that Graph-CDM
+    marks suspicious. Recovery requires correct classification, not retention.
 
 alert_compression_ratio(scores, y_true) -> float   # re-exported from ranking
 
@@ -151,9 +152,12 @@ def rare_evidence_recovery_rate(
 ):
     """Return recovery on clean rare samples that were marked suspicious.
 
-    A recovered sample must be retained by the method and predicted with its
-    clean label. ``tail_labels`` should be chosen from training-label
-    frequencies before noise injection.
+    A recovered sample must be predicted with its clean label. The retention
+    degree is reported separately as ``rare_retained_rate`` for diagnostics, but
+    it is deliberately not part of the recovery numerator. This lets hard
+    deletion score above zero when the resulting classifier still predicts a
+    deleted clean sample correctly, and lets soft retention score below one when
+    retained samples are misclassified.
     """
 
     weights = np.asarray(weights, dtype=np.float64)
@@ -167,7 +171,7 @@ def rare_evidence_recovery_rate(
     eligible = clean & suspicious & np.isin(y_true, tail_labels)
     denominator = int(eligible.sum())
     retained = np.clip(weights, 0.0, 1.0) >= float(retention_threshold)
-    recovered = eligible & retained & (y_pred == y_true)
+    recovered = eligible & (y_pred == y_true)
     retained_only = eligible & retained
     return {
         "rare_recovery_rate": float(recovered.sum() / denominator) if denominator else 0.0,
