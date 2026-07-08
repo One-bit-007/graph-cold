@@ -1,0 +1,545 @@
+{
+  "stage": "P2f",
+  "completed": true,
+  "real_data_only": true,
+  "pre_registration": "reports/p2f_preregistration.md",
+  "scope": {
+    "datasets": [
+      "CICIDS-2017",
+      "CESNET-TLS-Year22",
+      "UNSW-NB15"
+    ],
+    "methods": [
+      "CoLD",
+      "ablation_hard",
+      "Graph-CoLD-soft",
+      "Graph-CoLD-semisup"
+    ],
+    "candidate_methods": [
+      "Graph-CoLD-soft",
+      "Graph-CoLD-semisup"
+    ],
+    "rates": [
+      0.4,
+      0.6,
+      0.8
+    ],
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "train_size": 10000,
+    "test_size": 5000,
+    "paired_rows_per_dataset_metric": 30
+  },
+  "p2e_gate_note": {
+    "soft_not_hard_probe_passed": true,
+    "soft_not_hard_probe": {
+      "passed": true,
+      "hard_weights": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "soft_weights": [
+        0.807833144559353,
+        0.039165722796764356,
+        0.9500963821036466
+      ]
+    },
+    "tension_regenerated": true,
+    "max_tension_rate": 0.37531486146095716,
+    "expected_max_tension_approx": 0.375,
+    "passed": true
+  },
+  "corrected_metric": {
+    "rare_recovery_rate": "eligible(clean rare/tail and GraphCDM>theta) samples predicted as their clean true class; retention is diagnostic only and not in the numerator",
+    "evaluation": "final_trained_classifier_predictions_on_training_nodes",
+    "oof_audit": "out_of_fold predictions are retained as a memorization-sensitivity audit column",
+    "non_constant_examples": {
+      "hard_max_gt_zero": true,
+      "hard_max": 0.2903225806451613,
+      "soft_min_lt_one": true,
+      "soft_min": 0.9257142857142857,
+      "hard_mean": 0.03571032320025887,
+      "soft_mean": 0.9901233960812073
+    },
+    "p2e_before": [
+      {
+        "dataset": "CESNET-TLS-Year22",
+        "method": "Graph-CoLD-soft",
+        "method_mean": 1.0,
+        "baseline_mean": 0.0,
+        "mean_delta": 1.0,
+        "p_value_greater": 1e-12,
+        "cohens_dz": 99.0
+      },
+      {
+        "dataset": "CESNET-TLS-Year22",
+        "method": "Graph-CoLD-semisup",
+        "method_mean": 0.1347580120228387,
+        "baseline_mean": 0.0,
+        "mean_delta": 0.1347580120228387,
+        "p_value_greater": 0.0197639214523883,
+        "cohens_dz": 0.8188663170671913
+      },
+      {
+        "dataset": "CICIDS-2017",
+        "method": "Graph-CoLD-soft",
+        "method_mean": 1.0,
+        "baseline_mean": 0.0,
+        "mean_delta": 1.0,
+        "p_value_greater": 1e-12,
+        "cohens_dz": 99.0
+      },
+      {
+        "dataset": "CICIDS-2017",
+        "method": "Graph-CoLD-semisup",
+        "method_mean": 0.0154320987654321,
+        "baseline_mean": 0.0,
+        "mean_delta": 0.0154320987654321,
+        "p_value_greater": 0.0892995759176365,
+        "cohens_dz": 0.4914731871829905
+      },
+      {
+        "dataset": "UNSW-NB15",
+        "method": "Graph-CoLD-soft",
+        "method_mean": 0.9722345688484056,
+        "baseline_mean": 0.0,
+        "mean_delta": 0.9722345688484056,
+        "p_value_greater": 1e-12,
+        "cohens_dz": 48.97118456266451
+      },
+      {
+        "dataset": "UNSW-NB15",
+        "method": "Graph-CoLD-semisup",
+        "method_mean": 0.1791578896464856,
+        "baseline_mean": 0.0,
+        "mean_delta": 0.1791578896464856,
+        "p_value_greater": 4.234537417853236e-05,
+        "cohens_dz": 2.4300502598391542
+      },
+      {
+        "dataset": "pooled",
+        "method": "Graph-CoLD-soft",
+        "method_mean": 0.9907448562828018,
+        "baseline_mean": 0.0,
+        "mean_delta": 0.9907448562828018,
+        "p_value_greater": 1e-12,
+        "cohens_dz": 57.278903853451006
+      },
+      {
+        "dataset": "pooled",
+        "method": "Graph-CoLD-semisup",
+        "method_mean": 0.1097826668115855,
+        "baseline_mean": 0.0,
+        "mean_delta": 0.1097826668115855,
+        "p_value_greater": 4.631447920520366e-05,
+        "cohens_dz": 0.8883474677253579
+      }
+    ]
+  },
+  "outputs": {
+    "powered_results": "results/p2f_tail_powered.csv",
+    "tail_breakdown": "tables/table_p2f_tail_breakdown.csv",
+    "powered_tests": "tables/table_p2f_powered_tests.csv",
+    "summary": "tables/table_p2f_summary.csv",
+    "tail_figure": "figures/fig_p2f_tail_powered.pdf",
+    "recovery_figure": "figures/fig_p2f_corrected_recovery.pdf"
+  },
+  "row_count": 360,
+  "tail_breakdown_rows": 2640,
+  "summary": [
+    {
+      "reported_as": "CESNET-TLS-Year22",
+      "method": "CoLD",
+      "macro_f1": 0.657784167296946,
+      "tail_macro_f1": 0.4112472779232104,
+      "tail_recall": 0.3058584562753902,
+      "rare_recovery_rate": 0.05487762120140682,
+      "rare_recovery_rate_oof_audit": 0.05457850103680674,
+      "rare_retained_rate": 0.0
+    },
+    {
+      "reported_as": "CESNET-TLS-Year22",
+      "method": "Graph-CoLD-semisup",
+      "macro_f1": 0.678689119354629,
+      "tail_macro_f1": 0.45046370810488806,
+      "tail_recall": 0.3267265341030575,
+      "rare_recovery_rate": 0.1265720778856923,
+      "rare_recovery_rate_oof_audit": 0.1265720778856923,
+      "rare_retained_rate": 1.0
+    },
+    {
+      "reported_as": "CESNET-TLS-Year22",
+      "method": "Graph-CoLD-soft",
+      "macro_f1": 0.6915255672847253,
+      "tail_macro_f1": 0.47464184152096967,
+      "tail_recall": 0.3444943339747702,
+      "rare_recovery_rate": 1.0,
+      "rare_recovery_rate_oof_audit": 1.0,
+      "rare_retained_rate": 1.0
+    },
+    {
+      "reported_as": "CESNET-TLS-Year22",
+      "method": "ablation_hard",
+      "macro_f1": 0.6797102622848962,
+      "tail_macro_f1": 0.45283286691025304,
+      "tail_recall": 0.330874492195852,
+      "rare_recovery_rate": 0.06364057855822498,
+      "rare_recovery_rate_oof_audit": 0.06916357053377263,
+      "rare_retained_rate": 0.0
+    },
+    {
+      "reported_as": "CICIDS-2017",
+      "method": "CoLD",
+      "macro_f1": 0.5344923896467946,
+      "tail_macro_f1": 0.04732001674116088,
+      "tail_recall": 0.043229166666666666,
+      "rare_recovery_rate": 0.0027777777777777775,
+      "rare_recovery_rate_oof_audit": 0.0027777777777777775,
+      "rare_retained_rate": 0.0
+    },
+    {
+      "reported_as": "CICIDS-2017",
+      "method": "Graph-CoLD-semisup",
+      "macro_f1": 0.6865654763121031,
+      "tail_macro_f1": 0.3574811924565774,
+      "tail_recall": 0.271875,
+      "rare_recovery_rate": 0.011590413943355119,
+      "rare_recovery_rate_oof_audit": 0.011590413943355119,
+      "rare_retained_rate": 1.0
+    },
+    {
+      "reported_as": "CICIDS-2017",
+      "method": "Graph-CoLD-soft",
+      "macro_f1": 0.7211811709367727,
+      "tail_macro_f1": 0.4341705701828419,
+      "tail_recall": 0.32838541666666665,
+      "rare_recovery_rate": 1.0,
+      "rare_recovery_rate_oof_audit": 1.0,
+      "rare_retained_rate": 1.0
+    },
+    {
+      "reported_as": "CICIDS-2017",
+      "method": "ablation_hard",
+      "macro_f1": 0.6884972364833267,
+      "tail_macro_f1": 0.3610412073256064,
+      "tail_recall": 0.27682291666666664,
+      "rare_recovery_rate": 0.0022222222222222222,
+      "rare_recovery_rate_oof_audit": 0.007222222222222223,
+      "rare_retained_rate": 0.0
+    },
+    {
+      "reported_as": "UNSW-NB15",
+      "method": "CoLD",
+      "macro_f1": 0.4564972287742762,
+      "tail_macro_f1": 0.09568677165544928,
+      "tail_recall": 0.18692770676945966,
+      "rare_recovery_rate": 0.03735486732787139,
+      "rare_recovery_rate_oof_audit": 0.03554533919090959,
+      "rare_retained_rate": 0.0
+    },
+    {
+      "reported_as": "UNSW-NB15",
+      "method": "Graph-CoLD-semisup",
+      "macro_f1": 0.4688019791443348,
+      "tail_macro_f1": 0.12991667440236737,
+      "tail_recall": 0.19410172062332745,
+      "rare_recovery_rate": 0.18666818126657778,
+      "rare_recovery_rate_oof_audit": 0.18666818126657778,
+      "rare_retained_rate": 1.0
+    },
+    {
+      "reported_as": "UNSW-NB15",
+      "method": "Graph-CoLD-soft",
+      "macro_f1": 0.4848364218958043,
+      "tail_macro_f1": 0.17298580490091947,
+      "tail_recall": 0.2287124791080969,
+      "rare_recovery_rate": 0.970370188243622,
+      "rare_recovery_rate_oof_audit": 0.970370188243622,
+      "rare_retained_rate": 1.0
+    },
+    {
+      "reported_as": "UNSW-NB15",
+      "method": "ablation_hard",
+      "macro_f1": 0.47107793049925223,
+      "tail_macro_f1": 0.13249408605950072,
+      "tail_recall": 0.20494860350307703,
+      "rare_recovery_rate": 0.041268168820329375,
+      "rare_recovery_rate_oof_audit": 0.0386793407814753,
+      "rare_retained_rate": 0.0
+    }
+  ],
+  "tests": {
+    "verdict": "robust",
+    "dataset_pass": {
+      "CESNET-TLS-Year22": true,
+      "CICIDS-2017": true,
+      "UNSW-NB15": true
+    },
+    "pass_count": 3,
+    "tests": [
+      {
+        "paired_rows": 30,
+        "method_mean": 0.4746418415209696,
+        "baseline_mean": 0.452832866910253,
+        "mean_delta": 0.02180897461071662,
+        "p_value_greater": 1.2301278886122983e-05,
+        "cohens_dz": 0.9148788748825372,
+        "bootstrap_ci95_low": 0.013395243519388495,
+        "bootstrap_ci95_high": 0.02982093599908182,
+        "dataset": "CESNET-TLS-Year22",
+        "method": "Graph-CoLD-soft",
+        "metric": "tail_macro_f1",
+        "aggregate_macro_f1_delta_vs_hard": 0.011815304999829072,
+        "aggregate_macro_f1_regression_p_less": 0.9999927451168666,
+        "no_significant_aggregate_macro_f1_regression": true,
+        "p_holm": 3.690383665836895e-05,
+        "meets_success": true
+      },
+      {
+        "paired_rows": 30,
+        "method_mean": 1.0,
+        "baseline_mean": 0.06364057855822498,
+        "mean_delta": 0.9363594214417751,
+        "p_value_greater": 1e-12,
+        "cohens_dz": 10.636697516215044,
+        "bootstrap_ci95_low": 0.904581336339965,
+        "bootstrap_ci95_high": 0.9653753043302544,
+        "dataset": "CESNET-TLS-Year22",
+        "method": "Graph-CoLD-soft",
+        "metric": "rare_recovery_rate",
+        "aggregate_macro_f1_delta_vs_hard": 0.011815304999829072,
+        "aggregate_macro_f1_regression_p_less": 0.9999927451168666,
+        "no_significant_aggregate_macro_f1_regression": true,
+        "p_holm": 4e-12,
+        "meets_success": true
+      },
+      {
+        "paired_rows": 30,
+        "method_mean": 0.45046370810488806,
+        "baseline_mean": 0.452832866910253,
+        "mean_delta": -0.002369158805364997,
+        "p_value_greater": 0.8595946471045093,
+        "cohens_dz": -0.20064809280906362,
+        "bootstrap_ci95_low": -0.00659715382459146,
+        "bootstrap_ci95_high": 0.0018881224725341382,
+        "dataset": "CESNET-TLS-Year22",
+        "method": "Graph-CoLD-semisup",
+        "metric": "tail_macro_f1",
+        "aggregate_macro_f1_delta_vs_hard": -0.0010211429302673122,
+        "aggregate_macro_f1_regression_p_less": 0.1941402491037463,
+        "no_significant_aggregate_macro_f1_regression": true,
+        "p_holm": 0.8595946471045093,
+        "meets_success": false
+      },
+      {
+        "paired_rows": 30,
+        "method_mean": 0.12657207788569233,
+        "baseline_mean": 0.06364057855822498,
+        "mean_delta": 0.06293149932746733,
+        "p_value_greater": 0.00013206358121991486,
+        "cohens_dz": 0.758114545557237,
+        "bootstrap_ci95_low": 0.03574969670870852,
+        "bootstrap_ci95_high": 0.09443977408219302,
+        "dataset": "CESNET-TLS-Year22",
+        "method": "Graph-CoLD-semisup",
+        "metric": "rare_recovery_rate",
+        "aggregate_macro_f1_delta_vs_hard": -0.0010211429302673122,
+        "aggregate_macro_f1_regression_p_less": 0.1941402491037463,
+        "no_significant_aggregate_macro_f1_regression": true,
+        "p_holm": 0.0002641271624398297,
+        "meets_success": true
+      },
+      {
+        "paired_rows": 30,
+        "method_mean": 0.4341705701828419,
+        "baseline_mean": 0.3610412073256064,
+        "mean_delta": 0.07312936285723547,
+        "p_value_greater": 5.07647866143239e-08,
+        "cohens_dz": 1.281637221829647,
+        "bootstrap_ci95_low": 0.05325195151190417,
+        "bootstrap_ci95_high": 0.09238605259662414,
+        "dataset": "CICIDS-2017",
+        "method": "Graph-CoLD-soft",
+        "metric": "tail_macro_f1",
+        "aggregate_macro_f1_delta_vs_hard": 0.032683934453446056,
+        "aggregate_macro_f1_regression_p_less": 0.9999999379663475,
+        "no_significant_aggregate_macro_f1_regression": true,
+        "p_holm": 1.5229435984297172e-07,
+        "meets_success": true
+      },
+      {
+        "paired_rows": 30,
+        "method_mean": 1.0,
+        "baseline_mean": 0.0022222222222222222,
+        "mean_delta": 0.9977777777777778,
+        "p_value_greater": 1e-12,
+        "cohens_dz": 81.97580943993987,
+        "bootstrap_ci95_low": 0.9933333333333334,
+        "bootstrap_ci95_high": 1.0,
+        "dataset": "CICIDS-2017",
+        "method": "Graph-CoLD-soft",
+        "metric": "rare_recovery_rate",
+        "aggregate_macro_f1_delta_vs_hard": 0.032683934453446056,
+        "aggregate_macro_f1_regression_p_less": 0.9999999379663475,
+        "no_significant_aggregate_macro_f1_regression": true,
+        "p_holm": 4e-12,
+        "meets_success": true
+      },
+      {
+        "paired_rows": 30,
+        "method_mean": 0.3574811924565774,
+        "baseline_mean": 0.3610412073256064,
+        "mean_delta": -0.0035600148690290256,
+        "p_value_greater": 0.715570444186296,
+        "cohens_dz": -0.10521738590376113,
+        "bootstrap_ci95_low": -0.01637032965885425,
+        "bootstrap_ci95_high": 0.007885030109434848,
+        "dataset": "CICIDS-2017",
+        "method": "Graph-CoLD-semisup",
+        "metric": "tail_macro_f1",
+        "aggregate_macro_f1_delta_vs_hard": -0.0019317601712235178,
+        "aggregate_macro_f1_regression_p_less": 0.28924978876957547,
+        "no_significant_aggregate_macro_f1_regression": true,
+        "p_holm": 0.715570444186296,
+        "meets_success": false
+      },
+      {
+        "paired_rows": 30,
+        "method_mean": 0.011590413943355119,
+        "baseline_mean": 0.0022222222222222222,
+        "mean_delta": 0.009368191721132898,
+        "p_value_greater": 0.023682766259263435,
+        "cohens_dz": 0.37810527619348827,
+        "bootstrap_ci95_low": 0.0018518518518518517,
+        "bootstrap_ci95_high": 0.018845315904139435,
+        "dataset": "CICIDS-2017",
+        "method": "Graph-CoLD-semisup",
+        "metric": "rare_recovery_rate",
+        "aggregate_macro_f1_delta_vs_hard": -0.0019317601712235178,
+        "aggregate_macro_f1_regression_p_less": 0.28924978876957547,
+        "no_significant_aggregate_macro_f1_regression": true,
+        "p_holm": 0.04736553251852687,
+        "meets_success": true
+      },
+      {
+        "paired_rows": 30,
+        "method_mean": 0.17298580490091947,
+        "baseline_mean": 0.13249408605950075,
+        "mean_delta": 0.04049171884141874,
+        "p_value_greater": 4.7829703479561375e-08,
+        "cohens_dz": 1.285744716131697,
+        "bootstrap_ci95_low": 0.02994439253955347,
+        "bootstrap_ci95_high": 0.05233802999589349,
+        "dataset": "UNSW-NB15",
+        "method": "Graph-CoLD-soft",
+        "metric": "tail_macro_f1",
+        "aggregate_macro_f1_delta_vs_hard": 0.013758491396552086,
+        "aggregate_macro_f1_regression_p_less": 0.9999981689876049,
+        "no_significant_aggregate_macro_f1_regression": true,
+        "p_holm": 9.565940695912275e-08,
+        "meets_success": true
+      },
+      {
+        "paired_rows": 30,
+        "method_mean": 0.970370188243622,
+        "baseline_mean": 0.041268168820329375,
+        "mean_delta": 0.9291020194232925,
+        "p_value_greater": 1e-12,
+        "cohens_dz": 14.962160517665527,
+        "bootstrap_ci95_low": 0.9059597576425142,
+        "bootstrap_ci95_high": 0.9505192857790774,
+        "dataset": "UNSW-NB15",
+        "method": "Graph-CoLD-soft",
+        "metric": "rare_recovery_rate",
+        "aggregate_macro_f1_delta_vs_hard": 0.013758491396552086,
+        "aggregate_macro_f1_regression_p_less": 0.9999981689876049,
+        "no_significant_aggregate_macro_f1_regression": true,
+        "p_holm": 4e-12,
+        "meets_success": true
+      },
+      {
+        "paired_rows": 30,
+        "method_mean": 0.12991667440236734,
+        "baseline_mean": 0.13249408605950075,
+        "mean_delta": -0.0025774116571333533,
+        "p_value_greater": 0.7985613083796334,
+        "cohens_dz": -0.1549915033701829,
+        "bootstrap_ci95_low": -0.008681643208610907,
+        "bootstrap_ci95_high": 0.003180899914413239,
+        "dataset": "UNSW-NB15",
+        "method": "Graph-CoLD-semisup",
+        "metric": "tail_macro_f1",
+        "aggregate_macro_f1_delta_vs_hard": -0.002275951354917436,
+        "aggregate_macro_f1_regression_p_less": 0.04250305947573154,
+        "no_significant_aggregate_macro_f1_regression": false,
+        "p_holm": 0.7985613083796334,
+        "meets_success": false
+      },
+      {
+        "paired_rows": 30,
+        "method_mean": 0.18666818126657778,
+        "baseline_mean": 0.041268168820329375,
+        "mean_delta": 0.1454000124462484,
+        "p_value_greater": 1e-12,
+        "cohens_dz": 2.807712512609457,
+        "bootstrap_ci95_low": 0.1276794272692269,
+        "bootstrap_ci95_high": 0.16273796748080024,
+        "dataset": "UNSW-NB15",
+        "method": "Graph-CoLD-semisup",
+        "metric": "rare_recovery_rate",
+        "aggregate_macro_f1_delta_vs_hard": -0.002275951354917436,
+        "aggregate_macro_f1_regression_p_less": 0.04250305947573154,
+        "no_significant_aggregate_macro_f1_regression": false,
+        "p_holm": 4e-12,
+        "meets_success": false
+      }
+    ]
+  },
+  "claims_input": {
+    "verdict": "robust",
+    "dataset_pass": {
+      "CESNET-TLS-Year22": true,
+      "CICIDS-2017": true,
+      "UNSW-NB15": true
+    },
+    "bounded_statement": "Evidence-aware soft retention significantly improves rare-class tail metrics over hard deletion under high asymmetric noise on 3 datasets; remaining dataset-level effects are reported without overclaim.",
+    "dataset_trends": [
+      {
+        "dataset": "CESNET-TLS-Year22",
+        "soft_tail_macro_f1_delta": 0.02180897461071662,
+        "semisup_tail_macro_f1_delta": -0.002369158805364997,
+        "soft_corrected_recovery_delta": 0.9363594214417751,
+        "semisup_corrected_recovery_delta": 0.06293149932746733
+      },
+      {
+        "dataset": "CICIDS-2017",
+        "soft_tail_macro_f1_delta": 0.07312936285723547,
+        "semisup_tail_macro_f1_delta": -0.0035600148690290256,
+        "soft_corrected_recovery_delta": 0.9977777777777778,
+        "semisup_corrected_recovery_delta": 0.009368191721132898
+      },
+      {
+        "dataset": "UNSW-NB15",
+        "soft_tail_macro_f1_delta": 0.04049171884141874,
+        "semisup_tail_macro_f1_delta": -0.0025774116571333533,
+        "soft_corrected_recovery_delta": 0.9291020194232925,
+        "semisup_corrected_recovery_delta": 0.1454000124462484
+      }
+    ]
+  },
+  "reproduction_commands": [
+    "python -m pytest tests/test_soft_not_hard.py tests/test_rare_recovery_nontautological.py -q",
+    "python -m src.paper.p2f_tighten --configs configs --out results --reports reports --tables tables --figures figures --train-size 10000 --test-size 5000"
+  ]
+}
