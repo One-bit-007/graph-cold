@@ -41,6 +41,8 @@ evidence_preserving:          # KEY contribution: soft reweighting, NOT deletion
   kappa: 4.0                   # steepness of sigmoid on (CDM - theta)
   theta: 0.5                   # CDM soft threshold
   rho: 0.2                     # weight floor scaled by evidence score (never zero)
+  lambda_rescue: 0.8           # P2e: evidence-rescue strength for high-CDM clean rare samples
+  training_mode: scalar_soft   # {scalar_soft, evidence_semisup}
   gamma_anomaly: 1.0           # anomaly boost in evidence score
   freq_protect: log            # {log, inverse} low-frequency-class protection
   retention_threshold: 0.1     # retained(v)=1[w(v) >= tau_ret] for ERR

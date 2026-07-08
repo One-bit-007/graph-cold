@@ -14,6 +14,13 @@ evidence_retention_rate(keep_or_weight, clean_mask, y, cfg) -> float
     Evidence retention on clean informative samples. A sample is retained by the
     binary rule retained(v)=1[w(v) >= tau_ret], not by continuous w*e.
 
+degree_evidence_retention_components(weights, evidence, clean_mask, y) -> dict
+    P2e secondary ERR variant that uses the bounded retention degree w(v) in
+    the numerator instead of a hard retained/not-retained indicator.
+
+rare_evidence_recovery_rate(weights, y_true, y_pred, clean_mask, suspicious_mask, tail_labels) -> dict
+    Recovery rate for clean rare/tail samples that Graph-CDM marks suspicious.
+
 alert_compression_ratio(scores, y_true) -> float   # re-exported from ranking
 
 noise_detection_prf(flip_mask, pred_noisy_mask) -> (P, R, F1)
@@ -105,6 +112,72 @@ def evidence_retention_components(weights, evidence, clean_mask, y, retention_th
     }
 
 
+def degree_evidence_retention_components(weights, evidence, clean_mask, y):
+    """Evidence retention with continuous retention degree for P2e analysis.
+
+    This is intentionally separate from :func:`evidence_retention_components`,
+    whose binary threshold semantics are part of the P0 ERR fix and existing
+    regression tests. P2e uses this as a secondary diagnostic to show whether
+    the rescue term preserves evidence mass before imposing a hard threshold.
+    """
+
+    weights = np.clip(np.asarray(weights, dtype=np.float64), 0.0, 1.0)
+    evidence = np.clip(np.asarray(evidence, dtype=np.float64), 0.0, None)
+    clean = np.asarray(clean_mask, dtype=bool)
+    y = np.asarray(y)
+    if weights.shape[0] != y.shape[0] or evidence.shape[0] != y.shape[0] or clean.shape[0] != y.shape[0]:
+        raise ValueError("weights, evidence, clean_mask, and y must have the same length.")
+    masks = _informative_masks(evidence, clean, y)
+    err = _degree_retention(weights, evidence, masks["informative_mask"])
+    err_tail = _degree_retention(weights, evidence, masks["tail_mask"])
+    return {
+        "err_degree": float(np.clip(err, 0.0, 1.0)),
+        "err_tail_degree": float(np.clip(err_tail, 0.0, 1.0)),
+        "err_final_degree": float(np.clip(0.5 * (err + err_tail), 0.0, 1.0)),
+        "tail_count": int(masks["tail_mask"].sum()),
+        "informative_count": int(masks["informative_mask"].sum()),
+    }
+
+
+def rare_evidence_recovery_rate(
+    weights,
+    y_true,
+    y_pred,
+    clean_mask,
+    suspicious_mask,
+    tail_labels,
+    *,
+    retention_threshold=0.1,
+):
+    """Return recovery on clean rare samples that were marked suspicious.
+
+    A recovered sample must be retained by the method and predicted with its
+    clean label. ``tail_labels`` should be chosen from training-label
+    frequencies before noise injection.
+    """
+
+    weights = np.asarray(weights, dtype=np.float64)
+    y_true = np.asarray(y_true, dtype=np.int64)
+    y_pred = np.asarray(y_pred, dtype=np.int64)
+    clean = np.asarray(clean_mask, dtype=bool)
+    suspicious = np.asarray(suspicious_mask, dtype=bool)
+    tail_labels = np.asarray(tail_labels, dtype=np.int64)
+    if weights.shape != y_true.shape or y_pred.shape != y_true.shape or clean.shape != y_true.shape or suspicious.shape != y_true.shape:
+        raise ValueError("weights, labels, clean_mask, and suspicious_mask must have the same shape.")
+    eligible = clean & suspicious & np.isin(y_true, tail_labels)
+    denominator = int(eligible.sum())
+    retained = np.clip(weights, 0.0, 1.0) >= float(retention_threshold)
+    recovered = eligible & retained & (y_pred == y_true)
+    retained_only = eligible & retained
+    return {
+        "rare_recovery_rate": float(recovered.sum() / denominator) if denominator else 0.0,
+        "rare_retained_rate": float(retained_only.sum() / denominator) if denominator else 0.0,
+        "rare_clean_suspicious_count": denominator,
+        "rare_recovered_count": int(recovered.sum()),
+        "rare_retained_count": int(retained_only.sum()),
+    }
+
+
 def noise_detection_prf(flip_mask, pred_noisy_mask):
     flip = np.asarray(flip_mask, dtype=bool)
     pred = np.asarray(pred_noisy_mask, dtype=bool)
@@ -122,6 +195,34 @@ def _binary_retention(retained, evidence, mask):
     if denom <= 1e-12:
         return 0.0
     return float(np.sum(retained[mask].astype(np.float64) * evidence[mask]) / denom)
+
+
+def _degree_retention(weights, evidence, mask):
+    denom = float(np.sum(evidence[mask]))
+    if denom <= 1e-12:
+        return 0.0
+    return float(np.sum(weights[mask] * evidence[mask]) / denom)
+
+
+def _informative_masks(evidence, clean, y):
+    if not clean.any():
+        empty = np.zeros_like(clean, dtype=bool)
+        return {"tail_mask": empty, "informative_mask": empty}
+    labels, counts = np.unique(y[clean], return_counts=True)
+    if labels.size == 0:
+        tail_mask = clean.copy()
+    else:
+        tail_cut = np.median(counts)
+        tail_labels = labels[counts <= tail_cut]
+        tail_mask = clean & np.isin(y, tail_labels)
+        if not tail_mask.any():
+            tail_mask = clean.copy()
+    anomaly_cut = _safe_quantile(evidence[clean], 0.75)
+    anomaly_mask = clean & (evidence >= anomaly_cut)
+    informative_mask = clean & (tail_mask | anomaly_mask)
+    if not informative_mask.any():
+        informative_mask = clean.copy()
+    return {"tail_mask": tail_mask, "informative_mask": informative_mask}
 
 
 def _safe_quantile(values, q):

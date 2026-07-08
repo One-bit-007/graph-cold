@@ -21,9 +21,10 @@ Evidence score (protect low-frequency classes, early-APT, boundary anomalies):
     e(v)  = freq_protect(n_{y_v}) * (1 + gamma * anomaly(v))
     ~e(v) = normalize(e(v)) in [0, 1]
 
-Soft weight (high divergence -> down-weight, never zero):
+Soft weight (high divergence -> down-weight, evidence can rescue):
 
-    w(v) = sigmoid(-kappa * (GraphCDM(v) - theta)) * (1 - rho) + rho * ~e(v)
+    base(v) = sigmoid(-kappa * (GraphCDM(v) - theta))
+    w(v)    = base(v) + (1 - base(v)) * lambda_rescue * ~e(v)
 
 Downstream weighted robust loss:  L = sum_v w(v) * CE(f(z_v), y_v)
 
@@ -116,7 +117,14 @@ def evidence_score(y, anomaly, cfg):
 
 
 def soft_weights(cdm, evidence, cfg):
-    """w = sigmoid(-kappa*(cdm-theta))*(1-rho) + rho*evidence  (no zeros)."""
+    """Evidence-rescue soft weights with hard CoLD degeneration at rho=0.
+
+    The P2e rescue form first computes the CDM gate
+    ``base=sigmoid(-kappa*(cdm-theta))`` and then lets high evidence restore
+    part of the deleted mass: ``base + (1-base)*lambda_rescue*evidence``.
+    ``rho`` is retained as the historical ablation switch; ``rho=0`` or
+    ``ablation_hard=true`` returns the CoLD-style hard keep mask.
+    """
     cfg_ev = _section(cfg, "evidence_preserving")
     cdm = np.asarray(cdm, dtype=np.float64)
     evidence = np.asarray(evidence, dtype=np.float64)
@@ -127,8 +135,9 @@ def soft_weights(cdm, evidence, cfg):
     if bool(cfg_ev.get("ablation_hard", False)) or np.isclose(rho, 0.0):
         return (cdm <= theta).astype(np.float64)
     kappa = float(cfg_ev.get("kappa", 4.0))
+    lambda_rescue = float(cfg_ev.get("lambda_rescue", rho))
     sigmoid = 1.0 / (1.0 + np.exp(kappa * (cdm - theta)))
-    weights = sigmoid * (1.0 - rho) + rho * evidence
+    weights = sigmoid + (1.0 - sigmoid) * lambda_rescue * evidence
     return np.clip(weights, 0.0, 1.0)
 
 
