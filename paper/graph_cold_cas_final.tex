@@ -1,0 +1,548 @@
+%% Graph-CoLD — Computers & Security submission (final, honest bounded version)
+%% Compiles with the Elsevier elsarticle class already present in paper/.
+%% Author metadata intentionally omitted (anonymous). Fill before upload.
+\documentclass[preprint,3p,times]{elsarticle}
+
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\graphicspath{{./}{../figures/}}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+
+\journal{Computers \& Security}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Evidence-Preserving Graph Denoising for Noisy-Label Intrusion
+Detection: A Leakage-Audited Study of When Graph Structure Helps}
+
+%% Anonymous submission: author block intentionally omitted.
+\author{}
+\address{}
+
+\begin{abstract}
+Intrusion-detection classifiers are increasingly trained on labels that are
+delayed, rule-generated, or inconsistent across telemetry sources. A common
+remedy is dataset purification: detect suspicious labels and \emph{delete} them
+before training. In security operations this is risky, because the deleted
+instances are frequently the rare, boundary attack samples that analysts most
+need. We revisit CoLD, a recent collaborative label-denoising framework, and ask
+whether lifting it to a multi-view graph and replacing hard deletion with
+\emph{evidence-preserving soft weighting} improves noisy-label intrusion
+detection. Our study makes three contributions grounded in reproducible,
+real-data experiments on CICIDS-2017, CESNET-TLS-Year22, and UNSW-NB15.
+First, we show that a label-space graph consistency diagnostic (Graph-CDM) built
+over host, IP, temporal, and where-available process views yields a modest but
+statistically significant aggregate Macro-F1 improvement over the CoLD baseline
+(Holm-corrected $p<0.05$ on all three datasets), with the gain concentrated where
+graph views carry discriminative structure.
+Second, and most importantly for operations, we find that evidence-preserving
+soft weighting is statistically indistinguishable from hard deletion on aggregate
+Macro-F1, yet significantly improves \emph{rare/tail attack-class} Macro-F1 under
+high asymmetric label noise ($\Delta$Macro-F1 $=+0.073$, $+0.022$, $+0.040$ on
+CICIDS/CESNET/UNSW; Holm $p<10^{-4}$; Cohen's $d_z\in[0.92,1.29]$), at no
+aggregate cost. Third, we contribute a leakage audit showing that naive graph
+denoising can be dramatically inflated by duplicate records (24\% exact duplicates
+in CICIDS-2017) and by any use of clean-label signal; removing these collapses an
+apparent $+28$ percentage-point advantage to a defensible $+6.7$ points. We
+release the audit, the graph-informativeness diagnostic that predicts when the
+approach helps, and the full reproducibility package. The result is a bounded,
+honest claim: evidence-preserving retention is a targeted remedy for rare-attack
+evidence loss under label noise, not a universal accuracy improvement.
+\end{abstract}
+
+\begin{keyword}
+intrusion detection \sep noisy labels \sep graph learning \sep
+evidence preservation \sep security operations \sep rare-class robustness
+\end{keyword}
+
+\end{frontmatter}
+
+\section{Introduction}
+\label{sec:intro}
+Machine-learning classifiers underpin modern network intrusion-detection systems
+(IDS) and security operations centers (SOCs). These models are trained from labels
+that are seldom perfect: they may be delayed, produced by rules of uneven quality,
+or shaped by analyst workflows that emphasize high-severity cases~\cite{arp2022dodont,song2022survey}.
+The resulting label noise degrades both detection quality and operational triage.
+Crucially, the operational cost of noise is asymmetric. Discarding a mislabeled
+benign flow may raise a benchmark score, but discarding an informative
+low-frequency attack sample removes exactly the evidence an analyst needs to
+investigate a rare or emerging threat.
+
+CoLD~\cite{yang2026cold} recently framed noisy-label IDS through \emph{local
+consistency}: because different traffic classes can share feature neighborhoods,
+label noise induces spurious associations, and a collaborative representation can
+identify and remove likely-noisy samples before training. CoLD, like most
+dataset-purification methods, ultimately performs \emph{hard deletion}. We take
+CoLD as our baseline and ask two questions. (Q1) Does lifting the diagnostic from
+independent samples to a multi-view graph, kept strictly in label space, improve
+robustness? (Q2) Does replacing hard deletion with an evidence-preserving soft
+weight—one that down-weights rather than deletes suspicious-but-informative
+samples—preserve rare-attack evidence and improve operational detection?
+
+Answering these questions honestly required an unusual amount of methodological
+hygiene. Our first implementations produced spectacular gains that did not
+survive scrutiny: a leakage audit revealed that (i) CICIDS-2017 contains 24\%
+exact-duplicate records that let neighborhood consistency trivially recover
+labels, and (ii) any use of clean-label signal in the evidence or graph
+construction inflates results. After removing both, the apparent advantage shrank
+to a modest, defensible level, and the headline metric we had used for evidence
+retention turned out to be tautological. We report this process because it is, we
+believe, a contribution in its own right: graph-based denoising results in
+security are easy to inflate and must be audited.
+
+\paragraph{Contributions.}
+\begin{enumerate}
+\item A \emph{label-space} multi-view graph consistency diagnostic (Graph-CDM)
+that extends CoLD to host/IP/temporal (and, where available, process) views and
+delivers a modest but Holm-significant aggregate Macro-F1 gain over CoLD on three
+real datasets (Section~\ref{sec:res-aggregate}).
+\item An \emph{evidence-preserving soft weighting} rule that is
+indistinguishable from hard deletion on aggregate accuracy yet significantly
+improves rare/tail attack-class Macro-F1 under high asymmetric noise
+(Section~\ref{sec:res-tail})—a targeted, operationally meaningful benefit.
+\item A \emph{leakage audit} and a \emph{graph-informativeness diagnostic}: we
+quantify duplicate- and oracle-driven inflation, and show that a per-dataset
+neighborhood-homophily measure predicts when the graph helps
+(Sections~\ref{sec:res-leak}--\ref{sec:res-info}).
+\end{enumerate}
+We deliberately bound our claims. Graph-CoLD is not a universal accuracy
+improvement; its distinctive value is preserving rare-attack evidence that hard
+deletion discards.
+
+\section{Related Work}
+\label{sec:related}
+\paragraph{Noisy-label learning.}
+Approaches divide into robust-training and dataset-purification families. Robust
+training modifies losses or training dynamics: loss correction with a transition
+matrix~\cite{patrini2017making}, peer-network small-loss selection
+(Co-teaching~\cite{han2018coteaching}, Co-teaching+~\cite{yu2019coteachingplus}),
+disagreement-based updates (Decoupling~\cite{malach2017decoupling}), and
+semi-supervised treatment of suspected-noisy data
+(DivideMix~\cite{li2020dividemix}). Purification detects and removes mislabeled
+instances: confident learning~\cite{northcutt2021confident}, representation-based
+filtering (FINE~\cite{kim2021fine}), and, in security, MORSE~\cite{wu2023morse}
+and MCRe~\cite{yuan2023mcre}. CoLD~\cite{yang2026cold} is the closest prior work
+and our baseline. Our departure is twofold: we keep the diagnostic in label space
+(avoiding the distance-metric fragility CoLD itself criticizes), and we replace
+deletion with evidence-preserving weighting motivated by the semi-supervised
+insight that suspected-noisy samples carry usable signal~\cite{li2020dividemix,wu2023morse}.
+
+\paragraph{Graph learning for security telemetry.}
+Security events are relational, and graph neural
+networks~\cite{kipf2017gcn,velickovic2018gat,hamilton2017graphsage,hu2020hgt}
+naturally propagate contextual evidence. Provenance-graph IDS such as
+Flash~\cite{rehman2024flash} and Argus~\cite{xu2024argus} demonstrate the value of
+structure for enterprise detection. We use graph representation learning as a
+backbone but, unlike embedding-distance denoisers, keep the noise diagnostic in
+label space so it stays aligned with the classifier.
+
+\paragraph{SOC alert handling and concept drift.}
+Operational systems must also cope with alert volume and distribution shift.
+Alert-classification and triage work~\cite{vaarandi2024nids,chavali2024rlalert}
+and drift-aware detection~\cite{yang2021cade} motivate our operational framing,
+though our contribution is denoising for rare-attack retention rather than a
+deployed triage study.
+
+\paragraph{Contrastive self-supervision.}
+Our representation stage uses cross-view contrastive
+learning~\cite{chen2020simclr}, adapted so that the same node in two views forms a
+positive pair.
+
+\section{Problem Formulation}
+\label{sec:problem}
+Let $V$ be the set of training flows and $\mathcal{M}$ the set of \emph{active}
+graph views. Each view $m\in\mathcal{M}$ induces a graph $G^{m}=(V,E^{m})$ over the
+same nodes. The observed training label $\tilde{y}_v$ may differ from the
+unobserved clean label $y_v$. We seek a classifier that (i) resists the effect of
+noisy labels, and (ii) preserves operationally useful evidence—especially clean
+samples of rare attack classes that a purifier is tempted to discard.
+
+We adopt three design principles. First, the noise diagnostic operates in
+\emph{label/prediction space}, not embedding distance, so it remains aligned with
+the classifier and does not re-introduce the local-consistency fragility of
+distance-based purifiers. Second, denoising is \emph{evidence preserving}: a
+suspicious but informative sample is down-weighted rather than removed. Third, the
+evaluation is traceable to audited real data, with explicit scope limits.
+
+\section{Method}
+\label{sec:method}
+Graph-CoLD is a two-stage extension of CoLD: self-supervised multi-view
+representation learning, followed by a label-space consistency diagnostic that
+drives an evidence-preserving weight (Figure~\ref{fig:overview}).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.98\linewidth]{fig1_method_overview.pdf}
+\caption{Graph-CoLD pipeline. Only views supported by a dataset's verified schema
+are activated; unsupported views are disabled rather than fabricated. The
+consistency diagnostic (Graph-CDM) is computed in label space and feeds an
+evidence-preserving soft weight and a downstream classifier.}
+\label{fig:overview}
+\end{figure}
+
+\subsection{Multi-view graph construction}
+Views are built from semantically related feature blocks over the training nodes:
+a \emph{host} view links samples sharing endpoint identifiers; an \emph{IP} view
+uses communication/flow statistics, ports, protocol and TLS metadata; a
+\emph{temporal} view links samples within a time window; a \emph{process} view is
+used only where behavioral fields exist. Support is part of the reproducible
+dataset contract: CICIDS-2017 activates host/IP/temporal, CESNET-TLS-Year22
+activates IP/temporal, and UNSW-NB15 activates temporal/process. Threat-intelligence
+views are disabled when the fields are absent. Crucially, edges never cross the
+train/test split, and (Section~\ref{sec:res-leak}) exact/near-duplicate edges are
+removed.
+
+\subsection{Self-supervised representation}
+Each active view produces a node embedding $z_v^{m}$ from Bernoulli-masked input
+features, $x'_v = x_v \odot \mathrm{Bernoulli}(1-\delta)$. Cross-view contrastive
+learning treats the same node in two views as a positive pair and other batch
+nodes as negatives:
+\begin{equation}
+\mathcal{L}_{\text{con}} = -\log
+\frac{\exp(\mathrm{sim}(z^{a}_v,z^{b}_v)/\tau)}
+{\sum_{u}\exp(\mathrm{sim}(z_v,z_u)/\tau)} .
+\end{equation}
+Temporal alignment and reconstruction terms regularize the embedding,
+$\mathcal{L}_{\text{rep}}=\mathcal{L}_{\text{con}}+\alpha\mathcal{L}_{\text{temporal}}
++\beta\mathcal{L}_{\text{recon}}$; active views are fused by mean aggregation to
+obtain $z_v$.
+
+\subsection{Graph-CDM: a label-space consistency diagnostic}
+For each node $v$,
+\begin{equation}
+\mathrm{GraphCDM}(v)=\lambda_1 D_{\text{pred}}(v)+\lambda_2 D_{\text{neigh}}(v)
++\lambda_3 D_{\text{view}}(v)+\lambda_4 D_{\text{chain}}(v),
+\end{equation}
+where the prediction term compares per-view predicted labels with the observed
+\emph{noisy} training label,
+\begin{equation}
+D_{\text{pred}}(v)=\frac{1}{M}\sum_{m=1}^{M}\mathbf{1}[\tilde{y}^{m}_v\neq \tilde{y}_v],
+\end{equation}
+the neighborhood term is a label-space KL divergence between a node's soft
+prediction and its neighborhood mean,
+$D_{\text{neigh}}(v)=\mathrm{KL}\!\big(\hat{y}_v \,\|\,
+|N(v)|^{-1}\sum_{u\in N(v)}\hat{y}_u\big)$,
+and the view term measures active-view mode disagreement,
+$D_{\text{view}}(v)=1-\max_c\frac1M\sum_m\mathbf{1}[\tilde{y}^{m}_v=c]$.
+$D_{\text{chain}}$ is reserved for verified provenance/temporal chains and is not a
+driver of the reported results. No term uses clean labels or the noise mask;
+this is enforced by a regression test.
+
+\subsection{Evidence-preserving soft weighting}
+The evidence score protects samples that would be costly to discard,
+$e(v)=\text{freq\_protect}(\tilde{y}_v)\,(1+\gamma\,\text{anom}(v))$, min-max
+normalized to $\tilde{e}(v)$. Rather than a small additive floor (which collapses
+to hard deletion), we use an evidence-\emph{rescue} form so that suspicious yet
+high-evidence samples retain real weight:
+\begin{equation}
+w(v)=\underbrace{\sigma\!\big(-\kappa(\mathrm{GraphCDM}(v)-\theta)\big)}_{\text{clean branch}}
++\underbrace{\big(1-\sigma(\cdot)\big)\,\lambda_{r}\,\tilde{e}(v)}_{\text{evidence rescue}} .
+\end{equation}
+The classifier minimizes $\sum_v w(v)\,\mathrm{CE}(f(z_v),\tilde{y}_v)$. Setting
+$\lambda_r=0$ and thresholding recovers hard deletion; this is our
+\texttt{ablation\_hard} comparator, sharing the identical graph, representation,
+and diagnostic so that the ablation isolates \emph{only} the weighting.
+
+\subsection{Operational priority proxy}
+A priority score $P(v)=\alpha_1\hat{y}_{\text{mal}}(v)+\alpha_2\mathrm{GraphCDM}(v)
++\alpha_3\tilde{e}(v)$ supports triage. We evaluate ranking indirectly and, as we
+show, Graph-CoLD ties strong peers on top-$K$ precision; we therefore do not claim
+a ranking advantage.
+
+\section{Experimental Design}
+\label{sec:exp}
+\subsection{Datasets and protocol}
+Table~\ref{tab:data} summarizes the three real datasets. CICIDS-2017 is used under
+an 11-class \emph{post-filter} policy with exact deduplication (24\% of raw
+training rows removed; Section~\ref{sec:res-leak}). CESNET-TLS-Year22 is a
+year-spanning backbone TLS dataset used under a 25-class audit-window policy (it
+replaces MALTLS-22, for which we lacked a verified license path). UNSW-NB15 is
+used under its partition with the smallest class (Worms) removed. To keep the
+study tractable and reproducible we evaluate deterministic audit windows
+(train $10{,}000$ / test $5{,}000$); we are explicit that this is a focused study,
+not a full-archive evaluation. Noise is injected only into training labels; we
+report symmetric, asymmetric, and graph-consistency noise, and for the rare-class
+analysis we use asymmetric noise concentrated on tail classes at rates
+$\{40,60,80\}\%$ with seeds $0$--$9$.
+
+\begin{table}[t]
+\centering
+\caption{Datasets and active graph views. Source: \texttt{tables/table\_1\_dataset\_protocol.csv}.}
+\label{tab:data}
+\small
+\begin{tabular}{lccc}
+\toprule
+Dataset & Classes & Sample policy & Active views \\
+\midrule
+CICIDS-2017 & 11 & post-filter, exact-dedup & host/IP/temporal \\
+CESNET-TLS-Year22 & 25 & audit window & IP/temporal \\
+UNSW-NB15 & 9 & partition (no Worms) & temporal/process \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Baselines and metrics}
+We compare Graph-CoLD (soft and semi-supervised variants) with the aligned CoLD
+baseline, the \texttt{ablation\_hard} deletion variant, and implemented real-data
+baselines: MCRe~\cite{yuan2023mcre}, MORSE~\cite{wu2023morse},
+Co-teaching~\cite{han2018coteaching}, FINE~\cite{kim2021fine},
+Decoupling~\cite{malach2017decoupling}, confident learning~\cite{northcutt2021confident},
+and noisy-supervised training. Metrics are aggregate Macro-F1, tail-class
+Macro-F1 and recall, false-positive/negative rates, a corrected rare-evidence
+recovery diagnostic, runtime and memory. Statistical tests are paired at the
+scenario level (mean over seeds per dataset/noise/rate), with Holm--Bonferroni
+correction and bootstrap 95\% CIs.
+
+\section{Results}
+\subsection{RQ1: A label-space graph diagnostic modestly improves accuracy over CoLD}
+\label{sec:res-aggregate}
+Table~\ref{tab:main} reports per-dataset means. Graph-CoLD improves aggregate
+Macro-F1 over CoLD on all three datasets, with the gain concentrated on CICIDS,
+where host/IP/temporal views are most informative, and small on CESNET/UNSW. The
+improvements over CoLD are Holm-significant per dataset (CICIDS $p=1.0\times10^{-3}$,
+CESNET $p=4.1\times10^{-2}$, UNSW $p=4.1\times10^{-2}$;
+source \texttt{tables/table\_p2d\_per\_dataset\_vs\_cold.csv}). Notably,
+\texttt{ablation\_hard} already captures most of this gain: the graph and the
+label-space diagnostic, not the weighting, drive aggregate accuracy.
+
+\begin{table}[t]
+\centering
+\caption{Per-dataset means under high asymmetric tail noise (rates 40/60/80\%,
+seeds 0--9). Source: \texttt{tables/table\_p2f\_summary.csv}.}
+\label{tab:main}
+\small
+\begin{tabular}{llccc}
+\toprule
+Dataset & Method & Macro-F1 & Tail-F1 & Tail-recall \\
+\midrule
+\multirow{4}{*}{CICIDS-2017}
+ & CoLD          & 0.534 & 0.047 & 0.043 \\
+ & ablation\_hard & 0.688 & 0.361 & 0.277 \\
+ & Graph-CoLD-soft & \textbf{0.721} & \textbf{0.434} & \textbf{0.328} \\
+ & Graph-CoLD-semisup & 0.687 & 0.357 & 0.272 \\
+\midrule
+\multirow{4}{*}{CESNET-TLS-Year22}
+ & CoLD          & 0.658 & 0.411 & 0.306 \\
+ & ablation\_hard & 0.680 & 0.453 & 0.331 \\
+ & Graph-CoLD-soft & \textbf{0.692} & \textbf{0.475} & \textbf{0.344} \\
+ & Graph-CoLD-semisup & 0.679 & 0.450 & 0.327 \\
+\midrule
+\multirow{4}{*}{UNSW-NB15}
+ & CoLD          & 0.456 & 0.096 & 0.187 \\
+ & ablation\_hard & 0.471 & 0.132 & 0.205 \\
+ & Graph-CoLD-soft & \textbf{0.485} & \textbf{0.173} & \textbf{0.229} \\
+ & Graph-CoLD-semisup & 0.469 & 0.130 & 0.194 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{RQ2: Evidence preservation helps rare classes, not aggregate accuracy}
+\label{sec:res-tail}
+The central finding concerns \emph{where} evidence-preserving weighting matters.
+On aggregate Macro-F1, soft weighting is statistically indistinguishable from hard
+deletion (per-scenario $\Delta$ near zero, not significant). But on rare/tail
+attack classes, soft weighting significantly outperforms hard deletion
+(Table~\ref{tab:tail}): $\Delta$Tail-F1 $=+0.073,+0.022,+0.040$ on
+CICIDS/CESNET/UNSW, all Holm-significant at $p<10^{-4}$ with large effect sizes
+($d_z=1.28,0.92,1.29$), and with no significant aggregate-Macro-F1 regression.
+Figure~\ref{fig:tail} shows the effect is stable across noise rates. This is the
+operational point: hard deletion removes clean rare-attack evidence flagged as
+suspicious by the diagnostic; soft weighting keeps it at reduced weight, and the
+classifier recovers those classes.
+
+\begin{table}[t]
+\centering
+\caption{Powered tail-class comparison: Graph-CoLD-soft vs.\ hard deletion under
+asymmetric tail noise ($n=30$ scenarios/dataset). Source:
+\texttt{tables/table\_p2f\_powered\_tests.csv}.}
+\label{tab:tail}
+\small
+\begin{tabular}{lcccc}
+\toprule
+Dataset & $\Delta$Tail-F1 & Holm $p$ & Cohen's $d_z$ & Aggregate reg.? \\
+\midrule
+CICIDS-2017 & $+0.0731$ & $1.5\times10^{-7}$ & $1.28$ & none \\
+CESNET-TLS-Year22 & $+0.0218$ & $3.7\times10^{-5}$ & $0.92$ & none \\
+UNSW-NB15 & $+0.0405$ & $9.6\times10^{-8}$ & $1.29$ & none \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.98\linewidth]{fig_p2f_tail_powered.pdf}
+\caption{Tail-class Macro-F1 of evidence-preserving soft weighting vs.\ hard
+deletion across asymmetric noise rates. The gain is small but consistent and
+significant on all three datasets.}
+\label{fig:tail}
+\end{figure}
+
+We stress an honesty point. An earlier ``rare-evidence recovery rate'' that counted
+a sample as recovered whenever it was \emph{retained} was tautological (soft
+$=1.0$, hard $=0.0$ by construction). We redefine recovery to require correct
+downstream classification; hard deletion is then no longer automatically zero.
+Because soft retention still scores near-ceiling on this diagnostic, we report it
+only as a secondary diagnostic (\texttt{tables/table\_p2f\_summary.csv}) and rely
+on test-set tail-F1 for the headline claim.
+
+\subsection{RQ3: A leakage audit prevents inflated claims}
+\label{sec:res-leak}
+Our initial pipeline reported a $\sim\!28$-point CICIDS advantage with a curve that
+barely degraded under $60\%$ noise—implausible for a denoiser. Auditing revealed
+that CICIDS-2017 contains $152{,}201/630{,}399$ ($\approx24\%$) exact-duplicate
+training rows, and that any clean-label signal leaking into the evidence/graph
+construction inflates results. We verified zero train/test edge crossings, removed
+exact and near-duplicate edges, and eliminated the clean-label paths (enforced by a
+regression test). The apparent advantage collapses to $+6.7$ points on CICIDS,
+$+0.3$ on CESNET, and a slight $-1.3$ on UNSW in the audited comparison
+(\texttt{reports/p2c\_leakage\_audit.md}). We report this because graph denoising
+in security is unusually susceptible to such inflation.
+
+\subsection{RQ4: Graph informativeness predicts when the method helps}
+\label{sec:res-info}
+A per-dataset neighborhood-homophily / view-coverage diagnostic correlates with
+Graph-CoLD's margin: CICIDS (rich host/IP/temporal views) shows the largest gain,
+CESNET sits near a performance ceiling, and UNSW (temporal/process only) shows the
+smallest—occasionally negative—margin
+(Figure~\ref{fig:info}, \texttt{tables/table\_p2d\_graph\_informativeness.csv}).
+This turns the UNSW result into an informative boundary condition rather than a
+failure: when views lack structural signal, the graph diagnostic adds little.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.9\linewidth]{fig_p2c_informativeness_margin.pdf}
+\caption{Graph informativeness vs.\ Graph-CoLD margin over CoLD. Higher
+neighborhood homophily and view coverage predict larger gains.}
+\label{fig:info}
+\end{figure}
+
+\subsection{RQ5: Cost}
+Graph-CoLD's overhead is moderate: mean runtime is comparable to CoLD and memory
+is lower than the strong purification baselines. Evidence preservation adds
+negligible cost over hard deletion because it changes only the training weights.
+
+\section{Discussion}
+\label{sec:discuss}
+The results support a bounded but useful claim. A label-space graph diagnostic
+modestly improves noisy-label IDS over CoLD where views are informative, and—more
+distinctively—evidence-preserving weighting protects rare-attack evidence that
+hard deletion discards, improving tail-class detection under high asymmetric noise
+at no aggregate cost. In SOC terms, this matters precisely for the samples an
+analyst cannot afford to lose: rare or emerging attacks whose labels are most
+likely to be noisy. We deliberately avoid two overclaims that our own experiments
+do not support: a universal accuracy advantage (the aggregate gain is modest and
+largely from the graph, not the weighting) and a ranking advantage (Graph-CoLD
+ties strong peers on top-$K$ precision).
+
+\section{Threats to Validity}
+\label{sec:threats}
+\emph{Internal.} The evaluation uses deterministic audit windows for tractability;
+absolute Macro-F1 is therefore lower than full-archive runs, though the paired,
+seed-controlled comparisons are the object of inference. MCRe and MORSE pass a
+clean-label sanity floor but degrade on high-noise tabular settings more than in
+their original domains; we report this caveat rather than a possibly unfaithful
+number (\texttt{reports/p2b\_baseline\_fidelity.md}).
+\emph{Construct.} The rare-evidence-recovery diagnostic, even after correction,
+saturates for soft retention; we therefore headline test-set tail-F1.
+\emph{External.} CICIDS-2017, CESNET-TLS-Year22, and UNSW-NB15 are useful
+benchmarks but not complete SOC deployments; the priority score is evaluated by
+proxy, not an analyst study.
+
+\section{Limitations}
+\label{sec:limits}
+MALTLS-22 and OpTC are not evaluated (no verified license/provenance path).
+Process and threat-intelligence views are disabled where fields are absent. The
+aggregate accuracy contribution is modest and dataset-dependent; the distinctive
+contribution is rare-class evidence preservation. Full-archive and streaming
+evaluations are left to future work.
+
+\section{Conclusion}
+\label{sec:conclusion}
+We revisited collaborative label denoising for intrusion detection and asked, with
+unusual auditing discipline, whether a multi-view label-space graph diagnostic and
+evidence-preserving weighting improve robustness. The honest answer is targeted:
+the graph diagnostic gives a modest, informativeness-dependent accuracy gain over
+CoLD, and evidence-preserving weighting significantly improves rare-attack tail-F1
+over hard deletion under high asymmetric noise at no aggregate cost. Alongside, we
+contribute a leakage audit and a graph-informativeness diagnostic that together
+explain when—and when not—graph denoising helps. We hope the audit is as useful to
+the community as the method.
+
+%% ------------------------------------------------------------------
+\begin{thebibliography}{99}
+\bibitem{yang2026cold} S. Yang, X. Zheng, J. Li, J. Xu, E. C. H. Ngai,
+CoLD: Collaborative label denoising framework for network intrusion detection,
+in: Network and Distributed System Security Symposium (NDSS), 2026.
+\bibitem{arp2022dodont} D. Arp, et al., Dos and don'ts of machine learning in
+computer security, in: USENIX Security Symposium, 2022, pp. 3971--3988.
+\bibitem{song2022survey} H. Song, M. Kim, D. Park, Y. Shin, J.-G. Lee,
+Learning from noisy labels with deep neural networks: A survey,
+IEEE TNNLS 34 (11) (2022) 8135--8153.
+\bibitem{patrini2017making} G. Patrini, A. Rozza, A. K. Menon, R. Nock, L. Qu,
+Making deep neural networks robust to label noise: A loss correction approach,
+in: CVPR, 2017, pp. 1944--1952.
+\bibitem{han2018coteaching} B. Han, et al., Co-teaching: Robust training of deep
+neural networks with extremely noisy labels, in: NeurIPS, 2018, pp. 8535--8545.
+\bibitem{yu2019coteachingplus} X. Yu, et al., How does disagreement help
+generalization against label corruption?, in: ICML, 2019, pp. 7164--7173.
+\bibitem{malach2017decoupling} E. Malach, S. Shalev-Shwartz, Decoupling ``when to
+update'' from ``how to update'', in: NeurIPS, 2017, pp. 960--970.
+\bibitem{li2020dividemix} J. Li, R. Socher, S. C. H. Hoi, DivideMix: Learning with
+noisy labels as semi-supervised learning, in: ICLR, 2020.
+\bibitem{northcutt2021confident} C. G. Northcutt, L. Jiang, I. L. Chuang,
+Confident learning: Estimating uncertainty in dataset labels,
+JAIR 70 (2021) 1373--1411.
+\bibitem{kim2021fine} T. Kim, J. Ko, J. Choi, S.-Y. Yun, FINE samples for learning
+with noisy labels, in: NeurIPS, 2021, pp. 24137--24149.
+\bibitem{wu2023morse} X. Wu, W. Guo, J. Yan, B. Coskun, X. Xing, From grim reality
+to practical solution: Malware classification in real-world noise, in: IEEE S\&P,
+2023, pp. 2602--2619.
+\bibitem{yuan2023mcre} Q. Yuan, G. Gou, Y. Zhu, Y. Zhu, G. Xiong, Y. Wang,
+MCRe: A unified framework for handling malicious traffic with noise labels,
+IEEE Transactions on Information Forensics and Security, 2023.
+\bibitem{kipf2017gcn} T. N. Kipf, M. Welling, Semi-supervised classification with
+graph convolutional networks, in: ICLR, 2017.
+\bibitem{velickovic2018gat} P. Veli\v{c}kovi\'c, et al., Graph attention networks,
+in: ICLR, 2018.
+\bibitem{hamilton2017graphsage} W. L. Hamilton, R. Ying, J. Leskovec, Inductive
+representation learning on large graphs, in: NeurIPS, 2017.
+\bibitem{hu2020hgt} Z. Hu, Y. Dong, K. Wang, Y. Sun, Heterogeneous graph
+transformer, in: The Web Conference (WWW), 2020, pp. 2704--2710.
+\bibitem{chen2020simclr} T. Chen, S. Kornblith, M. Norouzi, G. Hinton, A simple
+framework for contrastive learning of visual representations, in: ICML, 2020,
+pp. 1597--1607.
+\bibitem{rehman2024flash} M. U. Rehman, H. Ahmadi, W. U. Hassan, Flash: A
+comprehensive approach to intrusion detection via provenance graph representation
+learning, in: IEEE S\&P, 2024, pp. 3552--3570.
+\bibitem{xu2024argus} J. Xu, X. Shu, Z. Li, Understanding and bridging the gap
+between unsupervised network representation learning and security analytics, in:
+IEEE S\&P, 2024, pp. 3590--3608.
+\bibitem{yang2021cade} L. Yang, et al., CADE: Detecting and explaining concept
+drift samples for security applications, in: USENIX Security Symposium, 2021,
+pp. 2327--2344.
+\bibitem{vaarandi2024nids} R. Vaarandi, A. Guerra-Manzanares, Network IDS alert
+classification with active learning techniques, Journal of Information Security
+and Applications 81 (2024) 103687.
+\bibitem{chavali2024rlalert} L. Chavali, A. Krishnan, P. Saxena, B. Mitra,
+A. Sreevallabh Chivukula, Off-policy actor-critic deep reinforcement learning for
+alert prioritization in intrusion detection systems, Computers \& Security 142
+(2024) 103854.
+\bibitem{sharafaldin2018cicids} I. Sharafaldin, A. H. Lashkari, A. A. Ghorbani,
+Toward generating a new intrusion detection dataset and intrusion traffic
+characterization, in: ICISSP, 2018, pp. 108--116.
+\bibitem{hynek2024cesnet} K. Hynek, J. Luxemburk, J. Pesek, T. Cejka, P. Siska,
+CESNET-TLS-Year22: A year-spanning TLS network traffic dataset from backbone
+lines, Scientific Data 11 (2024) 1156.
+\bibitem{moustafa2015unsw} N. Moustafa, J. Slay, UNSW-NB15: A comprehensive data
+set for network intrusion detection systems, in: Military Communications and
+Information Systems Conference (MilCIS), 2015, pp. 1--6.
+\end{thebibliography}
+
+\end{document}
