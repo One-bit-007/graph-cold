@@ -11,6 +11,8 @@
 \usepackage{url}
 \usepackage[hidelinks]{hyperref}
 \usepackage{xcolor}
+\newcounter{algorithm}
+\renewcommand{\thealgorithm}{\arabic{algorithm}}
 
 \journal{Computers \& Security}
 
@@ -156,6 +158,113 @@ learning~\cite{chen2020simclr}, adapted so that the same node in two views forms
 positive pair.
 
 % <<P4-RELATED-WORK>>
+% BLOCK A -> <<P4-RELATED-WORK>>
+
+\subsection{Positioning and Open Challenges}
+
+\subsubsection*{Noisy-label learning for intrusion detection}
+
+Learning from noisy labels has become an important challenge in security
+analytics because network telemetry is often collected through heterogeneous
+sources, automated rules, and delayed analyst feedback. Unlike conventional
+computer vision benchmarks where label corruption can often be controlled
+synthetically, security labels may reflect incomplete attack knowledge,
+imbalanced detection rules, and evolving adversarial behaviors
+\cite{guerra2022datasets,qing2023lowquality}. Therefore, improving robustness
+requires not only higher classification accuracy but also understanding which
+samples should be trusted and which samples contain useful but uncertain evidence.
+
+Existing noisy-label learning methods can be broadly divided into robust
+training and dataset purification. Robust training approaches attempt to reduce
+the influence of corrupted samples during optimization. Loss correction methods
+estimate label transition characteristics and modify the training objective
+\cite{zhao2021enhancing}. Sample-selection approaches exploit uncertainty,
+loss dynamics, or disagreement between models to identify potentially noisy
+instances \cite{xia2021sample,liu2021metric}. Co-teaching and related
+disagreement-based approaches train multiple networks and exchange selected
+small-loss samples to reduce memorization of corrupted labels
+\cite{han2018coteaching,yu2019coteachingplus}. Decoupling further separates the
+decision of when to update from how to update, demonstrating that disagreement
+between classifiers can provide useful information under label corruption
+\cite{malach2017decoupling}.
+
+A different family focuses on dataset purification. Confident Learning estimates
+label uncertainty by identifying statistically inconsistent annotations
+\cite{northcutt2021confident}. FINE explores representation-space filtering of
+noisy instances through latent feature structures
+\cite{kim2021fine}. In security domains, MCRe and MORSE extend noisy-label
+handling toward malicious traffic and malware classification scenarios
+\cite{yuan2023mcre,wu2023morse}. More recently, intrusion detection studies
+have explored contrastive learning and representation enhancement as a way to
+improve robustness against noisy or incomplete observations
+\cite{wang2022feco,yue2022cleid}.
+
+CoLD provides the closest foundation for our work by introducing collaborative
+label denoising specifically for network intrusion detection. However, existing
+purification-oriented methods generally treat suspicious samples as removable
+noise. This assumption is problematic in SOC environments because rare attack
+samples may simultaneously appear inconsistent and operationally valuable.
+Graph-CoLD therefore does not aim to replace purification, but instead explores
+whether structural context and evidence-preserving weighting can retain
+informative suspicious instances.
+
+\subsubsection*{Graph learning and contrastive representation for security}
+
+Graph representation learning has become increasingly important for security
+analytics because network activities naturally form relational structures among
+hosts, addresses, sessions, and temporal events. Graph convolutional networks
+and graph attention networks demonstrated that neighborhood information can
+improve representation learning when samples are connected through meaningful
+relations \cite{kipf2017gcn,velickovic2018gat}. Inductive graph representation
+learning further enables scalable modeling of previously unseen nodes
+\cite{hamilton2017graphsage}, while heterogeneous graph transformers extend
+graph reasoning to multiple relation types \cite{hu2020hgt}.
+
+In security applications, graph methods have mainly focused on attack
+detection, provenance analysis, and contextual behavior modeling. Systems such
+as Flash demonstrate the value of provenance graph representation learning for
+enterprise intrusion detection \cite{rehman2024flash}. Other work investigates
+security-oriented representation learning and graph analytics for detecting
+suspicious behaviors \cite{xu2024argus}. These approaches usually focus on
+discovering malicious structures from graph embeddings.
+
+Graph-CoLD differs from these methods in its objective. The graph structure is
+not directly used as an anomaly detector; instead, it provides contextual
+evidence for a label-space consistency diagnostic. This distinction is
+important because embedding distance alone may capture feature similarity while
+remaining disconnected from the classifier's final prediction behavior. By
+combining graph context with prediction-space disagreement, Graph-CoLD aims to
+identify unreliable labels while preserving samples that remain informative.
+
+\subsubsection*{SOC alert triage, prioritization, and concept drift}
+
+Modern SOC environments face not only detection accuracy challenges but also
+large-scale alert management problems. Excessive alerts, evolving attack
+behaviors, and changing network distributions create operational pressure for
+analysts. Alert classification and active-learning approaches have explored
+ways to reduce analyst workload by improving alert categorization
+\cite{vaarandi2024nids}. Reinforcement-learning-based alert prioritization
+methods further investigate how automated systems can rank alerts according to
+operational importance \cite{chavali2024rlalert}.
+
+Beyond static classification, concept drift has become a critical challenge in
+long-running security monitoring. Detection systems must adapt when normal
+traffic patterns, attack strategies, and service behaviors evolve. Studies such
+as CADE, RecDA, and Insomnia investigate drift detection and adaptation
+mechanisms for network intrusion detection
+\cite{yang2021cade,yang2024recda,andresini2021insomnia}. Recent SOC-oriented
+research also explores alert aggregation and filtering through deep learning
+models to improve investigation efficiency
+\cite{liu2025deepdrac,shon2023semisup,wang2024alertagg}.
+
+These operational studies motivate our security framing, but Graph-CoLD
+addresses a different layer of the problem. Rather than replacing analyst
+triage or predicting attack priority directly, we focus on improving the
+quality of the training evidence that supports downstream detection. The key
+difference is that Graph-CoLD combines three principles: label-space
+consistency diagnosis, evidence-preserving retention, and leakage-audited
+evaluation. This design aims to answer when graph-based denoising genuinely
+helps security analytics and when structural information is insufficient.
 \section{Problem Formulation}
 \label{sec:problem}
 Let $V$ be the set of training flows and $\mathcal{M}$ the set of \emph{active}
@@ -184,7 +293,9 @@ drives an evidence-preserving weight (Figure~\ref{fig:overview}).
 \caption{Graph-CoLD pipeline. Only views supported by a dataset's verified schema
 are activated; unsupported views are disabled rather than fabricated. The
 consistency diagnostic (Graph-CDM) is computed in label space and feeds an
-evidence-preserving soft weight and a downstream classifier.}
+evidence-preserving soft weight and a downstream classifier. Datasets are
+CICIDS-2017, CESNET-TLS-Year22, and UNSW-NB15 (active views vary by dataset;
+see Table~\ref{tab:data}).}
 \label{fig:overview}
 \end{figure}
 
@@ -262,6 +373,46 @@ show, Graph-CoLD ties strong peers on top-$K$ precision; we therefore do not cla
 a ranking advantage.
 
 % <<P4-METHOD-ALGORITHM>>
+% BLOCK B -> <<P4-METHOD-ALGORITHM>>
+
+\subsection{Graph-CoLD Optimization Procedure}
+
+The complete Graph-CoLD pipeline consists of representation learning,
+label-space consistency estimation, evidence scoring, and weighted classifier
+optimization. Algorithm~\ref{alg:graphcold} summarizes the complete procedure.
+
+\begin{center}
+\refstepcounter{algorithm}\label{alg:graphcold}
+\begin{minipage}{0.92\linewidth}
+\textbf{Algorithm~\thealgorithm: Graph-CoLD evidence-preserving noisy-label learning.}
+
+\textit{Input:} Multi-view graphs $\{G_m\}_{m=1}^{M}$, noisy labels
+$\tilde{Y}$, feature matrix $X$. \\
+\textit{Output:} Trained classifier $f$.
+
+\begin{enumerate}
+\item Construct active graph views according to available telemetry fields.
+\item Learn view-specific representations using contrastive, temporal-alignment,
+and reconstruction objectives, then fuse them into node embeddings $Z$.
+\item Generate prediction-space and neighborhood consistency statistics and
+compute a Graph-CDM score for each training sample.
+\item Estimate evidence scores from label frequency and anomaly factors, then
+compute the evidence-preserving weights $w(v)$.
+\item Optimize the classifier using weighted cross entropy and return $f$.
+\end{enumerate}
+\end{minipage}
+\end{center}
+
+The design follows three considerations. First, the diagnostic operates in label
+and prediction space rather than pure embedding distance. This maintains
+consistency with the classifier decision process and avoids relying solely on
+representation similarity. Second, the weighting mechanism adopts an
+evidence-rescue formulation because suspicious samples may still contain useful
+attack information. A simple lower bound would approximate hard deletion,
+whereas the rescue formulation allows uncertain but informative samples to
+participate in training. Third, hard deletion is retained as the primary
+ablation because it isolates the contribution of evidence preservation while
+keeping the same graph representation and diagnostic components.
 \section{Experimental Design}
 \label{sec:exp}
 \subsection{Datasets and protocol}
@@ -393,6 +544,33 @@ UNSW-NB15 & \texttt{graph\_consistency} & 0.434276 & 0.436233 & 0.001957 \\
 \end{tabular}
 \end{table}
 % <<P4-RESULTS-NOISETYPE>>
+% BLOCK C -> <<P4-RESULTS-NOISETYPE>>
+
+\subsection{Performance under Different Noise Types}
+
+To better understand when Graph-CoLD provides benefits, we analyze performance
+across different label-noise mechanisms. Table~\ref{tab:noisetype} summarizes
+Macro-F1 results under clean, symmetric, asymmetric, and graph-consistency
+noise.
+
+The results show that the benefit of Graph-CoLD is strongly dataset-dependent.
+On CICIDS-2017, where host, IP, and temporal relations provide richer structural
+signals, Graph-CoLD achieves consistent improvements over CoLD across all noise
+types. Under asymmetric noise, the improvement is 0.107 in Macro-F1. This
+observation is consistent with the hypothesis that graph context is more
+valuable when corruption is associated with non-uniform class behavior.
+
+For CESNET-TLS-Year22 \cite{hynek2024zenodo}, the improvement is smaller because
+the baseline already achieves high performance under the evaluated protocol.
+Under this near-ceiling condition, additional graph information provides only
+marginal gains. UNSW-NB15 \cite{moustafa2016unsw} shows a similar trend,
+indicating that graph denoising effectiveness depends on whether available views
+contain sufficient discriminative structure.
+
+Overall, the noise-type analysis supports a bounded conclusion: Graph-CoLD is
+not universally superior under all conditions, but provides the largest benefit
+when the available relational views contain informative structure and when
+label corruption disrupts class-consistent evidence.
 
 \subsection{RQ2: Evidence preservation helps rare classes, not aggregate accuracy}
 \label{sec:res-tail}
@@ -483,6 +661,49 @@ negligible cost over hard deletion because it changes only the training weights.
 \section{Discussion}
 \label{sec:discuss}
 % <<P4-DISCUSSION>>
+% BLOCK D -> <<P4-DISCUSSION>>
+
+\subsection{Discussion}
+
+From an operational perspective, Graph-CoLD is most suitable for SOC scenarios
+where multiple telemetry sources provide partially consistent evidence. Examples
+include environments where host relationships, communication patterns, and
+temporal behaviors jointly describe security events. In such settings, a
+suspicious sample does not necessarily indicate useless information. A rare
+attack instance may appear inconsistent because it represents an emerging
+technique rather than because it is incorrectly labeled.
+
+However, the results also demonstrate clear boundaries. When available views
+are weak or incomplete, graph structure provides limited additional information.
+The UNSW-NB15 results illustrate this condition: without sufficiently
+informative relational views, graph-based diagnostics cannot reliably create
+additional evidence. Similarly, datasets operating near a performance ceiling,
+such as CESNET-TLS-Year22 under the evaluated protocol, naturally limit the
+observable improvement.
+
+A key methodological decision in this work is the avoidance of unfair
+state-of-the-art comparisons. Earlier experiments included additional
+purification and robust-training variants. However, these variants were not all
+reimplemented under the final leakage-audited protocol. Mixing results obtained
+under different data-cleaning, duplication-removal, and evaluation settings
+would create an unreliable comparison. Therefore, the final evaluation uses
+aligned baselines with identical data contracts, representation settings, and
+statistical protocols. A comprehensive comparison with all previous methods
+requires faithful implementations or official code under a unified evaluation
+framework.
+
+The leakage audit provides a broader methodological lesson for graph-based
+security machine learning. Graph models can unintentionally exploit duplicated
+records, cross-split connections, or hidden clean-label information. Such
+effects may produce impressive but misleading improvements. Therefore, graph
+security studies should explicitly verify data separation, graph construction
+constraints, and label independence before reporting performance gains.
+
+Future work should extend Graph-CoLD toward streaming SOC environments,
+full-archive evaluation, analyst-in-the-loop validation, and broader
+cross-domain benchmark comparisons. These extensions are necessary to determine
+whether evidence-preserving denoising remains effective when labels arrive
+continuously and attack distributions evolve over time.
 The results support a bounded but useful claim. A label-space graph diagnostic
 modestly improves noisy-label IDS over CoLD where views are informative, and—more
 distinctively—evidence-preserving weighting protects rare-attack evidence that
