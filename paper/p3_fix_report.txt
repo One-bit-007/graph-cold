@@ -1,0 +1,78 @@
+P3 submission-consistency fix report
+====================================
+
+Scope
+-----
+This P3 pass changed prose, submission-file organization, and the reproducibility
+README only. No model, Graph-CDM, encoder, noise, metric, or results/*.csv/json
+file was changed. The D9 submission-ready flag remains unchanged.
+
+Fixes completed
+---------------
+1. Baseline scope and Co-Teaching naming (paper/graph_cold_cas_final.tex,
+   lines 310-321): Tables 2-3 now compare only Graph-CoLD variants, aligned CoLD,
+   and ablation_hard. Earlier-protocol MCRe, MORSE, FINE, Decoupling, and
+   Co-Teaching-lite are acknowledged as incompatible with P2f rather than claimed
+   as formal table baselines. Co-Teaching-lite is explicitly described as a
+   lightweight approximation, not a full Han et al. implementation.
+2. Final scope unification (paper/graph_cold_cas_final.tex, lines 295-308,
+   475-479, and 495-497): the manuscript identifies the P2f clean de-oracled
+   runner as the authoritative three-dataset source, explains that D5/D9 are
+   intermediate protocols, and states the three-real-dataset scope in the
+   conclusion.
+3. Encoder fairness (paper/graph_cold_cas_final.tex, lines 252-255): the aligned
+   CoLD and ablation_hard comparators are stated to share Graph-CoLD's encoder,
+   budget, and view-masking configuration.
+4. Protocol transparency (paper/graph_cold_cas_final.tex, lines 301-308): local
+   data roots, 10,000/5,000 audit windows, tail-noise rates, seeds, paired
+   seed-rate observations, Holm correction, bootstrap CIs, and P2f commands are
+   collected in one paragraph.
+5. Rare-recovery containment (paper/graph_cold_cas_final.tex, lines 407-414):
+   the tautology caveat is retained, numeric diagnostic details are moved to a
+   footnote/source note, and test-set tail-F1 is the sole headline comparison.
+6. CoLD reference (paper/graph_cold_cas_final.tex, lines 504-507): the NDSS 2026
+   entry is marked "to appear" and contains DOI 10.14722/ndss.2026.231950 without
+   invented pagination.
+7. Authoritative reproduction path (reproducibility/README_realdata.md,
+   lines 7-19 and 39-47): P2f is marked as the submission source; D5/D9 commands
+   are retained only as historical audit paths.
+8. Archive protection (paper/archive_do_not_submit/README.txt and moved files):
+   all former paper/elsevier/ and paper/sections/ materials were moved under
+   paper/archive_do_not_submit/. paper/elsarticle.cls remains at the paper root
+   for the final source; the archive README names paper/graph_cold_cas_final.tex
+   as the only submission file.
+9. Submission class and long-path layout (paper/elsarticle.cls and
+   paper/graph_cold_cas_final.tex, line 435): the obsolete local compatibility
+   class was replaced with the installed Elsevier elsarticle 3.5 class so the
+   title renders on page 1. The long RQ4 source path now uses a breakable URL,
+   preventing right-margin overflow in the final PDF.
+
+Compile verification
+--------------------
+Command, run twice from paper/:
+  pdflatex -interaction=nonstopmode graph_cold_cas_final.tex
+
+Result: "Output written on graph_cold_cas_final.pdf"; 9 pages.
+The second-pass log contains zero "undefined reference" and zero "undefined
+citation" lines. All three referenced figures resolved. Page-level visual
+inspection of the title/abstract, experimental protocol, and tail-results pages
+found the title, tables, figures, and the long RQ4 source reference legible and
+inside the page margin.
+
+Grep verification
+-----------------
+- `MCRe|MORSE|FINE|Decoupling` occurs in Related Work, the explicit
+  earlier-protocol acknowledgement, the fidelity caveat, or bibliography only;
+  it does not appear as a formal Tables 2-3 baseline claim.
+- `co-teaching[^-]` occurs only in Related Work and the Han et al. bibliography
+  entry. The experimental-context occurrence is "Co-Teaching-lite" and labels it
+  a lightweight approximation.
+- No "two datasets" result-scope phrase remains. The only two-dataset wording is
+  the explicitly identified intermediate D9 lock in Threats to Validity.
+- paper/elsevier/ and paper/sections/ no longer exist at their original paths.
+
+Incomplete items
+----------------
+None for P3 items 1-9. Human author, funding, competing-interest, and final
+upload confirmations remain outside this text-only P3 scope; submission_ready is
+intentionally not set to true.
