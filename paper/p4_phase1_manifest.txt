@@ -1,0 +1,73 @@
+Graph-CoLD P4 Phase-1 artifact manifest
+=======================================
+
+Scope and integrity
+-------------------
+This phase creates raw materials for GPT-pro. No model, Graph-CDM, encoder,
+noise, or metrics code was changed. No results/*.csv/json file was changed, and
+submission_ready remains false. No prose expansion was performed.
+
+1. Noise-type table verification
+---------------------------------
+Source: tables/table_p2d_per_dataset_vs_cold.csv
+Output: tables/table_p4_noise_type_breakdown.csv
+Aggregation: arithmetic mean over all source rows sharing (dataset, noise_type),
+collapsing noise_rate, graph_beta, and seed dimensions where present.
+The CSV and LaTeX table print values rounded to six decimal places. Every printed
+cell was compared with its source-row arithmetic mean; all 36 checks passed. The
+maximum absolute rounding error was 4.8843e-7.
+
+Dataset              Noise type             n   CoLD CSV   CoLD TeX   Graph CSV  Graph TeX  Delta CSV  Delta TeX
+CICIDS-2017          clean                  1   0.671150   0.671150   0.778689   0.778689   0.107539   0.107539
+CICIDS-2017          symmetric              4   0.553919   0.553919   0.592429   0.592429   0.038510   0.038510
+CICIDS-2017          asymmetric             4   0.322779   0.322779   0.429941   0.429941   0.107162   0.107162
+CICIDS-2017          graph_consistency      8   0.496244   0.496244   0.531555   0.531555   0.035311   0.035311
+CESNET-TLS-Year22    clean                  1   0.966321   0.966321   0.968261   0.968261   0.001941   0.001941
+CESNET-TLS-Year22    symmetric              4   0.898812   0.898812   0.902585   0.902585   0.003774   0.003774
+CESNET-TLS-Year22    asymmetric             4   0.698745   0.698745   0.708302   0.708302   0.009557   0.009557
+CESNET-TLS-Year22    graph_consistency      8   0.846591   0.846591   0.849355   0.849355   0.002764   0.002764
+UNSW-NB15            clean                  1   0.494282   0.494282   0.501909   0.501909   0.007627   0.007627
+UNSW-NB15            symmetric              4   0.445324   0.445324   0.445923   0.445923   0.000599   0.000599
+UNSW-NB15            asymmetric             4   0.296512   0.296512   0.303933   0.303933   0.007421   0.007421
+UNSW-NB15            graph_consistency      8   0.434276   0.434276   0.436233   0.436233   0.001957   0.001957
+
+The source contains one additional pooled/all summary row. It was excluded
+because it is not a (formal dataset, noise_type) group and the task requires
+three named datasets in the output.
+
+2. Confirmed bibliography keys
+------------------------------
+Added exactly these 14 keys; none were previously present and none were skipped:
+
+guerra2022datasets
+qing2023lowquality
+zhao2021enhancing
+wang2022feco
+yue2022cleid
+liu2025deepdrac
+shon2023semisup
+wang2024alertagg
+xia2021sample
+liu2021metric
+yang2024recda
+andresini2021insomnia
+hynek2024zenodo
+moustafa2016unsw
+
+Entries use only the author, venue, year, page, arXiv, or Zenodo information
+provided by the Phase-1 prompt. No DOI or other bibliographic field was invented.
+
+3. Phase-2 anchors
+------------------
+% <<P4-RELATED-WORK>>: paper/graph_cold_cas_final.tex:158
+% <<P4-METHOD-ALGORITHM>>: paper/graph_cold_cas_final.tex:264
+% <<P4-RESULTS-NOISETYPE>>: paper/graph_cold_cas_final.tex:395
+% <<P4-DISCUSSION>>: paper/graph_cold_cas_final.tex:485
+The new table label is tab:noisetype at paper/graph_cold_cas_final.tex:372.
+
+Warnings and skipped items
+--------------------------
+- The pooled/all source summary row was excluded as documented above.
+- No requested bibliography key was skipped.
+- Phase 1 stops here by design: no new prose, no model or metric changes, no
+  merge to main, and no submission_ready change.
