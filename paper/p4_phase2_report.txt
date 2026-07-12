@@ -1,0 +1,96 @@
+Graph-CoLD P4 Phase-2 merge report
+===================================
+
+Scope and integrity
+-------------------
+Phase 2 merged the coordinator-provided literature, method, results, and
+discussion expansions into the final manuscript only. No model, Graph-CDM,
+encoder, noise, metric, configuration, test, or results/*.csv/json file was
+changed. submission_ready was not changed.
+
+Anchor placement
+----------------
+The Phase-1 anchors were retained and the requested blocks were inserted
+immediately after them.
+
+Anchor                         Phase-1 line  Phase-2 anchor line  Block start
+P4-RELATED-WORK                158           160                  161
+P4-METHOD-ALGORITHM            264           375                  376
+P4-RESULTS-NOISETYPE           395           546                  547
+P4-DISCUSSION                  485           663                  664
+
+Block A adds the noisy-label IDS positioning and open challenges. Block B adds
+the Graph-CoLD optimization procedure and a numbered Algorithm 1. Block C adds
+the per-noise-type interpretation for Table 3. Block D adds the operational
+scope, fair-comparison, leakage-audit, and future-work discussion.
+
+Algorithm environment note
+--------------------------
+The local TeX installation does not provide algorithm.sty. Rather than add a
+non-portable package dependency, Algorithm 1 is rendered with a native LaTeX
+counter and minipage. Its reference resolves as Algorithm 1 and visual PDF
+inspection confirmed that it is legible and not clipped.
+
+Compilation and visual verification
+-----------------------------------
+Command (from paper/):
+  pdflatex -interaction=nonstopmode graph_cold_cas_final.tex
+
+Two consecutive pdflatex passes completed successfully. The final output is
+paper/graph_cold_cas_final.pdf with 12 pages. The final log has zero undefined
+citations and zero undefined references. Visual inspection of the rendered PDF
+confirmed the Related Work expansion, Algorithm 1, Table 3 and its discussion,
+and the new discussion section have no overlap or clipping.
+
+The Phase-2 prompt anticipated approximately 16--20 pages, whereas this
+manuscript expanded from the Phase-1 10-page PDF to 12 pages. This is recorded
+as a length warning, not hidden or compensated with untraceable filler. The
+prompt's explicit abort condition (remaining at 9 pages) was not met.
+
+Citation and reference checks
+-----------------------------
+All 14 bibliography keys introduced in Phase 1 are cited by the manuscript:
+
+guerra2022datasets
+qing2023lowquality
+zhao2021enhancing
+wang2022feco
+yue2022cleid
+liu2025deepdrac
+shon2023semisup
+wang2024alertagg
+xia2021sample
+liu2021metric
+yang2024recda
+andresini2021insomnia
+hynek2024zenodo
+moustafa2016unsw
+
+The labels alg:graphcold, tab:noisetype, and tab:data are present and their
+references resolve. Figure 1's caption now explicitly scopes the three
+datasets and directs readers to Table 1 for active-view variation.
+
+P3 consistency greps
+--------------------
+The P3 baseline and dataset-scope greps were rechecked.
+
+- MCRe, MORSE, FINE, and Decoupling occur in Related Work and bibliography as
+  literature context. Existing Experimental Design and Threats text retains the
+  P3-approved caveat that these methods were not re-run under the final
+  leakage-audited protocol and are excluded from formal result tables. No new
+  formal result claim was introduced.
+- Co-Teaching appears only in Related Work/bibliography context; the paper does
+  not relabel Co-Teaching-lite as full Co-Teaching.
+- The only two-dataset wording is the existing D9 checkpoint caveat in Threats
+  to Validity; the manuscript's formal scope remains CICIDS-2017,
+  CESNET-TLS-Year22, and UNSW-NB15 as stated in the protocol table.
+
+Result: PASS, with the pre-existing P3-approved caveats classified as caveats
+rather than experimental claims.
+
+Known follow-up
+---------------
+Phase 2 is a manuscript-expansion checkpoint, not a declaration that the
+submission package is ready. Human authors should decide whether additional
+validated content is needed to reach a desired journal length before any final
+submission decision.
