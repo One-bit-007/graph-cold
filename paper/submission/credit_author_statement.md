@@ -1,8 +1,5 @@
 # CRediT Author Statement
 
-[DRAFT MAPPING — please have all authors confirm/adjust roles before
-submission; names below are filled from the author information sheet]
-
 | Role | Author(s) |
 | --- | --- |
 | Conceptualization | Tianqi Guo, Yan Chen |

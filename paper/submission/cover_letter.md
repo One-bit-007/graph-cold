@@ -1,6 +1,6 @@
 # Cover Letter — Computers & Security
 
-[DATE]
+August 10, 2026
 
 To the Editor-in-Chief,
 *Computers & Security*
