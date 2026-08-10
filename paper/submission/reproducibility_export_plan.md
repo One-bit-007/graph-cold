@@ -37,10 +37,11 @@ not a judgment call.
 ## Publication steps
 
 1. Create a clean public repository containing only the "Include" set above
-   (verify with a fresh `git archive` or a clean-room copy, then `grep -ri
-   h3c` on the export to confirm zero company references).
-2. Fill in author metadata in `CITATION.cff`, `paper/submission/*.md`, and the
-   manuscript front matter.
+   (verify with a fresh `git archive` or a clean-room copy, then confirm zero
+   references to internal directory names and local-only paths; author
+   affiliations legitimately contain employer names and are not leaks).
+2. ~~Fill in author metadata~~ — done (2026-08-10); only the license choice
+   and repository URL in `CITATION.cff` remain.
 3. Tag the release (`rev-p5` or the acceptance tag) in the public repository.
 4. Create a Zenodo archive from that tag; record the DOI.
 5. Replace `[REPO/DOI PLACEHOLDER]` in the manuscript Data availability section
