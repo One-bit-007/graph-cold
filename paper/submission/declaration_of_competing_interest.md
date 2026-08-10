@@ -1,10 +1,13 @@
 # Declaration of Competing Interest
 
-[TO BE CONFIRMED BY AUTHORS]
+[DRAFT — please have all authors confirm before submission]
 
-The authors declare that they have no known competing financial interests or
-personal relationships that could have appeared to influence the work reported
-in this paper.
+Tianqi Guo is employed by H3C Information Security Technology Co., Ltd.
+Weiguo Wang, Jian Wang, and Shiyin Zhu are employed by New H3C Technologies
+Co., Ltd. Yan Chen declares that he has no known competing financial interests
+or personal relationships that could have appeared to influence the work
+reported in this paper.
 
-(If any author has relevant employment, consultancy, or funding relationships
-to disclose, replace this text accordingly before submission.)
+Beyond the employment relationships disclosed above, the authors declare that
+they have no known competing financial interests or personal relationships that
+could have appeared to influence the work reported in this paper.

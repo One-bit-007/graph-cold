@@ -1,20 +1,21 @@
 # CRediT Author Statement
 
-[TO BE CONFIRMED BY AUTHORS — map roles to named authors before submission]
+[DRAFT MAPPING — please have all authors confirm/adjust roles before
+submission; names below are filled from the author information sheet]
 
 | Role | Author(s) |
 | --- | --- |
-| Conceptualization | [Author 1] |
-| Methodology | [Author 1], [Author 2] |
-| Software | [Author 1] |
-| Validation | [Author 1], [Author 2] |
-| Formal analysis | [Author 1] |
-| Investigation | [Author 1] |
-| Resources | [Author 2] |
-| Data curation | [Author 1] |
-| Writing — original draft | [Author 1] |
-| Writing — review & editing | [Author 1], [Author 2] |
-| Visualization | [Author 1] |
-| Supervision | [Author 2] |
-| Project administration | [Author 2] |
-| Funding acquisition | [Author 2] |
+| Conceptualization | Tianqi Guo, Yan Chen |
+| Methodology | Tianqi Guo |
+| Software | Tianqi Guo |
+| Validation | Tianqi Guo, Yan Chen |
+| Formal analysis | Tianqi Guo |
+| Investigation | Tianqi Guo |
+| Resources | Yan Chen, Weiguo Wang, Jian Wang, Shiyin Zhu |
+| Data curation | Tianqi Guo |
+| Writing — original draft | Tianqi Guo |
+| Writing — review & editing | Tianqi Guo, Yan Chen, Weiguo Wang, Jian Wang, Shiyin Zhu |
+| Visualization | Tianqi Guo |
+| Supervision | Yan Chen |
+| Project administration | Yan Chen, Shiyin Zhu |
+| Funding acquisition | — (no specific grant; see funding statement) |

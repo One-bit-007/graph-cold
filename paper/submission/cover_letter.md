@@ -52,8 +52,15 @@ the submission. Raw datasets are public; code, frozen result hashes, and the
 reproduction command sequence are available as described in the Data
 Availability section.
 
-Authors: [AUTHOR NAMES]
-Corresponding author: [CORRESPONDING AUTHOR, AFFILIATION, EMAIL]
+Authors: Tianqi Guo (University of Science and Technology of China),
+Yan Chen (University of Science and Technology of China),
+Weiguo Wang (New H3C Technologies Co., Ltd.),
+Jian Wang (New H3C Technologies Co., Ltd.),
+Shiyin Zhu (New H3C Technologies Co., Ltd.)
+
+Corresponding author: Tianqi Guo, University of Science and Technology of
+China, No. 96 Jinzhai Road, Baohe District, Hefei, Anhui 230026, P.R. China.
+Email: guotianqi@mail.ustc.edu.cn. ORCID: 0009-0006-0870-7491.
 
 Sincerely,
-[AUTHOR NAMES]
+Tianqi Guo (on behalf of all authors)
