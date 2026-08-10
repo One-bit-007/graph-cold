@@ -13,8 +13,10 @@ providers:
 The derived artifacts required to reproduce the reported results — source code
 (`src/`), configuration files (`configs/`), frozen data-split manifests with
 content hashes (`results/`), all result tables (`tables/`), figure-generation
-scripts, and the reproducibility documentation (`reproducibility/`) — will be
-released in a public repository and archived with a persistent DOI at:
+scripts, and the reproducibility documentation (`reproducibility/`) — are
+released in a public repository:
 
-> **[REPO/DOI PLACEHOLDER] — to be filled by the authors upon repository
-> publication (see `paper/submission/reproducibility_export_plan.md`)**
+> **<https://github.com/One-bit-007/graph-cold>**
+
+A Zenodo archive with a persistent DOI will be minted from the release tag
+upon acceptance (see `reproducibility_export_plan.md`).
