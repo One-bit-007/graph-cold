@@ -32,8 +32,7 @@ doi: 10.5281/zenodo.21873516
 date-released: 2026-08-10
 url: "https://github.com/One-bit-007/graph-cold"
 repository-code: "https://github.com/One-bit-007/graph-cold"
-# license: intentionally unset until the authors choose one (invalid values
-# break Zenodo's GitHub archiving); add e.g. MIT or CC-BY-4.0 later.
+license: MIT
 preferred-citation:
   type: article
   title: "Evidence-Preserving Graph Denoising for Noisy-Label Intrusion Detection: A Leakage-Audited Study of When Graph Structure Helps"
