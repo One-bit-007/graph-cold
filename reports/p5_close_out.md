@@ -111,3 +111,24 @@ and the text now treats them as such.
    tests so the suite is green for future reviewers.
 
 `submission_ready` is **false** at the time of this report, by design.
+
+## Addendum — 2026-08-10 (post-publication)
+
+All blocking human to-dos are now resolved:
+
+- Author metadata filled from the author information sheet (five authors,
+  corresponding author Tianqi Guo); funding confirmed as none; CRediT and
+  competing-interest drafts marked for author sign-off.
+- Public repository live: https://github.com/One-bit-007/graph-cold
+  (`main` at `00bb451`, tag `rev-p5`).
+- Zenodo archive minted: version DOI `10.5281/zenodo.21873516` (rev-p5),
+  concept DOI `10.5281/zenodo.21873515`. Both DOIs are now cited in the
+  manuscript Data availability section and in
+  `paper/submission/data_availability.md`; the PDF was recompiled
+  (14 pages, 0 undefined references).
+- `CITATION.cff` carries the real repository URL and the version DOI; only a
+  license choice (MIT or CC-BY-4.0 suggested) remains open and non-blocking.
+
+Per the P5 prompt, only the human author may authorize flipping
+`submission_ready` to true. With the above items resolved, that authorization
+is the single remaining action before upload to the C&S editorial system.

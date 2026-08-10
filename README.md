@@ -1,5 +1,7 @@
 # Graph-CoLD
 
+[![DOI](https://zenodo.org/badge/1287201233.svg)](https://doi.org/10.5281/zenodo.21873515)
+
 **Evidence-Preserving Graph Denoising for Noisy-Label Intrusion Detection:
 A Leakage-Audited Study of When Graph Structure Helps**
 

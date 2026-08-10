@@ -28,8 +28,8 @@ authors:
     orcid: "https://orcid.org/0009-0008-5219-0885"
     email: "zhushiyin@h3c.com"
 version: rev-p5
-# doi: 10.5281/zenodo.TODO   # fill in after Zenodo archive
-# date-released: 2026-MM-DD  # fill in at publication
+doi: 10.5281/zenodo.21873516
+date-released: 2026-08-10
 url: "https://github.com/One-bit-007/graph-cold"
 repository-code: "https://github.com/One-bit-007/graph-cold"
 # license: intentionally unset until the authors choose one (invalid values

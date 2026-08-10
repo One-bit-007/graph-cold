@@ -18,5 +18,8 @@ released in a public repository:
 
 > **<https://github.com/One-bit-007/graph-cold>**
 
-A Zenodo archive with a persistent DOI will be minted from the release tag
-upon acceptance (see `reproducibility_export_plan.md`).
+The release tag `rev-p5` is archived on Zenodo:
+
+> **<https://doi.org/10.5281/zenodo.21873516>** (version DOI, `rev-p5`)
+> **<https://doi.org/10.5281/zenodo.21873515>** (concept DOI, always resolves
+> to the latest version)
