@@ -32,7 +32,8 @@ not a judgment call.
 | External data roots (`E:\graphcold-data`, anything under `GRAPHCOLD_DATA_ROOT`) | Raw datasets |
 | `paper/archive_do_not_submit/` | Superseded drafts |
 | `*.aux`, `*.log`, `*.out`, `*.spl`, `__pycache__/` | Build/cache artifacts |
-| `docs/prompts/` | Internal working prompts (optional; keep private) |
+| `docs/prompts/` | Internal working prompts (keep private) |
+| `docs/PLAN.md` | Internal process plan with personal handles (keep private) |
 
 ## Publication steps
 
