@@ -359,12 +359,33 @@ def write_scale_policy_report(reports: str | Path = "reports") -> dict[str, Any]
     return report
 
 
+def _resolve_recorded_data_path(dataset_name: str, recorded: Any, fallback: str, configs_dir: Path) -> str:
+    """P5-C6 env-first data-path resolution.
+
+    ``GRAPHCOLD_DATA_ROOT`` (or legacy ``GRAPH_COLD_DATA_ROOT``) overrides the
+    audited absolute path so the pipeline runs on any machine without editing
+    tracked configs; otherwise the recorded audit path is kept verbatim.
+    Path resolution only -- no effect on sampling, splitting, or results.
+    """
+    import os
+
+    from src.data.paths import DATASET_RELATIVE_PATHS, get_data_root
+
+    if os.environ.get("GRAPHCOLD_DATA_ROOT") or os.environ.get("GRAPH_COLD_DATA_ROOT"):
+        return str(get_data_root(configs=configs_dir) / DATASET_RELATIVE_PATHS[dataset_name])
+    if recorded:
+        return str(recorded)
+    return str(fallback)
+
+
 def _load_formal_dataset(dataset_name: str, seed: int, configs_dir: Path, scale_policy: dict[str, Any]) -> FormalBundle:
     cfg = yaml.safe_load((configs_dir / "datasets.yaml").read_text(encoding="utf-8"))
     cfg["seed"] = int(seed)
     if dataset_name == "cesnet_tls_year22":
         audit = _read_json(configs_dir.parent / "reports" / "cesnet_audit_report.json")
-        cfg[dataset_name]["path"] = audit.get("actual_data_path", cfg[dataset_name]["path"])
+        cfg[dataset_name]["path"] = _resolve_recorded_data_path(
+            dataset_name, audit.get("actual_data_path"), cfg[dataset_name]["path"], configs_dir
+        )
         cfg[dataset_name]["sample_rows"] = CESNET_D5_SAMPLE_ROWS
         cfg[dataset_name]["dataset_hash"] = audit.get("dataset_hash")
         cfg[dataset_name]["reported_as"] = "CESNET-TLS-Year22"
@@ -377,7 +398,9 @@ def _load_formal_dataset(dataset_name: str, seed: int, configs_dir: Path, scale_
         cfg[dataset_name]["source_verified"] = True
     elif dataset_name == "unsw_nb15":
         audit = _read_json(configs_dir.parent / "reports" / "unsw_ingest.json")
-        cfg[dataset_name]["path"] = audit.get("actual_data_path", cfg[dataset_name]["path"])
+        cfg[dataset_name]["path"] = _resolve_recorded_data_path(
+            dataset_name, audit.get("actual_data_path"), cfg[dataset_name]["path"], configs_dir
+        )
         cfg[dataset_name]["dataset_hash"] = audit.get("dataset_hash")
         cfg[dataset_name]["reported_as"] = "UNSW-NB15"
         cfg[dataset_name]["source_verified"] = True

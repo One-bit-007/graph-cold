@@ -1,0 +1,643 @@
+..................................................FF....F............... [ 31%]
+......sFF....FF.FFFFFF...FFFFFF....ss................................... [ 63%]
+...............................................................F........ [ 94%]
+............                                                             [100%]
+================================== FAILURES ===================================
+_ test_d11_final_manuscript_and_package_do_not_use_forbidden_overclaiming_terms _
+
+    def test_d11_final_manuscript_and_package_do_not_use_forbidden_overclaiming_terms():
+        paths = [
+            Path("paper/elsevier/final_candidate/graph_cold_cas_realdata_d11.tex"),
+            Path("submission/cas_candidate_d11/manuscript_author_version_d11.tex"),
+            Path("submission/cas_candidate_d11/manuscript_anonymous_review_d11.tex"),
+            Path("submission/cas_candidate_d11/cover_letter_d11.md"),
+            Path("submission/cas_candidate_d11/highlights_d11.md"),
+            Path("submission/cas_candidate_d11/reviewer_risk_pack_d11.md"),
+        ]
+        for path in paths:
+>           text = path.read_text(encoding="utf-8").lower()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_d11_no_overclaiming.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\AppData\Roaming\kimi-desktop\daimon-bundle\runtime\python\cpython-3.12\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('paper/elsevier/final_candidate/graph_cold_cas_realdata_d11.tex')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'paper\\elsevier\\final_candidate\\graph_cold_cas_realdata_d11.tex'
+
+..\AppData\Roaming\kimi-desktop\daimon-bundle\runtime\python\cpython-3.12\Lib\pathlib.py:1013: FileNotFoundError
+____________ test_d11_final_manuscript_has_no_local_windows_paths _____________
+
+    def test_d11_final_manuscript_has_no_local_windows_paths():
+>       text = Path("paper/elsevier/final_candidate/graph_cold_cas_realdata_d11.tex").read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_d11_no_overclaiming.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\AppData\Roaming\kimi-desktop\daimon-bundle\runtime\python\cpython-3.12\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('paper/elsevier/final_candidate/graph_cold_cas_realdata_d11.tex')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'paper\\elsevier\\final_candidate\\graph_cold_cas_realdata_d11.tex'
+
+..\AppData\Roaming\kimi-desktop\daimon-bundle\runtime\python\cpython-3.12\Lib\pathlib.py:1013: FileNotFoundError
+________ test_d11_mandatory_risk_patch_present_in_tex_and_pdf_compiles ________
+
+    def test_d11_mandatory_risk_patch_present_in_tex_and_pdf_compiles():
+        tex_path = Path("paper/elsevier/final_candidate/graph_cold_cas_realdata_d11.tex")
+        pdf_path = Path("paper/elsevier/final_candidate/graph_cold_cas_realdata_d11.pdf")
+>       text = tex_path.read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_d11_risk_patch.py:10: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\AppData\Roaming\kimi-desktop\daimon-bundle\runtime\python\cpython-3.12\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('paper/elsevier/final_candidate/graph_cold_cas_realdata_d11.tex')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'paper\\elsevier\\final_candidate\\graph_cold_cas_realdata_d11.tex'
+
+..\AppData\Roaming\kimi-desktop\daimon-bundle\runtime\python\cpython-3.12\Lib\pathlib.py:1013: FileNotFoundError
+___________ test_paper_sections_exist_and_use_correct_dataset_names ___________
+
+    def test_paper_sections_exist_and_use_correct_dataset_names():
+        _ensure_d6_outputs()
+        for path in [
+            "paper/sections/experiments_realdata.tex",
+            "paper/sections/results_realdata.tex",
+            "paper/sections/discussion_realdata.tex",
+            "paper/sections/limitations_realdata.tex",
+        ]:
+>           assert Path(path).exists(), path
+E           AssertionError: paper/sections/experiments_realdata.tex
+E           assert False
+E            +  where False = exists()
+E            +    where exists = WindowsPath('paper/sections/experiments_realdata.tex').exists
+E            +      where WindowsPath('paper/sections/experiments_realdata.tex') = Path('paper/sections/experiments_realdata.tex')
+
+tests\test_d6_paper_sections.py:29: AssertionError
+_ test_paper_sections_report_sample_policy_and_do_not_claim_unavailable_results _
+
+    def test_paper_sections_report_sample_policy_and_do_not_claim_unavailable_results():
+        _ensure_d6_outputs()
+>       text = _section_text()
+               ^^^^^^^^^^^^^^^
+
+tests\test_d6_paper_sections.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_d6_paper_sections.py:18: in _section_text
+    return "\n".join(Path(path).read_text(encoding="utf-8") for path in files)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_d6_paper_sections.py:18: in <genexpr>
+    return "\n".join(Path(path).read_text(encoding="utf-8") for path in files)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\AppData\Roaming\kimi-desktop\daimon-bundle\runtime\python\cpython-3.12\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('paper/sections/experiments_realdata.tex'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'paper\\sections\\experiments_realdata.tex'
+
+..\AppData\Roaming\kimi-desktop\daimon-bundle\runtime\python\cpython-3.12\Lib\pathlib.py:1013: FileNotFoundError
+_______________ test_d7_elsevier_assets_exist_and_are_nonempty ________________
+
+    def test_d7_elsevier_assets_exist_and_are_nonempty():
+        _ensure_outputs()
+        required = [
+            "paper/elsevier/graph_cold_cas_realdata.tex",
+            "paper/elsevier/graph_cold_cas_realdata.pdf",
+            "paper/elsevier/references.bib",
+            "paper/elsevier/elsarticle.cls",
+            "paper/elsevier/build_elsevier.ps1",
+            "paper/elsevier/build_elsevier.sh",
+            "paper/elsevier/cover_letter_draft.md",
+        ]
+        for path in required:
+            item = Path(path)
+>           assert item.exists(), path
+E           AssertionError: paper/elsevier/graph_cold_cas_realdata.tex
+E           assert False
+E            +  where False = exists()
+E            +    where exists = WindowsPath('paper/elsevier/graph_cold_cas_realdata.tex').exists
+
+tests\test_d7_latex_assets.py:25: AssertionError
+___________ test_d7_figures_and_tables_are_embedded_from_d6_assets ____________
+
+    def test_d7_figures_and_tables_are_embedded_from_d6_assets():
+        _ensure_outputs()
+        for stem in [
+            "fig2_macro_f1_vs_noise_rate",
+            "fig3_err_retention",
+            "fig4_ablation",
+            "fig5_runtime_cost",
+        ]:
+>           assert Path(f"paper/elsevier/figures/{stem}.pdf").exists()
+E           AssertionError: assert False
+E            +  where False = exists()
+E            +    where exists = WindowsPath('paper/elsevier/figures/fig2_macro_f1_vs_noise_rate.pdf').exists
+E            +      where WindowsPath('paper/elsevier/figures/fig2_macro_f1_vs_noise_rate.pdf') = Path('paper/elsevier/figures/fig2_macro_f1_vs_noise_rate.pdf')
+
+tests\test_d7_latex_assets.py:39: AssertionError
+_____________ test_d7_references_have_no_todo_or_unknown_entries ______________
+
+    def test_d7_references_have_no_todo_or_unknown_entries():
+        _ensure_outputs()
+>       refs = Path("paper/elsevier/references.bib").read_text(encoding="utf-8", errors="ignore")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_d7_latex_assets.py:82: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\AppData\Roaming\kimi-desktop\daimon-bundle\runtime\python\cpython-3.12\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('paper/elsevier/references.bib'), mode = 'r', buffering = -1
+encoding = 'utf-8', errors = 'ignore', newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'paper\\elsevier\\references.bib'
+
+..\AppData\Roaming\kimi-desktop\daimon-bundle\runtime\python\cpython-3.12\Lib\pathlib.py:1013: FileNotFoundError
+___________ test_d7_manuscript_has_required_structure_and_datasets ____________
+
+    def test_d7_manuscript_has_required_structure_and_datasets():
+>       text = _ensure_d7_outputs()
+               ^^^^^^^^^^^^^^^^^^^^
+
+tests\test_d7_manuscript_content.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_d7_manuscript_content.py:11: in _ensure_d7_outputs
+    run_d7_assembly()
+src\paper\d7_assemble.py:73: in run_d7_assembly
+    _validate_scope(main)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+main =          dataset  reported_as  ... replacement_for cicids_train_dedup_removed
+0     cicids2017  CICIDS-2017  ...      ...              0
+1529   unsw_nb15    UNSW-NB15  ...             NaN                          0
+
+[1530 rows x 38 columns]
+
+    def _validate_scope(main: pd.DataFrame) -> None:
+        datasets = tuple(sorted(main["reported_as"].dropna().unique()))
+        if datasets != tuple(sorted(FORMAL_DATASETS)):
+>           raise ValueError(f"D7 formal datasets must be {FORMAL_DATASETS}, got {datasets}")
+E           ValueError: D7 formal datasets must be ('CICIDS-2017', 'CESNET-TLS-Year22'), got ('CESNET-TLS-Year22', 'CICIDS-2017', 'UNSW-NB15')
+
+src\paper\d7_assemble.py:169: ValueError
+____ test_d7_manuscript_contains_label_space_graph_cdm_and_weight_formula _____
+
+    def test_d7_manuscript_contains_label_space_graph_cdm_and_weight_formula():
+>       text = _ensure_d7_outputs()
+               ^^^^^^^^^^^^^^^^^^^^
+
+tests\test_d7_manuscript_content.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_d7_manuscript_content.py:11: in _ensure_d7_outputs
+    run_d7_assembly()
+src\paper\d7_assemble.py:73: in run_d7_assembly
+    _validate_scope(main)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+main =          dataset  reported_as  ... replacement_for cicids_train_dedup_removed
+0     cicids2017  CICIDS-2017  ...      ...              0
+1529   unsw_nb15    UNSW-NB15  ...             NaN                          0
+
+[1530 rows x 38 columns]
+
+    def _validate_scope(main: pd.DataFrame) -> None:
+        datasets = tuple(sorted(main["reported_as"].dropna().unique()))
+        if datasets != tuple(sorted(FORMAL_DATASETS)):
+>           raise ValueError(f"D7 formal datasets must be {FORMAL_DATASETS}, got {datasets}")
+E           ValueError: D7 formal datasets must be ('CICIDS-2017', 'CESNET-TLS-Year22'), got ('CESNET-TLS-Year22', 'CICIDS-2017', 'UNSW-NB15')
+
+src\paper\d7_assemble.py:169: ValueError
+_______ test_d7_manuscript_declares_baseline_scope_without_overclaiming _______
+
+    def test_d7_manuscript_declares_baseline_scope_without_overclaiming():
+>       text = _ensure_d7_outputs()
+               ^^^^^^^^^^^^^^^^^^^^
+
+tests\test_d7_manuscript_content.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_d7_manuscript_content.py:11: in _ensure_d7_outputs
+    run_d7_assembly()
+src\paper\d7_assemble.py:73: in run_d7_assembly
+    _validate_scope(main)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+main =          dataset  reported_as  ... replacement_for cicids_train_dedup_removed
+0     cicids2017  CICIDS-2017  ...      ...              0
+1529   unsw_nb15    UNSW-NB15  ...             NaN                          0
+
+[1530 rows x 38 columns]
+
+    def _validate_scope(main: pd.DataFrame) -> None:
+        datasets = tuple(sorted(main["reported_as"].dropna().unique()))
+        if datasets != tuple(sorted(FORMAL_DATASETS)):
+>           raise ValueError(f"D7 formal datasets must be {FORMAL_DATASETS}, got {datasets}")
+E           ValueError: D7 formal datasets must be ('CICIDS-2017', 'CESNET-TLS-Year22'), got ('CESNET-TLS-Year22', 'CICIDS-2017', 'UNSW-NB15')
+
+src\paper\d7_assemble.py:169: ValueError
+_____ test_d7_text_outputs_do_not_report_generated_or_placeholder_results _____
+
+    def test_d7_text_outputs_do_not_report_generated_or_placeholder_results():
+        forbidden = [
+            "synthetic result",
+            "synthetic dataset",
+            "deterministic soc",
+            "draft placeholder",
+            "to be refreshed later",
+            "MALTLS-22 results",
+            "OpTC results",
+        ]
+>       for path in _text_paths():
+                    ^^^^^^^^^^^^^
+
+tests\test_d7_no_forbidden_claims.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_d7_no_forbidden_claims.py:12: in _text_paths
+    _ensure_outputs()
+tests\test_d7_no_forbidden_claims.py:8: in _ensure_outputs
+    run_d7_assembly()
+src\paper\d7_assemble.py:73: in run_d7_assembly
+    _validate_scope(main)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+main =          dataset  reported_as  ... replacement_for cicids_train_dedup_removed
+0     cicids2017  CICIDS-2017  ...      ...              0
+1529   unsw_nb15    UNSW-NB15  ...             NaN                          0
+
+[1530 rows x 38 columns]
+
+    def _validate_scope(main: pd.DataFrame) -> None:
+        datasets = tuple(sorted(main["reported_as"].dropna().unique()))
+        if datasets != tuple(sorted(FORMAL_DATASETS)):
+>           raise ValueError(f"D7 formal datasets must be {FORMAL_DATASETS}, got {datasets}")
+E           ValueError: D7 formal datasets must be ('CICIDS-2017', 'CESNET-TLS-Year22'), got ('CESNET-TLS-Year22', 'CICIDS-2017', 'UNSW-NB15')
+
+src\paper\d7_assemble.py:169: ValueError
+_______________ test_d7_manuscript_avoids_overclaiming_language _______________
+
+    def test_d7_manuscript_avoids_overclaiming_language():
+        forbidden_claims = [
+            "state-of-the-art dominance",
+            "near-perfect",
+            "massive gain",
+            "causal proof",
+            "beats all baselines",
+            "full archive result",
+        ]
+>       manuscript = Path("paper/elsevier/graph_cold_cas_realdata.tex").read_text(encoding="utf-8", errors="ignore")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_d7_no_forbidden_claims.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\AppData\Roaming\kimi-desktop\daimon-bundle\runtime\python\cpython-3.12\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('paper/elsevier/graph_cold_cas_realdata.tex'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = 'ignore', newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'paper\\elsevier\\graph_cold_cas_realdata.tex'
+
+..\AppData\Roaming\kimi-desktop\daimon-bundle\runtime\python\cpython-3.12\Lib\pathlib.py:1013: FileNotFoundError
+______________ test_d8_manuscript_has_submission_grade_structure ______________
+
+    def test_d8_manuscript_has_submission_grade_structure():
+>       text = _ensure_d8()
+               ^^^^^^^^^^^^
+
+tests\test_d8_manuscript_hardening.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_d8_manuscript_hardening.py:16: in _ensure_d8
+    return MANUSCRIPT.read_text(encoding="utf-8")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\AppData\Roaming\kimi-desktop\daimon-bundle\runtime\python\cpython-3.12\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('paper/elsevier/graph_cold_cas_realdata.tex'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'paper\\elsevier\\graph_cold_cas_realdata.tex'
+
+..\AppData\Roaming\kimi-desktop\daimon-bundle\runtime\python\cpython-3.12\Lib\pathlib.py:1013: FileNotFoundError
+____________ test_d8_manuscript_keeps_scope_and_results_traceable _____________
+
+    def test_d8_manuscript_keeps_scope_and_results_traceable():
+>       text = _ensure_d8()
+               ^^^^^^^^^^^^
+
+tests\test_d8_manuscript_hardening.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_d8_manuscript_hardening.py:16: in _ensure_d8
+    return MANUSCRIPT.read_text(encoding="utf-8")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\AppData\Roaming\kimi-desktop\daimon-bundle\runtime\python\cpython-3.12\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('paper/elsevier/graph_cold_cas_realdata.tex'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'paper\\elsevier\\graph_cold_cas_realdata.tex'
+
+..\AppData\Roaming\kimi-desktop\daimon-bundle\runtime\python\cpython-3.12\Lib\pathlib.py:1013: FileNotFoundError
+________________ test_d8_audit_and_pdf_are_ready_for_v1_review ________________
+
+    def test_d8_audit_and_pdf_are_ready_for_v1_review():
+>       _ensure_d8()
+
+tests\test_d8_manuscript_hardening.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_d8_manuscript_hardening.py:16: in _ensure_d8
+    return MANUSCRIPT.read_text(encoding="utf-8")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\AppData\Roaming\kimi-desktop\daimon-bundle\runtime\python\cpython-3.12\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('paper/elsevier/graph_cold_cas_realdata.tex'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'paper\\elsevier\\graph_cold_cas_realdata.tex'
+
+..\AppData\Roaming\kimi-desktop\daimon-bundle\runtime\python\cpython-3.12\Lib\pathlib.py:1013: FileNotFoundError
+________________ test_d8_references_correct_known_d7_metadata _________________
+
+    def test_d8_references_correct_known_d7_metadata():
+>       _ensure_d8()
+
+tests\test_d8_manuscript_hardening.py:92: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_d8_manuscript_hardening.py:16: in _ensure_d8
+    return MANUSCRIPT.read_text(encoding="utf-8")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\AppData\Roaming\kimi-desktop\daimon-bundle\runtime\python\cpython-3.12\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('paper/elsevier/graph_cold_cas_realdata.tex'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'paper\\elsevier\\graph_cold_cas_realdata.tex'
+
+..\AppData\Roaming\kimi-desktop\daimon-bundle\runtime\python\cpython-3.12\Lib\pathlib.py:1013: FileNotFoundError
+_______ test_d8_no_forbidden_overclaiming_or_generated_result_language ________
+
+    def test_d8_no_forbidden_overclaiming_or_generated_result_language():
+>       text = _ensure_d8()
+               ^^^^^^^^^^^^
+
+tests\test_d8_manuscript_hardening.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_d8_manuscript_hardening.py:16: in _ensure_d8
+    return MANUSCRIPT.read_text(encoding="utf-8")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\AppData\Roaming\kimi-desktop\daimon-bundle\runtime\python\cpython-3.12\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('paper/elsevier/graph_cold_cas_realdata.tex'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'paper\\elsevier\\graph_cold_cas_realdata.tex'
+
+..\AppData\Roaming\kimi-desktop\daimon-bundle\runtime\python\cpython-3.12\Lib\pathlib.py:1013: FileNotFoundError
+__________________ test_d8_reproducibility_entrypoint_exists __________________
+
+    def test_d8_reproducibility_entrypoint_exists():
+>       _ensure_d8()
+
+tests\test_d8_manuscript_hardening.py:120: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_d8_manuscript_hardening.py:16: in _ensure_d8
+    return MANUSCRIPT.read_text(encoding="utf-8")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\AppData\Roaming\kimi-desktop\daimon-bundle\runtime\python\cpython-3.12\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('paper/elsevier/graph_cold_cas_realdata.tex'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'paper\\elsevier\\graph_cold_cas_realdata.tex'
+
+..\AppData\Roaming\kimi-desktop\daimon-bundle\runtime\python\cpython-3.12\Lib\pathlib.py:1013: FileNotFoundError
+______ test_experiment_gate_does_not_reintroduce_generated_result_paths _______
+
+    def test_experiment_gate_does_not_reintroduce_generated_result_paths():
+        root = Path(__file__).resolve().parents[1]
+        paths = [root / "src" / "experiments" / "d5.py", root / "src" / "experiments" / "smoke_realdata.py"]
+        blocked_terms = ["syn" + "thetic", "fall" + "back", "emul" + "ation", "draft " + "placeholder"]
+    
+        for path in paths:
+            text = path.read_text(encoding="utf-8").lower()
+            for term in blocked_terms:
+>               assert term not in text
+E               assert 'fallback' not in '"""d5 real-...    main()\n'
+E                 
+E                 'fallback' is contained here:
+E                   ded: any, fallback: str, configs_dir: path) -> str:
+E                 ?           ++++++++
+E                       """p5-c6 env-first data-path resolution.
+E                   
+E                       ``graphcold_data_root`` (or legacy ``graph_cold_data_root``) overrides the...
+E                 
+E                 ...Full output truncated (878 lines hidden), use '-vv' to show
+
+tests\test_smoke_realdata_gate.py:57: AssertionError
+============================== warnings summary ===============================
+tests/test_baseline_confident_learning.py::test_cl_filtering_uses_noisy_labels_and_returns_valid_mask
+tests/test_baseline_confident_learning.py::test_cl_filtering_is_deterministic_for_fixed_seed
+tests/test_baseline_confident_learning.py::test_cl_filtering_is_deterministic_for_fixed_seed
+tests/test_baseline_mcre_morse.py::test_morse_is_deterministic_and_records_unlabeled_split
+tests/test_baseline_mcre_morse.py::test_morse_is_deterministic_and_records_unlabeled_split
+  C:\Users\g14370\graph-cold\.venv\Lib\site-packages\sklearn\linear_model\_stochastic_gradient.py:741: ConvergenceWarning: Maximum number of iteration reached before convergence. Consider increasing max_iter to improve the fit.
+    warnings.warn(
+
+tests/test_cold_smoke.py::test_cold_smoke_runs_end_to_end_on_small_maltls_sample
+  C:\Users\g14370\graph-cold\.venv\Lib\site-packages\joblib\externals\loky\backend\context.py:131: UserWarning: Could not find the number of physical cores for the following reason:
+  [WinError 2] 系统找不到指定的文件。
+  Returning the number of logical cores instead. You can silence this warning by setting LOKY_MAX_CPU_COUNT to the number of cores you want to use.
+    warnings.warn(
+
+tests/test_stat_tests.py::test_paired_summary_uses_seed_matched_pairs
+tests/test_stat_tests.py::test_grouped_paired_summary_reports_overall_and_groups
+tests/test_stat_tests.py::test_grouped_paired_summary_reports_overall_and_groups
+tests/test_stat_tests.py::test_grouped_paired_summary_reports_overall_and_groups
+tests/test_stat_tests.py::test_grouped_paired_summary_reports_overall_and_groups
+tests/test_stat_tests.py::test_grouped_paired_summary_reports_overall_and_groups
+tests/test_stat_tests.py::test_grouped_paired_summary_reports_overall_and_groups
+tests/test_stat_tests.py::test_scenario_level_paired_summary_aggregates_over_seeds
+  C:\Users\g14370\graph-cold\.venv\Lib\site-packages\scipy\stats\_axis_nan_policy.py:431: RuntimeWarning: Precision loss occurred in moment calculation due to catastrophic cancellation. This occurs when the data are nearly identical. Results may be unreliable.
+    return hypotest_fun_in(*args, **kwds)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_d11_no_overclaiming.py::test_d11_final_manuscript_and_package_do_not_use_forbidden_overclaiming_terms
+FAILED tests/test_d11_no_overclaiming.py::test_d11_final_manuscript_has_no_local_windows_paths
+FAILED tests/test_d11_risk_patch.py::test_d11_mandatory_risk_patch_present_in_tex_and_pdf_compiles
+FAILED tests/test_d6_paper_sections.py::test_paper_sections_exist_and_use_correct_dataset_names
+FAILED tests/test_d6_paper_sections.py::test_paper_sections_report_sample_policy_and_do_not_claim_unavailable_results
+FAILED tests/test_d7_latex_assets.py::test_d7_elsevier_assets_exist_and_are_nonempty
+FAILED tests/test_d7_latex_assets.py::test_d7_figures_and_tables_are_embedded_from_d6_assets
+FAILED tests/test_d7_latex_assets.py::test_d7_references_have_no_todo_or_unknown_entries
+FAILED tests/test_d7_manuscript_content.py::test_d7_manuscript_has_required_structure_and_datasets
+FAILED tests/test_d7_manuscript_content.py::test_d7_manuscript_contains_label_space_graph_cdm_and_weight_formula
+FAILED tests/test_d7_manuscript_content.py::test_d7_manuscript_declares_baseline_scope_without_overclaiming
+FAILED tests/test_d7_no_forbidden_claims.py::test_d7_text_outputs_do_not_report_generated_or_placeholder_results
+FAILED tests/test_d7_no_forbidden_claims.py::test_d7_manuscript_avoids_overclaiming_language
+FAILED tests/test_d8_manuscript_hardening.py::test_d8_manuscript_has_submission_grade_structure
+FAILED tests/test_d8_manuscript_hardening.py::test_d8_manuscript_keeps_scope_and_results_traceable
+FAILED tests/test_d8_manuscript_hardening.py::test_d8_audit_and_pdf_are_ready_for_v1_review
+FAILED tests/test_d8_manuscript_hardening.py::test_d8_references_correct_known_d7_metadata
+FAILED tests/test_d8_manuscript_hardening.py::test_d8_no_forbidden_overclaiming_or_generated_result_language
+FAILED tests/test_d8_manuscript_hardening.py::test_d8_reproducibility_entrypoint_exists
+FAILED tests/test_smoke_realdata_gate.py::test_experiment_gate_does_not_reintroduce_generated_result_paths
+20 failed, 205 passed, 3 skipped, 14 warnings in 124.91s (0:02:04)

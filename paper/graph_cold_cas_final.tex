@@ -39,23 +39,32 @@ whether lifting it to a multi-view graph and replacing hard deletion with
 detection. Our study makes three contributions grounded in reproducible,
 real-data experiments on CICIDS-2017, CESNET-TLS-Year22, and UNSW-NB15.
 First, we show that a label-space graph consistency diagnostic (Graph-CDM) built
-over host, IP, temporal, and where-available process views yields a modest but
+over host, IP, temporal, and where-available behavioral views yields a modest but
 statistically significant aggregate Macro-F1 improvement over the CoLD baseline
-(Holm-corrected $p<0.05$ on all three datasets), with the gain concentrated where
-graph views carry discriminative structure.
-Second, and most importantly for operations, we find that evidence-preserving
+(Holm-corrected $p<0.05$ on all three datasets; up to $+0.11$ Macro-F1 on
+CICIDS-2017 but $\leq+0.01$ on the other two datasets under the final protocol),
+with the gain concentrated where graph views carry discriminative structure.
+Second, within a shared pipeline, we find that evidence-preserving
 soft weighting is statistically indistinguishable from hard deletion on aggregate
 Macro-F1, yet significantly improves \emph{rare/tail attack-class} Macro-F1 under
 high asymmetric label noise ($\Delta$Macro-F1 $=+0.073$, $+0.022$, $+0.040$ on
-CICIDS/CESNET/UNSW; Holm $p<10^{-4}$; Cohen's $d_z\in[0.92,1.29]$), at no
-aggregate cost. Third, we contribute a leakage audit showing that naive graph
+CICIDS/CESNET/UNSW; Holm $p<10^{-4}$; Cohen's $d_z\in[0.91,1.29]$), at no
+aggregate cost. Benchmarked under the identical protocol, an external Confident
+Learning anchor outperforms our weighting on aggregate and tail metrics on all
+three datasets, while full Co-Teaching collapses on tail classes---confirming
+empirically that deletion- and forgetting-based mechanisms can sacrifice
+rare-attack evidence unless the noise diagnostic is precise. Third, we contribute
+a leakage audit showing that naive graph
 denoising can be dramatically inflated by duplicate records (24\% exact duplicates
 in CICIDS-2017) and by any use of clean-label signal; removing these collapses an
 apparent $+28$ percentage-point advantage to a defensible $+6.7$ points. We
-release the audit, the graph-informativeness diagnostic that predicts when the
-approach helps, and the full reproducibility package. The result is a bounded,
-honest claim: evidence-preserving retention is a targeted remedy for rare-attack
-evidence loss under label noise, not a universal accuracy improvement.
+release the audit, the graph-informativeness diagnostic whose scores are
+consistent with when the approach helps, and the full reproducibility package.
+The result is a bounded,
+honest claim: evidence-preserving retention is a mechanism-level remedy for
+rare-attack evidence loss within a shared pipeline, not a universal accuracy
+improvement; confident-learning-precision pruning is the performance bar that
+graph-based denoising must still clear.
 \end{abstract}
 
 \begin{keyword}
@@ -102,16 +111,21 @@ security are easy to inflate and must be audited.
 \paragraph{Contributions.}
 \begin{enumerate}
 \item A \emph{label-space} multi-view graph consistency diagnostic (Graph-CDM)
-that extends CoLD to host/IP/temporal (and, where available, process) views and
+that extends CoLD to host/IP/temporal (and, where available, behavioral) views and
 delivers a modest but Holm-significant aggregate Macro-F1 gain over CoLD on three
 real datasets (Section~\ref{sec:res-aggregate}).
 \item An \emph{evidence-preserving soft weighting} rule that is
 indistinguishable from hard deletion on aggregate accuracy yet significantly
 improves rare/tail attack-class Macro-F1 under high asymmetric noise
-(Section~\ref{sec:res-tail})—a targeted, operationally meaningful benefit.
+(Section~\ref{sec:res-tail})—a mechanism-level benefit within the shared
+pipeline. Benchmarked under the identical protocol, external anchors bound this
+benefit from both sides: confident-learning pruning sets a higher performance
+bar on every dataset, while full co-teaching's forgetting discards the rare
+classes outright.
 \item A \emph{leakage audit} and a \emph{graph-informativeness diagnostic}: we
 quantify duplicate- and oracle-driven inflation, and show that a per-dataset
-neighborhood-homophily measure predicts when the graph helps
+neighborhood-homophily measure is consistent with when the graph helps (three
+datasets; descriptive, not inferential)
 (Sections~\ref{sec:res-leak}--\ref{sec:res-info}).
 \end{enumerate}
 We deliberately bound our claims. Graph-CoLD is not a universal accuracy
@@ -303,10 +317,12 @@ see Table~\ref{tab:data}).}
 Views are built from semantically related feature blocks over the training nodes:
 a \emph{host} view links samples sharing endpoint identifiers; an \emph{IP} view
 uses communication/flow statistics, ports, protocol and TLS metadata; a
-\emph{temporal} view links samples within a time window; a \emph{process} view is
-used only where behavioral fields exist. Support is part of the reproducible
+\emph{temporal} view links samples within a time window; a \emph{behavioral} view
+groups service, protocol, port-state, and related behavioral feature blocks
+(it is a feature-block view, not host-process lineage) and is used only where such
+fields exist. Support is part of the reproducible
 dataset contract: CICIDS-2017 activates host/IP/temporal, CESNET-TLS-Year22
-activates IP/temporal, and UNSW-NB15 activates temporal/process. Threat-intelligence
+activates IP/temporal, and UNSW-NB15 activates temporal/behavioral. Threat-intelligence
 views are disabled when the fields are absent. Crucially, edges never cross the
 train/test split, and (Section~\ref{sec:res-leak}) exact/near-duplicate edges are
 removed.
@@ -440,7 +456,7 @@ Dataset & Classes & Sample policy & Active views \\
 \midrule
 CICIDS-2017 & 11 & post-filter, exact-dedup & host/IP/temporal \\
 CESNET-TLS-Year22 & 25 & audit window & IP/temporal \\
-UNSW-NB15 & 9 & partition (no Worms) & temporal/process \\
+UNSW-NB15 & 9 & partition (no Worms) & temporal/behavioral \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -463,9 +479,16 @@ the reproduction commands of \texttt{reports/p2f\_tighten.md}.
 \subsection{Baselines and metrics}
 We compare Graph-CoLD (soft and semi-supervised variants) with the aligned CoLD
 baseline and the \texttt{ablation\_hard} deletion variant across the
-Tables~\ref{tab:main}--\ref{tab:tail} result matrix. Additional purification
+Tables~\ref{tab:main}--\ref{tab:tail} result matrix. Two external noisy-label
+anchors were run under the \emph{identical} P2f protocol (same audit windows,
+splits, seeds, and noise): Confident Learning (cleanlab \texttt{find\_label\_issues}
+with a shared-budget ExtraTrees head) and a full Co-Teaching implementation
+(dual MLPs with per-batch small-loss co-exchange and a forget-rate schedule
+tracking the true injected rate), recorded in
+\texttt{results/p5\_external\_baselines.csv} and compared in
+Section~\ref{sec:res-tail}. Additional purification
 methods (MCRe, MORSE, FINE, Decoupling, and Co-Teaching-lite, a lightweight
-approximation rather than a full re-implementation of Han et al.) were evaluated
+approximation superseded by the full implementation above) were evaluated
 under an earlier protocol. They were not re-run under the P2f clean-deduplication
 protocol and are therefore excluded from Tables~\ref{tab:main}--\ref{tab:tail}
 to avoid mixing incompatible result regimes; the MCRe/MORSE fidelity caveat is
@@ -487,31 +510,39 @@ label-space diagnostic, not the weighting, drive aggregate accuracy.
 
 \begin{table}[t]
 \centering
-\caption{Per-dataset means under high asymmetric tail noise (rates 40/60/80\%,
-seeds 0--9). Source: \texttt{tables/table\_p2f\_summary.csv}.}
+\caption{Per-dataset mean$\pm$std under high asymmetric tail noise (rates 40/60/80\%,
+seeds 0--9; 30 scenarios per dataset). Sources: \texttt{tables/table\_p2f\_summary.csv}
+(Graph-CoLD family) and \texttt{results/p5\_external\_baselines.csv} (external anchors,
+same protocol). Best value per dataset and metric in bold.}
 \label{tab:main}
 \small
 \begin{tabular}{llccc}
 \toprule
 Dataset & Method & Macro-F1 & Tail-F1 & Tail-recall \\
 \midrule
-\multirow{4}{*}{CICIDS-2017}
- & CoLD          & 0.534 & 0.047 & 0.043 \\
- & ablation\_hard & 0.688 & 0.361 & 0.277 \\
- & Graph-CoLD-soft & \textbf{0.721} & \textbf{0.434} & \textbf{0.328} \\
- & Graph-CoLD-semisup & 0.687 & 0.357 & 0.272 \\
+\multirow{6}{*}{CICIDS-2017}
+ & CoLD          & 0.534$\pm$0.039 & 0.047$\pm$0.070 & 0.043$\pm$0.065 \\
+ & ablation\_hard & 0.688$\pm$0.087 & 0.361$\pm$0.193 & 0.277$\pm$0.173 \\
+ & Graph-CoLD-soft & 0.721$\pm$0.086 & 0.434$\pm$0.191 & 0.328$\pm$0.180 \\
+ & Graph-CoLD-semisup & 0.687$\pm$0.093 & 0.357$\pm$0.206 & 0.272$\pm$0.181 \\
+ & Confident-Learning & \textbf{0.769$\pm$0.048} & \textbf{0.605$\pm$0.103} & \textbf{0.517$\pm$0.112} \\
+ & Co-Teaching & 0.567$\pm$0.071 & 0.118$\pm$0.152 & 0.128$\pm$0.171 \\
 \midrule
-\multirow{4}{*}{CESNET-TLS-Year22}
- & CoLD          & 0.658 & 0.411 & 0.306 \\
- & ablation\_hard & 0.680 & 0.453 & 0.331 \\
- & Graph-CoLD-soft & \textbf{0.692} & \textbf{0.475} & \textbf{0.344} \\
- & Graph-CoLD-semisup & 0.679 & 0.450 & 0.327 \\
+\multirow{6}{*}{CESNET-TLS-Year22}
+ & CoLD          & 0.658$\pm$0.130 & 0.411$\pm$0.247 & 0.306$\pm$0.211 \\
+ & ablation\_hard & 0.680$\pm$0.132 & 0.453$\pm$0.249 & 0.331$\pm$0.218 \\
+ & Graph-CoLD-soft & 0.692$\pm$0.120 & 0.475$\pm$0.227 & 0.344$\pm$0.204 \\
+ & Graph-CoLD-semisup & 0.679$\pm$0.129 & 0.450$\pm$0.243 & 0.327$\pm$0.212 \\
+ & Confident-Learning & \textbf{0.805$\pm$0.076} & \textbf{0.708$\pm$0.136} & \textbf{0.628$\pm$0.159} \\
+ & Co-Teaching & 0.488$\pm$0.152 & 0.179$\pm$0.258 & 0.181$\pm$0.262 \\
 \midrule
-\multirow{4}{*}{UNSW-NB15}
- & CoLD          & 0.456 & 0.096 & 0.187 \\
- & ablation\_hard & 0.471 & 0.132 & 0.205 \\
- & Graph-CoLD-soft & \textbf{0.485} & \textbf{0.173} & \textbf{0.229} \\
- & Graph-CoLD-semisup & 0.469 & 0.130 & 0.194 \\
+\multirow{6}{*}{UNSW-NB15}
+ & CoLD          & 0.456$\pm$0.032 & 0.096$\pm$0.068 & 0.187$\pm$0.146 \\
+ & ablation\_hard & 0.471$\pm$0.035 & 0.132$\pm$0.077 & 0.205$\pm$0.128 \\
+ & Graph-CoLD-soft & 0.485$\pm$0.033 & 0.173$\pm$0.078 & 0.229$\pm$0.120 \\
+ & Graph-CoLD-semisup & 0.469$\pm$0.033 & 0.130$\pm$0.074 & 0.194$\pm$0.119 \\
+ & Confident-Learning & \textbf{0.499$\pm$0.026} & \textbf{0.254$\pm$0.085} & \textbf{0.317$\pm$0.123} \\
+ & Co-Teaching & 0.419$\pm$0.036 & 0.055$\pm$0.080 & 0.120$\pm$0.178 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -580,7 +611,7 @@ deletion (per-scenario $\Delta$ near zero, not significant). But on rare/tail
 attack classes, soft weighting significantly outperforms hard deletion
 (Table~\ref{tab:tail}): $\Delta$Tail-F1 $=+0.073,+0.022,+0.040$ on
 CICIDS/CESNET/UNSW, all Holm-significant at $p<10^{-4}$ with large effect sizes
-($d_z=1.28,0.92,1.29$), and with no significant aggregate-Macro-F1 regression.
+($d_z=1.28,0.91,1.29$), and with no significant aggregate-Macro-F1 regression.
 Figure~\ref{fig:tail} shows the effect is stable across noise rates. This is the
 operational point: hard deletion removes clean rare-attack evidence flagged as
 suspicious by the diagnostic; soft weighting keeps it at reduced weight, and the
@@ -598,7 +629,7 @@ asymmetric tail noise ($n=30$ scenarios/dataset). Source:
 Dataset & $\Delta$Tail-F1 & Holm $p$ & Cohen's $d_z$ & Aggregate reg.? \\
 \midrule
 CICIDS-2017 & $+0.0731$ & $1.5\times10^{-7}$ & $1.28$ & none \\
-CESNET-TLS-Year22 & $+0.0218$ & $3.7\times10^{-5}$ & $0.92$ & none \\
+CESNET-TLS-Year22 & $+0.0218$ & $3.7\times10^{-5}$ & $0.91$ & none \\
 UNSW-NB15 & $+0.0405$ & $9.6\times10^{-8}$ & $1.29$ & none \\
 \bottomrule
 \end{tabular}
@@ -622,6 +653,58 @@ reported in \texttt{tables/table\_p2f\_summary.csv} and
 \texttt{reports/p2f\_tighten.md}.} we rely solely on test-set tail-F1 for all
 headline comparisons.
 
+\paragraph{External anchors under the identical protocol.}
+Table~\ref{tab:external} places two external noisy-label methods, run under the
+identical P2f protocol (same audit windows, splits, seeds, and injected noise),
+against Graph-CoLD-soft with scenario-paired tests. The ordering is consistent
+across datasets. Confident Learning, a precise probabilistic pruner that removes
+only 7--24\% of training rows, significantly outperforms Graph-CoLD-soft on
+aggregate and tail metrics on all three datasets. The evidence-preserving
+weighting in turn outperforms hard deletion (Table~\ref{tab:tail}). Full
+Co-Teaching collapses on tail classes (mean Tail-F1 $\approx 0$ at 60--80\%
+noise on every dataset; \texttt{tables/table\_p5\_tail\_by\_rate.csv}), because
+its small-loss forgetting systematically discards the rare classes it should
+protect. Two lessons follow. First, the operational motivation of this study is
+confirmed empirically: deletion- and forgetting-based mechanisms can sacrifice
+rare-attack evidence (Co-Teaching) unless the diagnostic is precise (Confident
+Learning). Second, under the injected tail$\to$benign noise model, precise
+pruning beats soft retention, because down-weighted flipped samples still teach
+the classifier that tail features indicate benign traffic. We therefore scope
+the evidence-preservation claim to the mechanism level---within the shared
+pipeline, soft weighting recovers rare classes that hard deletion loses---and we
+identify Confident Learning as the performance bar that graph-based denoising
+must clear; combining confident-learning-precision pruning with
+graph-structured diagnostics is future work. Per-noise-rate tail-F1 breakdowns
+for all methods are reported in \texttt{tables/table\_p5\_tail\_by\_rate.csv}.
+
+\begin{table}[t]
+\centering
+\caption{External anchors vs.\ Graph-CoLD-soft under the identical P2f protocol:
+scenario-paired mean differences ($n=30$ per dataset; positive $=$ external
+method is better). All deltas shown are Holm-significant at $p<0.05$ in the
+stated direction (Confident Learning above, Co-Teaching below Graph-CoLD-soft).
+Source: \texttt{tables/table\_p5\_external\_tests.csv}.}
+\label{tab:external}
+\small
+\begin{tabular}{llccc}
+\toprule
+Dataset & Method & $\Delta$Macro-F1 & $\Delta$Tail-F1 & $\Delta$Tail-recall \\
+\midrule
+\multirow{2}{*}{CICIDS-2017}
+ & Confident-Learning & $+0.048$ & $+0.171$ & $+0.189$ \\
+ & Co-Teaching & $-0.155$ & $-0.316$ & $-0.201$ \\
+\midrule
+\multirow{2}{*}{CESNET-TLS-Year22}
+ & Confident-Learning & $+0.114$ & $+0.234$ & $+0.283$ \\
+ & Co-Teaching & $-0.204$ & $-0.296$ & $-0.163$ \\
+\midrule
+\multirow{2}{*}{UNSW-NB15}
+ & Confident-Learning & $+0.014$ & $+0.081$ & $+0.089$ \\
+ & Co-Teaching & $-0.066$ & $-0.118$ & $-0.109$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \subsection{RQ3: A leakage audit prevents inflated claims}
 \label{sec:res-leak}
 Our initial pipeline reported a $\sim\!28$-point CICIDS advantage with a curve that
@@ -632,16 +715,23 @@ construction inflates results. We verified zero train/test edge crossings, remov
 exact and near-duplicate edges, and eliminated the clean-label paths (enforced by a
 regression test). The apparent advantage collapses to $+6.7$ points on CICIDS,
 $+0.3$ on CESNET, and a slight $-1.3$ on UNSW in the audited comparison
-(\texttt{reports/p2c\_leakage\_audit.md}). We report this because graph denoising
+(\texttt{reports/p2c\_leakage\_audit.md}). These audit deltas quantify the
+magnitude of the inflation and were measured under the earlier P2c audit protocol
+(a 3,000/8,000 stratified audit sample for CICIDS and the D5.5 frozen matrix for
+CESNET/UNSW); they aggregate differently from, and are not directly comparable to,
+the final P2f result matrix in Tables~\ref{tab:main}--\ref{tab:tail}
+(\texttt{reports/p2f\_tighten.md}). We report this because graph denoising
 in security is unusually susceptible to such inflation.
 
-\subsection{RQ4: Graph informativeness predicts when the method helps}
+\subsection{RQ4: Graph informativeness is consistent with when the method helps}
 \label{sec:res-info}
-A per-dataset neighborhood-homophily / view-coverage diagnostic correlates with
+A per-dataset neighborhood-homophily / view-coverage diagnostic is directionally
+consistent with
 Graph-CoLD's margin: CICIDS (rich host/IP/temporal views) shows the largest gain,
-CESNET sits near a performance ceiling, and UNSW (temporal/process only) shows the
+CESNET sits near a performance ceiling, and UNSW (temporal/behavioral only) shows the
 smallest—occasionally negative—margin
 (Figure~\ref{fig:info}, \url{tables/table_p2d_graph_informativeness.csv}).
+With only three datasets this pattern is descriptive, not inferential.
 This turns the UNSW result into an informative boundary condition rather than a
 failure: when views lack structural signal, the graph diagnostic adds little.
 
@@ -649,21 +739,23 @@ failure: when views lack structural signal, the graph diagnostic adds little.
 \centering
 \includegraphics[width=0.9\linewidth]{fig_p2c_informativeness_margin.pdf}
 \caption{Graph informativeness vs.\ Graph-CoLD margin over CoLD. Higher
-neighborhood homophily and view coverage predict larger gains.}
+neighborhood homophily and view coverage are directionally consistent with
+larger gains (three datasets; descriptive pattern, not inferential).}
 \label{fig:info}
 \end{figure}
 
 \subsection{RQ5: Cost}
 Graph-CoLD's overhead is moderate: mean runtime is comparable to CoLD and memory
-is lower than the strong purification baselines. Evidence preservation adds
+is lower than the strong purification baselines (the runtime and memory figures
+are measured under the earlier D5.5-protocol runs recorded in
+\texttt{results/runtime.json}; the relative pattern, not the absolute numbers, is
+the claim). Evidence preservation adds
 negligible cost over hard deletion because it changes only the training weights.
 
 \section{Discussion}
 \label{sec:discuss}
 % <<P4-DISCUSSION>>
 % BLOCK D -> <<P4-DISCUSSION>>
-
-\subsection{Discussion}
 
 From an operational perspective, Graph-CoLD is most suitable for SOC scenarios
 where multiple telemetry sources provide partially consistent evidence. Examples
@@ -682,15 +774,28 @@ such as CESNET-TLS-Year22 under the evaluated protocol, naturally limit the
 observable improvement.
 
 A key methodological decision in this work is the avoidance of unfair
-state-of-the-art comparisons. Earlier experiments included additional
-purification and robust-training variants. However, these variants were not all
+state-of-the-art comparisons. Two external anchors---Confident Learning and a
+full Co-Teaching implementation---were therefore run under the identical
+leakage-audited protocol and are reported in Table~\ref{tab:external}, even
+though one of them outperforms our method on every dataset; that result is part
+of the evidence, not an inconvenience. Other purification and robust-training
+variants (MCRe, MORSE, FINE, Decoupling) were not all
 reimplemented under the final leakage-audited protocol. Mixing results obtained
 under different data-cleaning, duplication-removal, and evaluation settings
-would create an unreliable comparison. Therefore, the final evaluation uses
-aligned baselines with identical data contracts, representation settings, and
-statistical protocols. A comprehensive comparison with all previous methods
+would create an unreliable comparison, so those methods remain excluded from
+the formal matrix. A comprehensive comparison with all previous methods
 requires faithful implementations or official code under a unified evaluation
 framework.
+
+The external-anchor ordering carries a practical lesson for SOC deployments.
+Confident Learning's precise pruning---removing only 7--24\% of rows---sets the
+performance bar under the injected noise model, while Co-Teaching's aggressive
+small-loss forgetting eliminates the rare attack classes almost entirely. The
+differentiator is not deletion versus retention but \emph{diagnostic precision}:
+an imprecise purifier sacrifices exactly the evidence an analyst needs, whether
+it deletes it (Co-Teaching) or down-weights it insufficiently (Graph-CoLD under
+tail$\to$benign flips). Combining confident-learning-precision pruning with
+graph-structured diagnostics is the natural next step.
 
 The leakage audit provides a broader methodological lesson for graph-based
 security machine learning. Graph models can unintentionally exploit duplicated
@@ -708,7 +813,9 @@ The results support a bounded but useful claim. A label-space graph diagnostic
 modestly improves noisy-label IDS over CoLD where views are informative, and—more
 distinctively—evidence-preserving weighting protects rare-attack evidence that
 hard deletion discards, improving tail-class detection under high asymmetric noise
-at no aggregate cost. In SOC terms, this matters precisely for the samples an
+at no aggregate cost \emph{within the shared pipeline}; under the same protocol,
+confident-learning pruning remains the stronger performer and marks the bar for
+future graph-based denoisers. In SOC terms, this matters precisely for the samples an
 analyst cannot afford to lose: rare or emerging attacks whose labels are most
 likely to be noisy. We deliberately avoid two overclaims that our own experiments
 do not support: a universal accuracy advantage (the aggregate gain is modest and
@@ -734,9 +841,13 @@ three-dataset P2f clean de-oracled protocol.
 \section{Limitations}
 \label{sec:limits}
 MALTLS-22 and OpTC are not evaluated (no verified license/provenance path).
-Process and threat-intelligence views are disabled where fields are absent. The
-aggregate accuracy contribution is modest and dataset-dependent; the distinctive
-contribution is rare-class evidence preservation. Full-archive and streaming
+Behavioral and threat-intelligence views are disabled where fields are absent. The
+aggregate accuracy contribution is modest and dataset-dependent; under the
+audited protocol, Confident Learning outperforms Graph-CoLD on aggregate and
+tail metrics on all three datasets, so the distinctive contribution is the
+leakage audit, the mechanism-level evidence-preservation finding, and the
+informativeness boundary analysis rather than state-of-the-art accuracy.
+Full-archive and streaming
 evaluations are left to future work.
 
 \section{Conclusion}
@@ -747,16 +858,29 @@ evidence-preserving weighting improve robustness. The honest answer is targeted:
 the graph diagnostic gives a modest, informativeness-dependent accuracy gain over
 CoLD, and evidence-preserving weighting significantly improves rare-attack tail-F1
 over hard deletion under high asymmetric noise at no aggregate cost across three
-real datasets. Alongside, we
+real datasets---while a confident-learning anchor, evaluated under the identical
+protocol, outperforms both, and full co-teaching sacrifices the rare classes
+outright. Alongside, we
 contribute a leakage audit and a graph-informativeness diagnostic that together
-explain when—and when not—graph denoising helps. We hope the audit is as useful to
-the community as the method.
+explain when—and when not—graph denoising helps. We hope the audit, and the
+audited external-baseline ordering, are as useful to the community as the method.
+
+%% ------------------------------------------------------------------
+\section*{Data availability}
+All three datasets are publicly available from their original providers:
+CIC-IDS-2017 from the Canadian Institute for Cybersecurity, University of New
+Brunswick; CESNET-TLS-Year22 from Zenodo (DOI: 10.5281/zenodo.10608607); and
+UNSW-NB15 from the University of New South Wales, Canberra. The derived
+artifacts required to reproduce our results---code, configuration files, frozen
+data-split manifests with content hashes, result tables, and figure-generation
+scripts---will be released in a public repository and archived at
+[REPO/DOI PLACEHOLDER] upon acceptance.
 
 %% ------------------------------------------------------------------
 \begin{thebibliography}{99}
 \bibitem{yang2026cold} S. Yang, X. Zheng, J. Li, J. Xu, E. C. H. Ngai,
-``CoLD: Collaborative label denoising framework for network intrusion detection,''
-in \emph{Proc. Network and Distributed System Security (NDSS) Symposium}, 2026,
+CoLD: Collaborative label denoising framework for network intrusion detection,
+in: Network and Distributed System Security (NDSS) Symposium, 2026,
 to appear. Available: \url{https://dx.doi.org/10.14722/ndss.2026.231950}
 \bibitem{arp2022dodont} D. Arp, et al., Dos and don'ts of machine learning in
 computer security, in: USENIX Security Symposium, 2022, pp. 3971--3988.
@@ -821,41 +945,41 @@ lines, Scientific Data 11 (2024) 1156.
 \bibitem{moustafa2015unsw} N. Moustafa, J. Slay, UNSW-NB15: A comprehensive data
 set for network intrusion detection systems, in: Military Communications and
 Information Systems Conference (MilCIS), 2015, pp. 1--6.
-\bibitem{guerra2022datasets} J. L. Guerra, C. Catania, E. Veas, ``Datasets are not
-enough: Challenges in labeling network traffic,'' \emph{Computers \& Security} 120
+\bibitem{guerra2022datasets} J. L. Guerra, C. Catania, E. Veas, Datasets are not
+enough: Challenges in labeling network traffic, Computers \& Security 120
 (2022) 102810.
-\bibitem{qing2023lowquality} Y. Qing et al., ``Low-quality training data only? A
-robust framework for detecting encrypted malicious network traffic,'' arXiv
+\bibitem{qing2023lowquality} Y. Qing et al., Low-quality training data only? A
+robust framework for detecting encrypted malicious network traffic, arXiv
 preprint arXiv:2309.04798, 2023.
-\bibitem{zhao2021enhancing} Z. Zhao et al., ``Enhancing robustness of on-line
-learning models on highly noisy data,'' IEEE TDSC 18(5) (2021) 2177--2192.
-\bibitem{wang2022feco} N. Wang et al., ``FeCo: Boosting intrusion detection
-capability in IoT networks via contrastive learning,'' in: IEEE INFOCOM, 2022,
+\bibitem{zhao2021enhancing} Z. Zhao et al., Enhancing robustness of on-line
+learning models on highly noisy data, IEEE TDSC 18(5) (2021) 2177--2192.
+\bibitem{wang2022feco} N. Wang et al., FeCo: Boosting intrusion detection
+capability in IoT networks via contrastive learning, in: IEEE INFOCOM, 2022,
 pp. 1409--1418.
-\bibitem{yue2022cleid} Y. Yue et al., ``Contrastive learning enhanced intrusion
-detection,'' IEEE TNSM 19(4) (2022) 4232--4247.
-\bibitem{liu2025deepdrac} Y. Liu et al., ``DeepDRAC: Disposition recommendation
-for alert clusters based on security event patterns,'' IEEE TIFS 20 (2025)
+\bibitem{yue2022cleid} Y. Yue et al., Contrastive learning enhanced intrusion
+detection, IEEE TNSM 19(4) (2022) 4232--4247.
+\bibitem{liu2025deepdrac} Y. Liu et al., DeepDRAC: Disposition recommendation
+for alert clusters based on security event patterns, IEEE TIFS 20 (2025)
 6443--6458.
-\bibitem{shon2023semisup} H. G. Shon, Y. Lee, M. Yoon, ``Semi-supervised alert
-filtering for network security,'' Electronics 12(23) (2023) 4755.
-\bibitem{wang2024alertagg} W. Wang et al., ``Transformer-based framework for
-alert aggregation and attack prediction in a multi-stage attack,'' \emph{Computers
-\& Security} 136 (2024) 103533.
-\bibitem{xia2021sample} X. Xia et al., ``Sample selection with uncertainty of
-losses for learning with noisy labels,'' arXiv preprint arXiv:2106.00445, 2021.
-\bibitem{liu2021metric} C. Liu et al., ``Noise-resistant deep metric learning with
-ranking-based instance selection,'' in: CVPR, 2021, pp. 6811--6820.
-\bibitem{yang2024recda} S. Yang et al., ``RecDA: Concept drift adaptation with
-representation enhancement for network intrusion detection,'' in: ACM SIGKDD,
+\bibitem{shon2023semisup} H. G. Shon, Y. Lee, M. Yoon, Semi-supervised alert
+filtering for network security, Electronics 12(23) (2023) 4755.
+\bibitem{wang2024alertagg} W. Wang et al., Transformer-based framework for
+alert aggregation and attack prediction in a multi-stage attack, Computers
+\& Security 136 (2024) 103533.
+\bibitem{xia2021sample} X. Xia et al., Sample selection with uncertainty of
+losses for learning with noisy labels, arXiv preprint arXiv:2106.00445, 2021.
+\bibitem{liu2021metric} C. Liu et al., Noise-resistant deep metric learning with
+ranking-based instance selection, in: CVPR, 2021, pp. 6811--6820.
+\bibitem{yang2024recda} S. Yang et al., RecDA: Concept drift adaptation with
+representation enhancement for network intrusion detection, in: ACM SIGKDD,
 2024, pp. 3818--3828.
-\bibitem{andresini2021insomnia} G. Andresini et al., ``Insomnia: Towards
-concept-drift robustness in network intrusion detection,'' in: ACM AISec, 2021,
+\bibitem{andresini2021insomnia} G. Andresini et al., Insomnia: Towards
+concept-drift robustness in network intrusion detection, in: ACM AISec, 2021,
 pp. 111--122.
 \bibitem{hynek2024zenodo} K. Hynek et al., CESNET-TLS-Year22 dataset, Zenodo
 record 10608607, 2024.
-\bibitem{moustafa2016unsw} N. Moustafa, J. Slay, ``The evaluation of network
-anomaly detection systems: UNSW-NB15,'' Information Security Journal 25(1--3)
+\bibitem{moustafa2016unsw} N. Moustafa, J. Slay, The evaluation of network
+anomaly detection systems: UNSW-NB15, Information Security Journal 25(1--3)
 (2016) 18--31.
 \end{thebibliography}
 
