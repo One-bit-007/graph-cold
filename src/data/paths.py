@@ -21,7 +21,7 @@ DATASET_RELATIVE_PATHS = {
 def get_data_root(data_root: str | Path | None = None, configs: str | Path = "configs") -> Path:
     if data_root:
         return Path(data_root)
-    env_root = os.environ.get("GRAPH_COLD_DATA_ROOT")
+    env_root = os.environ.get("GRAPHCOLD_DATA_ROOT") or os.environ.get("GRAPH_COLD_DATA_ROOT")
     if env_root:
         return Path(env_root)
     cfg = _paths_config(configs)

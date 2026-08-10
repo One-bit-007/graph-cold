@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this software or artifacts, please cite them as below."
+title: "Graph-CoLD: Graph-Diagnosed Collaborative Label Denoising for Network Intrusion Detection"
+authors:
+  - family-names: "TODO-FAMILY-NAME"
+    given-names: "TODO-GIVEN-NAME"
+    affiliation: "TODO-AFFILIATION"
+    # orcid: "https://orcid.org/XXXX-XXXX-XXXX-XXXX"
+version: rev-p5
+# doi: 10.5281/zenodo.TODO   # fill in after Zenodo archive
+# date-released: 2026-MM-DD  # fill in at publication
+url: "https://github.com/TODO-ORG/graph-cold"
+repository-code: "https://github.com/TODO-ORG/graph-cold"
+license: TODO-LICENSE
+preferred-citation:
+  type: article
+  title: "Graph-Diagnosed Collaborative Label Denoising for Network Intrusion Detection: A Leakage Audit and Mechanism-Level Re-evaluation"
+  authors:
+    - family-names: "TODO-FAMILY-NAME"
+      given-names: "TODO-GIVEN-NAME"
+  journal: "Computers & Security"
+  status: "submitted"
