@@ -132,3 +132,10 @@ All blocking human to-dos are now resolved:
 Per the P5 prompt, only the human author may authorize flipping
 `submission_ready` to true. With the above items resolved, that authorization
 is the single remaining action before upload to the C&S editorial system.
+
+**`submission_ready = true`** — authorized by the human author (Tianqi Guo,
+corresponding author) on 2026-08-10, 20:53 local time, after confirmation that
+author metadata, funding (none), the public repository, and the Zenodo DOIs
+are all in place. Remaining non-blocking items: license choice for
+`CITATION.cff`/GitHub, and co-author sign-off on the CRediT and
+competing-interest drafts.
