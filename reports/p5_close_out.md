@@ -56,7 +56,8 @@ with Plan A (honest repositioning) after CL was found to beat Graph-CoLD.
   `src/experiments/d5.py::_resolve_recorded_data_path`); verified that setting
   the variable resolves correctly and that unset behavior is unchanged.
   `paper/submission/reproducibility_export_plan.md` (include/exclude lists;
-  `h3c-ai-security/` explicitly excluded), `CITATION.cff` (author metadata
+  the untracked internal company document directory explicitly excluded),
+  `CITATION.cff` (author metadata
   placeholders), `paper/submission/zenodo_archive_readme.md`.
 - C7: `reproducibility/README.md` rewritten to match reality (stale
   `graph_cold_cas_submission.tex`, missing CSV/figure names, MALTLS-22/OpTC
@@ -96,10 +97,13 @@ and the text now treats them as such.
 
 ## Remaining human to-dos (block `submission_ready=true`)
 
-1. Fill in author metadata everywhere (manuscript front matter, `CITATION.cff`,
-   `paper/submission/*.md`).
+1. ~~Fill in author metadata~~ — DONE 2026-08-10 (five authors, front matter,
+   `CITATION.cff`, `paper/submission/*.md`; funding confirmed as none;
+   CRediT mapping and competing-interest disclosure marked for author sign-off).
 2. Execute `paper/submission/reproducibility_export_plan.md`: create the public
-   repo (exclude `h3c-ai-security/`), tag, archive on Zenodo, obtain DOI.
+   repo (exclude the untracked internal company document directory), tag,
+   archive on Zenodo, obtain DOI. A sanitized export tree has been prepared at
+   `workspace/graph-cold-public-export/` (0 internal-directory references).
 3. Replace `[REPO/DOI PLACEHOLDER]` in the tex and
    `paper/submission/data_availability.md`; recompile (2× pdflatex).
 4. Only then set `submission_ready=true`.

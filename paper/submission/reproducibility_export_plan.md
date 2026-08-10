@@ -26,7 +26,7 @@ not a judgment call.
 | Path | Reason |
 | --- | --- |
 | `.venv/` | Local virtual environment |
-| `h3c-ai-security/` | Internal company documents; untracked; must never be pushed or archived |
+| Internal company document directory (untracked) | Must never be pushed or archived |
 | `work/` | Scratch/intermediate outputs |
 | `data/` | Raw datasets (redistributable only from original providers) |
 | External data roots (`E:\graphcold-data`, anything under `GRAPHCOLD_DATA_ROOT`) | Raw datasets |
