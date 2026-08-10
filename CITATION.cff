@@ -30,8 +30,8 @@ authors:
 version: rev-p5
 # doi: 10.5281/zenodo.TODO   # fill in after Zenodo archive
 # date-released: 2026-MM-DD  # fill in at publication
-url: "https://github.com/TODO-ORG/graph-cold"
-repository-code: "https://github.com/TODO-ORG/graph-cold"
+url: "https://github.com/One-bit-007/graph-cold"
+repository-code: "https://github.com/One-bit-007/graph-cold"
 license: TODO-LICENSE
 preferred-citation:
   type: article
