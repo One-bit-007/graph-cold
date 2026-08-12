@@ -139,3 +139,13 @@ author metadata, funding (none), the public repository, and the Zenodo DOIs
 are all in place. Remaining non-blocking items: license choice for
 `CITATION.cff`/GitHub, and co-author sign-off on the CRediT and
 competing-interest drafts.
+
+**Re-authorized for the P5b+ version** — on 2026-08-12, 19:39 local time, the
+corresponding author re-confirmed `submission_ready = true` for commit
+`847587b` (evidence-curation reframing, risk-aware evidence interpretation,
+reference style unification, TikZ Fig. 1), after an independent audit of the
+diff verified: no results/figures data changed (25/25 frozen hashes intact),
+the "never zero" weight claim is consistent with Eq. (4), the risk-aware
+$R_{\text{delete}}$ interpretation mirrors the implemented evidence score, all
+cross-references resolve, and the build is clean (14 pages, 0 undefined).
+License (MIT) added 2026-08-10; CRediT/COI statements finalized 2026-08-10.
