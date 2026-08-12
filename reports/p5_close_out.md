@@ -149,3 +149,17 @@ the "never zero" weight claim is consistent with Eq. (4), the risk-aware
 $R_{\text{delete}}$ interpretation mirrors the implemented evidence score, all
 cross-references resolve, and the build is clean (14 pages, 0 undefined).
 License (MIT) added 2026-08-10; CRediT/COI statements finalized 2026-08-10.
+
+## Submission record — 2026-08-12
+
+**SUBMITTED** to *Computers & Security* (Elsevier) on 2026-08-12, 20:28 local
+time, as a Full Length Article, via the Elsevier editorial portal. Submitted
+manuscript version: commit `1129a10` (P5b+ reframing + in-manuscript
+generative-AI declaration; 14 pages, 0 undefined references). Title:
+"Evidence-Preserving Graph Denoising for Noisy-Label Intrusion Detection: A
+Leakage-Audited Study of When Graph Structure Helps". Authors: Tianqi Guo
+(corresponding), Yan Chen, Weiguo Wang, Jian Wang, Shiyin Zhu.
+Classifications: AI/ML (defensive use of); Intrusion Detection and Prevention;
+Evaluation/Standards; Security Metrics; Network Security. Research-data link
+registered as `https://doi.org/10.5281/zenodo.21873516` (Zenodo, original
+data). The exact submitted version is tagged `submitted-cas-2026-08-12`.
