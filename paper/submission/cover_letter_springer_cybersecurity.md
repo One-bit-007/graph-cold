@@ -1,0 +1,45 @@
+Dear Editors of *Cybersecurity*,
+
+We are pleased to submit our manuscript entitled **"Evidence-Preserving Graph
+Denoising for Noisy-Label Intrusion Detection: A Leakage-Audited Study of When
+Graph Structure Helps"** for consideration as a Research article in
+*Cybersecurity*.
+
+Intrusion-detection classifiers are routinely trained on delayed,
+rule-generated, or inconsistent labels, and the standard remedy—dataset
+purification by deleting suspicious samples—risks discarding exactly the rare,
+boundary attack evidence that security analysts need most. Our manuscript
+reframes noisy-label intrusion detection as *evidence-preserving data
+curation* and reports a leakage-audited, fully reproducible study on three
+real-world datasets (CICIDS-2017, CESNET-TLS-Year22, UNSW-NB15). We make three
+contributions: (i) a multi-view graph consistency diagnostic (Graph-CDM) that
+yields a modest but statistically significant aggregate improvement over the
+CoLD baseline under a leakage-controlled protocol; (ii) evidence-preserving
+soft weighting that matches hard deletion on aggregate Macro-F1 while
+significantly improving rare/tail attack-class Macro-F1 under high asymmetric
+label noise, benchmarked against external anchors (Confident Learning,
+Co-Teaching) under an identical protocol with honest reporting of where our
+approach does not lead; and (iii) a leakage audit showing that naive graph
+denoising gains can be dramatically inflated by duplicate records and
+clean-label signal, together with the full reproducibility package.
+
+We believe this work fits the scope of *Cybersecurity* closely, given the
+journal's focus on data-driven security, intrusion detection, and applied
+machine learning for security operations.
+
+We confirm that this manuscript is original, has not been published before,
+and is not under consideration by any other journal. All authors have read and
+approved the manuscript and agree with its submission to *Cybersecurity*. The
+authors declare no competing interests, and no specific funding was received
+for this work. In accordance with the journal's double-anonymous review
+policy, the main manuscript file contains no identifying information; author
+details are provided in the separate title page file.
+
+A declaration of generative AI use in the writing process is included in both
+the manuscript and the title page, in line with Springer Nature policy.
+
+Sincerely,
+
+Tianqi Guo (on behalf of all authors)
+University of Science and Technology of China
+guotianqi@mail.ustc.edu.cn
