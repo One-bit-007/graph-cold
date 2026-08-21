@@ -163,3 +163,17 @@ Classifications: AI/ML (defensive use of); Intrusion Detection and Prevention;
 Evaluation/Standards; Security Metrics; Network Security. Research-data link
 registered as `https://doi.org/10.5281/zenodo.21873516` (Zenodo, original
 data). The exact submitted version is tagged `submitted-cas-2026-08-12`.
+
+## Outcome — 2026-08-13 (desk rejection, policy-based)
+
+**REJECTED without review** (Ms. Ref. No. COSE-D-26-04881, decision letter
+dated 2026-08-13, signed by Editor-in-Chief Prof. Steven Furnell). Stated
+reason: as of early 2024, Computers & Security has a **moratorium on
+submissions that feature AI or ML as significant components** — both
+"AI/ML applied to security" and "security of AI/ML systems" are out of scope,
+and such papers should go to "a venue primarily about AI/ML". This is a
+categorical scope policy, not a quality judgment; no reviewer comments exist.
+The manuscript, reproducibility package, and all claims remain intact for
+submission to another venue. Candidate re-targets analyzed 2026-08-11: IEEE
+TIFS (scope-fit, IF 8.0), IEEE TDSC (evaluation/dependability fit, IF 7.5),
+IEEE TMLCN (ML-for-networking fit, reproducibility-friendly; new journal).
