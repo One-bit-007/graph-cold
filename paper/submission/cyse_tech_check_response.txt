@@ -1,0 +1,12 @@
+Dear Editorial Office,
+
+Thank you for the technical check of our manuscript CYSE-D-26-01464. We have completed both requested corrections:
+
+1. Declarations relocated to the title page. All declarations (Ethics approval and consent to participate; Consent for publication; Availability of data and materials; Competing interests; Funding; Authors' contributions; Acknowledgements) have been removed from the blinded manuscript file and are now presented only in the separate title page file, under a single "Declarations" heading, with "Not applicable" stated where relevant. The declaration of generative AI use in the writing process, required by Springer Nature policy, is also included in the title page file.
+
+2. Corresponding author email aligned. The corresponding author's email address in the Editorial Manager system has been updated to guotianqi@mail.ustc.edu.cn, which now matches the address on the title page. We have also verified that all co-authors' email addresses and metadata are consistent between the manuscript files and the system.
+
+We confirm that no changes were made to the scientific content of the manuscript. The updated blinded manuscript and title page files have been uploaded. We apologize for the inconvenience and appreciate your assistance.
+
+Kind regards,
+Tianqi Guo (on behalf of all authors)
