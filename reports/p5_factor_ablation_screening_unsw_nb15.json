@@ -1,0 +1,81 @@
+{
+  "stage": "P5-P0-3-factor-ablation",
+  "tier": "screening",
+  "completed": true,
+  "row_count": 15,
+  "expected_row_count": 15,
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "rates": [
+    0.6
+  ],
+  "cells": [
+    "1_nograph_ce",
+    "2_graph_no_cdm",
+    "7a_cdm_neigh_only",
+    "7b_cdm_evid_only",
+    "7c_cdm_full"
+  ],
+  "datasets": [
+    "unsw_nb15"
+  ],
+  "protocols": {
+    "cicids2017": {
+      "mask": "tier1",
+      "split": "temporal",
+      "label": "C1-tier1 + S1 temporal-by-source-file",
+      "limitation": "S2 unavailable because the local copy lacks entity columns"
+    },
+    "cesnet_tls_year22": {
+      "mask": "tier2",
+      "split": "temporal_entity",
+      "label": "C1b-tier2 + S1\u2229S2 temporal/entity-disjoint",
+      "limitation": "audit frame spans about seven hours"
+    },
+    "unsw_nb15": {
+      "mask": "tier2",
+      "split": "stratified",
+      "label": "C1b-tier2 + official fixed partition",
+      "limitation": "S1/S2 unavailable because the fixed files lack timestamp/entity columns"
+    }
+  },
+  "outputs": {
+    "results": "results/p5_factor_ablation_screening_unsw_nb15.csv",
+    "partial": "results/p5_factor_ablation_screening_unsw_nb15.partial.csv"
+  },
+  "descriptive_means": [
+    {
+      "dataset": "unsw_nb15",
+      "cell": "1_nograph_ce",
+      "macro_f1": 0.42439542654349777,
+      "tail_macro_f1": 0.1003056865491977
+    },
+    {
+      "dataset": "unsw_nb15",
+      "cell": "2_graph_no_cdm",
+      "macro_f1": 0.42439542654349777,
+      "tail_macro_f1": 0.1003056865491977
+    },
+    {
+      "dataset": "unsw_nb15",
+      "cell": "7a_cdm_neigh_only",
+      "macro_f1": 0.4872010186615486,
+      "tail_macro_f1": 0.20673047459401597
+    },
+    {
+      "dataset": "unsw_nb15",
+      "cell": "7b_cdm_evid_only",
+      "macro_f1": 0.48551909423810957,
+      "tail_macro_f1": 0.20512772330999218
+    },
+    {
+      "dataset": "unsw_nb15",
+      "cell": "7c_cdm_full",
+      "macro_f1": 0.4787282756031232,
+      "tail_macro_f1": 0.1945216053801342
+    }
+  ]
+}

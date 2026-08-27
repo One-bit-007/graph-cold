@@ -1,0 +1,81 @@
+{
+  "stage": "P5-P0-3-factor-ablation",
+  "tier": "screening",
+  "completed": true,
+  "row_count": 15,
+  "expected_row_count": 15,
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "rates": [
+    0.6
+  ],
+  "cells": [
+    "1_nograph_ce",
+    "2_graph_no_cdm",
+    "7a_cdm_neigh_only",
+    "7b_cdm_evid_only",
+    "7c_cdm_full"
+  ],
+  "datasets": [
+    "cesnet_tls_year22"
+  ],
+  "protocols": {
+    "cicids2017": {
+      "mask": "tier1",
+      "split": "temporal",
+      "label": "C1-tier1 + S1 temporal-by-source-file",
+      "limitation": "S2 unavailable because the local copy lacks entity columns"
+    },
+    "cesnet_tls_year22": {
+      "mask": "tier2",
+      "split": "temporal_entity",
+      "label": "C1b-tier2 + S1\u2229S2 temporal/entity-disjoint",
+      "limitation": "audit frame spans about seven hours"
+    },
+    "unsw_nb15": {
+      "mask": "tier2",
+      "split": "stratified",
+      "label": "C1b-tier2 + official fixed partition",
+      "limitation": "S1/S2 unavailable because the fixed files lack timestamp/entity columns"
+    }
+  },
+  "outputs": {
+    "results": "results/p5_factor_ablation_screening_cesnet_tls_year22.csv",
+    "partial": "results/p5_factor_ablation_screening_cesnet_tls_year22.partial.csv"
+  },
+  "descriptive_means": [
+    {
+      "dataset": "cesnet_tls_year22",
+      "cell": "1_nograph_ce",
+      "macro_f1": 0.43899343825853704,
+      "tail_macro_f1": 0.25134632157395514
+    },
+    {
+      "dataset": "cesnet_tls_year22",
+      "cell": "2_graph_no_cdm",
+      "macro_f1": 0.43899343825853704,
+      "tail_macro_f1": 0.25134632157395514
+    },
+    {
+      "dataset": "cesnet_tls_year22",
+      "cell": "7a_cdm_neigh_only",
+      "macro_f1": 0.4405975544067859,
+      "tail_macro_f1": 0.2514684441714629
+    },
+    {
+      "dataset": "cesnet_tls_year22",
+      "cell": "7b_cdm_evid_only",
+      "macro_f1": 0.4390912805350333,
+      "tail_macro_f1": 0.2569731162557514
+    },
+    {
+      "dataset": "cesnet_tls_year22",
+      "cell": "7c_cdm_full",
+      "macro_f1": 0.44505533628325217,
+      "tail_macro_f1": 0.26042401256330133
+    }
+  ]
+}
