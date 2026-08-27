@@ -77,6 +77,9 @@ def load_dataset(name: str, cfg: dict) -> Dataset:
     drop_cols = [col for col in ds_cfg.get("drop_cols", []) if col in df.columns]
     timestamp_cols = _timestamp_columns(df.columns)
     timestamps = _coalesce_timestamps(df, timestamp_cols)
+    entity_col = next((col for col in ds_cfg.get("entity_cols", []) if col in df.columns), None)
+    entities = df[entity_col].astype("string").to_numpy() if entity_col is not None else None
+    source_files = df["__source_file"].astype("string").to_numpy() if "__source_file" in df.columns else None
 
     valid_label_mask = df[label_col].notna().to_numpy()
     if key == "unsw_nb15" and label_col.lower() == "attack_cat":
@@ -84,18 +87,27 @@ def load_dataset(name: str, cfg: dict) -> Dataset:
         valid_label_mask = (stripped.notna() & (stripped != "") & (stripped.str.lower() != "nan")).to_numpy()
     if timestamps is not None:
         timestamps = timestamps[valid_label_mask]
+    if entities is not None:
+        entities = entities[valid_label_mask]
+    if source_files is not None:
+        source_files = source_files[valid_label_mask]
     df.drop(columns=drop_cols, errors="ignore", inplace=True)
     df.drop(columns=[col for col in timestamp_cols if col in df.columns], errors="ignore", inplace=True)
+    df.drop(columns=["__source_file"], errors="ignore", inplace=True)
     work = df.loc[valid_label_mask] if not np.all(valid_label_mask) else df
     del df
 
     if key == "cicids2017":
         min_count = int(ds_cfg.get("min_class_count", 1000))
-        work, timestamps = _filter_and_downsample_cicids(work, timestamps, label_col, min_count, rng)
+        work, timestamps, entities, source_files = _filter_and_downsample_cicids(
+            work, timestamps, label_col, min_count, rng, entities, source_files
+        )
     elif key in {"cesnet_tls_year22", "unsw_nb15"}:
         min_count = int(ds_cfg.get("min_class_count", 1000))
         if str(ds_cfg.get("class_policy", "postfilter")) == "postfilter":
-            work, timestamps = _filter_and_downsample_postfilter(work, timestamps, label_col, min_count, rng)
+            work, timestamps, entities, source_files = _filter_and_downsample_postfilter(
+                work, timestamps, label_col, min_count, rng, entities, source_files
+            )
 
     labels_raw = work[label_col].astype(str).to_numpy()
     class_names = _ordered_class_names(labels_raw)
@@ -109,12 +121,17 @@ def load_dataset(name: str, cfg: dict) -> Dataset:
     train_ratio = float(ds_cfg.get("train_test_split", 0.8))
     test_size = 1.0 - train_ratio
     indices = np.arange(len(y))
-    stratify = y if _can_stratify(y) else None
-    train_idx, test_idx = train_test_split(
+    split_strategy = str(ds_cfg.get("split_strategy", "stratified"))
+    train_idx, test_idx, split_notes = _make_split(
         indices,
+        y,
+        split_strategy,
+        timestamps=timestamps,
+        entities=entities,
+        source_files=source_files,
         test_size=test_size,
-        random_state=seed,
-        stratify=stratify,
+        seed=seed,
+        holdout_blocks=int(ds_cfg.get("holdout_blocks", 1)),
     )
 
     scaler = StandardScaler()
@@ -129,6 +146,20 @@ def load_dataset(name: str, cfg: dict) -> Dataset:
     else:
         timestamp_train = None
         timestamp_test = None
+
+    if entities is not None:
+        entity_train = entities[train_idx]
+        entity_test = entities[test_idx]
+    else:
+        entity_train = None
+        entity_test = None
+
+    if source_files is not None:
+        source_file_train = source_files[train_idx]
+        source_file_test = source_files[test_idx]
+    else:
+        source_file_train = None
+        source_file_test = None
 
     class_counts = {class_names[idx]: int(count) for idx, count in enumerate(np.bincount(y))}
     view_support = _expected_view_support(key, source_columns, unsw_layout)
@@ -152,6 +183,10 @@ def load_dataset(name: str, cfg: dict) -> Dataset:
         "train_indices": train_idx,
         "test_indices": test_idx,
         "timestamps": {"train": timestamp_train, "test": timestamp_test},
+        "entities": {"train": entity_train, "test": entity_test, "column": entity_col},
+        "source_files": {"train": source_file_train, "test": source_file_test},
+        "split_strategy": split_strategy,
+        "split_notes": split_notes,
         "scaler": scaler,
         "benign_class": _benign_class_index(class_names),
         "expected_view_support": view_support,
@@ -429,6 +464,7 @@ def _read_dataset_frame(path_value: str | Path, sample_rows: int | None = None) 
     for file in files:
         nrows = remaining if remaining is not None else None
         frame = _read_table(file, nrows=nrows)
+        frame["__source_file"] = file.name
         frames.append(frame)
         if remaining is not None:
             remaining -= len(frame)
@@ -470,7 +506,9 @@ def _filter_and_downsample_cicids(
     label_col: str,
     min_count: int,
     rng: np.random.Generator,
-) -> tuple[pd.DataFrame, np.ndarray | None]:
+    entities: np.ndarray | None = None,
+    source_files: np.ndarray | None = None,
+) -> tuple[pd.DataFrame, np.ndarray | None, np.ndarray | None, np.ndarray | None]:
     counts = df[label_col].value_counts()
     keep_labels = counts[counts >= min_count].index
     kept_counts = counts.loc[keep_labels]
@@ -480,7 +518,10 @@ def _filter_and_downsample_cicids(
     if len(counts) <= 1:
         keep_mask = df[label_col].isin(keep_labels).to_numpy()
         out = df.loc[keep_mask].reset_index(drop=True)
-        return out, _reset_timestamps(timestamps[keep_mask] if timestamps is not None else None)
+        kept_timestamps = _reset_timestamps(timestamps[keep_mask] if timestamps is not None else None)
+        kept_entities = entities[keep_mask] if entities is not None else None
+        kept_sources = source_files[keep_mask] if source_files is not None else None
+        return out, kept_timestamps, kept_entities, kept_sources
 
     dominant_label = counts.idxmax()
     cap = int(counts.drop(index=dominant_label).max())
@@ -496,7 +537,11 @@ def _filter_and_downsample_cicids(
     downsampled = df.iloc[selected].reset_index(drop=True)
     if timestamps is not None:
         timestamps = timestamps[selected]
-    return downsampled, _reset_timestamps(timestamps)
+    if entities is not None:
+        entities = entities[selected]
+    if source_files is not None:
+        source_files = source_files[selected]
+    return downsampled, _reset_timestamps(timestamps), entities, source_files
 
 
 def _filter_and_downsample_postfilter(
@@ -505,7 +550,9 @@ def _filter_and_downsample_postfilter(
     label_col: str,
     min_count: int,
     rng: np.random.Generator,
-) -> tuple[pd.DataFrame, np.ndarray | None]:
+    entities: np.ndarray | None = None,
+    source_files: np.ndarray | None = None,
+) -> tuple[pd.DataFrame, np.ndarray | None, np.ndarray | None, np.ndarray | None]:
     counts = df[label_col].value_counts()
     keep_labels = counts[counts >= min_count].index
     kept_counts = counts.loc[keep_labels]
@@ -515,7 +562,10 @@ def _filter_and_downsample_postfilter(
     counts = kept_counts
     if len(counts) <= 1:
         keep_mask = df[label_col].isin(keep_labels).to_numpy()
-        return df.loc[keep_mask].reset_index(drop=True), _reset_timestamps(timestamps[keep_mask] if timestamps is not None else None)
+        kept_timestamps = _reset_timestamps(timestamps[keep_mask] if timestamps is not None else None)
+        kept_entities = entities[keep_mask] if entities is not None else None
+        kept_sources = source_files[keep_mask] if source_files is not None else None
+        return df.loc[keep_mask].reset_index(drop=True), kept_timestamps, kept_entities, kept_sources
     dominant_label = counts.idxmax()
     cap = int(counts.drop(index=dominant_label).max())
     selected_positions: list[np.ndarray] = []
@@ -529,13 +579,195 @@ def _filter_and_downsample_postfilter(
     out = df.iloc[selected].reset_index(drop=True)
     if timestamps is not None:
         timestamps = timestamps[selected]
-    return out, _reset_timestamps(timestamps)
+    if entities is not None:
+        entities = entities[selected]
+    if source_files is not None:
+        source_files = source_files[selected]
+    return out, _reset_timestamps(timestamps), entities, source_files
 
 
 def _reset_timestamps(timestamps: np.ndarray | None) -> np.ndarray | None:
     if timestamps is None:
         return None
     return np.asarray(timestamps)
+
+
+def _make_split(
+    indices: np.ndarray,
+    y: np.ndarray,
+    strategy: str,
+    *,
+    timestamps: np.ndarray | None,
+    entities: np.ndarray | None,
+    source_files: np.ndarray | None = None,
+    test_size: float,
+    seed: int,
+    holdout_blocks: int = 1,
+) -> tuple[np.ndarray, np.ndarray, dict[str, Any]]:
+    """S0-S3 split dispatcher for the P0-2 leakage audit.
+
+    Strategies:
+        stratified     : S0 baseline (random stratified split)
+        temporal       : S1 time-ordered split, earliest rows train / latest test
+                         (falls back to weekday-ordered source files when the
+                         local copy carries no timestamp column, e.g. CICIDS)
+        entity         : S2 group-disjoint split by entity (e.g. source IP)
+        temporal_entity: S1 and S2 jointly; latest rows are test and any test
+                         entity is removed from the earlier training partition
+        block_holdout  : S3 hold out the last ``holdout_blocks`` day-blocks or
+                         source-file day groups only where scenario is not
+                         identical to the class label (CICIDS in P3)
+
+    Falls back to stratified with a note when required metadata is missing.
+    """
+    notes: dict[str, Any] = {"requested_strategy": strategy}
+
+    if strategy == "stratified":
+        stratify = y if _can_stratify(y) else None
+        train_idx, test_idx = train_test_split(indices, test_size=test_size, random_state=seed, stratify=stratify)
+        notes["applied_strategy"] = "stratified"
+        return train_idx, test_idx, notes
+
+    if strategy == "temporal" and timestamps is not None:
+        seconds = _timestamps_to_seconds(timestamps)
+        order = np.argsort(seconds, kind="stable")
+        cut = int(np.floor((1.0 - test_size) * len(order)))
+        boundary = float(seconds[order[cut]])
+        train_mask = seconds < boundary
+        test_mask = seconds >= boundary
+        if train_mask.any() and test_mask.any():
+            notes.update({"applied_strategy": "temporal", "train_time_max": float(np.nanmax(seconds[train_mask])), "test_time_min": float(np.nanmin(seconds[test_mask])), "strict_time_boundary": True})
+            return indices[train_mask], indices[test_mask], notes
+        notes["fallback"] = "temporal split produced degenerate strict timestamp boundary"
+
+    if strategy == "temporal" and source_files is not None:
+        day_ids = _source_file_day_ids(source_files)
+        if day_ids is not None:
+            order = np.argsort(day_ids, kind="stable")
+            cut = int(np.floor((1.0 - test_size) * len(order)))
+            notes.update({
+                "applied_strategy": "temporal_by_source_file",
+                "note": "no timestamp column in local copy; ordered by source-file weekday",
+                "test_days": sorted(int(d) for d in np.unique(day_ids[order[cut:]])),
+            })
+            return np.sort(order[:cut]), np.sort(order[cut:]), notes
+
+    if strategy == "entity" and entities is not None:
+        unique_entities, inverse = np.unique(entities, return_inverse=True)
+        rng = np.random.default_rng(seed)
+        group_order = rng.permutation(len(unique_entities))
+        target = test_size * len(indices)
+        test_groups: list[int] = []
+        running = 0
+        for group in group_order:
+            test_groups.append(group)
+            running += int(np.sum(inverse == group))
+            if running >= target:
+                break
+        test_mask = np.isin(inverse, np.asarray(test_groups))
+        notes.update({
+            "applied_strategy": "entity",
+            "n_entities": int(len(unique_entities)),
+            "test_entities": int(len(test_groups)),
+            "entity_overlap": int(len(set(entities[test_mask]) & set(entities[~test_mask]))),
+        })
+        return indices[~test_mask], indices[test_mask], notes
+
+    if strategy == "temporal_entity" and timestamps is not None and entities is not None:
+        seconds = _timestamps_to_seconds(timestamps)
+        order = np.argsort(seconds, kind="stable")
+        cut = int(np.floor((1.0 - test_size) * len(order)))
+        boundary = float(seconds[order[cut]])
+        temporal_test = seconds >= boundary
+        temporal_train = seconds < boundary
+        test_entities = set(entities[temporal_test].tolist())
+        train_mask = temporal_train & (~np.isin(entities, list(test_entities)))
+        test_mask = temporal_test
+        if train_mask.any() and test_mask.any() and np.unique(y[train_mask]).size >= 2:
+            notes.update({
+                "applied_strategy": "temporal_entity",
+                "train_time_max": float(np.nanmax(seconds[train_mask])),
+                "test_time_min": float(np.nanmin(seconds[test_mask])),
+                "test_entities": int(len(test_entities)),
+                "entity_overlap": int(len(set(entities[test_mask]) & set(entities[train_mask]))),
+                "train_rows_removed_for_entity_overlap": int(np.sum(temporal_train & (~train_mask))),
+                "strict_time_boundary": True,
+            })
+            return indices[train_mask], indices[test_mask], notes
+        notes["fallback"] = "temporal_entity produced degenerate training partition"
+
+    if strategy == "block_holdout" and timestamps is not None:
+        seconds = _timestamps_to_seconds(timestamps)
+        day_blocks = np.floor((seconds - np.nanmin(seconds)) / 86400.0).astype(np.int64)
+        blocks = np.unique(day_blocks)
+        holdout = set(blocks[-max(1, holdout_blocks):].tolist())
+        test_mask = np.isin(day_blocks, list(holdout))
+        if test_mask.all() or not test_mask.any():
+            notes["fallback"] = "block_holdout produced degenerate split; used stratified"
+        else:
+            notes.update({
+                "applied_strategy": "block_holdout",
+                "n_blocks": int(len(blocks)),
+                "held_out_blocks": sorted(int(b) for b in holdout),
+                "test_classes": sorted(int(c) for c in np.unique(y[test_mask])),
+                "unseen_test_classes": sorted(int(c) for c in set(np.unique(y[test_mask])) - set(np.unique(y[~test_mask]))),
+            })
+            return indices[~test_mask], indices[test_mask], notes
+
+    if strategy == "block_holdout" and source_files is not None:
+        day_ids = _source_file_day_ids(source_files)
+        if day_ids is not None:
+            days = np.unique(day_ids)
+            holdout = set(days[-max(1, holdout_blocks):].tolist())
+            test_mask = np.isin(day_ids, list(holdout))
+            if not (test_mask.all() or not test_mask.any()):
+                notes.update({
+                    "applied_strategy": "block_holdout_by_source_file",
+                    "note": "no timestamp column in local copy; held out last weekday source-file group(s)",
+                    "held_out_days": sorted(int(d) for d in holdout),
+                    "test_classes": sorted(int(c) for c in np.unique(y[test_mask])),
+                    "unseen_test_classes": sorted(int(c) for c in set(np.unique(y[test_mask])) - set(np.unique(y[~test_mask]))),
+                })
+                return indices[~test_mask], indices[test_mask], notes
+        notes["fallback"] = "block_holdout produced degenerate split; used stratified"
+
+    stratify = y if _can_stratify(y) else None
+    train_idx, test_idx = train_test_split(indices, test_size=test_size, random_state=seed, stratify=stratify)
+    notes.update({"applied_strategy": "stratified", "fallback": f"strategy '{strategy}' unavailable (missing metadata or degenerate)"})
+    return train_idx, test_idx, notes
+
+
+_WEEKDAY_ORDER = ("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")
+
+
+def _source_file_day_ids(source_files: np.ndarray) -> np.ndarray | None:
+    """Map source file names to weekday ids; None if no weekday is parseable."""
+    names = np.asarray(source_files).astype(str)
+    day_ids = np.full(names.shape[0], -1, dtype=np.int64)
+    for idx, weekday in enumerate(_WEEKDAY_ORDER):
+        mask = np.char.find(np.char.lower(names), weekday) >= 0
+        day_ids[mask] = idx
+    if (day_ids < 0).any():
+        return None
+    return day_ids
+
+
+def _timestamps_to_seconds(timestamps: np.ndarray) -> np.ndarray:
+    values = pd.Series(timestamps)
+    if values.astype("string").str.contains("|", regex=False).any():
+        # Multi-column coalesced timestamps ("first|last"); use the first part.
+        values = values.astype("string").str.split("|", n=1).str[0]
+    parsed = pd.to_datetime(values, errors="coerce", utc=True)
+    if parsed.notna().any():
+        seconds = parsed.to_numpy(dtype="datetime64[ns]").astype("int64").astype(np.float64) / 1e9
+        finite = np.isfinite(seconds)
+        fill = np.nanmin(seconds[finite]) if finite.any() else 0.0
+        seconds[~finite] = fill
+        return seconds
+    numeric = pd.to_numeric(values, errors="coerce").to_numpy(dtype=np.float64)
+    if np.isnan(numeric).all():
+        return np.arange(len(timestamps), dtype=np.float64)
+    return np.nan_to_num(numeric, nan=np.nanmin(numeric))
 
 
 def _ordered_class_names(labels: np.ndarray) -> list[str]:

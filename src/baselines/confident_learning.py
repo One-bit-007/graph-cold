@@ -12,7 +12,7 @@ import importlib.util
 import numpy as np
 from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.linear_model import SGDClassifier
-from sklearn.model_selection import StratifiedShuffleSplit, train_test_split
+from sklearn.model_selection import StratifiedKFold, train_test_split
 
 from src.baselines.base import BaselineResult, aligned_proba, array_hash, ensure_class_coverage
 
@@ -72,6 +72,7 @@ class ConfidentLearningBaseline:
                 "classifier": "ExtraTreesClassifier",
                 "issue_detector": engine,
                 "probe_model": "SGDClassifier(log_loss)",
+                "probability_protocol": "full_oof_stratified_cv",
                 "trained_on": "retained noisy_y_train",
                 "train_label_source": "noisy_y_train",
                 "eval_label_source": "clean_y_test",
@@ -89,31 +90,26 @@ class ConfidentLearningBaseline:
             out[np.arange(y_noisy.shape[0]), y_noisy] = 1.0
             return out
 
-        train_idx, calib_idx = self._stratified_probe_split(y_noisy)
-        fit_idx = self._cap_probe_train_indices(train_idx, y_noisy)
-        probe = SGDClassifier(
-            loss="log_loss",
-            alpha=5e-4,
-            max_iter=5,
-            tol=1e-3,
-            random_state=self.seed,
-            class_weight="balanced",
-        )
-        probe.fit(X_train[fit_idx], y_noisy[fit_idx])
-        probs = _aligned_sgd_proba(probe, X_train, num_classes)
-        # Replace the calibration slice with strictly out-of-split estimates.
-        probs[calib_idx] = _aligned_sgd_proba(probe, X_train[calib_idx], num_classes)
+        # cleanlab requires out-of-sample probabilities for every row.  The old
+        # implementation predicted most rows with the same model that fitted
+        # them and replaced only one calibration slice; that is not a valid CL
+        # input.  Generate complete OOF probabilities instead.
+        n_splits = int(min(3, counts.min()))
+        splitter = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=self.seed)
+        probs = np.zeros((y_noisy.shape[0], num_classes), dtype=np.float64)
+        for fold, (train_idx, eval_idx) in enumerate(splitter.split(X_train, y_noisy)):
+            fit_idx = self._cap_probe_train_indices(train_idx, y_noisy)
+            probe = SGDClassifier(
+                loss="log_loss",
+                alpha=5e-4,
+                max_iter=1000,
+                tol=1e-3,
+                random_state=self.seed + fold,
+                class_weight="balanced",
+            )
+            probe.fit(X_train[fit_idx], y_noisy[fit_idx])
+            probs[eval_idx] = _aligned_sgd_proba(probe, X_train[eval_idx], num_classes)
         return probs
-
-    def _stratified_probe_split(self, y_noisy: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-        labels, counts = np.unique(y_noisy, return_counts=True)
-        if labels.size < 2 or counts.min() < 2:
-            idx = np.arange(y_noisy.shape[0])
-            return idx, idx
-        test_size = 0.25 if y_noisy.shape[0] < 200_000 else 0.15
-        splitter = StratifiedShuffleSplit(n_splits=1, test_size=test_size, random_state=self.seed)
-        train_idx, calib_idx = next(splitter.split(np.zeros_like(y_noisy), y_noisy))
-        return train_idx, calib_idx
 
     def _cap_probe_train_indices(self, train_idx: np.ndarray, y_noisy: np.ndarray) -> np.ndarray:
         if train_idx.shape[0] <= self.max_probe_train:

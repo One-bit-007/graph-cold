@@ -28,6 +28,7 @@ def test_cl_filtering_uses_noisy_labels_and_returns_valid_mask():
     assert result.method in {"Confident-Learning", "CL-filtering"}
     assert result.details["training_label_hash"] == array_hash(y_noisy)
     assert result.details["training_label_hash"] != array_hash(y_clean)
+    assert result.details["probability_protocol"] == "full_oof_stratified_cv"
     assert result.retained_mask.shape == y_noisy.shape
     assert 0.0 < result.retained_mask.mean() <= 1.0
     assert result.proba.shape == (X.shape[0], 3)
@@ -42,3 +43,15 @@ def test_cl_filtering_is_deterministic_for_fixed_seed():
 
     np.testing.assert_array_equal(a.y_pred, b.y_pred)
     np.testing.assert_array_equal(a.retained_mask, b.retained_mask)
+
+
+def test_cl_oof_probabilities_cover_every_row():
+    X, _, y_noisy = _toy()
+    baseline = ConfidentLearningBaseline(seed=7, noise_rate=0.2, n_estimators=8)
+
+    probs = baseline._probe_probabilities(X, y_noisy, num_classes=3)
+
+    assert probs.shape == (len(y_noisy), 3)
+    assert np.all(np.isfinite(probs))
+    np.testing.assert_allclose(probs.sum(axis=1), 1.0)
+    assert np.all(probs.max(axis=1) > 0.0)
