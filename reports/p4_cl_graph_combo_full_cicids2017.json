@@ -1,0 +1,400 @@
+{
+  "stage": "P0-4",
+  "result_schema_version": 2,
+  "mode": "full",
+  "completed": true,
+  "row_count": 150,
+  "expected_row_count": 150,
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "rates": [
+    0.4,
+    0.6,
+    0.8
+  ],
+  "methods": [
+    "Confident-Learning",
+    "Graph-CoLD-soft",
+    "CL+Graph-soft",
+    "CL-issue-intersection",
+    "CL-issue-union"
+  ],
+  "datasets": [
+    "cicids2017"
+  ],
+  "cleanlab_version": "2.9.0",
+  "cl_probability_protocol": "full_oof_stratified_cv",
+  "protocols": {
+    "cicids2017": {
+      "mask": "tier1",
+      "split": "temporal",
+      "label": "C1-tier1 + S1 temporal-by-source-file",
+      "limitation": "S2 unavailable because the local copy lacks entity columns"
+    },
+    "cesnet_tls_year22": {
+      "mask": "tier2",
+      "split": "temporal_entity",
+      "label": "C1b-tier2 + S1\u2229S2 temporal/entity-disjoint",
+      "limitation": "audit frame spans about seven hours"
+    },
+    "unsw_nb15": {
+      "mask": "tier2",
+      "split": "stratified",
+      "label": "C1b-tier2 + official fixed partition",
+      "limitation": "S1/S2 unavailable because the fixed files lack timestamp/entity columns"
+    }
+  },
+  "summary": {
+    "means": [
+      {
+        "dataset": "cicids2017",
+        "protocol": "C1-tier1 + S1 temporal-by-source-file",
+        "method": "CL+Graph-soft",
+        "macro_f1": 0.133701344573302,
+        "tail_macro_f1": 0.3415700463267436,
+        "tail_recall": 0.29120260193558617,
+        "retained_fraction": 0.9604133333333333
+      },
+      {
+        "dataset": "cicids2017",
+        "protocol": "C1-tier1 + S1 temporal-by-source-file",
+        "method": "CL-issue-intersection",
+        "macro_f1": 0.11940598290161314,
+        "tail_macro_f1": 0.2636115819267855,
+        "tail_recall": 0.20375218150087257,
+        "retained_fraction": 0.9982233333333334
+      },
+      {
+        "dataset": "cicids2017",
+        "protocol": "C1-tier1 + S1 temporal-by-source-file",
+        "method": "CL-issue-union",
+        "macro_f1": 0.10114728585182614,
+        "tail_macro_f1": 0.23093686038377675,
+        "tail_recall": 0.17878787878787877,
+        "retained_fraction": 0.9584566666666666
+      },
+      {
+        "dataset": "cicids2017",
+        "protocol": "C1-tier1 + S1 temporal-by-source-file",
+        "method": "Confident-Learning",
+        "macro_f1": 0.13698898087496852,
+        "tail_macro_f1": 0.3553614351133478,
+        "tail_recall": 0.31070125337141047,
+        "retained_fraction": 0.9604133333333333
+      },
+      {
+        "dataset": "cicids2017",
+        "protocol": "C1-tier1 + S1 temporal-by-source-file",
+        "method": "Graph-CoLD-soft",
+        "macro_f1": 0.13639854158457812,
+        "tail_macro_f1": 0.36239130837097727,
+        "tail_recall": 0.2731001110582262,
+        "retained_fraction": 1.0
+      }
+    ],
+    "family_b_tests": [
+      {
+        "paired_rows": 10,
+        "method_mean": 0.19014337584016403,
+        "baseline_mean": 0.17864274426453813,
+        "mean_delta": 0.011500631575625905,
+        "p_value_greater": 0.21473597793428048,
+        "cohens_dz": 0.2616058244396205,
+        "bootstrap_ci95_low": -0.01256876108795348,
+        "bootstrap_ci95_high": 0.03773057707895254,
+        "dataset": "cicids2017",
+        "tail_flip_rate": 0.4,
+        "method": "CL+Graph-soft",
+        "reference": "Confident-Learning",
+        "metric": "macro_f1",
+        "p_holm_greater": 1.0
+      },
+      {
+        "paired_rows": 10,
+        "method_mean": 0.4942229308747099,
+        "baseline_mean": 0.49025212783643324,
+        "mean_delta": 0.003970803038276615,
+        "p_value_greater": 0.1545496144089602,
+        "cohens_dz": 0.34087725992165346,
+        "bootstrap_ci95_low": 0.0,
+        "bootstrap_ci95_high": 0.011553942604116473,
+        "dataset": "cicids2017",
+        "tail_flip_rate": 0.4,
+        "method": "CL+Graph-soft",
+        "reference": "Confident-Learning",
+        "metric": "tail_macro_f1",
+        "p_holm_greater": 1.0
+      },
+      {
+        "paired_rows": 10,
+        "method_mean": 0.12617747635122412,
+        "baseline_mean": 0.1491323532396626,
+        "mean_delta": -0.022954876888438468,
+        "p_value_greater": 0.8586660625849296,
+        "cohens_dz": -0.361338825198415,
+        "bootstrap_ci95_low": -0.0653047090627488,
+        "bootstrap_ci95_high": 0.0025935845986610998,
+        "dataset": "cicids2017",
+        "tail_flip_rate": 0.6,
+        "method": "CL+Graph-soft",
+        "reference": "Confident-Learning",
+        "metric": "macro_f1",
+        "p_holm_greater": 1.0
+      },
+      {
+        "paired_rows": 10,
+        "method_mean": 0.34843456467336387,
+        "baseline_mean": 0.3906022273399479,
+        "mean_delta": -0.04216766266658402,
+        "p_value_greater": 0.8282818019310433,
+        "cohens_dz": -0.31622776601683794,
+        "bootstrap_ci95_low": -0.12650298799975204,
+        "bootstrap_ci95_high": 0.0,
+        "dataset": "cicids2017",
+        "tail_flip_rate": 0.6,
+        "method": "CL+Graph-soft",
+        "reference": "Confident-Learning",
+        "metric": "tail_macro_f1",
+        "p_holm_greater": 1.0
+      },
+      {
+        "paired_rows": 10,
+        "method_mean": 0.08478318152851774,
+        "baseline_mean": 0.08319184512070485,
+        "mean_delta": 0.0015913364078128781,
+        "p_value_greater": 0.3631119768972695,
+        "cohens_dz": 0.11424756988216134,
+        "bootstrap_ci95_low": -0.0047973728259828935,
+        "bootstrap_ci95_high": 0.011070857004061744,
+        "dataset": "cicids2017",
+        "tail_flip_rate": 0.8,
+        "method": "CL+Graph-soft",
+        "reference": "Confident-Learning",
+        "metric": "macro_f1",
+        "p_holm_greater": 1.0
+      },
+      {
+        "paired_rows": 10,
+        "method_mean": 0.18205264343215707,
+        "baseline_mean": 0.18522995016366228,
+        "mean_delta": -0.003177306731505164,
+        "p_value_greater": 0.8282818019310434,
+        "cohens_dz": -0.31622776601683794,
+        "bootstrap_ci95_low": -0.009531920194515492,
+        "bootstrap_ci95_high": 0.0,
+        "dataset": "cicids2017",
+        "tail_flip_rate": 0.8,
+        "method": "CL+Graph-soft",
+        "reference": "Confident-Learning",
+        "metric": "tail_macro_f1",
+        "p_holm_greater": 1.0
+      }
+    ],
+    "family_b_size": 18,
+    "g2_by_dataset": {
+      "cicids2017": {
+        "rates": [
+          {
+            "tail_flip_rate": 0.4,
+            "tail_primary": {
+              "paired_rows": 10,
+              "method_mean": 0.4942229308747099,
+              "baseline_mean": 0.49025212783643324,
+              "mean_delta": 0.003970803038276615,
+              "p_value_greater": 0.1545496144089602,
+              "cohens_dz": 0.34087725992165346,
+              "bootstrap_ci95_low": 0.0,
+              "bootstrap_ci95_high": 0.011553942604116473,
+              "dataset": "cicids2017",
+              "tail_flip_rate": 0.4,
+              "method": "CL+Graph-soft",
+              "reference": "Confident-Learning",
+              "metric": "tail_macro_f1",
+              "p_holm_greater": 1.0
+            },
+            "macro_superiority_descriptive": {
+              "paired_rows": 10,
+              "method_mean": 0.19014337584016403,
+              "baseline_mean": 0.17864274426453813,
+              "mean_delta": 0.011500631575625905,
+              "p_value_greater": 0.21473597793428048,
+              "cohens_dz": 0.2616058244396205,
+              "bootstrap_ci95_low": -0.01256876108795348,
+              "bootstrap_ci95_high": 0.03773057707895254,
+              "dataset": "cicids2017",
+              "tail_flip_rate": 0.4,
+              "method": "CL+Graph-soft",
+              "reference": "Confident-Learning",
+              "metric": "macro_f1",
+              "p_holm_greater": 1.0
+            },
+            "macro_noninferiority": {
+              "paired_rows": 10,
+              "mean_delta": 0.011500631575625905,
+              "delta": 0.01,
+              "p_noninferior": 0.07818193666570115,
+              "passed": false
+            },
+            "class_f1_guard": {
+              "limit": 0.05,
+              "worst_class": "1",
+              "worst_mean_delta": 0.0,
+              "passed": true,
+              "class_mean_deltas": {
+                "0": 0.033784543607030426,
+                "1": 0.0,
+                "8": 0.00397080303827646
+              }
+            },
+            "passed": false,
+            "screening_direction_positive": true
+          },
+          {
+            "tail_flip_rate": 0.6,
+            "tail_primary": {
+              "paired_rows": 10,
+              "method_mean": 0.34843456467336387,
+              "baseline_mean": 0.3906022273399479,
+              "mean_delta": -0.04216766266658402,
+              "p_value_greater": 0.8282818019310433,
+              "cohens_dz": -0.31622776601683794,
+              "bootstrap_ci95_low": -0.12650298799975204,
+              "bootstrap_ci95_high": 0.0,
+              "dataset": "cicids2017",
+              "tail_flip_rate": 0.6,
+              "method": "CL+Graph-soft",
+              "reference": "Confident-Learning",
+              "metric": "tail_macro_f1",
+              "p_holm_greater": 1.0
+            },
+            "macro_superiority_descriptive": {
+              "paired_rows": 10,
+              "method_mean": 0.12617747635122412,
+              "baseline_mean": 0.1491323532396626,
+              "mean_delta": -0.022954876888438468,
+              "p_value_greater": 0.8586660625849296,
+              "cohens_dz": -0.361338825198415,
+              "bootstrap_ci95_low": -0.0653047090627488,
+              "bootstrap_ci95_high": 0.0025935845986610998,
+              "dataset": "cicids2017",
+              "tail_flip_rate": 0.6,
+              "method": "CL+Graph-soft",
+              "reference": "Confident-Learning",
+              "metric": "macro_f1",
+              "p_holm_greater": 1.0
+            },
+            "macro_noninferiority": {
+              "paired_rows": 10,
+              "mean_delta": -0.022954876888438468,
+              "delta": 0.01,
+              "p_noninferior": 0.7324495367134063,
+              "passed": false
+            },
+            "class_f1_guard": {
+              "limit": 0.05,
+              "worst_class": "0",
+              "worst_mean_delta": -0.05737728117979013,
+              "passed": false,
+              "class_mean_deltas": {
+                "0": -0.05737728117979013,
+                "1": 0.0,
+                "8": -0.042167887018575656
+              }
+            },
+            "passed": false,
+            "screening_direction_positive": false
+          },
+          {
+            "tail_flip_rate": 0.8,
+            "tail_primary": {
+              "paired_rows": 10,
+              "method_mean": 0.18205264343215707,
+              "baseline_mean": 0.18522995016366228,
+              "mean_delta": -0.003177306731505164,
+              "p_value_greater": 0.8282818019310434,
+              "cohens_dz": -0.31622776601683794,
+              "bootstrap_ci95_low": -0.009531920194515492,
+              "bootstrap_ci95_high": 0.0,
+              "dataset": "cicids2017",
+              "tail_flip_rate": 0.8,
+              "method": "CL+Graph-soft",
+              "reference": "Confident-Learning",
+              "metric": "tail_macro_f1",
+              "p_holm_greater": 1.0
+            },
+            "macro_superiority_descriptive": {
+              "paired_rows": 10,
+              "method_mean": 0.08478318152851774,
+              "baseline_mean": 0.08319184512070485,
+              "mean_delta": 0.0015913364078128781,
+              "p_value_greater": 0.3631119768972695,
+              "cohens_dz": 0.11424756988216134,
+              "bootstrap_ci95_low": -0.0047973728259828935,
+              "bootstrap_ci95_high": 0.011070857004061744,
+              "dataset": "cicids2017",
+              "tail_flip_rate": 0.8,
+              "method": "CL+Graph-soft",
+              "reference": "Confident-Learning",
+              "metric": "macro_f1",
+              "p_holm_greater": 1.0
+            },
+            "macro_noninferiority": {
+              "paired_rows": 10,
+              "mean_delta": 0.0015913364078128781,
+              "delta": 0.01,
+              "p_noninferior": 0.01364367814892182,
+              "passed": true
+            },
+            "class_f1_guard": {
+              "limit": 0.05,
+              "worst_class": "8",
+              "worst_mean_delta": -0.003177306731505153,
+              "passed": true,
+              "class_mean_deltas": {
+                "0": -0.0008744529131301526,
+                "1": 0.0,
+                "8": -0.003177306731505153
+              }
+            },
+            "passed": false,
+            "screening_direction_positive": false
+          }
+        ],
+        "passed": false,
+        "screening_direction_positive": true,
+        "mixed_effect_robustness": {
+          "available": true,
+          "model": "tail_delta ~ C(tail_flip_rate) + (1|seed)",
+          "paired_rows": 30,
+          "seed_groups": 10,
+          "estimate_average_rate_delta": -0.01379138878660419,
+          "z_value": -0.9747175886415418,
+          "p_value_greater": 0.8351498170715457,
+          "ci95_low": -0.04152313963784941,
+          "ci95_high": 0.013940362064641033,
+          "random_intercept_variance": 6.691655692041513e-13,
+          "residual_variance": 0.00600592150728447,
+          "converged": true,
+          "warnings": [
+            "The MLE may be on the boundary of the parameter space."
+          ]
+        }
+      }
+    },
+    "global_verdict": "null"
+  },
+  "outputs": {
+    "results": "results/p4_cl_graph_combo_full_cicids2017.csv",
+    "partial": "results/p4_cl_graph_combo_full_cicids2017.partial.csv"
+  }
+}

@@ -1,0 +1,418 @@
+{
+  "stage": "P0-4",
+  "result_schema_version": 2,
+  "mode": "full",
+  "completed": true,
+  "row_count": 150,
+  "expected_row_count": 150,
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "rates": [
+    0.4,
+    0.6,
+    0.8
+  ],
+  "methods": [
+    "Confident-Learning",
+    "Graph-CoLD-soft",
+    "CL+Graph-soft",
+    "CL-issue-intersection",
+    "CL-issue-union"
+  ],
+  "datasets": [
+    "unsw_nb15"
+  ],
+  "cleanlab_version": "2.9.0",
+  "cl_probability_protocol": "full_oof_stratified_cv",
+  "protocols": {
+    "cicids2017": {
+      "mask": "tier1",
+      "split": "temporal",
+      "label": "C1-tier1 + S1 temporal-by-source-file",
+      "limitation": "S2 unavailable because the local copy lacks entity columns"
+    },
+    "cesnet_tls_year22": {
+      "mask": "tier2",
+      "split": "temporal_entity",
+      "label": "C1b-tier2 + S1\u2229S2 temporal/entity-disjoint",
+      "limitation": "audit frame spans about seven hours"
+    },
+    "unsw_nb15": {
+      "mask": "tier2",
+      "split": "stratified",
+      "label": "C1b-tier2 + official fixed partition",
+      "limitation": "S1/S2 unavailable because the fixed files lack timestamp/entity columns"
+    }
+  },
+  "summary": {
+    "means": [
+      {
+        "dataset": "unsw_nb15",
+        "protocol": "C1b-tier2 + official fixed partition",
+        "method": "CL+Graph-soft",
+        "macro_f1": 0.48299479597283473,
+        "tail_macro_f1": 0.25646298147643,
+        "tail_recall": 0.2829098156452416,
+        "retained_fraction": 0.7381233333333334
+      },
+      {
+        "dataset": "unsw_nb15",
+        "protocol": "C1b-tier2 + official fixed partition",
+        "method": "CL-issue-intersection",
+        "macro_f1": 0.4814633411132145,
+        "tail_macro_f1": 0.22380874992987898,
+        "tail_recall": 0.24280019930244143,
+        "retained_fraction": 0.9426100000000001
+      },
+      {
+        "dataset": "unsw_nb15",
+        "protocol": "C1b-tier2 + official fixed partition",
+        "method": "CL-issue-union",
+        "macro_f1": 0.46257870811399404,
+        "tail_macro_f1": 0.20856885791962346,
+        "tail_recall": 0.24140508221225707,
+        "retained_fraction": 0.7229433333333334
+      },
+      {
+        "dataset": "unsw_nb15",
+        "protocol": "C1b-tier2 + official fixed partition",
+        "method": "Confident-Learning",
+        "macro_f1": 0.48498699810824414,
+        "tail_macro_f1": 0.2631818540940017,
+        "tail_recall": 0.291230692575984,
+        "retained_fraction": 0.7381233333333334
+      },
+      {
+        "dataset": "unsw_nb15",
+        "protocol": "C1b-tier2 + official fixed partition",
+        "method": "Graph-CoLD-soft",
+        "macro_f1": 0.48401832708351494,
+        "tail_macro_f1": 0.230836912377051,
+        "tail_recall": 0.238863976083707,
+        "retained_fraction": 1.0
+      }
+    ],
+    "family_b_tests": [
+      {
+        "paired_rows": 10,
+        "method_mean": 0.5012744214032865,
+        "baseline_mean": 0.5047975293708709,
+        "mean_delta": -0.003523107967584338,
+        "p_value_greater": 0.9322070579682883,
+        "cohens_dz": -0.5183725360261814,
+        "bootstrap_ci95_low": -0.007807418840462474,
+        "bootstrap_ci95_high": 0.00044793414663104074,
+        "dataset": "unsw_nb15",
+        "tail_flip_rate": 0.4,
+        "method": "CL+Graph-soft",
+        "reference": "Confident-Learning",
+        "metric": "macro_f1",
+        "p_holm_greater": 1.0
+      },
+      {
+        "paired_rows": 10,
+        "method_mean": 0.3030691041642459,
+        "baseline_mean": 0.3132468949301034,
+        "mean_delta": -0.010177790765857531,
+        "p_value_greater": 0.9525983280236539,
+        "cohens_dz": -0.5902869635337555,
+        "bootstrap_ci95_low": -0.020826486510575982,
+        "bootstrap_ci95_high": -0.0001018079703137757,
+        "dataset": "unsw_nb15",
+        "tail_flip_rate": 0.4,
+        "method": "CL+Graph-soft",
+        "reference": "Confident-Learning",
+        "metric": "tail_macro_f1",
+        "p_holm_greater": 1.0
+      },
+      {
+        "paired_rows": 10,
+        "method_mean": 0.48475969690470055,
+        "baseline_mean": 0.4878344422077653,
+        "mean_delta": -0.0030747453030648573,
+        "p_value_greater": 0.8928845477533737,
+        "cohens_dz": -0.422595543125975,
+        "bootstrap_ci95_low": -0.007315650235096641,
+        "bootstrap_ci95_high": 0.0010023588061659845,
+        "dataset": "unsw_nb15",
+        "tail_flip_rate": 0.6,
+        "method": "CL+Graph-soft",
+        "reference": "Confident-Learning",
+        "metric": "macro_f1",
+        "p_holm_greater": 1.0
+      },
+      {
+        "paired_rows": 10,
+        "method_mean": 0.25632960864581367,
+        "baseline_mean": 0.2672746609795561,
+        "mean_delta": -0.010945052333742428,
+        "p_value_greater": 0.9468843286795989,
+        "cohens_dz": -0.5676221046479734,
+        "bootstrap_ci95_low": -0.022214910849779276,
+        "bootstrap_ci95_high": -0.0003358352600501565,
+        "dataset": "unsw_nb15",
+        "tail_flip_rate": 0.6,
+        "method": "CL+Graph-soft",
+        "reference": "Confident-Learning",
+        "metric": "tail_macro_f1",
+        "p_holm_greater": 1.0
+      },
+      {
+        "paired_rows": 10,
+        "method_mean": 0.4629502696105171,
+        "baseline_mean": 0.4623290227460962,
+        "mean_delta": 0.0006212468644209324,
+        "p_value_greater": 0.36891480493560247,
+        "cohens_dz": 0.10918142403930377,
+        "bootstrap_ci95_low": -0.0024423034904882744,
+        "bootstrap_ci95_high": 0.004237363825405733,
+        "dataset": "unsw_nb15",
+        "tail_flip_rate": 0.8,
+        "method": "CL+Graph-soft",
+        "reference": "Confident-Learning",
+        "metric": "macro_f1",
+        "p_holm_greater": 1.0
+      },
+      {
+        "paired_rows": 10,
+        "method_mean": 0.20999023161923042,
+        "baseline_mean": 0.20902400637234564,
+        "mean_delta": 0.0009662252468847609,
+        "p_value_greater": 0.4145713229041215,
+        "cohens_dz": 0.07025570762936305,
+        "bootstrap_ci95_low": -0.006241729005667725,
+        "bootstrap_ci95_high": 0.009493272085237314,
+        "dataset": "unsw_nb15",
+        "tail_flip_rate": 0.8,
+        "method": "CL+Graph-soft",
+        "reference": "Confident-Learning",
+        "metric": "tail_macro_f1",
+        "p_holm_greater": 1.0
+      }
+    ],
+    "family_b_size": 18,
+    "g2_by_dataset": {
+      "unsw_nb15": {
+        "rates": [
+          {
+            "tail_flip_rate": 0.4,
+            "tail_primary": {
+              "paired_rows": 10,
+              "method_mean": 0.3030691041642459,
+              "baseline_mean": 0.3132468949301034,
+              "mean_delta": -0.010177790765857531,
+              "p_value_greater": 0.9525983280236539,
+              "cohens_dz": -0.5902869635337555,
+              "bootstrap_ci95_low": -0.020826486510575982,
+              "bootstrap_ci95_high": -0.0001018079703137757,
+              "dataset": "unsw_nb15",
+              "tail_flip_rate": 0.4,
+              "method": "CL+Graph-soft",
+              "reference": "Confident-Learning",
+              "metric": "tail_macro_f1",
+              "p_holm_greater": 1.0
+            },
+            "macro_superiority_descriptive": {
+              "paired_rows": 10,
+              "method_mean": 0.5012744214032865,
+              "baseline_mean": 0.5047975293708709,
+              "mean_delta": -0.003523107967584338,
+              "p_value_greater": 0.9322070579682883,
+              "cohens_dz": -0.5183725360261814,
+              "bootstrap_ci95_low": -0.007807418840462474,
+              "bootstrap_ci95_high": 0.00044793414663104074,
+              "dataset": "unsw_nb15",
+              "tail_flip_rate": 0.4,
+              "method": "CL+Graph-soft",
+              "reference": "Confident-Learning",
+              "metric": "macro_f1",
+              "p_holm_greater": 1.0
+            },
+            "macro_noninferiority": {
+              "paired_rows": 10,
+              "mean_delta": -0.003523107967584338,
+              "delta": 0.01,
+              "p_noninferior": 0.007315362153146101,
+              "passed": true
+            },
+            "class_f1_guard": {
+              "limit": 0.05,
+              "worst_class": "3",
+              "worst_mean_delta": -0.022664731553651535,
+              "passed": true,
+              "class_mean_deltas": {
+                "0": 2.8465165802238346e-06,
+                "1": -0.0015640292294145791,
+                "2": -0.011269619378369455,
+                "3": -0.022664731553651535,
+                "4": 0.002031514774447518,
+                "5": 0.002555204985010384,
+                "6": -1.6895178220899254e-06,
+                "7": 0.007996113377584102,
+                "8": -0.008793581682623036
+              }
+            },
+            "passed": false,
+            "screening_direction_positive": false
+          },
+          {
+            "tail_flip_rate": 0.6,
+            "tail_primary": {
+              "paired_rows": 10,
+              "method_mean": 0.25632960864581367,
+              "baseline_mean": 0.2672746609795561,
+              "mean_delta": -0.010945052333742428,
+              "p_value_greater": 0.9468843286795989,
+              "cohens_dz": -0.5676221046479734,
+              "bootstrap_ci95_low": -0.022214910849779276,
+              "bootstrap_ci95_high": -0.0003358352600501565,
+              "dataset": "unsw_nb15",
+              "tail_flip_rate": 0.6,
+              "method": "CL+Graph-soft",
+              "reference": "Confident-Learning",
+              "metric": "tail_macro_f1",
+              "p_holm_greater": 1.0
+            },
+            "macro_superiority_descriptive": {
+              "paired_rows": 10,
+              "method_mean": 0.48475969690470055,
+              "baseline_mean": 0.4878344422077653,
+              "mean_delta": -0.0030747453030648573,
+              "p_value_greater": 0.8928845477533737,
+              "cohens_dz": -0.422595543125975,
+              "bootstrap_ci95_low": -0.007315650235096641,
+              "bootstrap_ci95_high": 0.0010023588061659845,
+              "dataset": "unsw_nb15",
+              "tail_flip_rate": 0.6,
+              "method": "CL+Graph-soft",
+              "reference": "Confident-Learning",
+              "metric": "macro_f1",
+              "p_holm_greater": 1.0
+            },
+            "macro_noninferiority": {
+              "paired_rows": 10,
+              "mean_delta": -0.0030747453030648573,
+              "delta": 0.01,
+              "p_noninferior": 0.007359164154759656,
+              "passed": true
+            },
+            "class_f1_guard": {
+              "limit": 0.05,
+              "worst_class": "3",
+              "worst_mean_delta": -0.02524155860919522,
+              "passed": true,
+              "class_mean_deltas": {
+                "0": 0.00036694042680218697,
+                "1": -0.004634434188239549,
+                "2": -0.015291234239884745,
+                "3": -0.02524155860919522,
+                "4": 0.0029085620133018075,
+                "5": 8.617384834597175e-07,
+                "6": 0.00011056149313359853,
+                "7": -0.0036544835250810204,
+                "8": 0.017762077163095386
+              }
+            },
+            "passed": false,
+            "screening_direction_positive": false
+          },
+          {
+            "tail_flip_rate": 0.8,
+            "tail_primary": {
+              "paired_rows": 10,
+              "method_mean": 0.20999023161923042,
+              "baseline_mean": 0.20902400637234564,
+              "mean_delta": 0.0009662252468847609,
+              "p_value_greater": 0.4145713229041215,
+              "cohens_dz": 0.07025570762936305,
+              "bootstrap_ci95_low": -0.006241729005667725,
+              "bootstrap_ci95_high": 0.009493272085237314,
+              "dataset": "unsw_nb15",
+              "tail_flip_rate": 0.8,
+              "method": "CL+Graph-soft",
+              "reference": "Confident-Learning",
+              "metric": "tail_macro_f1",
+              "p_holm_greater": 1.0
+            },
+            "macro_superiority_descriptive": {
+              "paired_rows": 10,
+              "method_mean": 0.4629502696105171,
+              "baseline_mean": 0.4623290227460962,
+              "mean_delta": 0.0006212468644209324,
+              "p_value_greater": 0.36891480493560247,
+              "cohens_dz": 0.10918142403930377,
+              "bootstrap_ci95_low": -0.0024423034904882744,
+              "bootstrap_ci95_high": 0.004237363825405733,
+              "dataset": "unsw_nb15",
+              "tail_flip_rate": 0.8,
+              "method": "CL+Graph-soft",
+              "reference": "Confident-Learning",
+              "metric": "macro_f1",
+              "p_holm_greater": 1.0
+            },
+            "macro_noninferiority": {
+              "paired_rows": 10,
+              "mean_delta": 0.0006212468644209324,
+              "delta": 0.01,
+              "p_noninferior": 0.00011413510415504149,
+              "passed": true
+            },
+            "class_f1_guard": {
+              "limit": 0.05,
+              "worst_class": "3",
+              "worst_mean_delta": -0.0319989202988015,
+              "passed": true,
+              "class_mean_deltas": {
+                "0": -0.0013684494625926247,
+                "1": 0.0051919035146824055,
+                "2": 0.002687455860154321,
+                "3": -0.0319989202988015,
+                "4": -0.0010476175243464558,
+                "5": 0.0009334027539378287,
+                "6": -1.5443487317856608e-06,
+                "7": 0.008799893063913988,
+                "8": 0.022395098221571985
+              }
+            },
+            "passed": false,
+            "screening_direction_positive": true
+          }
+        ],
+        "passed": false,
+        "screening_direction_positive": true,
+        "mixed_effect_robustness": {
+          "available": true,
+          "model": "tail_delta ~ C(tail_flip_rate) + (1|seed)",
+          "paired_rows": 30,
+          "seed_groups": 10,
+          "estimate_average_rate_delta": -0.006718872617571735,
+          "z_value": -2.016824487678381,
+          "p_value_greater": 0.9781430837365804,
+          "ci95_low": -0.013248319491906272,
+          "ci95_high": -0.0001894257432371975,
+          "random_intercept_variance": 2.343434559052572e-05,
+          "residual_variance": 0.00026264607299178173,
+          "converged": true,
+          "warnings": [
+            "The MLE may be on the boundary of the parameter space."
+          ]
+        }
+      }
+    },
+    "global_verdict": "null"
+  },
+  "outputs": {
+    "results": "results/p4_cl_graph_combo_full_unsw_nb15.csv",
+    "partial": "results/p4_cl_graph_combo_full_unsw_nb15.partial.csv"
+  }
+}
