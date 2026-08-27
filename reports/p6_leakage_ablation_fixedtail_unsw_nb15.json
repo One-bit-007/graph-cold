@@ -1,0 +1,48 @@
+{
+  "stage": "P6-P0-6-leakage-ablation",
+  "completed": true,
+  "row_count": 180,
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "noise_rate": 0.6,
+  "methods": [
+    "CoLD",
+    "ablation_hard",
+    "Graph-CoLD-soft"
+  ],
+  "conditions": [
+    "FINAL",
+    "DUP",
+    "ENT",
+    "PRX",
+    "ORA",
+    "ALL"
+  ],
+  "conditions_run": {
+    "unsw_nb15": [
+      "ALL",
+      "DUP",
+      "ENT",
+      "FINAL",
+      "ORA",
+      "PRX"
+    ]
+  },
+  "unsupported": {},
+  "statistics": "descriptive paired deltas vs FINAL with bootstrap 95% CI; no new inferential family (F-6)",
+  "tail_definition": "F-2 tail locked per seed to the FINAL condition window (tail_lock files in results/)",
+  "outputs": {
+    "results": "results/p6_leakage_ablation_fixedtail_unsw_nb15.csv",
+    "deltas": "tables/table_p6_leakage_ablation_fixedtail_unsw_nb15.csv"
+  }
+}

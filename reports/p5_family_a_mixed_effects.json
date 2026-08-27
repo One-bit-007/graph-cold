@@ -1,0 +1,51 @@
+{
+  "cesnet_tls_year22": {
+    "available": true,
+    "model": "tail_delta ~ C(tail_flip_rate) + (1|seed)",
+    "paired_rows": 30,
+    "seed_groups": 10,
+    "estimate_average_rate_delta": 0.044233838298051095,
+    "z_value": 8.48184390855398,
+    "p_value_greater": 1.1082639977201748e-17,
+    "ci95_low": 0.03401238988460946,
+    "ci95_high": 0.05445528671149273,
+    "random_intercept_variance": 0.0001504944308188809,
+    "residual_variance": 0.0003644411717533103,
+    "converged": true,
+    "warnings": [
+      "The MLE may be on the boundary of the parameter space."
+    ]
+  },
+  "cicids2017": {
+    "available": true,
+    "model": "tail_delta ~ C(tail_flip_rate) + (1|seed)",
+    "paired_rows": 30,
+    "seed_groups": 10,
+    "estimate_average_rate_delta": 0.260587761185352,
+    "z_value": 4.002487279257722,
+    "p_value_greater": 3.134001944818769e-05,
+    "ci95_low": 0.13298145263265276,
+    "ci95_high": 0.3881940697380512,
+    "random_intercept_variance": 0.019675138464795325,
+    "residual_variance": 0.06814010225787186,
+    "converged": true,
+    "warnings": []
+  },
+  "unsw_nb15": {
+    "available": true,
+    "model": "tail_delta ~ C(tail_flip_rate) + (1|seed)",
+    "paired_rows": 30,
+    "seed_groups": 10,
+    "estimate_average_rate_delta": 0.03845328461777032,
+    "z_value": 9.476476086480554,
+    "p_value_greater": 1.3150769353173193e-21,
+    "ci95_low": 0.030500217227496528,
+    "ci95_high": 0.046406352008044105,
+    "random_intercept_variance": 6.423826915391583e-05,
+    "residual_variance": 0.00030124816754268535,
+    "converged": true,
+    "warnings": [
+      "The MLE may be on the boundary of the parameter space."
+    ]
+  }
+}

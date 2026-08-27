@@ -1,0 +1,49 @@
+{
+  "stage": "P6-P0-6-leakage-ablation",
+  "completed": true,
+  "row_count": 150,
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "noise_rate": 0.6,
+  "methods": [
+    "CoLD",
+    "ablation_hard",
+    "Graph-CoLD-soft"
+  ],
+  "conditions": [
+    "FINAL",
+    "DUP",
+    "ENT",
+    "PRX",
+    "ORA",
+    "ALL"
+  ],
+  "conditions_run": {
+    "cicids2017": [
+      "ALL",
+      "DUP",
+      "FINAL",
+      "ORA",
+      "PRX"
+    ]
+  },
+  "unsupported": {
+    "cicids2017/ENT": "local CICIDS-2017 copy lacks entity columns; ENT toggle requires the original GeneratedLabelledFlows (WP-3, time-boxed to 2026-09-03)"
+  },
+  "statistics": "descriptive paired deltas vs FINAL with bootstrap 95% CI; no new inferential family (F-6)",
+  "tail_definition": "F-2 tail locked per seed to the FINAL condition window (tail_lock files in results/)",
+  "outputs": {
+    "results": "results/p6_leakage_ablation_fixedtail_cicids2017.csv",
+    "deltas": "tables/table_p6_leakage_ablation_fixedtail_cicids2017.csv"
+  }
+}
