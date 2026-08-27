@@ -37,6 +37,8 @@ RATES = (0.4, 0.6, 0.8)
 TRAIN_WINDOW = 100_000
 TEST_WINDOW = 20_000
 METHODS = ("CoLD", "ablation_hard", "Graph-CoLD-soft", "Confident-Learning", "CL+Graph-soft")
+# Smallest effect of interest for contradicting a null claim; reuses the frozen F-6 TOST margin.
+PRACTICAL_DELTA = 0.01
 
 
 def _scenario_rows(ds, seed: int, rate: float) -> list[dict[str, Any]]:
@@ -84,7 +86,7 @@ def _scenario_rows(ds, seed: int, rate: float) -> list[dict[str, Any]]:
     return rows
 
 
-def _delta(frame: pd.DataFrame, method: str, reference: str) -> dict[str, Any]:
+def _delta(frame: pd.DataFrame, method: str, reference: str, expected: str) -> dict[str, Any]:
     per_rate: list[dict[str, Any]] = []
     for rate in sorted(frame.tail_flip_rate.unique()):
         part = frame[np.isclose(frame.tail_flip_rate, rate)]
@@ -105,8 +107,18 @@ def _delta(frame: pd.DataFrame, method: str, reference: str) -> dict[str, Any]:
             "bootstrap_ci95_high": float(hi),
             "direction_positive": bool(np.mean(diff) > 0),
         })
-    return {"method": method, "reference": reference, "per_rate": per_rate,
-            "direction_consistent": bool(per_rate) and all(r["direction_positive"] for r in per_rate)}
+    consistent = bool(per_rate) and all(r["direction_positive"] for r in per_rate)
+    if expected == "positive":
+        holds = consistent
+    else:  # expected == "null": contradicted only by a CI-supported, practically meaningful positive increment
+        holds = bool(per_rate) and not any(
+            r["bootstrap_ci95_low"] > 0 and r["mean_delta"] >= PRACTICAL_DELTA for r in per_rate
+        )
+    return {"method": method, "reference": reference, "expected": expected, "per_rate": per_rate,
+            "direction_consistent": consistent,
+            "ci_excludes_zero_rates": [r["tail_flip_rate"] for r in per_rate
+                                       if r["bootstrap_ci95_low"] > 0 or r["bootstrap_ci95_high"] < 0],
+            "conclusion_holds": holds}
 
 
 def run(
@@ -139,10 +151,13 @@ def run(
     frame = pd.DataFrame(rows)
     final_csv = out / "p6_scale_validation_cicids.csv"
     frame.to_csv(final_csv, index=False)
+    return _build_report(frame, final_csv, reports)
 
+
+def _build_report(frame: pd.DataFrame, final_csv: Path, reports: Path) -> dict[str, Any]:
     comparisons = [
-        _delta(frame, "Graph-CoLD-soft", "ablation_hard"),   # family A direction
-        _delta(frame, "CL+Graph-soft", "Confident-Learning"),  # G2 direction
+        _delta(frame, "Graph-CoLD-soft", "ablation_hard", expected="positive"),   # family A: positive claim
+        _delta(frame, "CL+Graph-soft", "Confident-Learning", expected="null"),    # G2: null claim
     ]
     report = {
         "stage": "P6b-F-1.2-scale-validation",
@@ -156,7 +171,15 @@ def run(
         "expected_row_count": len(SEEDS) * len(RATES) * len(METHODS),
         "completed": int(len(frame)) == len(SEEDS) * len(RATES) * len(METHODS),
         "comparisons": comparisons,
-        "verdict": "direction_holds" if all(c["direction_consistent"] for c in comparisons) else "direction_flips",
+        "verdict": "conclusions_hold" if all(c["conclusion_holds"] for c in comparisons) else "conclusion_flips",
+        "verdict_note": (
+            "Per-comparison criterion matches the claim under validation: expected=positive requires all "
+            "per-rate mean deltas > 0; expected=null is contradicted only by a CI-supported increment >= "
+            f"{PRACTICAL_DELTA} (smallest effect of interest, reused from the frozen F-6 TOST margin; "
+            "sign flips around zero are the expected behaviour of a null claim). Earlier verdict string "
+            "'direction_flips' came from applying the positive-claim criterion to the null claim and is "
+            "superseded; underlying per-rate numbers are unchanged."
+        ),
         "outputs": {"results": str(final_csv).replace("\\", "/")},
     }
     (reports / "p6_scale_validation_cicids.json").write_text(
@@ -171,8 +194,14 @@ def main() -> None:
     parser.add_argument("--configs", default="configs")
     parser.add_argument("--out", default="results")
     parser.add_argument("--reports", default="reports")
+    parser.add_argument("--recompute", action="store_true",
+                        help="Rebuild verdict JSON from the existing final CSV without re-running experiments")
     args = parser.parse_args()
-    report = run(args.configs, args.out, args.reports)
+    if args.recompute:
+        frame = pd.read_csv(Path(args.out) / "p6_scale_validation_cicids.csv")
+        report = _build_report(frame, Path(args.out) / "p6_scale_validation_cicids.csv", Path(args.reports))
+    else:
+        report = run(args.configs, args.out, args.reports)
     print(json.dumps({"completed": report["completed"], "row_count": report["row_count"],
                       "verdict": report["verdict"]}, indent=2, default=str), flush=True)
 

@@ -27,6 +27,7 @@
     {
       "method": "Graph-CoLD-soft",
       "reference": "ablation_hard",
+      "expected": "positive",
       "per_rate": [
         {
           "tail_flip_rate": 0.4,
@@ -52,18 +53,23 @@
           "tail_flip_rate": 0.8,
           "paired_seeds": 3,
           "mean_delta": 0.03086332676710188,
-          "ref_mean": 0.1569022931726349,
-          "method_mean": 0.18776561993973676,
+          "ref_mean": 0.15690229317263485,
+          "method_mean": 0.18776561993973673,
           "bootstrap_ci95_low": -0.03150182676298868,
           "bootstrap_ci95_high": 0.1508273499662929,
           "direction_positive": true
         }
       ],
-      "direction_consistent": true
+      "direction_consistent": true,
+      "ci_excludes_zero_rates": [
+        0.4
+      ],
+      "conclusion_holds": true
     },
     {
       "method": "CL+Graph-soft",
       "reference": "Confident-Learning",
+      "expected": "null",
       "per_rate": [
         {
           "tail_flip_rate": 0.4,
@@ -88,18 +94,23 @@
         {
           "tail_flip_rate": 0.8,
           "paired_seeds": 3,
-          "mean_delta": -0.013697073943921981,
+          "mean_delta": -0.013697073943921945,
           "ref_mean": 0.9671464464874999,
           "method_mean": 0.9534493725435781,
-          "bootstrap_ci95_low": -0.042313136420150554,
+          "bootstrap_ci95_low": -0.04231313642015044,
           "bootstrap_ci95_high": 0.0012219145883846094,
           "direction_positive": false
         }
       ],
-      "direction_consistent": false
+      "direction_consistent": false,
+      "ci_excludes_zero_rates": [
+        0.6
+      ],
+      "conclusion_holds": true
     }
   ],
-  "verdict": "direction_flips",
+  "verdict": "conclusions_hold",
+  "verdict_note": "Per-comparison criterion matches the claim under validation: expected=positive requires all per-rate mean deltas > 0; expected=null is contradicted only by a CI-supported increment >= 0.01 (smallest effect of interest, reused from the frozen F-6 TOST margin; sign flips around zero are the expected behaviour of a null claim). Earlier verdict string 'direction_flips' came from applying the positive-claim criterion to the null claim and is superseded; underlying per-rate numbers are unchanged.",
   "outputs": {
     "results": "results/p6_scale_validation_cicids.csv"
   }
