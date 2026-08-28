@@ -1,0 +1,23 @@
+{
+  "protocol": "P3-F3",
+  "frozen_on": "2026-08-27",
+  "rates": [0.4, 0.6, 0.8],
+  "tail_definition": "training-window class count <= median class count",
+  "mappings": {
+    "cicids2017": {
+      "source": "tail attack classes excluding benign",
+      "target": "dataset-declared benign class"
+    },
+    "unsw_nb15": {
+      "source": "tail attack classes excluding benign",
+      "target": "dataset-declared benign class"
+    },
+    "cesnet_tls_year22": {
+      "source": "low-frequency service classes",
+      "target_label": 11,
+      "target_name": "microsoft-diagnostic",
+      "target_rule": "highest source-window count; ties resolve to lowest encoded label",
+      "semantic_note": "service-to-service corruption; no benign or attack meaning"
+    }
+  }
+}
