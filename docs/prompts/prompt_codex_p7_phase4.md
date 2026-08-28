@@ -31,27 +31,34 @@ CICIDS-2017 修正标签文件。二者均为公开 GitHub 资源：
 - Lanvin et al. 2023, "Errors in the CICIDS2017 dataset and the significant differences in
   detection performances it makes"（修正标签 + 工具）。
 **数据依赖（人工前置，协调者已核实来源，2026-08-28）**：
-- **源 1（主）Engelen/Liu CNS2022**——已核实。
-  - 修正标注**规则代码**（核心）：`https://github.com/GintsEngelen/CNS2022_Code`，
-    人工克隆到 `E:/graphcold-data/cicids2017_corrected/CNS2022_Code/`；
-  - 改进版数据集 CSV（交叉验证用）：下载页
+- **源 1（主）Engelen/Liu CNS2022**——已核实并**已克隆到位**：
+  `E:/graphcold-data/cicids2017_corrected/CNS2022_Code/`（`github.com/GintsEngelen/CNS2022_Code`）。
+  权威规则源 = `Labelling/CICIDS2017_original_version_labelling.ipynb`（吃 CIC 原始 CSV，行级对齐）。
+  - 改进版数据集 CSV（可选，仅聚合交叉验证）：下载页
     `https://intrusion-detection.distrinet-research.be/CNS2022/Dataset_Download.html`
     → 目录 `.../CNS2022/Datasets/`，放 `E:/graphcold-data/cicids2017_corrected/engelen_improved_csv/`。
 - **源 2（可选交叉验证）Lanvin CRiSIS2022**：`https://gitlab.inria.fr/mlanvin/crisis2022`
-  （原始流上只改标签，行级对齐；有反爬，需人工下载）。下不到不阻塞。
-- **就位判定**：`CNS2022_Code` 克隆完成即可启动本项；CSV/Lanvin 缺失只降级交叉验证，不阻塞。
-- 若数据未就位：跳过本项，先做 P1-3/P1-1/P1-2，并在报告标注「等待人工获取修正标签」。
+  （原始流上只改标签；有反爬，需人工下载）。下不到不阻塞。
+- **就位判定**：`CNS2022_Code` 已克隆 → **本项可立即启动**。CSV/Lanvin 缺失只降级交叉验证。
 
 **关键设计（协调者裁定，避免流对齐陷阱）**：
-Engelen **用修复版 CICFlowMeter 重新生成了流**，流边界与原始不同，**不能**与原始 CICIDS
-做行级 1:1 匹配。因此主路径是「**规则派生**」而非「文件对齐」：
-- Engelen 的修正标注逻辑是一组确定性规则，键于 (Src IP, Dst IP, Dst/Src Port, 时间窗)——
-  这些列在 **WP-3 raw 副本**（`E:/graphcold-data/cicids2017_raw/`，已就位）上全部存在；
-- 把这组规则**实现/移植**并套用到我们冻结的 raw 流上 → 每条流得到「修正标签」，
-  与该流的「原始标签」逐行对齐，差集 = 真实标注错误集（行级、可复现、不依赖下载匹配）；
-- **「Attempted」处理纪律（源站强制）**：凡修正逻辑判为 Attempted（`Attempted Category != -1`，
-  即"意图攻击但无恶意行为"）的流一律**归为 Benign**；**绝不**把 Attempted 作为独立 ML 类别。
-  这条必须在实现里硬编码并加断言。
+Engelen **用修复版 CICFlowMeter 重新生成了流**，改进版 CSV 的流边界与原始不同，**不能**与
+原始 CICIDS 做行级 1:1 匹配。**但仓库已提供直接可用的解法**：
+`CNS2022_Code/Labelling/CICIDS2017_original_version_labelling.ipynb`（已克隆到
+`E:/graphcold-data/cicids2017_corrected/CNS2022_Code/`）——README 明确它「用于仅研究标注错误
+对分类器的影响」，**直接接受 CIC 原始发布 CSV 作输入**（正是我们的 WP-3 raw 副本 schema），
+把 `Label` 清空为 `NeedManualLabel` 后用一组硬编码 `label_flows(...)` 规则重标，输出修正标签
++ `Attempted Category` 列，**行级对齐原始流天然成立**。
+- **主路径 = 移植该 notebook**：把其 `label_flows` 规则调用、`format_csv_for_labelling`、
+  尤其是**时间戳重建**逻辑原样移植为一个 Python 模块，套用到 WP-3 raw 流上得到修正标签；
+  与原始发布 `Label` 逐行 diff = 真实标注错误集。**不要**改规则、不要自行反推。
+- **时间戳重建必须精确复刻**（notebook 内逻辑，易错）：解析 `%d/%m/%Y %H:%M` →
+  `hour < 7` 则 +12h（作者用 12 小时制但删了 AM/PM，流量集中 9:00–17:00）→ 再 +3h
+  从 New Brunswick 夏令时(UTC-3)转 UTC。攻击时间窗在 notebook 中以 unix 纳秒硬编码，须原样保留。
+  注意与 WP-3 loader 既有时间戳处理的一致性/差异，如实记录。
+- **「Attempted」处理纪律（源站强制）**：凡 `Attempted Category != -1`（意图攻击但无恶意行为）
+  的流一律**归为 Benign**；**绝不**把 Attempted 作独立 ML 类别。实现里硬编码并加断言。
+- 改进版 CSV / Lanvin 仅作**聚合层面**交叉验证（差集规模、类分布量级），不做行级对齐。
 
 **实验设计（就位后）**：
 1. **规则派生 + 差集**：在 raw 副本上派生修正标签，原始 vs 修正差集 = 真实标注错误集；
