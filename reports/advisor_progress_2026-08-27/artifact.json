@@ -1,0 +1,343 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "Graph-CoLD 论文提升工作阶段总结与导师决策建议",
+    "description": "截至 2026-08-27 的协议、实验、工程与文稿状态汇总。",
+    "generatedAt": "2026-08-27T23:00:00+08:00",
+    "cards": [
+      {
+        "id": "datasets_audited",
+        "description": "P0-2 已纳入 CICIDS、CESNET 与 UNSW。",
+        "dataset": "headline",
+        "sourceId": "p3_report",
+        "metrics": [
+          {"label": "已审计数据集", "field": "datasets_audited", "format": "number", "unit": "个"}
+        ]
+      },
+      {
+        "id": "p02_conditions",
+        "description": "P0-2 粗筛中有落盘结果的可执行条件；另有 5 个明确不支持条件。",
+        "dataset": "headline",
+        "sourceId": "p3_report",
+        "metrics": [
+          {"label": "P0-2 可执行条件", "field": "p02_conditions", "format": "number", "unit": "个"}
+        ]
+      },
+      {
+        "id": "p04_pairs",
+        "description": "CESNET 正式 P0-4：10 seeds × 3 噪声率。",
+        "dataset": "headline",
+        "sourceId": "p4_report",
+        "metrics": [
+          {"label": "P0-4 正式配对", "field": "p04_pairs", "format": "number", "unit": "组"}
+        ]
+      },
+      {
+        "id": "targeted_tests",
+        "description": "加载器、代理字段、Confident Learning 与 P0-4 的定向测试；非全仓库测试。",
+        "dataset": "headline",
+        "sourceId": "synthesis_notes",
+        "metrics": [
+          {"label": "定向测试通过", "field": "targeted_tests", "format": "number", "unit": "项"}
+        ]
+      }
+    ],
+    "charts": [
+      {
+        "id": "g2_tail_delta_boxplot",
+        "title": "CESNET 上 CL+Graph-soft 相对 Confident Learning 的 Tail-F1 配对差值",
+        "subtitle": "每档 10 seeds；正值偏向组合方法，零线表示无增益",
+        "intent": "distribution",
+        "question": "组合方法的 Tail-F1 增益是否在各噪声率和 seeds 下稳定为正？",
+        "rationale": "箱线图展示三档噪声率下配对差值的分布、离散程度与过零情况，比只报告总体均值更能揭示不稳定性。",
+        "type": "boxPlot",
+        "dataset": "g2_box_summary",
+        "sourceId": "p4_csv",
+        "encodings": {
+          "x": {"field": "noise_rate", "type": "ordinal", "label": "训练标签噪声率"},
+          "y": {"fields": ["min", "q1", "median", "q3", "max"], "type": "quantitative", "label": "Tail-F1 差值（CL+Graph-soft − CL）", "format": "number"},
+          "tooltip": [
+            {"field": "mean", "type": "quantitative", "label": "均值", "format": "number"}
+          ]
+        },
+        "valueFormat": "number",
+        "layout": "full",
+        "palette": {"kind": "sequential", "name": "blue"},
+        "legend": {"position": "bottom", "interactive": false, "sort": "spec"},
+        "referenceLines": [
+          {"value": 0, "axis": "x", "label": "无增益", "color": "neutral", "lineStyle": "dashed"}
+        ]
+      }
+    ],
+    "tables": [
+      {
+        "id": "phase_status_table",
+        "title": "各阶段真实完成状态",
+        "subtitle": "“粗筛完成”不等于正式统计完成；文稿框架改写不等于数字已经回填",
+        "dataset": "phase_status",
+        "sourceId": "synthesis_notes",
+        "defaultSort": {"field": "phase", "direction": "asc"},
+        "density": "spacious",
+        "layout": "full",
+        "columns": [
+          {"field": "phase", "label": "阶段", "type": "text"},
+          {"field": "state", "label": "当前状态", "type": "text"},
+          {"field": "completed", "label": "已经完成", "type": "text"},
+          {"field": "outstanding", "label": "尚未完成", "type": "text"},
+          {"field": "implication", "label": "对推进的含义", "type": "text"}
+        ]
+      },
+      {
+        "id": "p02_findings_table",
+        "title": "P0-2 三数据集代理泄漏审计粗筛",
+        "subtitle": "3 seeds × 0.6 非对称噪声；仅用于方向筛选",
+        "dataset": "p02_findings",
+        "sourceId": "p3_report",
+        "defaultSort": {"field": "dataset", "direction": "asc"},
+        "density": "spacious",
+        "layout": "full",
+        "columns": [
+          {"field": "dataset", "label": "数据集", "type": "text"},
+          {"field": "finding", "label": "主要发现", "type": "text"},
+          {"field": "directional_result", "label": "方向性结果", "type": "text"},
+          {"field": "limitation", "label": "限制", "type": "text"}
+        ]
+      },
+      {
+        "id": "g2_rate_table",
+        "title": "G2 预注册门槛的分噪声率结果",
+        "subtitle": "CESNET，10 seeds/档；Holm 家族固定为 18 项，未扩跑单元以 p=1 保守占位",
+        "dataset": "g2_rate_summary",
+        "sourceId": "p4_report",
+        "defaultSort": {"field": "noise_rate", "direction": "asc"},
+        "density": "spacious",
+        "layout": "full",
+        "columns": [
+          {"field": "noise_rate", "label": "噪声率", "type": "text"},
+          {"field": "tail_delta", "label": "Tail-F1 Δ", "format": "number", "movement": true},
+          {"field": "ci", "label": "95% CI", "type": "text"},
+          {"field": "holm_p", "label": "Holm p", "format": "number"},
+          {"field": "dz", "label": "Cohen dz", "format": "number"},
+          {"field": "macro_delta", "label": "Macro-F1 Δ", "format": "number", "movement": true},
+          {"field": "worst_class_delta", "label": "最差类别 Δ", "format": "number", "movement": true},
+          {"field": "verdict", "label": "判定", "type": "text"}
+        ]
+      },
+      {
+        "id": "route_table",
+        "title": "后续研究路线对比",
+        "subtitle": "建议导师先确认论文定位，再批准实验预算",
+        "dataset": "routes",
+        "sourceId": "synthesis_notes",
+        "defaultSort": {"field": "route", "direction": "asc"},
+        "density": "spacious",
+        "layout": "full",
+        "columns": [
+          {"field": "route", "label": "路线", "type": "text"},
+          {"field": "positioning", "label": "中心定位", "type": "text"},
+          {"field": "must_do", "label": "必须补齐", "type": "text"},
+          {"field": "risk", "label": "主要风险", "type": "text"},
+          {"field": "assessment", "label": "当前判断", "type": "text"}
+        ]
+      },
+      {
+        "id": "roadmap_table",
+        "title": "建议的下一阶段执行顺序",
+        "subtitle": "先解决会改变论文中心结论的门，再做增强性实验和写作",
+        "dataset": "roadmap",
+        "sourceId": "synthesis_notes",
+        "defaultSort": {"field": "priority", "direction": "asc"},
+        "density": "spacious",
+        "layout": "full",
+        "columns": [
+          {"field": "priority", "label": "优先级", "format": "number"},
+          {"field": "work", "label": "工作包", "type": "text"},
+          {"field": "question", "label": "要回答的问题", "type": "text"},
+          {"field": "exit_gate", "label": "完成门槛", "type": "text"},
+          {"field": "effort", "label": "建议预算", "type": "text"}
+        ]
+      }
+    ],
+    "sources": [
+      {"id": "synthesis_notes", "label": "导师汇报来源与图表说明", "path": "reports/advisor_progress_2026-08-27/source_notes.md"},
+      {"id": "p3_report", "label": "P0-2 代理泄漏审计粗筛报告", "path": "reports/p3_proxy_audit_screening.md"},
+      {"id": "p4_screening", "label": "P0-4 三数据集粗筛报告", "path": "reports/p4_cl_graph_combo_screening.md"},
+      {"id": "p4_report", "label": "P0-4 CESNET 正式 G2 报告", "path": "reports/p4_cl_graph_combo_full_cesnet_tls_year22.md"},
+      {"id": "p4_csv", "label": "P0-4 CESNET 正式结果明细", "path": "results/p4_cl_graph_combo_full_cesnet_tls_year22.csv"},
+      {"id": "manuscript", "label": "当前 Springer 盲审稿 LaTeX", "path": "paper/springer/graph_cold_sn_blind.tex"},
+      {"id": "protocol_history", "label": "协议历史与冻结口径", "path": "reproducibility/protocol_history.md"},
+      {"id": "noise_map", "label": "冻结噪声映射", "path": "reproducibility/noise_map.json"}
+    ],
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "layout": "full",
+        "body": "# Graph-CoLD 论文提升工作阶段总结与导师决策建议"
+      },
+      {
+        "id": "technical_summary",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## 当前结论：已经完成关键审计，但尚不具备重投稿条件\n\n**最重要的进展不是把原有性能结论做得更强，而是把论文从容易被质疑的性能论文重定位为可审计的边界研究。** Phase 0 已冻结协议并修正 CESNET 任务语义；P0-2 在三数据集上发现标签代理、表示碰撞和划分限制；P0-4 的正式结论为 G2=`null`，即没有证据表明 Graph-CDM 能在 Confident Learning 之上提供稳定 Tail-F1 增量。\n\n因此，当前最稳妥的中心声明应是：**图结构何时提供真实的带噪标签信号、何时只是在重建标签生成代理；软保留在共享管线中表现出方向性机制价值，但 Graph-CDM 不是对强精确剪枝基线的性能升级。**\n\n论文暂时不能重投。P0-3 因子消融、主结果的分噪声率统计、最终泄漏消融、规模/多窗口验证和自然噪声外部效度仍未闭合；当前 LaTeX 虽完成了标题—摘要—贡献框架收缩，但结果表和统计段仍主要引用旧 P2f 口径。"
+      },
+      {
+        "id": "headline_metrics",
+        "type": "metric-strip",
+        "layout": "full",
+        "cardIds": ["datasets_audited", "p02_conditions", "p04_pairs", "targeted_tests"]
+      },
+      {
+        "id": "status_heading",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## 工作推进到哪里：Phase 0 基本完成，Phase 1 只完成粗筛，Phase 2 仅完成 P0-4\n\n阶段状态必须按证据等级理解。P0-2 的 3-seed 结果足以决定哪些配置值得扩跑，但不能替代 10-seed 正式推断；P0-4 的 CESNET 结果已经达到正式证据标准，而 P0-3 尚未启动。"
+      },
+      {"id": "phase_status_block", "type": "table", "tableId": "phase_status_table", "layout": "full"},
+      {
+        "id": "phase0_result",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## Phase 0 已把最危险的语义与协议问题前置解决\n\n已冻结 train/test=10,000/5,000、seeds 0–9、按数据集启用视图、Tail 定义、噪声映射、group-disjoint、调参和统计协议。CESNET 保留为 25 类 TLS 服务分类压力测试，不再支撑攻击/良性结论；CTU-13、CIC-IDS-2018、Bot-IoT 均未形成比方案 B 更低风险的替换路径。\n\n写作层面，标题已改为 *When Does Graph Structure Help Noisy-Label Intrusion Detection?*；摘要压缩至约 227 词；贡献顺序改为“泄漏审计—软保留机制—Graph-CDM 诊断工具”；`rare-attack evidence` 已收缩为 `rare-class training-signal retention`。\n\n仍需注意：F-7 的 CESNET/UNSW 原始数据哈希、全部划分索引哈希和最终配置快照尚未全部签署；W3 数字一致性也必须等正式结果回填后重跑。"
+      },
+      {
+        "id": "p02_heading",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "p3_report",
+        "body": "## P0-2 证明审计主线有实质内容，但 G1 仍只是初判\n\n粗筛覆盖 18 个可执行条件，另有 5 个条件因本地数据缺少必要字段而明确标为不支持。CESNET 发现 `CATEGORY_*` 与 `DST_PORT` 直接代理，屏蔽后 soft Macro-F1 从 0.699 降到 0.641；iid 下表示空间近似碰撞率为 CESNET 87.3%、CICIDS 82.7%、UNSW 23.7%。这些值衡量标准化特征碰撞，不等同原始流重复。\n\n所有可测条件的 soft−hard Tail-F1 方向为正（约 +0.016 至 +0.104），说明软保留值得进入正式因子消融；但目前只有 3 seeds，不能写成显著性结论。"
+      },
+      {"id": "p02_table_block", "type": "table", "tableId": "p02_findings_table", "layout": "full"},
+      {
+        "id": "p02_interpretation",
+        "type": "markdown",
+        "layout": "full",
+        "body": "### 对 G1 的谨慎解释\n\nG1 目前应表述为“方向存活，但绝对性能和适用范围明显收缩”。最强的可保留论点是共享管线内 soft 相对 hard 的机制差异；不能再把 iid 绝对分数、单一 LabelPropagation 对照或 CICIDS 未见类留出结果外推为部署鲁棒性。是否正式保留机制主张，要由 P0-3 的 #4 vs #5/#6 和族 C 统计决定。"
+      },
+      {
+        "id": "g2_heading",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "p4_report",
+        "body": "## P0-4 已作出明确负结论：G2=`null`\n\n三数据集粗筛中，CICIDS 的 Tail-F1 增量为 0，UNSW 为负，只有 CESNET 出现很小的正向信号。因此按预先冻结的筛选规则，只对 CESNET 扩展到 10 seeds × 3 噪声率。正式结果没有任何噪声率通过 Tail-F1 优效门槛：0.4 和 0.6 的均值虽为正，但区间跨零且 Holm p=1；0.8 的均值为负。"
+      },
+      {"id": "g2_chart_block", "type": "chart", "chartId": "g2_tail_delta_boxplot", "layout": "full"},
+      {
+        "id": "g2_chart_note",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "p4_csv",
+        "body": "图中每个箱体汇总同一噪声率下 10 个 seed 的配对差值。0.6 档中位数较高，但仍有负值且正式置信区间跨零；0.8 档中位数和均值均为负。该分布支持“组合方法不稳定”，而不是“样本量不足下已有稳定正趋势”。"
+      },
+      {"id": "g2_rate_block", "type": "table", "tableId": "g2_rate_table", "layout": "full"},
+      {
+        "id": "g2_implication",
+        "type": "markdown",
+        "layout": "full",
+        "body": "### G2 对论文定位的直接影响\n\nMacro-F1 的 δ=0.01 非劣效检验与逐类 F1 回退 ≤0.05 护栏均通过，但它们只能说明组合方法没有明显整体代价，不能替代 Tail-F1 优效性。随机截距稳健性模型的平均 Tail-F1 Δ=+0.0044、单侧 p=0.192、95% CI=[-0.0055,+0.0144]，同样不支持增量。\n\n因此必须撤回“Graph-CDM 对 Confident Learning 有显著增量”的声明，把 Graph-CDM 降格为审计/诊断工具。继续围绕这一组合调参以寻找正结果，会构成高风险的事后选择。"
+      },
+      {
+        "id": "engineering",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## 工程与复现基础已显著加强，但还不是最终复现包\n\n已经完成的工程工作包括：加载器支持 S0–S3 与严格时间—实体联合隔离；实体与源文件元数据透传；代理字段禁令写成回归测试；CESNET 噪声目标冻结为 `microsoft-diagnostic`（code 11）；Confident Learning 改为完整分层折外概率；P0-2/P0-4 运行器支持可续跑、逐条件 JSON/CSV 和正式统计；协议历史与噪声映射已入复现目录。\n\n当前相关定向测试 26/26 通过。这个数字只覆盖本轮触及的加载器、代理屏蔽、CL 与 P0-4，不代表全仓库测试或论文发布门已经通过。"
+      },
+      {
+        "id": "manuscript_gap",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "manuscript",
+        "body": "## 文稿已完成叙事框架收缩，但尚未吸收最新实验\n\n当前 LaTeX 已正确区分 CICIDS/UNSW 的攻击任务与 CESNET 的服务分类压力测试，也已明确 Confident Learning 是更强性能基线。然而实验与统计段仍写着旧 P2f 的 30 个 seed-rate 观测合并推断，并引用旧的 soft-vs-hard 数字；P0-2 的新代理字段审计、严格 C6 划分、P0-4 G2=`null` 和分噪声率 Holm/TOST 尚未系统回填。\n\n因此当前 PDF 只能作为“重定位草稿”，不能作为准备投稿的修改稿。正确顺序是先完成 P0-3/P0-5/P0-6，再一次性更新摘要、表格、图、讨论、限制和答复信。"
+      },
+      {
+        "id": "limitations",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## 仍会改变结论的限制\n\n- 本地 CICIDS 文件缺少 IP/原始时间戳，实体隔离无法执行，时间/场景划分只能借助源文件星期。\n- UNSW 固定划分缺少时间与实体列，S1/S2 和联合隔离未完成。\n- CESNET 当前审计窗约 7 小时，虽实现严格时间先后和实体零重叠，外部效度仍弱。\n- P0-2 的高碰撞率是处理后特征空间相似，不是原始流重复率。\n- 高噪声稀有类上 Cleanlab 曾提示样本过少；混合效应模型收敛但方差估计接近边界。\n- 目前仍以合成非对称噪声为主，尚未通过自然噪声或真实标注错误验证。"
+      },
+      {
+        "id": "route_heading",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## 建议导师优先选择审计驱动路线，而不是继续挽救性能叙事\n\n现有证据已经支持一篇有价值的边界研究：它揭示图去噪容易被标签代理、表示碰撞、划分重叠和统计伪重复抬高，也诚实报告强精确剪枝基线胜出。相比之下，性能挽救路线需要新方法、原始数据、多窗口和更多强基线，且 G2 已给出不利先验。"
+      },
+      {"id": "route_table_block", "type": "table", "tableId": "route_table", "layout": "full"},
+      {
+        "id": "roadmap_heading",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## 推荐推进顺序：先闭合机制门和数据门，再补外部效度与写作\n\nP0-3 是当前最关键的下一步，因为它决定软保留是否只是普通类别重加权。与此同时需要导师决定是否投入成本获取 CICIDS/UNSW 原始字段；如果不获取，就必须接受 group-disjoint 证据不完整并进一步收缩数据集级结论。"
+      },
+      {"id": "roadmap_table_block", "type": "table", "tableId": "roadmap_table", "layout": "full"},
+      {
+        "id": "advisor_questions",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## 建议带给导师直接拍板的六个问题\n\n1. 是否接受把论文中心定位正式改为“泄漏审计驱动的边界/负结果研究”，并删除 Graph-CDM 对 CL 的性能增量声明？\n2. 目标期刊是否仍坚持 *Cybersecurity*，还是更适合 measurement、dataset quality 或 SoK 导向 venue？\n3. 是否批准获取含完整 IP/时间戳的 CICIDS 与 UNSW 原始数据，以补齐 S1/S2/S1∩S2；若不批准，是否接受明确的数据限制和更窄结论？\n4. P0-3 是否按完整 7 组矩阵执行，还是先只做最关键的 #4 vs #5/#6 加 Dpred/Dneigh/Dview 单因素？\n5. 在算力有限时，100k 规模、多窗口、自然噪声、强基线中应如何排序？本报告建议自然噪声与最终泄漏消融优先于继续调 Graph-CDM。\n6. 是否同意在全部 P0 门关闭前冻结正文数字，只维护追溯矩阵和结果占位，避免反复改稿？"
+      },
+      {
+        "id": "closing",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## 建议的导师会议结论模板\n\n如果导师认可推荐路线，本阶段可以形成如下决议：**保留 Graph-CoLD 项目，但从性能贡献转为审计与边界贡献；立即执行 P0-3 和原始数据可得性裁决，随后完成 P0-5/P0-6；P1 只保留自然噪声、文献重定位和必要强基线；所有结果冻结后再重写主稿和答复信。**"
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-08-27T23:00:00+08:00",
+    "status": "ready",
+    "datasets": {
+      "headline": [
+        {"datasets_audited": 3, "p02_conditions": 18, "p04_pairs": 30, "targeted_tests": 26}
+      ],
+      "phase_status": [
+        {"order": 0, "phase": "Phase 0", "state": "基本完成", "completed": "协议冻结、P0-1 方案 B、W1/W2/W4/W5", "outstanding": "F-7 全量哈希/快照；W3 最终数字一致性", "implication": "可作为后续实验共同协议，但不能宣称复现包完成"},
+        {"order": 1, "phase": "Phase 1 / P0-2", "state": "粗筛完成", "completed": "三数据集代理屏蔽、可用隔离划分、碰撞审计、回归测试", "outstanding": "10-seed 正式 G1；CICIDS/UNSW 原始字段", "implication": "支持审计主线和进入 P0-3，不支持正式显著性"},
+        {"order": 2, "phase": "Phase 2 / P0-4", "state": "完成", "completed": "三数据集筛选；CESNET 存活配置 10×3 全量；G2=null", "outstanding": "无需要继续扩跑的主组合", "implication": "撤回 Graph-CDM 对 CL 的增量声明"},
+        {"order": 3, "phase": "Phase 2 / P0-3", "state": "未开始", "completed": "矩阵与族 C 判据已冻结", "outstanding": "#1–#7 因子消融及正式统计", "implication": "决定软保留是否只是类别重加权"},
+        {"order": 4, "phase": "Phase 3–4", "state": "未系统执行", "completed": "F-6 已在 P0-4 落地；P1 优先级已按 G2 调整", "outstanding": "P0-5/P0-6、规模/多窗口、自然噪声、必要强基线", "implication": "决定外部效度与是否达到重投稿标准"},
+        {"order": 5, "phase": "Phase 5 / 文稿", "state": "框架改写完成，结果回填未完成", "completed": "标题、227 词摘要、CESNET 语义、贡献重排", "outstanding": "P3/P4 结果、分噪声率统计、最终表图、答复信", "implication": "当前 PDF 不是可投稿版本"}
+      ],
+      "p02_findings": [
+        {"dataset": "CESNET", "finding": "CATEGORY_*、DST_PORT 构成标签代理；屏蔽后 soft Macro-F1 0.699→0.641", "directional_result": "严格时间∩实体隔离下 soft−hard Tail-F1 +0.039", "limitation": "当前窗口约 7 小时；任务是服务分类而非攻击检测"},
+        {"dataset": "CICIDS", "finding": "iid 近似特征碰撞 82.7%；场景留出崩塌主要由未见类主导", "directional_result": "端口屏蔽后 soft−hard Tail-F1 +0.104；时间序 soft 0.454 vs hard 0.254", "limitation": "本地数据缺 IP，实体隔离不可执行；部分条件 Tail 无交集"},
+        {"dataset": "UNSW", "finding": "屏蔽 ct_* 后表示维度下降，近似碰撞升至 58.0%，不能解释为原始重复增加", "directional_result": "tier2 屏蔽后 soft−hard Tail-F1 +0.047", "limitation": "固定文件缺时间戳和实体列，S1/S2 不支持"}
+      ],
+      "g2_box_summary": [
+        {"noise_rate": "0.4", "min": -0.043826, "q1": -0.003384, "median": 0.001715, "q3": 0.004638, "max": 0.059181, "mean": 0.003843},
+        {"noise_rate": "0.6", "min": -0.033258, "q1": 0.000762, "median": 0.019130, "q3": 0.028648, "max": 0.039640, "mean": 0.011800},
+        {"noise_rate": "0.8", "min": -0.046582, "q1": -0.009107, "median": -0.003165, "q3": 0.003288, "max": 0.028292, "mean": -0.002381}
+      ],
+      "g2_rate_summary": [
+        {"noise_rate": "0.4", "tail_delta": 0.0038, "ci": "[-0.0102, +0.0200]", "holm_p": 1.0, "dz": 0.146, "macro_delta": 0.0023, "worst_class_delta": -0.0320, "verdict": "不通过"},
+        {"noise_rate": "0.6", "tail_delta": 0.0118, "ci": "[-0.0034, +0.0256]", "holm_p": 1.0, "dz": 0.454, "macro_delta": 0.0072, "worst_class_delta": -0.0192, "verdict": "不通过"},
+        {"noise_rate": "0.8", "tail_delta": -0.0024, "ci": "[-0.0149, +0.0101]", "holm_p": 1.0, "dz": -0.112, "macro_delta": -0.0027, "worst_class_delta": -0.0354, "verdict": "不通过"}
+      ],
+      "routes": [
+        {"priority": 1, "route": "A：审计驱动边界研究（推荐）", "positioning": "解释图结构何时帮助、何时重建标签代理；报告软保留边界与负结果", "must_do": "P0-3、P0-5/P0-6、自然噪声、文献重定位、必要强基线", "risk": "需要接受较弱性能叙事；venue 可能转向 measurement/SoK", "assessment": "与现有证据一致，风险可控"},
+        {"priority": 2, "route": "B：继续挽救性能论文", "positioning": "寻求 Graph-CDM 或组合方法超过强基线", "must_do": "新机制/调参、完整原始数据、多窗口/大规模、更多 SOTA 基线", "risk": "G2 已不利，易形成事后选择；成本高且成功概率低", "assessment": "不建议作为默认路线"}
+      ],
+      "roadmap": [
+        {"priority": 1, "work": "P0-3 因子消融粗筛", "question": "soft 的收益来自图诊断、软权重还是普通类别重加权？", "exit_gate": "#4 对 #5/#6 的方向与各证据分量清晰", "effort": "约 1 周"},
+        {"priority": 1, "work": "原始数据可得性裁决", "question": "是否能补齐 CICIDS/UNSW 的时间与实体隔离？", "exit_gate": "获取数据并验证契约，或书面接受不支持与结论收缩", "effort": "并行 2–3 天决策"},
+        {"priority": 2, "work": "P0-3 存活配置全量", "question": "机制结论能否通过族 C、效应量和非劣效护栏？", "exit_gate": "10 seeds × 3 rates，分噪声率 Holm，类级护栏", "effort": "约 1–2 周"},
+        {"priority": 3, "work": "P0-5/P0-6 与规模/多窗口", "question": "最终主结论是否抗伪重复、窗口选择和规模变化？", "exit_gate": "四因素独立泄漏贡献；100k/多窗口方向不翻转", "effort": "约 1–2 周"},
+        {"priority": 4, "work": "自然噪声与文献重定位", "question": "合成噪声结论是否有外部效度，审计贡献是否有新颖性？", "exit_gate": "至少一组自然/弱规则噪声；完整 related-work 对照", "effort": "约 1–2 周"},
+        {"priority": 5, "work": "必要强基线与最终写作", "question": "是否达到目标 venue 的比较和复现要求？", "exit_gate": "P1-1/P1-3；正文、复现包、逐点答复信一致", "effort": "约 1–2 周"}
+      ]
+    }
+  },
+  "sources": [
+    {"id": "synthesis_notes", "label": "导师汇报来源与图表说明", "path": "reports/advisor_progress_2026-08-27/source_notes.md"},
+    {"id": "p3_report", "label": "P0-2 代理泄漏审计粗筛报告", "path": "reports/p3_proxy_audit_screening.md"},
+    {"id": "p4_screening", "label": "P0-4 三数据集粗筛报告", "path": "reports/p4_cl_graph_combo_screening.md"},
+    {"id": "p4_report", "label": "P0-4 CESNET 正式 G2 报告", "path": "reports/p4_cl_graph_combo_full_cesnet_tls_year22.md"},
+    {"id": "p4_csv", "label": "P0-4 CESNET 正式结果明细", "path": "results/p4_cl_graph_combo_full_cesnet_tls_year22.csv"},
+    {"id": "manuscript", "label": "当前 Springer 盲审稿 LaTeX", "path": "paper/springer/graph_cold_sn_blind.tex"},
+    {"id": "protocol_history", "label": "协议历史与冻结口径", "path": "reproducibility/protocol_history.md"},
+    {"id": "noise_map", "label": "冻结噪声映射", "path": "reproducibility/noise_map.json"}
+  ]
+}
