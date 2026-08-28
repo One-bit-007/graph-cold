@@ -61,7 +61,11 @@ REGISTRY: dict[str, BaselineRegistryEntry] = {
         uses_clean_y_test_for_eval_only=True,
         verified=True,
         include_in_formal_results=True,
-        notes="Formal baseline expansion method.",
+        notes="Formal baseline expansion method. F-5 fix (P7/p7_baseline_expansion): "
+              "noise_rate=None so the forget rate is estimated from the noisy training "
+              "set only (src/baselines/noise_estimate.py); the true injected rate is "
+              "never passed. Results under the oracle forget rate are kept as history "
+              "in p5 and are superseded by results/p7_baseline_expansion.csv.",
         factory=CoTeachingBaseline,
     ),
     "Decoupling": BaselineRegistryEntry(
@@ -85,7 +89,11 @@ REGISTRY: dict[str, BaselineRegistryEntry] = {
         uses_clean_y_test_for_eval_only=True,
         verified=True,
         include_in_formal_results=True,
-        notes="Formal baseline expansion method; unstable settings are retained with a caveat.",
+        notes="Formal baseline expansion method; unstable settings are retained with a caveat. "
+              "F-5 fix (P7/p7_baseline_expansion): noise_rate=None so the retain fraction is "
+              "driven by a noise rate estimated from the noisy training set only "
+              "(src/baselines/noise_estimate.py); the true injected rate is never passed. "
+              "Formal grid results: results/p7_baseline_expansion.csv.",
         factory=FINEBaseline,
     ),
     "MCRe": BaselineRegistryEntry(

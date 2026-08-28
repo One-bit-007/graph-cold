@@ -7,7 +7,10 @@ the published Co-Teaching protocol faithfully:
 - two independently initialized deep networks (small MLPs for tabular flows),
 - per-mini-batch small-loss selection,
 - co-exchange: each network is updated on the peer network's selected batch,
-- forget-rate schedule tracking the true injected noise rate with a gradual
+- forget-rate schedule tracking an ESTIMATED noise rate (F-5 compliant: the
+  estimate uses only the noisy training set, see ``src/baselines/noise_estimate.py``;
+  passing an explicit ``noise_rate`` remains possible for legacy reproduction but
+  the P7 runner always passes ``None``), with a gradual
   warmup (``num_gradual`` epochs), as in the authors' reference code,
 - final predictions average the two networks' softmax probabilities.
 
@@ -30,7 +33,7 @@ class CoTeachingFullBaseline:
     def __init__(
         self,
         seed: int = 0,
-        noise_rate: float = 0.0,
+        noise_rate: float | None = None,
         epochs: int = 40,
         batch_size: int = 512,
         hidden: tuple[int, int] = (256, 128),
@@ -40,7 +43,9 @@ class CoTeachingFullBaseline:
         num_gradual: int = 10,
     ):
         self.seed = int(seed)
-        self.noise_rate = float(noise_rate)
+        # None -> estimated from the noisy training set at fit time (F-5).
+        self.noise_rate = None if noise_rate is None else float(noise_rate)
+        self.noise_rate_source_: str | None = None
         self.epochs = int(epochs)
         self.batch_size = int(batch_size)
         self.hidden = tuple(int(h) for h in hidden)
@@ -50,7 +55,7 @@ class CoTeachingFullBaseline:
         self.num_gradual = int(num_gradual)
 
     def _forget_rate(self, epoch: int) -> float:
-        target = float(np.clip(self.noise_rate, 0.0, 0.5))
+        target = float(np.clip(getattr(self, "_resolved_noise_rate", None) or 0.0, 0.0, 0.5))
         if target <= 0.0:
             return 0.0
         return target * min(1.0, float(epoch + 1) / float(max(self.num_gradual, 1)))
@@ -67,6 +72,17 @@ class CoTeachingFullBaseline:
         y = np.asarray(y_noisy, dtype=np.int64)
         n, d = X.shape
         device = torch.device("cpu")
+
+        if self.noise_rate is None:
+            # F-5: estimate from the noisy training set only; the true injected
+            # rate must never reach this baseline.
+            from src.baselines.noise_estimate import estimate_noise_rate
+
+            self._resolved_noise_rate = estimate_noise_rate(X, y, seed=self.seed)
+            self.noise_rate_source_ = "estimated_from_noisy_train"
+        else:
+            self._resolved_noise_rate = float(self.noise_rate)
+            self.noise_rate_source_ = "caller_provided_legacy"
 
         def _make_net():
             net = torch.nn.Sequential(
@@ -144,7 +160,7 @@ class CoTeachingFullBaseline:
         # remember-rate threshold of the last epoch.
         confidence = proba_train[np.arange(n), y]
         final_remember = 1.0 - self._forget_rate(max(self.epochs, 1) - 1)
-        if self.noise_rate > 0 and 0.0 < final_remember < 1.0:
+        if self._resolved_noise_rate > 0 and 0.0 < final_remember < 1.0:
             threshold = float(np.quantile(confidence, 1.0 - final_remember))
             retained = confidence >= threshold
         else:
@@ -163,7 +179,8 @@ class CoTeachingFullBaseline:
                 "epochs": max(self.epochs, 1),
                 "batch_size": max(1, self.batch_size),
                 "num_gradual": max(self.num_gradual, 1),
-                "forget_rate_target": float(np.clip(self.noise_rate, 0.0, 0.5)),
+                "forget_rate_target": float(np.clip(self._resolved_noise_rate, 0.0, 0.5)),
+                "noise_rate_source": str(self.noise_rate_source_),
                 "mean_remembered_fraction": float(np.mean(exchanged_fractions)) if exchanged_fractions else 1.0,
                 "trained_on": "noisy_y_train",
                 "train_label_source": "noisy_y_train",

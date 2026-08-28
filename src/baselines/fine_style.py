@@ -20,7 +20,7 @@ class FINEStyleBaseline:
     def __init__(
         self,
         seed: int = 0,
-        noise_rate: float = 0.0,
+        noise_rate: float | None = None,
         n_components: int = 32,
         min_retain_fraction: float = 0.2,
         min_class_size_for_svd: int = 20,
@@ -28,7 +28,9 @@ class FINEStyleBaseline:
         n_estimators: int = 8,
     ):
         self.seed = int(seed)
-        self.noise_rate = float(noise_rate)
+        # None -> estimated from the noisy training set at fit time (F-5).
+        self.noise_rate = None if noise_rate is None else float(noise_rate)
+        self.noise_rate_source_: str | None = None
         self.n_components = int(n_components)
         self.min_retain_fraction = float(min_retain_fraction)
         self.min_class_size_for_svd = int(min_class_size_for_svd)
@@ -58,6 +60,17 @@ class FINEStyleBaseline:
         if self.num_classes_ < 2:
             raise ValueError("FINE-style requires at least two classes.")
 
+        if self.noise_rate is None:
+            # F-5: the retain fraction follows an ESTIMATED noise rate computed
+            # from the noisy training set only (no true injected rate).
+            from src.baselines.noise_estimate import estimate_noise_rate
+
+            self._resolved_noise_rate = estimate_noise_rate(X, y, seed=fit_seed)
+            self.noise_rate_source_ = "estimated_from_noisy_train"
+        else:
+            self._resolved_noise_rate = float(self.noise_rate)
+            self.noise_rate_source_ = "caller_provided_legacy"
+
         self.scaler_ = StandardScaler()
         X_scaled = self.scaler_.fit_transform(X).astype(np.float32)
         Z = self._represent(X_scaled, fit_seed, representation=representation)
@@ -85,6 +98,8 @@ class FINEStyleBaseline:
             "eval_label_source": "clean_y_test",
             "training_label_hash": array_hash(y),
             "filter_rule": "class_wise_top_eigenvector_alignment",
+            "noise_rate_source": str(self.noise_rate_source_),
+            "estimated_noise_rate": float(getattr(self, "_resolved_noise_rate", 0.0)),
             "min_class_size_for_svd": self.min_class_size_for_svd,
             "retain_fraction": float(self._target_retain_fraction()),
             "overall_retained_fraction": float(np.mean(retained)) if retained.size else 0.0,
@@ -165,7 +180,7 @@ class FINEStyleBaseline:
         retained = np.ones(y.shape[0], dtype=bool)
         per_class: dict[str, dict[str, Any]] = {}
         target_fraction = self._target_retain_fraction()
-        if self.noise_rate <= 0:
+        if self._resolved_noise_rate <= 0:
             for label in np.unique(y):
                 members = np.flatnonzero(y == label)
                 per_class[str(int(label))] = {
@@ -218,7 +233,8 @@ class FINEStyleBaseline:
         return retained, scores, per_class
 
     def _target_retain_fraction(self) -> float:
-        return float(np.clip(max(self.min_retain_fraction, 1.0 - self.noise_rate), self.min_retain_fraction, 1.0))
+        rate = float(getattr(self, "_resolved_noise_rate", None) or 0.0)
+        return float(np.clip(max(self.min_retain_fraction, 1.0 - rate), self.min_retain_fraction, 1.0))
 
     def _check_fitted(self) -> None:
         if self.scaler_ is None or self.classifier_ is None or self.num_classes_ is None:
