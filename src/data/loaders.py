@@ -123,6 +123,13 @@ def load_dataset(name: str, cfg: dict) -> Dataset:
                 work, timestamps, label_col, min_count, rng, entities, source_files
             )
 
+    row_in_file = None
+    if "__row_in_file" in work.columns:
+        # Row-level provenance key (source_file comes from meta["source_files"]);
+        # survives filtering as a plain column, removed before feature building.
+        row_in_file = work["__row_in_file"].to_numpy(dtype=np.int64)
+        work = work.drop(columns=["__row_in_file"])
+
     labels_raw = work[label_col].astype(str).to_numpy()
     class_names = _ordered_class_names(labels_raw)
     label_mapping = {label: idx for idx, label in enumerate(class_names)}
@@ -136,11 +143,17 @@ def load_dataset(name: str, cfg: dict) -> Dataset:
     test_size = 1.0 - train_ratio
     indices = np.arange(len(y))
     split_strategy = str(ds_cfg.get("split_strategy", "stratified"))
+    # FINAL parity option: order the temporal split by source-file weekday even
+    # when a real timestamp column exists (CICIDS ML copy semantics). Timestamps
+    # stay in meta; only the split path changes.
+    timestamps_for_split = timestamps
+    if str(ds_cfg.get("temporal_order", "")) == "source_file":
+        timestamps_for_split = None
     train_idx, test_idx, split_notes = _make_split(
         indices,
         y,
         split_strategy,
-        timestamps=timestamps,
+        timestamps=timestamps_for_split,
         entities=entities,
         source_files=source_files,
         test_size=test_size,
@@ -175,6 +188,13 @@ def load_dataset(name: str, cfg: dict) -> Dataset:
         source_file_train = None
         source_file_test = None
 
+    if row_in_file is not None:
+        row_in_file_train = row_in_file[train_idx]
+        row_in_file_test = row_in_file[test_idx]
+    else:
+        row_in_file_train = None
+        row_in_file_test = None
+
     class_counts = {class_names[idx]: int(count) for idx, count in enumerate(np.bincount(y))}
     view_support = _expected_view_support(key, source_columns, unsw_layout)
     meta = {
@@ -200,6 +220,7 @@ def load_dataset(name: str, cfg: dict) -> Dataset:
         "entities": {"train": entity_train, "test": entity_test, "column": entity_col},
         "entity_component_ips": entity_component_ips,
         "source_files": {"train": source_file_train, "test": source_file_test},
+        "row_in_file": {"train": row_in_file_train, "test": row_in_file_test},
         "split_strategy": split_strategy,
         "split_notes": split_notes,
         "scaler": scaler,
@@ -482,6 +503,7 @@ def _read_dataset_frame(path_value: str | Path, sample_rows: int | None = None) 
         nrows = remaining if remaining is not None else None
         frame = _read_table(file, nrows=nrows)
         frame["__source_file"] = file.name
+        frame["__row_in_file"] = np.arange(len(frame), dtype=np.int64)
         frames.append(frame)
         if remaining is not None:
             remaining -= len(frame)
