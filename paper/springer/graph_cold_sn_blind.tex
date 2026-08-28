@@ -147,16 +147,26 @@ conditions---not a state-of-the-art number.
 \section{Related Work}
 \label{sec:related}
 \paragraph{Noisy-label learning.}
-Approaches divide into robust-training and dataset-purification families. Robust
+Security labels reflect incomplete attack knowledge, uneven detection rules,
+and delayed analyst feedback rather than controlled synthetic
+corruption~\cite{guerra2022datasets,qing2023lowquality}. Approaches divide into
+robust-training and dataset-purification families. Robust
 training modifies losses or training dynamics: loss correction with a transition
-matrix~\cite{patrini2017making}, peer-network small-loss selection
+matrix~\cite{patrini2017making,zhao2021enhancing}, sample selection via
+uncertainty, loss dynamics, or model disagreement~\cite{xia2021sample,liu2021metric},
+peer-network small-loss selection
 (Co-teaching~\cite{han2018coteaching}, Co-teaching+~\cite{yu2019coteachingplus}),
 disagreement-based updates (Decoupling~\cite{malach2017decoupling}), and
 semi-supervised treatment of suspected-noisy data
 (DivideMix~\cite{li2020dividemix}). Purification detects and removes mislabeled
 instances: confident learning~\cite{northcutt2021confident}, representation-based
 filtering (FINE~\cite{kim2021fine}), and, in security, MORSE~\cite{wu2023morse}
-and MCRe~\cite{yuan2023mcre}. CoLD~\cite{yang2026cold} is the closest prior work;
+and MCRe~\cite{yuan2023mcre}; contrastive representation enhancement has also
+been explored for robustness in intrusion
+detection~\cite{wang2022feco,yue2022cleid}. Purification-oriented methods
+generally treat suspicious samples as removable noise---problematic under class
+imbalance, where rare-class samples may simultaneously appear inconsistent and
+be essential to the decision boundary. CoLD~\cite{yang2026cold} is the closest prior work;
 we evaluate against a \emph{CoLD-aligned proxy} and are explicit about what it
 does and does not implement (Section~\ref{sec:cold-fidelity}). Our departure is twofold: we keep the diagnostic in label space
 (avoiding the distance-metric fragility CoLD itself criticizes), and we replace
@@ -186,125 +196,18 @@ label space so it stays aligned with the classifier.
 
 \paragraph{SOC alert handling and concept drift.}
 Operational systems must also cope with alert volume and distribution shift.
-Alert-classification and triage work~\cite{vaarandi2024nids,chavali2024rlalert}
-and drift-aware detection~\cite{yang2021cade} motivate our operational framing,
-though our contribution is denoising for rare-class signal retention rather than a
-deployed triage study.
+Alert classification, aggregation, and prioritization
+work~\cite{vaarandi2024nids,chavali2024rlalert,liu2025deepdrac,shon2023semisup,wang2024alertagg}
+and drift-aware detection and
+adaptation~\cite{yang2021cade,yang2024recda,andresini2021insomnia} motivate our
+operational framing, though our contribution is training-data quality for
+rare-class signal retention rather than a deployed triage study.
 
 \paragraph{Contrastive self-supervision.}
 Our representation stage uses cross-view contrastive
 learning~\cite{chen2020simclr}, adapted so that the same node in two views forms a
 positive pair.
 
-% <<P4-RELATED-WORK>>
-% BLOCK A -> <<P4-RELATED-WORK>>
-
-\subsection{Positioning and Open Challenges}
-
-\subsubsection*{Noisy-label learning for intrusion detection}
-
-Learning from noisy labels has become an important challenge in security
-analytics because network telemetry is often collected through heterogeneous
-sources, automated rules, and delayed analyst feedback. Unlike conventional
-computer vision benchmarks where label corruption can often be controlled
-synthetically, security labels may reflect incomplete attack knowledge,
-imbalanced detection rules, and evolving adversarial behaviors
-\cite{guerra2022datasets,qing2023lowquality}. Therefore, improving robustness
-requires not only higher classification accuracy but also understanding which
-samples should be trusted and which samples contain useful but uncertain training signal.
-
-Existing noisy-label learning methods can be broadly divided into robust
-training and dataset purification. Robust training approaches attempt to reduce
-the influence of corrupted samples during optimization. Loss correction methods
-estimate label transition characteristics and modify the training objective
-\cite{zhao2021enhancing}. Sample-selection approaches exploit uncertainty,
-loss dynamics, or disagreement between models to identify potentially noisy
-instances \cite{xia2021sample,liu2021metric}. Co-teaching and related
-disagreement-based approaches train multiple networks and exchange selected
-small-loss samples to reduce memorization of corrupted labels
-\cite{han2018coteaching,yu2019coteachingplus}. Decoupling further separates the
-decision of when to update from how to update, demonstrating that disagreement
-between classifiers can provide useful information under label corruption
-\cite{malach2017decoupling}.
-
-A different family focuses on dataset purification. Confident Learning estimates
-label uncertainty by identifying statistically inconsistent annotations
-\cite{northcutt2021confident}. FINE explores representation-space filtering of
-noisy instances through latent feature structures
-\cite{kim2021fine}. In security domains, MCRe and MORSE extend noisy-label
-handling toward malicious traffic and malware classification scenarios
-\cite{yuan2023mcre,wu2023morse}. More recently, intrusion detection studies
-have explored contrastive learning and representation enhancement as a way to
-improve robustness against noisy or incomplete observations
-\cite{wang2022feco,yue2022cleid}.
-
-CoLD provides the closest foundation for our work by introducing collaborative
-label denoising specifically for network intrusion detection. However, existing
-purification-oriented methods generally treat suspicious samples as removable
-noise. This assumption is problematic for imbalanced classification because
-rare-class samples may simultaneously appear inconsistent and be important to
-the learned decision boundary.
-Graph-CoLD therefore does not aim to replace purification, but instead explores
-whether structural context and signal-preserving weighting can retain
-informative suspicious instances.
-
-\subsubsection*{Graph learning and contrastive representation for security}
-
-Graph representation learning has become increasingly important for security
-analytics because network activities naturally form relational structures among
-hosts, addresses, sessions, and temporal events. Graph convolutional networks
-and graph attention networks demonstrated that neighborhood information can
-improve representation learning when samples are connected through meaningful
-relations \cite{kipf2017gcn,velickovic2018gat}. Inductive graph representation
-learning further enables scalable modeling of previously unseen nodes
-\cite{hamilton2017graphsage}, while heterogeneous graph transformers extend
-graph reasoning to multiple relation types \cite{hu2020hgt}.
-
-In security applications, graph methods have mainly focused on attack
-detection, provenance analysis, and contextual behavior modeling. Systems such
-as Flash demonstrate the value of provenance graph representation learning for
-enterprise intrusion detection \cite{rehman2024flash}. Other work investigates
-security-oriented representation learning and graph analytics for detecting
-suspicious behaviors \cite{xu2024argus}. These approaches usually focus on
-discovering malicious structures from graph embeddings.
-
-Graph-CoLD differs from these methods in its objective. The graph structure is
-not directly used as an anomaly detector; instead, it provides contextual
-signals for a label-space consistency diagnostic. This distinction is
-important because embedding distance alone may capture feature similarity while
-remaining disconnected from the classifier's final prediction behavior. By
-combining graph context with prediction-space disagreement, Graph-CoLD aims to
-identify unreliable labels while preserving samples that remain informative.
-
-\subsubsection*{SOC alert triage, prioritization, and concept drift}
-
-Modern SOC environments face not only detection accuracy challenges but also
-large-scale alert management problems. Excessive alerts, evolving attack
-behaviors, and changing network distributions create operational pressure for
-analysts. Alert classification and active-learning approaches have explored
-ways to reduce analyst workload by improving alert categorization
-\cite{vaarandi2024nids}. Reinforcement-learning-based alert prioritization
-methods further investigate how automated systems can rank alerts according to
-operational importance \cite{chavali2024rlalert}.
-
-Beyond static classification, concept drift has become a critical challenge in
-long-running security monitoring. Detection systems must adapt when normal
-traffic patterns, attack strategies, and service behaviors evolve. Studies such
-as CADE, RecDA, and Insomnia investigate drift detection and adaptation
-mechanisms for network intrusion detection
-\cite{yang2021cade,yang2024recda,andresini2021insomnia}. Recent SOC-oriented
-research also explores alert aggregation and filtering through deep learning
-models to improve investigation efficiency
-\cite{liu2025deepdrac,shon2023semisup,wang2024alertagg}.
-
-These operational studies motivate our security framing, but Graph-CoLD
-addresses a different layer of the problem. Rather than replacing analyst
-triage or predicting attack priority directly, we focus on improving the
-quality of the training data that supports downstream detection. The key
-difference is that Graph-CoLD combines three principles: label-space
-consistency diagnosis, signal-preserving retention, and leakage-audited
-evaluation. This design aims to answer when graph-based denoising genuinely
-helps security analytics and when structural information is insufficient.
 \section{Problem Formulation}
 \label{sec:problem}
 Let $V$ be the set of training flows and $\mathcal{M}$ the set of \emph{active}
