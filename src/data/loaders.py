@@ -26,6 +26,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+import warnings
+
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -79,6 +81,18 @@ def load_dataset(name: str, cfg: dict) -> Dataset:
     timestamps = _coalesce_timestamps(df, timestamp_cols)
     entity_col = next((col for col in ds_cfg.get("entity_cols", []) if col in df.columns), None)
     entities = df[entity_col].astype("string").to_numpy() if entity_col is not None else None
+    entity_component_ips: dict[int, list[str]] | None = None
+    if bool(ds_cfg.get("entity_union_find")):
+        # F-4 faithful grouping: connected components of the (src, dst) flow
+        # graph, so that NO IP (source or destination) can cross the split.
+        src_col = next((c for c in ("Source IP", "Src IP", "SRC_IP") if c in df.columns), None)
+        dst_col = next((c for c in ("Destination IP", "Dst IP", "DST_IP") if c in df.columns), None)
+        if src_col is None or dst_col is None:
+            raise ValueError("entity_union_find requires Source IP and Destination IP columns")
+        entities, entity_component_ips = _union_find_entity_groups(
+            df[src_col].astype("string").to_numpy(), df[dst_col].astype("string").to_numpy()
+        )
+        entity_col = "unionfind(src_ip,dst_ip)"
     source_files = df["__source_file"].astype("string").to_numpy() if "__source_file" in df.columns else None
 
     valid_label_mask = df[label_col].notna().to_numpy()
@@ -97,7 +111,7 @@ def load_dataset(name: str, cfg: dict) -> Dataset:
     work = df.loc[valid_label_mask] if not np.all(valid_label_mask) else df
     del df
 
-    if key == "cicids2017":
+    if key in {"cicids2017", "cicids2017_raw"}:
         min_count = int(ds_cfg.get("min_class_count", 1000))
         work, timestamps, entities, source_files = _filter_and_downsample_cicids(
             work, timestamps, label_col, min_count, rng, entities, source_files
@@ -184,6 +198,7 @@ def load_dataset(name: str, cfg: dict) -> Dataset:
         "test_indices": test_idx,
         "timestamps": {"train": timestamp_train, "test": timestamp_test},
         "entities": {"train": entity_train, "test": entity_test, "column": entity_col},
+        "entity_component_ips": entity_component_ips,
         "source_files": {"train": source_file_train, "test": source_file_test},
         "split_strategy": split_strategy,
         "split_notes": split_notes,
@@ -220,6 +235,8 @@ def _normalize_dataset_key(name: str) -> str:
         "cicids": "cicids2017",
         "cicids-2017": "cicids2017",
         "cicids2017": "cicids2017",
+        "cicids2017_raw": "cicids2017_raw",
+        "cicids2017-raw": "cicids2017_raw",
         "maltls": "maltls22",
         "maltls-22": "maltls22",
         "maltls22": "maltls22",
@@ -479,7 +496,14 @@ def _read_table(path: Path, nrows: int | None = None) -> pd.DataFrame:
         frame = pd.read_parquet(path)
         return frame.head(nrows) if nrows is not None else frame
     if suffixes.endswith(".csv") or suffixes.endswith(".csv.gz") or suffixes.endswith(".csv.xz"):
-        return pd.read_csv(path, low_memory=False, nrows=nrows)
+        try:
+            return pd.read_csv(path, low_memory=False, nrows=nrows)
+        except UnicodeDecodeError:
+            # Raw CICIDS-2017 GeneratedLabelledFlows contain a few cp1252 bytes
+            # (e.g. 0x96 en-dash); cp1252 maps 0x96 to U+2013 so labels match
+            # the cleaned ML copy ("Web Attack – Brute Force").
+            warnings.warn(f"UTF-8 decode failed for {path.name}; fell back to cp1252", stacklevel=2)
+            return pd.read_csv(path, low_memory=False, nrows=nrows, encoding="cp1252")
     raise ValueError(f"Unsupported dataset file type: {path}")
 
 
@@ -590,6 +614,30 @@ def _reset_timestamps(timestamps: np.ndarray | None) -> np.ndarray | None:
     if timestamps is None:
         return None
     return np.asarray(timestamps)
+
+
+def _union_find_entity_groups(src: np.ndarray, dst: np.ndarray) -> tuple[np.ndarray, dict[int, list[str]]]:
+    """Connected components of the (Source IP, Destination IP) flow graph.
+
+    Returns per-row component ids plus the component -> member-IP mapping for
+    audit. Built with scipy sparse connected_components (undirected)."""
+    from scipy import sparse
+    from scipy.sparse import csgraph
+
+    src_s = pd.Series(src).fillna("<missing>").astype(str).to_numpy()
+    dst_s = pd.Series(dst).fillna("<missing>").astype(str).to_numpy()
+    ips, inv = np.unique(np.concatenate([src_s, dst_s]), return_inverse=True)
+    n = src_s.shape[0]
+    src_inv, dst_inv = inv[:n], inv[n:]
+    graph = sparse.coo_matrix(
+        (np.ones(n, dtype=np.int8), (src_inv, dst_inv)), shape=(ips.shape[0], ips.shape[0])
+    )
+    n_comp, labels = csgraph.connected_components(graph, directed=False)
+    component_ips = {
+        int(comp): sorted(ips[labels == comp].tolist()) for comp in range(n_comp)
+    }
+    row_entities = labels[src_inv]  # per-row component id (src and dst share it)
+    return row_entities.astype(np.int64), component_ips
 
 
 def _make_split(
