@@ -352,7 +352,7 @@ obtain $z_v$.
 For each node $v$,
 \begin{equation}
 \mathrm{GraphCDM}(v)=\lambda_1 D_{\text{pred}}(v)+\lambda_2 D_{\text{neigh}}(v)
-+\lambda_3 D_{\text{view}}(v)+\lambda_4 D_{\text{chain}}(v),
++\lambda_3 D_{\text{view}}(v),
 \end{equation}
 where the prediction term compares per-view predicted labels with the observed
 \emph{noisy} training label,
@@ -365,9 +365,10 @@ $D_{\text{neigh}}(v)=\mathrm{KL}\!\big(\hat{y}_v \,\|\,
 |N(v)|^{-1}\sum_{u\in N(v)}\hat{y}_u\big)$,
 and the view term measures active-view mode disagreement,
 $D_{\text{view}}(v)=1-\max_c\frac1M\sum_m\mathbf{1}[\tilde{y}^{m}_v=c]$.
-$D_{\text{chain}}$ is reserved for verified provenance/temporal chains and is not a
-driver of the reported results. No term uses clean labels or the noise mask;
-this is enforced by a regression test.
+A fourth provenance-chain term explored in early drafts is removed (frozen
+$\lambda_4{=}0$): none of the three datasets carries verified provenance chains,
+and no reported result depends on it. No term uses clean labels or the noise
+mask; this is enforced by a regression test.
 
 \subsection{Signal-preserving soft weighting}
 The internal evidence score protects samples that would be costly to discard,
@@ -383,6 +384,14 @@ The classifier minimizes $\sum_v w(v)\,\mathrm{CE}(f(z_v),\tilde{y}_v)$. Setting
 $\lambda_r=0$ and thresholding recovers hard deletion; this is our
 \texttt{ablation\_hard} comparator, sharing the identical graph, representation,
 and diagnostic so that the ablation isolates \emph{only} the weighting.
+Two further frozen comparators isolate whether the specific \emph{rescue form}
+(rather than retention per se) carries the benefit: a frequency-floor
+reweighting $w(v)=\max(\tau_{\text{ret}},\,\mathrm{freq}(v))$ with
+$\mathrm{freq}(v)=\min(1,\,\mathrm{median\ class\ count}/\mathrm{count}(\tilde{y}_v))$,
+and a no-graph class-balanced cross entropy with effective-number weights
+($w_c\propto(1-\beta)/(1-\beta^{n_c})$, $\beta{=}0.9999$)~\cite{cui2019classbalanced};
+both share the encoder and training budget (pre-registered family~C,
+Section~\ref{sec:res-tail}).
 
 We stress the intended interpretation of this internal score: ``evidence'' here
 means a heuristic estimate of training-signal retention value, not SOC or
@@ -400,7 +409,15 @@ $P(\text{clean}\mid x)\cdot\mathrm{Cost}(y)$ explicitly is left to future work;
 the empirical ordering in Section~\ref{sec:res-tail}, where
 confident-learning-precision pruning outperforms our heuristic, indicates the
 value of sharpening the $P(\text{clean}\mid x)$ component.
-Both the aligned CoLD baseline and the \texttt{ablation\_hard} variant use the
+A structural limitation is that $\text{freq\_protect}$ is keyed on the
+\emph{observed} noisy label $\tilde{y}_v$: under asymmetric tail-to-majority
+noise, a flipped tail sample is observed as the majority class and receives
+weaker protection, while a majority sample mislabelled into a tail class is
+over-protected. Consistent with this, the pre-registered family~C comparison
+(Section~\ref{sec:res-tail}) finds no detectable advantage of the rescue form
+over the simple frequency floor---retention itself, not the weighting form,
+carries the benefit.
+Both the CoLD-aligned proxy baseline and the \texttt{ablation\_hard} variant use the
 same shared encoder architecture, training budget, and view-masking configuration
 as Graph-CoLD; they differ only in the presence or absence of graph views and the
 weighting rule applied after Graph-CDM scoring.
@@ -453,6 +470,26 @@ whereas the rescue formulation allows uncertain but informative samples to
 participate in training. Third, hard deletion is retained as the primary
 ablation because it isolates the contribution of signal preservation while
 keeping the same graph representation and diagnostic components.
+
+\subsection{Frozen configuration and tuning discipline}
+\label{sec:frozen-config}
+All experiments use one frozen configuration, fixed before the final experiment
+grid and archived with the reproduction package: diagnostic weights
+$\lambda_{\text{pred}}{=}0.4$, $\lambda_{\text{neigh}}{=}0.3$,
+$\lambda_{\text{view}}{=}0.3$ ($\lambda_4{=}0$, removed); weighting
+$\kappa{=}4.0$, $\theta{=}0.5$, $\lambda_r{=}0.8$, $\gamma{=}1.0$,
+log-scaled $\text{freq\_protect}$, retention floor $\tau_{\text{ret}}{=}0.1$;
+hard-deletion threshold $\mathrm{CDM}\le0.5$ on the shared diagnostic.
+Graph construction: host/IP views use $k{=}10$ Euclidean nearest neighbours,
+the temporal view links $k{=}2$ neighbours within a 3{,}600\,s window; the
+encoder is a 2-layer, 4-head heterogeneous graph transformer (hidden 128,
+dropout 0.2), trained 100 epochs (stage 1) plus 50 (stage 2), learning rate
+$10^{-3}$, batch 128. \emph{Tuning discipline:} no clean validation set and no
+true injected noise rate is available to any method at any point; hyperparameter
+selection uses defaults or criteria computed on the noisy training set only
+(e.g.\ cleanlab-estimated noise rates for the Co-Teaching forget schedule).
+This discipline is part of the frozen protocol and applies identically to every
+comparator.
 \section{Experimental Design}
 \label{sec:exp}
 \subsection{Datasets and protocol}
@@ -465,16 +502,13 @@ an 11-class \emph{post-filter} policy with exact deduplication (24\% of raw
 training rows removed; Section~\ref{sec:res-leak}). CESNET-TLS-Year22 is a
 year-spanning backbone TLS dataset used under a 25-service-class audit-window policy (it
 replaces MALTLS-22, for which we lacked a verified license path). UNSW-NB15 is
-used under its partition with the smallest class (Worms) removed. To keep the
-study tractable and reproducible we evaluate deterministic audit windows
-(train $10{,}000$ / test $5{,}000$); we are explicit that this is a focused study,
-not a full-archive evaluation. Noise is injected only into training labels; we
-report symmetric, asymmetric, and graph-consistency noise, and for the rare-class
-analysis we use asymmetric noise concentrated on tail classes at rates
-$\{40,60,80\}\%$ with seeds $0$--$9$. The asymmetric target is benign for the
-two IDS datasets and a high-frequency service class for CESNET; legacy result
-filenames may use \texttt{tail-to-benign} as an implementation label, but that
-term has no semantic meaning for CESNET.
+used under its partition with the smallest class (Worms) removed. Noise
+semantics per dataset: the asymmetric flip target is benign for the two IDS
+datasets and a high-frequency service class for CESNET; legacy result filenames
+may use \texttt{tail-to-benign} as an implementation label, but that term has no
+semantic meaning for CESNET.
+
+\paragraph{Frozen primary protocol.}
 
 \begin{table}[t]
 \centering
@@ -492,40 +526,90 @@ UNSW-NB15 & 9 & partition (no Worms) & temporal/behavioral \\
 \end{tabular}
 \end{table}
 
-All results in Tables~\ref{tab:main}--\ref{tab:tail} and Figures~\ref{fig:tail}--\ref{fig:info}
-are generated by the P2f clean de-oracled runner
-(\texttt{reports/p2f\_tighten.md}) on these three datasets; earlier intermediate
-result files from D5/D9 used a different protocol and are not cited as final
-results.
+All headline results use a \emph{frozen final protocol}, fixed before the final
+experiment grid; any later deviation is disclosed as a protocol amendment
+(Appendix). The protocol has two ingredients per dataset. (i)~\emph{Proxy-field
+masking}: features that participate in each dataset's label construction, or are
+strong proxies of it, are removed before any graph or model sees the data
+(CICIDS: tier-1 mask; CESNET and UNSW: tier-2, which additionally removes the
+\texttt{CATEGORY} one-hot columns---parents of the CESNET label---and the
+\texttt{ct\_*} generated features of UNSW). (ii)~\emph{Strongest-available
+group-disjoint split}: CICIDS uses a temporal split ordered by source-file day
+(with exact training-row deduplication); CESNET uses a strict temporal boundary
+with zero train--test entity overlap (S1$\cap$S2); UNSW uses its official fixed
+partition, whose released files lack timestamp and entity columns (a limitation
+we measure rather than hide: the official partition itself contains 38.4\%
+exact train--test feature collisions after masking).
 
-\paragraph{Reproducibility and statistical protocol.}
-The audited data roots are local and are not committed to the repository. Each
-dataset uses deterministic audit windows of 10,000 training and 5,000 test
-instances. The tail analysis injects asymmetric noise at $\{40,60,80\}\%$ over
-seeds 0--9. Paired inference uses 30 like-for-like seed--rate observations per
-dataset (ten seeds by three noise rates), with Holm--Bonferroni correction and
-bootstrap 95\% confidence intervals. The full command sequence is recorded in
-the reproduction commands of \texttt{reports/p2f\_tighten.md}.
+\paragraph{Split taxonomy and audit measurements.}
+The audit distinguishes S0 (iid stratified), S1 (temporal), S2 (entity-disjoint,
+grouped so that no entity appears on both sides), and S3
+(leave-one-scenario-out, defined only where the scenario is not identical to the
+class label: attack-day holdout for CICIDS; undefined for UNSW and CESNET, where
+S1$\cap$S2 substitutes). For every split we measure and report the train--test
+exact and near-duplicate intersection (cosine similarity $\ge 0.999$ on
+standardized features). Test-time inference is inductive (per-sample); a
+transductive variant that builds graphs over test batches is reported only as a
+control and does not represent an online IDS. On CICIDS, entity isolation is
+infeasible by construction---the flow graph collapses into one giant connected
+component spanning 99.96\% of valid flows---which we document as a dataset-level
+finding (Section~\ref{sec:limits}).
 
-\subsection{Baselines and metrics}
-We compare Graph-CoLD (soft and semi-supervised variants) with the aligned CoLD
-baseline and the \texttt{ablation\_hard} deletion variant across the
-Tables~\ref{tab:main}--\ref{tab:tail} result matrix. Two external noisy-label
-anchors were run under the \emph{identical} P2f protocol (same audit windows,
-splits, seeds, and noise): Confident Learning (cleanlab \texttt{find\_label\_issues}
-with a shared-budget ExtraTrees head) and a full Co-Teaching implementation
-(dual MLPs with per-batch small-loss co-exchange and a forget-rate schedule
-tracking the true injected rate), recorded in
-\texttt{results/p5\_external\_baselines.csv} and compared in
-Section~\ref{sec:res-tail}. Additional purification
-methods (MCRe, MORSE, FINE, Decoupling, and Co-Teaching-lite, a lightweight
-approximation superseded by the full implementation above) were evaluated
-under an earlier protocol. They were not re-run under the P2f clean-deduplication
-protocol and are therefore excluded from Tables~\ref{tab:main}--\ref{tab:tail}
-to avoid mixing incompatible result regimes; the MCRe/MORSE fidelity caveat is
-documented in \texttt{reports/p2b\_baseline\_fidelity.md}. Metrics reported here
-are aggregate Macro-F1, tail-class Macro-F1, tail recall, and paired statistical
-comparisons as specified above.
+\paragraph{Noise injection.}
+Noise is injected into training labels only; test labels stay clean. The
+rare-class analysis uses asymmetric noise concentrated on tail classes (training
+class count $\le$ window median) at rates $\{40,60,80\}\%$ with seeds $0$--$9$
+bound to the injection. Flip targets are the benign class for the two IDS
+datasets and the high-frequency service class \texttt{microsoft-diagnostic} for
+CESNET, which has no benign semantics. Symmetric and graph-consistency noise are
+reported as supplements. The complete mapping matrix ships with the reproduction
+package (\texttt{noise\_map.json}).
+
+\paragraph{Pre-registered statistical protocol.}
+The inference unit is the per-noise-rate paired seed comparison ($n{=}10$); we do
+not pool the 30 seed--rate observations as independent. Holm correction is
+applied within three pre-registered families: family~A (9 tests; soft retention
+vs.\ hard deletion, Tail-F1), family~B (18 tests; CL{+}Graph-CDM vs.\ CL,
+Macro- and Tail-F1---the G2 decision gate), and family~C (18 tests; soft weight
+vs.\ simple reweighting baselines, Tail-F1). ``No aggregate cost'' claims are
+replaced by TOST non-inferiority at $\delta{=}0.01$ Macro-F1; because a
+$0.01$ macro change could hide a concentrated single-class regression, a
+per-class guard additionally requires no class-level F1 regression above
+$0.05$. Seed random-intercept mixed-effects models provide robustness
+confirmation. Success requires Holm $p<0.05$, $d_z\ge0.3$, and a bootstrap 95\%
+CI excluding zero; the verdict vocabulary is frozen
+(\emph{robust}: $\ge$2 datasets pass; \emph{narrow}: 1; \emph{null}: 0).
+
+\paragraph{Windows and scale.}
+Each dataset uses a deterministic audit window of 10{,}000 training and 5{,}000
+test instances drawn inside the frozen split. A one-shot scale validation on
+CICIDS (train 100{,}000 / test 20{,}000; 3 seeds $\times$ 3 rates) checks that
+conclusions do not flip with scale; they do not (Section~\ref{sec:res-tail}).
+We are explicit that this is a focused audit study, not a full-archive
+evaluation.
+
+\subsection{Comparators and metrics}
+Within the frozen protocol we compare six configurations that share one encoder
+architecture and training budget: Graph-CoLD-soft; hard deletion
+(\texttt{ablation\_hard}); the frequency-floor and class-balanced-CE
+comparators of Section~\ref{sec:method}; Confident Learning
+(cleanlab \texttt{find\_label\_issues} with \emph{full stratified out-of-fold}
+probabilities, per its sample-out protocol, and a shared-budget classifier
+head)~\cite{northcutt2021confident}; and the CL{+}Graph-CDM combination that
+soft-reweights CL-retained samples (issue-set intersection/union fusions are
+exploratory). The rows labelled \emph{CoLD-aligned proxy} were called ``CoLD''
+in an earlier draft; the implementation predates the official CoLD code release
+and does not implement its multi-subset encoding, clustering-consistency
+purification, or XGBoost head. We therefore make no claim of reproducing or
+outperforming official CoLD, whose published numbers arise under a different
+nine-class protocol (Section~\ref{sec:cold-fidelity}). FINE~\cite{kim2021fine}
+and a fully-implemented Co-Teaching~\cite{han2018coteaching} (forget schedule
+driven by an \emph{estimated}, not oracle, noise rate) were run under the legacy
+stratified audit window and are reported separately as explicitly
+non-comparable (Section~\ref{sec:res-tail}). Metrics: aggregate Macro-F1,
+tail-class Macro-F1 (tail $=$ classes with training count $\le$ window median,
+fixed per data contract), tail recall, and paired deltas with bootstrap 95\%
+CIs under the statistical protocol above.
 
 \section{Results}
 \subsection{RQ1: A label-space graph diagnostic modestly improves accuracy over CoLD}
@@ -806,6 +890,22 @@ additional training signal. Similarly, datasets operating near a performance cei
 such as CESNET-TLS-Year22 under the evaluated protocol, naturally limit the
 observable improvement.
 
+\subsection{CoLD fidelity: what the proxy is and is not}
+\label{sec:cold-fidelity}
+The comparator historically labelled ``CoLD'' in earlier drafts is a
+\emph{CoLD-aligned proxy}: a neighbourhood consistency diagnostic with hard
+thresholding and a shared classifier head, built before the official CoLD code
+release. It does not implement official CoLD's multi-subset feature encoding,
+clustering-consistency purification, or XGBoost pipeline. The official NDSS
+paper reports Macro-F1 in the 0.94--1.00 range on a nine-class refined
+CICIDS-2017 under random 8:2 splits---a protocol that differs from our
+11-class, tail-targeted, group-disjoint audit windows in labelling space,
+split design, and noise model, so the numbers are not comparable in either
+direction. We use the proxy solely as a deletion-style anchor inside our frozen
+protocol and make no claim of reproducing or outperforming official
+CoLD~\cite{yang2026cold}. An exact-alignment grid under the official protocol
+is registered as future work.
+
 A key methodological decision in this work is the avoidance of unfair
 state-of-the-art comparisons. Two external anchors---Confident Learning and a
 full Co-Teaching implementation---were therefore run under the identical
@@ -969,6 +1069,20 @@ noisy labels as semi-supervised learning, in: ICLR, 2020.
 \bibitem{northcutt2021confident} C. G. Northcutt, L. Jiang, I. L. Chuang,
 Confident learning: Estimating uncertainty in dataset labels,
 JAIR 70 (2021) 1373--1411.
+\bibitem{cui2019classbalanced} Y. Cui, M. Jia, T.-Y. Lin, Y. Song, S. Belongie,
+Class-balanced loss based on effective number of samples, in: CVPR, 2019,
+pp. 9268--9277.
+\bibitem{engelen2021troubleshooting} G. Engelen, V. Rimmer, W. Joosen,
+Troubleshooting an intrusion detection dataset: the CICIDS2017 case study,
+in: IEEE Security and Privacy Workshops (WTMC), 2021, pp. 7--12.
+\bibitem{liu2022error} L. Liu, G. Engelen, T. Lynar, D. Essam, W. Joosen,
+Error prevalence in NIDS datasets: A case study on CIC-IDS-2017 and
+CSE-CIC-IDS-2018, in: IEEE Conference on Communications and Network Security
+(CNS), 2022, pp. 254--262.
+\bibitem{lanvin2023errors} M. Lanvin, P.-F. Gimenez, Y. Han, F. Majorczyk,
+L. M\'e, E. Totel, Errors in the CICIDS2017 dataset and the significant
+differences in detection performances it makes, in: Risks and Security of
+Internet and Systems (CRiSIS 2022), LNCS 13857, Springer, 2023, pp. 18--33.
 \bibitem{kim2021fine} T. Kim, J. Ko, J. Choi, S.-Y. Yun, FINE samples for learning
 with noisy labels, in: NeurIPS, 2021, pp. 24137--24149.
 \bibitem{wu2023morse} X. Wu, W. Guo, J. Yan, B. Coskun, X. Xing, From grim reality
