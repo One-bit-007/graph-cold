@@ -79,44 +79,66 @@ CoLD~\cite{yang2026cold} recently framed noisy-label IDS through \emph{local
 consistency}: because different traffic classes can share feature neighborhoods,
 label noise induces spurious associations, and a collaborative representation can
 identify and remove likely-noisy samples before training. CoLD, like most
-dataset-purification methods, ultimately performs \emph{hard deletion}. We take
-CoLD as our baseline and ask two questions. (Q1) Does lifting the diagnostic from
-independent samples to a multi-view graph, kept strictly in label space, improve
-robustness? (Q2) Does replacing hard deletion with signal-preserving soft
-weighting---which down-weights rather than deletes suspicious-but-informative
-samples---retain rare-class training signal and improve tail-class detection?
+dataset-purification methods, ultimately performs \emph{hard deletion}. Starting
+from a graph-based extension of this idea, we ask three questions that turn out
+to have very different answers. (RQ-A)~Does replacing hard deletion with
+signal-preserving soft weighting retain rare-class training signal and improve
+tail-class detection? (RQ-B)~Does a multi-view graph diagnostic, kept strictly
+in label space, add measurable value over precise probabilistic pruning?
+(RQ-C)~How much of the apparent benefit of graph-based denoising on standard
+IDS benchmarks is real, and how much reconstructs the rules by which the
+benchmark labels were generated in the first place?
 
 Answering these questions honestly required an unusual amount of methodological
-hygiene. Our first implementations produced spectacular gains that did not
-survive scrutiny: a leakage audit revealed that (i) CICIDS-2017 contains 24\%
-exact-duplicate records that let neighborhood consistency trivially recover
-labels, and (ii) any use of clean-label signal in the scoring or graph
-construction inflates results. After removing both, the apparent advantage shrank
-to a modest, defensible level, and the headline metric we had used for signal
-retention turned out to be tautological. We report this process because it is, we
-believe, a contribution in its own right: graph-based denoising results in
-security are easy to inflate and must be audited.
+hygiene, and the audit trail became a contribution in its own right. Our first
+implementations produced spectacular gains that did not survive scrutiny: a
+leakage audit revealed 24\% exact-duplicate CICIDS-2017 records, clean-label
+paths in score and graph construction, label-construction proxy fields in the
+released features, and train--test entity overlap. We therefore froze an
+audited protocol---proxy-masked features, strongest-available group-disjoint
+splits, pre-registered hypothesis families with Holm correction---and re-ran
+everything inside it. Under that protocol the answers are: soft retention
+robustly preserves tail signal relative to deletion (RQ-A, positive); the graph
+diagnostic adds no detectable increment over Confident Learning, and the
+specific weighting form adds nothing over a frequency floor (RQ-B, null, with
+informative effect ceilings); and a four-factor decomposition attributes 25--36
+points of Tail-F1 inflation to leakage factors that flatter deletion-style
+methods most (RQ-C).
 
 \paragraph{Contributions.}
-The current empirical record supports the following bounded contributions:
+The empirical record supports the following bounded contributions:
 \begin{enumerate}
-\item A \emph{leakage audit} that quantifies duplicate- and clean-label-path
-inflation and documents how apparently large graph-denoising gains can collapse
-under a de-oracled protocol (Section~\ref{sec:res-leak}).
-\item A \emph{signal-preserving soft weighting} rule that improves Tail-F1 over
-hard deletion under high asymmetric noise within an otherwise shared pipeline
-(Section~\ref{sec:res-tail}). The result concerns rare attack classes on
-CICIDS/UNSW and low-frequency service classes on CESNET; the current aggregate
-analysis detects no significant difference but does not establish equivalence.
-\item Graph-CDM, a \emph{label-space} multi-view consistency diagnostic used to
-study when graph structure helps. Its aggregate gain over CoLD is modest and
-dataset dependent, and the three-dataset informativeness pattern is descriptive,
-not inferential (Sections~\ref{sec:res-aggregate} and~\ref{sec:res-info}).
+\item A \emph{four-factor leakage audit protocol} for noisy-label IDS
+(duplicates, cross-split entities, label-construction proxy fields, clean-label
+oracle paths), instantiated as frozen splits, masking tiers, and regression
+tests. It quantifies 25--36 points of Tail-F1 inflation, shows that leakage
+flatters deletion-style baselines and compresses the apparent advantage of
+retention, and surfaces three dataset-level findings: CESNET's released
+\texttt{CATEGORY} columns are direct label parents, UNSW's official partition
+ships with 38.4\% exact feature collisions, and CICIDS's flow topology makes
+entity-disjoint splitting infeasible by construction
+(Section~\ref{sec:res-leak}).
+\item A \emph{mechanism-level finding} (pre-registered family A, robust on 3/3
+datasets): within a shared pipeline, soft retention improves Tail-F1 over hard
+deletion under high asymmetric noise, with no detectable aggregate cost and
+consistently positive macro means; the direction survives real labelling
+errors and a 100k-window scale check (Section~\ref{sec:res-tail}).
+\item \emph{Boundary results reported as first-class findings}: the graph
+diagnostic adds no detectable increment over Confident Learning (18/18
+Holm-corrected tests null; Tail-F1 effect ceiling $+0.026$), and the
+evidence-rescue weighting form adds nothing over a simple frequency floor---on
+one dataset it is significantly worse (Section~\ref{sec:res-nohelp}).
+\item \emph{Dataset-native corroboration}: applying published corrected labels
+to CICIDS shows that $\sim$95\% of its rare ``Web Attack -- Brute Force'' class
+are labelling artefacts, tying the audit directly to real, non-synthetic
+labelling errors (Section~\ref{sec:res-leak}).
 \end{enumerate}
-We deliberately bound our claims. Graph-CoLD is not a universal accuracy
-improvement, and retained benchmark samples are not operational evidence. Its
-distinctive mechanism-level value is retaining rare-class training signal that
-hard deletion can discard.
+We deliberately bound our claims. The graph-based method is not an accuracy
+advance: under the frozen protocol Confident Learning is the bar, and we make
+no claim of reproducing or outperforming official CoLD (our comparator is a
+CoLD-aligned proxy; Section~\ref{sec:cold-fidelity}). The distinctive value of
+this study is the audit protocol, the retention mechanism, and the boundary
+conditions---not a state-of-the-art number.
 
 \section{Related Work}
 \label{sec:related}
@@ -130,11 +152,24 @@ semi-supervised treatment of suspected-noisy data
 (DivideMix~\cite{li2020dividemix}). Purification detects and removes mislabeled
 instances: confident learning~\cite{northcutt2021confident}, representation-based
 filtering (FINE~\cite{kim2021fine}), and, in security, MORSE~\cite{wu2023morse}
-and MCRe~\cite{yuan2023mcre}. CoLD~\cite{yang2026cold} is the closest prior work
-and our baseline. Our departure is twofold: we keep the diagnostic in label space
+and MCRe~\cite{yuan2023mcre}. CoLD~\cite{yang2026cold} is the closest prior work;
+we evaluate against a \emph{CoLD-aligned proxy} and are explicit about what it
+does and does not implement (Section~\ref{sec:cold-fidelity}). Our departure is twofold: we keep the diagnostic in label space
 (avoiding the distance-metric fragility CoLD itself criticizes), and we replace
 deletion with signal-preserving weighting motivated by the semi-supervised
 insight that suspected-noisy samples carry usable signal~\cite{li2020dividemix,wu2023morse}.
+
+\paragraph{Benchmark label errors and dataset audits.}
+A parallel literature documents that the benchmarks themselves are flawed.
+Engelen et al.~\cite{engelen2021troubleshooting} diagnosed labelling and
+generation errors in CICIDS-2017; Liu et al.~\cite{liu2022error} reverse-engineered
+and corrected its labelling logic; Lanvin et al.~\cite{lanvin2023errors} showed
+that such errors materially change measured detector performance. We build on
+this line in two ways: we use the published corrected labels as a source of
+\emph{real} labelling errors for validation, and we extend the error taxonomy
+from label mistakes to \emph{label-construction proxy leakage}---features and
+split structures that let a model reconstruct the labelling rules---with an
+isolation protocol and regression tests that other studies can reuse.
 
 \paragraph{Graph learning for security telemetry.}
 Security events are relational, and graph neural
@@ -421,13 +456,6 @@ Both the CoLD-aligned proxy baseline and the \texttt{ablation\_hard} variant use
 same shared encoder architecture, training budget, and view-masking configuration
 as Graph-CoLD; they differ only in the presence or absence of graph views and the
 weighting rule applied after Graph-CDM scoring.
-
-\subsection{Triage-oriented benchmark proxy}
-A priority score $P(v)=\alpha_1\hat{y}_{\text{mal}}(v)+\alpha_2\mathrm{GraphCDM}(v)
-+\alpha_3\tilde{e}(v)$ models a triage-oriented ranking. We evaluate it only by
-benchmark labels and, as we show, Graph-CoLD ties strong peers on top-$K$
-precision; without an analyst study, we claim neither a ranking advantage nor
-operational effectiveness.
 
 % <<P4-METHOD-ALGORITHM>>
 % BLOCK B -> <<P4-METHOD-ALGORITHM>>
@@ -866,16 +894,18 @@ the formal matrix. A comprehensive comparison with all previous methods
 requires faithful implementations or official code under a unified evaluation
 framework.
 
-The external-anchor ordering carries a practical lesson for benchmark data
-curation and a hypothesis for later SOC-facing validation.
-Confident Learning's precise pruning---removing only 7--24\% of rows---sets the
-performance bar under the injected noise model, while the evaluated Co-Teaching
-configuration nearly eliminates the tail classes. The
-differentiator is not deletion versus retention but \emph{diagnostic precision}:
-an imprecise purifier can sacrifice scarce rare-class training signal, whether
-it deletes samples or down-weights mislabeled samples insufficiently. Combining
-confident-learning-precision pruning with
-graph-structured diagnostics is the natural next step.
+The frozen-protocol ordering carries a practical lesson for benchmark data
+curation and a hypothesis for later SOC-facing validation. Confident Learning's
+precise pruning sets the performance bar wherever a difference is detectable,
+while the retention-style reweightings form one narrow band
+(Table~\ref{tab:main}). The differentiator is not deletion versus retention but
+\emph{diagnostic precision}: an imprecise purifier sacrifices scarce rare-class
+training signal whether it deletes samples or down-weights them insufficiently,
+and family C shows the specific weighting form matters little once retention is
+granted. Sharpening the $P(\text{clean}\mid x)$ component---for example by
+feeding confident-learning-grade probabilities into a retention-aware
+weighting---is the natural next step, and our family-B result gives the effect
+ceiling such a combination must beat.
 
 The leakage audit provides a broader methodological lesson for graph-based
 security machine learning. Graph models can unintentionally exploit duplicated
@@ -884,72 +914,121 @@ effects may produce impressive but misleading improvements. Therefore, graph
 security studies should explicitly verify data separation, graph construction
 constraints, and label independence before reporting performance gains.
 
-Future work should extend Graph-CoLD toward streaming SOC environments,
+Future work should extend the audit protocol toward streaming SOC environments,
 full-archive evaluation, analyst-in-the-loop validation, and broader
 cross-domain benchmark comparisons. These extensions are necessary to determine
-whether signal-preserving denoising remains effective when labels arrive
+whether signal-preserving retention remains effective when labels arrive
 continuously and attack distributions evolve over time.
-The results support a bounded but useful claim. A label-space graph diagnostic
-modestly improves noisy-label IDS over CoLD where views are informative, and—more
-distinctively—signal-preserving weighting retains rare-class training examples
-that hard deletion discards, improving Tail-F1 under high asymmetric noise within
-the shared pipeline. The current analysis detects no significant aggregate
-difference but does not establish equivalence. Under the same protocol,
-confident-learning pruning remains the stronger performer and marks the bar for
-future graph-based denoisers. We deliberately avoid three overclaims that our own experiments
-do not support: a universal accuracy advantage (the aggregate gain is modest and
-largely from the graph, not the weighting), a ranking advantage (Graph-CoLD
-ties strong peers on top-$K$ precision), or SOC/forensic effectiveness from
-benchmark-level sample retention.
+The results support a deliberately narrow claim set. Within a shared pipeline,
+soft retention preserves rare-class training signal that hard deletion
+discards---robustly across datasets, noise rates, real labelling errors, and
+window scale. Beyond that, our experiments do \emph{not} support: an accuracy
+advantage for graph-based denoising (family B is null against Confident
+Learning), a superiority of the specific rescue weighting (family C is null,
+with one significant reversal), a ranking or triage advantage, or SOC/forensic
+effectiveness of benchmark-level sample retention.
 
 \section{Threats to Validity}
 \label{sec:threats}
-\emph{Internal.} The evaluation uses deterministic audit windows for tractability;
-absolute Macro-F1 is therefore lower than full-archive runs, though the paired,
-seed-controlled comparisons are the object of inference. MCRe and MORSE pass a
-clean-label sanity floor but degrade on high-noise tabular settings more than in
-their original domains; we report this caveat rather than a possibly unfaithful
-number (\texttt{reports/p2b\_baseline\_fidelity.md}).
-\emph{Construct.} The rare-evidence-recovery diagnostic, even after correction,
-saturates for soft retention; we therefore headline test-set tail-F1.
-\emph{External.} CICIDS-2017, CESNET-TLS-Year22, and UNSW-NB15 are useful
-benchmarks but not complete SOC deployments; the priority score is evaluated by
-proxy, not an analyst study. The two-dataset lock recorded in the D9 submission
-audit was an intermediate checkpoint; the authoritative final scope is the
-three-dataset P2f clean de-oracled protocol.
+\emph{Internal.} The evaluation uses deterministic audit windows for
+tractability; absolute scores are far below full-archive numbers, and the 100k
+scale check shows window size itself dominates tail learnability. The paired,
+seed-controlled family comparisons---not the absolute numbers---are the objects
+of inference. Two protocol deviations occurred and are disclosed as amendments
+(Appendix~\ref{app:amendments}): family B was initially run at full power on
+only one dataset (remediated by complete reruns), and the soft-retention claim
+was initially supported only by screening-tier evidence (remediated by the
+full family-A grid).
+\emph{Construct.} Injected noise is synthetic; we mitigate this with the
+real-labelling-error experiment, which preserves the family-A direction. The
+legacy rare-evidence-recovery diagnostic was tautological and is excluded from
+all hypothesis families. Tail-class definitions are window-relative and frozen
+per data contract.
+\emph{External.} CICIDS-2017, CESNET-TLS-Year22, and UNSW-NB15 are benchmarks,
+not SOC deployments; no analyst study is claimed. The strongest available
+split differs per dataset (UNSW's official partition lacks timestamp/entity
+columns and carries 38.4\% exact collisions we measure but cannot remove
+without leaving the official split). MCRe and MORSE pass a clean-label sanity
+floor but were not re-run under the frozen protocol; we report caveats rather
+than possibly unfaithful numbers.
 
 \section{Limitations}
 \label{sec:limits}
-MALTLS-22 and OpTC are not evaluated (no verified license/provenance path).
-Behavioral and threat-intelligence views are disabled where fields are absent. The
-aggregate accuracy contribution is modest and dataset-dependent; under the
-audited protocol, Confident Learning outperforms Graph-CoLD on aggregate and
-tail metrics on all three datasets, so the distinctive contribution is the
-leakage audit, the mechanism-level signal-retention finding, and the
-informativeness boundary analysis rather than state-of-the-art accuracy.
-Full-archive and streaming
-evaluations are left to future work.
+Five limitations bound the scope. (i)~\emph{CICIDS entity isolation is
+infeasible by construction}: the flow graph over the raw release forms one
+giant connected component covering 99.96\% of valid flows, so the cross-split
+entity factor cannot be measured on this dataset; we document the topology
+rather than substitute a weaker entity definition. (ii)~\emph{UNSW's official
+partition} carries 38.4\% exact train--test feature collisions after masking;
+we keep the official split for comparability and measure the collision effect
+in the leakage decomposition instead of silently repartitioning.
+(iii)~\emph{CESNET supports only service-class claims}: its SNI-derived labels
+have no attack semantics, so attack-level conclusions are limited to
+CICIDS/UNSW. (iv)~\emph{The CoLD-aligned proxy is not official CoLD}; no
+cross-comparison with published CoLD numbers is valid in either direction, and
+an official-code alignment grid is registered as future work.
+(v)~\emph{TOST non-inferiority at $\delta{=}0.01$} bounds only the aggregate:
+the margin equals a worst-case single-class F1 change of $\sim$0.11 in an
+11-class task, which is why the per-class guard accompanies every
+non-inferiority claim. MALTLS-22 and OpTC are not evaluated (no verified
+license/provenance path); behavioral and threat-intelligence views are
+disabled where fields are absent; full-archive and streaming evaluations are
+future work.
 
 \section{Conclusion}
 \label{sec:conclusion}
-We revisited collaborative label denoising and asked whether a multi-view
-label-space graph diagnostic and signal-preserving weighting improve robustness.
-The answer is targeted: the graph diagnostic gives a modest,
-informativeness-dependent accuracy gain over CoLD, and signal-preserving weighting
-improves Tail-F1 over hard deletion under high asymmetric noise within the shared
-pipeline. The current aggregate analysis detects no significant difference but
-does not establish equivalence. A confident-learning anchor, evaluated under the
-identical protocol, outperforms both. Alongside, we
-contribute a leakage audit and a graph-informativeness diagnostic that together
-explain when—and when not—graph denoising helps. More broadly, our results
+We set out to extend collaborative label denoising with graph structure and
+ended up with a boundary study. Under a frozen, leakage-audited protocol---
+proxy-masked features, group-disjoint splits, pre-registered hypothesis
+families---the surviving positive result is mechanism-level and robust: soft
+retention preserves rare-class training signal that hard deletion discards,
+across three datasets, three noise rates, real labelling errors, and a
+100k-window scale check, at no detectable aggregate cost. The graph diagnostic
+itself adds no detectable increment over Confident Learning (effect ceiling
+$+0.026$ Tail-F1), and the specific rescue weighting adds nothing over a
+frequency floor---results we report as first-class findings with effect
+ceilings rather than as absences. The four-factor leakage decomposition
+explains where the earlier, larger numbers came from: duplicates, cross-split
+entities, proxy fields, and oracle paths inflate deletion-style baselines most
+and compress the apparent advantage of retention. More broadly, our results
 argue that security data curation should shift from indiscriminate purification
 toward signal-aware retention, in which deletion decisions explicitly weigh
-the class-level cost of discarding scarce training examples against the precision
-of the noise diagnostic. CESNET supports only a service-class stress-test claim;
-attack-level conclusions are limited to CICIDS and UNSW. We hope the audit, and the
-audited external-baseline ordering, are as useful to the community as the method.
+the class-level cost of discarding scarce training examples against the
+precision of the noise diagnostic---and that graph-based denoising results in
+security should be accompanied by a leakage audit before any performance claim
+is made. CESNET supports only a service-class stress-test claim; attack-level
+conclusions are limited to CICIDS and UNSW. We hope the audit protocol, the
+regression tests, and the honestly reported boundaries are as useful to the
+community as any single number.
 
 \begin{appendices}
+\section{Protocol amendments}
+\label{app:amendments}
+The protocol was frozen before the final experiment grid. Two deviations
+occurred; both are disclosed here in full, with their remediations.
+
+\paragraph{PA-1: selective family-B testing (remediated).}
+Family B was frozen as 3 datasets $\times$ 2 metrics $\times$ 3 noise rates
+$=$ 18 tests. In the initial full-power run, only CESNET was executed at full
+power; CICIDS and UNSW were stopped after a screening pass (3 seeds, one rate)
+showed non-positive increments. This futility-stopping rule was \emph{not}
+pre-registered and constituted selective testing. As remediation, the
+full-power protocol (10 seeds $\times$ 3 rates, each dataset's frozen primary
+protocol) was executed on the two remaining datasets and the Holm correction
+recomputed over the complete 18-test family with no placeholders
+(Table~\ref{tab:family-b}). The screening-stop decision is disclosed as a
+post-hoc choice; the G2 verdict (null) is unchanged under the complete family.
+
+\paragraph{PA-2: claim strength ahead of evidence (remediated).}
+The soft-retention finding was initially reported as a core claim while
+supported only by screening-tier evidence (3 seeds, one rate). The frozen
+protocol requires full inference for headline claims. As remediation, the
+complete family-A grid (10 seeds $\times$ 3 rates $\times$ 3 datasets under the
+frozen primary protocol) was executed and the claim re-adjudicated under the
+pre-registered Holm family, TOST non-inferiority, per-class guard, and
+mixed-effects confirmation (Table~\ref{tab:family-a}); the verdict is
+\emph{robust} (3/3 datasets).
+
 \section{CESNET-TLS-Year22 class-filter policy}
 \label{app:cesnet-policy}
 \renewcommand{\thetable}{A\arabic{table}}
