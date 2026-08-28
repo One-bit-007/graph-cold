@@ -1,0 +1,26 @@
+{
+  "tab_main.tex": [
+    "results/p5_factor_ablation_full.csv",
+    "results/p4_cl_graph_combo_full_family_b_complete.csv"
+  ],
+  "tab_baselines_iid.tex": [
+    "results/p7_baseline_expansion.csv"
+  ],
+  "tab_family_a.tex": [
+    "tables/table_p5_family_a.csv",
+    "tables/table_p5_perclass_guard.csv",
+    "results/p5_factor_ablation_full.csv"
+  ],
+  "tab_family_b.tex": [
+    "reports/p4_cl_graph_combo_full_family_b_complete.json"
+  ],
+  "tab_family_c.tex": [
+    "tables/table_p5_family_c.csv"
+  ],
+  "tab_leakage.tex": [
+    "tables/table_p6_leakage_ablation_fixedtail_all.csv"
+  ],
+  "tab_natural_noise.tex": [
+    "reports/p7_natural_noise.json"
+  ]
+}
