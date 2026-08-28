@@ -1,0 +1,48 @@
+{
+  "stage": "P3-P0-2-screening",
+  "dataset": "cicids2017",
+  "condition": "C5_S0_transductive",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "noise_rate": 0.6,
+  "noise_type": "tail_asymmetric",
+  "leaked_proxy_features_present": [
+    "Destination Port"
+  ],
+  "n_features": 78,
+  "split_notes": {
+    "requested_strategy": "stratified",
+    "applied_strategy": "stratified"
+  },
+  "headline": {
+    "dataset": "cicids2017",
+    "condition": "C5_S0_transductive",
+    "tail_f1_delta_soft_minus_hard": 0.061409873631332046,
+    "macro_f1_soft": 0.6837209789999178,
+    "macro_f1_hard": 0.6528516933015788,
+    "macro_f1_cold": 0.4598693001013328,
+    "exact_dup_rate": 0.008533333333333334,
+    "near_dup_rate": 0.8269333333333333
+  },
+  "per_method": {
+    "CoLD": {
+      "macro_f1_mean": 0.4598693001013328,
+      "tail_f1_mean": 0.02792464987586939
+    },
+    "Graph-CoLD-soft": {
+      "macro_f1_mean": 0.6837209789999178,
+      "tail_f1_mean": 0.4390119931785024
+    },
+    "ablation_hard": {
+      "macro_f1_mean": 0.6528516933015788,
+      "tail_f1_mean": 0.3776021195471704
+    }
+  },
+  "transductive": {
+    "transductive_lp_macro_f1": 0.6027243618880007,
+    "transductive_lp_tail_f1": 0.3298638455331718
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "stage": "P3-P0-2-screening",
+  "dataset": "cesnet_tls_year22",
+  "condition": "C6_S1S2_temporal_entity",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "noise_rate": 0.6,
+  "noise_type": "tail_asymmetric",
+  "noise_target_class": 11,
+  "noise_target_name": "microsoft-diagnostic",
+  "leaked_proxy_features_present": [
+    "CATEGORY",
+    "DST_PORT"
+  ],
+  "n_features": 45,
+  "split_notes": {
+    "requested_strategy": "temporal_entity",
+    "applied_strategy": "temporal_entity",
+    "train_time_max": 1641006000.0,
+    "test_time_min": 1641009600.0,
+    "test_entities": 3722,
+    "entity_overlap": 0,
+    "train_rows_removed_for_entity_overlap": 35771,
+    "strict_time_boundary": true
+  },
+  "headline": {
+    "dataset": "cesnet_tls_year22",
+    "condition": "C6_S1S2_temporal_entity",
+    "tail_f1_delta_soft_minus_hard": 0.03875080084990867,
+    "macro_f1_soft": 0.6565941291559078,
+    "macro_f1_hard": 0.6380775080799838,
+    "macro_f1_cold": 0.5825934520892165,
+    "exact_dup_rate": 0.0,
+    "near_dup_rate": 0.6982666666666666
+  },
+  "per_method": {
+    "CoLD": {
+      "macro_f1_mean": 0.5825934520892165,
+      "tail_f1_mean": 0.3002049234121065
+    },
+    "Graph-CoLD-soft": {
+      "macro_f1_mean": 0.6565941291559078,
+      "tail_f1_mean": 0.4422862621067057
+    },
+    "ablation_hard": {
+      "macro_f1_mean": 0.6380775080799836,
+      "tail_f1_mean": 0.403535461256797
+    }
+  },
+  "transductive": {}
+}

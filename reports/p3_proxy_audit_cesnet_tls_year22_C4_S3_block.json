@@ -1,0 +1,54 @@
+{
+  "stage": "P3-P0-2-screening",
+  "dataset": "cesnet_tls_year22",
+  "condition": "C4_S3_block",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "noise_rate": 0.6,
+  "noise_type": "tail_asymmetric",
+  "noise_target_class": 11,
+  "noise_target_name": "microsoft-diagnostic",
+  "leaked_proxy_features_present": [
+    "CATEGORY",
+    "DST_PORT"
+  ],
+  "n_features": 45,
+  "split_notes": {
+    "requested_strategy": "block_holdout",
+    "fallback": "strategy 'block_holdout' unavailable (missing metadata or degenerate)",
+    "applied_strategy": "stratified",
+    "held_out_class": 24,
+    "held_out_class_name": "vmware-vcsa",
+    "unseen_test_rows": 206,
+    "s3_variant": "class_holdout",
+    "block_holdout_note": "time window spans <1 day in the sampled audit frame; block holdout degenerate, used class holdout instead"
+  },
+  "headline": {
+    "dataset": "cesnet_tls_year22",
+    "condition": "C4_S3_block",
+    "tail_f1_delta_soft_minus_hard": 0.02519418723008726,
+    "macro_f1_soft": 0.6716794875151937,
+    "macro_f1_hard": 0.6575724836099384,
+    "macro_f1_cold": 0.6361699106528619,
+    "exact_dup_rate": 6.666666666666667e-05,
+    "near_dup_rate": 0.8562
+  },
+  "per_method": {
+    "CoLD": {
+      "macro_f1_mean": 0.636169910652862,
+      "tail_f1_mean": 0.4430782755665596
+    },
+    "Graph-CoLD-soft": {
+      "macro_f1_mean": 0.6716794875151937,
+      "tail_f1_mean": 0.5092453993150517
+    },
+    "ablation_hard": {
+      "macro_f1_mean": 0.6575724836099384,
+      "tail_f1_mean": 0.4840512120849645
+    }
+  },
+  "transductive": {}
+}

@@ -1,0 +1,40 @@
+{
+  "stage": "P3-P0-2-screening",
+  "dataset": "unsw_nb15",
+  "condition": "C1_S0_masked_t1",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "noise_rate": 0.6,
+  "noise_type": "tail_asymmetric",
+  "leaked_proxy_features_present": [],
+  "n_features": 193,
+  "split_notes": {},
+  "headline": {
+    "dataset": "unsw_nb15",
+    "condition": "C1_S0_masked_t1",
+    "tail_f1_delta_soft_minus_hard": 0.01842295139617127,
+    "macro_f1_soft": 0.4523262915168691,
+    "macro_f1_hard": 0.4417164169342717,
+    "macro_f1_cold": 0.4315779989226227,
+    "exact_dup_rate": 0.038133333333333325,
+    "near_dup_rate": 0.23660000000000003
+  },
+  "per_method": {
+    "CoLD": {
+      "macro_f1_mean": 0.4315779989226227,
+      "tail_f1_mean": 0.1023654492671427
+    },
+    "Graph-CoLD-soft": {
+      "macro_f1_mean": 0.4523262915168691,
+      "tail_f1_mean": 0.14012824455212178
+    },
+    "ablation_hard": {
+      "macro_f1_mean": 0.4417164169342717,
+      "tail_f1_mean": 0.12170529315595051
+    }
+  },
+  "transductive": {}
+}

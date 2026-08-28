@@ -1,0 +1,45 @@
+{
+  "stage": "P3-P0-2-screening",
+  "dataset": "cesnet_tls_year22",
+  "condition": "C1b_S0_masked_t2",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "noise_rate": 0.6,
+  "noise_type": "tail_asymmetric",
+  "noise_target_class": 11,
+  "noise_target_name": "microsoft-diagnostic",
+  "leaked_proxy_features_present": [],
+  "n_features": 29,
+  "split_notes": {
+    "requested_strategy": "stratified",
+    "applied_strategy": "stratified"
+  },
+  "headline": {
+    "dataset": "cesnet_tls_year22",
+    "condition": "C1b_S0_masked_t2",
+    "tail_f1_delta_soft_minus_hard": 0.0567656804176101,
+    "macro_f1_soft": 0.6019481680393444,
+    "macro_f1_hard": 0.5591475470916742,
+    "macro_f1_cold": 0.5436934403720116,
+    "exact_dup_rate": 0.00013333333333333334,
+    "near_dup_rate": 0.8934666666666666
+  },
+  "per_method": {
+    "CoLD": {
+      "macro_f1_mean": 0.5436934403720116,
+      "tail_f1_mean": 0.3274330303394053
+    },
+    "Graph-CoLD-soft": {
+      "macro_f1_mean": 0.6019481680393444,
+      "tail_f1_mean": 0.4109282517926706
+    },
+    "ablation_hard": {
+      "macro_f1_mean": 0.5591475470916744,
+      "tail_f1_mean": 0.3541625713750605
+    }
+  },
+  "transductive": {}
+}

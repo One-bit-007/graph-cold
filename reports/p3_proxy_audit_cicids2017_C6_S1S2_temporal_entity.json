@@ -1,0 +1,7 @@
+{
+  "stage": "P3-P0-2-screening",
+  "dataset": "cicids2017",
+  "condition": "C6_S1S2_temporal_entity",
+  "status": "unsupported",
+  "reason": "local CICIDS-2017 copy has no entity columns required for joint S1+S2"
+}

@@ -1,0 +1,46 @@
+{
+  "stage": "P3-P0-2-screening",
+  "dataset": "unsw_nb15",
+  "condition": "C4_S3_block",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "noise_rate": 0.6,
+  "noise_type": "tail_asymmetric",
+  "leaked_proxy_features_present": [
+    "is_sm_ips_ports"
+  ],
+  "n_features": 194,
+  "split_notes": {
+    "held_out_class": 8,
+    "held_out_class_name": "Shellcode",
+    "unseen_test_rows": 378
+  },
+  "headline": {
+    "dataset": "unsw_nb15",
+    "condition": "C4_S3_block",
+    "tail_f1_delta_soft_minus_hard": 0.026364224984009976,
+    "macro_f1_soft": 0.45248450552570824,
+    "macro_f1_hard": 0.43880189570680744,
+    "macro_f1_cold": 0.4268138714365038,
+    "exact_dup_rate": 0.03933333333333333,
+    "near_dup_rate": 0.23753333333333332
+  },
+  "per_method": {
+    "CoLD": {
+      "macro_f1_mean": 0.4268138714365038,
+      "tail_f1_mean": 0.11957078733447098
+    },
+    "Graph-CoLD-soft": {
+      "macro_f1_mean": 0.45248450552570824,
+      "tail_f1_mean": 0.1712533924985654
+    },
+    "ablation_hard": {
+      "macro_f1_mean": 0.43880189570680744,
+      "tail_f1_mean": 0.1448891675145554
+    }
+  },
+  "transductive": {}
+}

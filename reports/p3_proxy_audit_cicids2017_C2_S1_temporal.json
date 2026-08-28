@@ -1,0 +1,49 @@
+{
+  "stage": "P3-P0-2-screening",
+  "dataset": "cicids2017",
+  "condition": "C2_S1_temporal",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "noise_rate": 0.6,
+  "noise_type": "tail_asymmetric",
+  "leaked_proxy_features_present": [
+    "Destination Port"
+  ],
+  "n_features": 78,
+  "split_notes": {
+    "requested_strategy": "temporal",
+    "applied_strategy": "temporal_by_source_file",
+    "note": "no timestamp column in local copy; ordered by source-file weekday",
+    "test_days": [
+      4
+    ]
+  },
+  "headline": {
+    "dataset": "cicids2017",
+    "condition": "C2_S1_temporal",
+    "tail_f1_delta_soft_minus_hard": null,
+    "macro_f1_soft": 0.4543483412663954,
+    "macro_f1_hard": 0.25376089094281445,
+    "macro_f1_cold": 0.2717065706389023,
+    "exact_dup_rate": 0.0024000000000000002,
+    "near_dup_rate": 0.49593333333333334
+  },
+  "per_method": {
+    "CoLD": {
+      "macro_f1_mean": 0.2717065706389023,
+      "tail_f1_mean": null
+    },
+    "Graph-CoLD-soft": {
+      "macro_f1_mean": 0.4543483412663954,
+      "tail_f1_mean": null
+    },
+    "ablation_hard": {
+      "macro_f1_mean": 0.25376089094281445,
+      "tail_f1_mean": null
+    }
+  },
+  "transductive": {}
+}

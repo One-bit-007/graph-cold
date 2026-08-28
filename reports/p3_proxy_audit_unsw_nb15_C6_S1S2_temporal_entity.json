@@ -1,0 +1,7 @@
+{
+  "stage": "P3-P0-2-screening",
+  "dataset": "unsw_nb15",
+  "condition": "C6_S1S2_temporal_entity",
+  "status": "unsupported",
+  "reason": "UNSW-NB15 partition layout has neither timestamp nor entity columns"
+}

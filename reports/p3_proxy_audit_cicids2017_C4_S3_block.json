@@ -1,0 +1,60 @@
+{
+  "stage": "P3-P0-2-screening",
+  "dataset": "cicids2017",
+  "condition": "C4_S3_block",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "noise_rate": 0.6,
+  "noise_type": "tail_asymmetric",
+  "leaked_proxy_features_present": [
+    "Destination Port"
+  ],
+  "n_features": 78,
+  "split_notes": {
+    "requested_strategy": "block_holdout",
+    "applied_strategy": "block_holdout_by_source_file",
+    "note": "no timestamp column in local copy; held out last weekday source-file group(s)",
+    "held_out_days": [
+      4
+    ],
+    "test_classes": [
+      0,
+      1,
+      2,
+      8
+    ],
+    "unseen_test_classes": [
+      1,
+      2,
+      8
+    ]
+  },
+  "headline": {
+    "dataset": "cicids2017",
+    "condition": "C4_S3_block",
+    "tail_f1_delta_soft_minus_hard": null,
+    "macro_f1_soft": 0.0431816370742451,
+    "macro_f1_hard": 0.04927781186883764,
+    "macro_f1_cold": 0.044832574393996384,
+    "exact_dup_rate": 0.00013333333333333334,
+    "near_dup_rate": 0.30326666666666663
+  },
+  "per_method": {
+    "CoLD": {
+      "macro_f1_mean": 0.044832574393996384,
+      "tail_f1_mean": null
+    },
+    "Graph-CoLD-soft": {
+      "macro_f1_mean": 0.0431816370742451,
+      "tail_f1_mean": null
+    },
+    "ablation_hard": {
+      "macro_f1_mean": 0.04927781186883764,
+      "tail_f1_mean": null
+    }
+  },
+  "transductive": {}
+}

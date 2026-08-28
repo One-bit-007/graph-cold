@@ -1,0 +1,43 @@
+{
+  "stage": "P3-P0-2-screening",
+  "dataset": "cicids2017",
+  "condition": "C1_S0_masked_t1",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "noise_rate": 0.6,
+  "noise_type": "tail_asymmetric",
+  "leaked_proxy_features_present": [],
+  "n_features": 77,
+  "split_notes": {
+    "requested_strategy": "stratified",
+    "applied_strategy": "stratified"
+  },
+  "headline": {
+    "dataset": "cicids2017",
+    "condition": "C1_S0_masked_t1",
+    "tail_f1_delta_soft_minus_hard": 0.10434711594406115,
+    "macro_f1_soft": 0.6524719408724198,
+    "macro_f1_hard": 0.5889150635396053,
+    "macro_f1_cold": 0.4296594460363328,
+    "exact_dup_rate": 0.006466666666666667,
+    "near_dup_rate": 0.7996666666666666
+  },
+  "per_method": {
+    "CoLD": {
+      "macro_f1_mean": 0.4296594460363328,
+      "tail_f1_mean": 0.0367960534841151
+    },
+    "Graph-CoLD-soft": {
+      "macro_f1_mean": 0.6524719408724199,
+      "tail_f1_mean": 0.42987543698714553
+    },
+    "ablation_hard": {
+      "macro_f1_mean": 0.5889150635396053,
+      "tail_f1_mean": 0.32552832104308443
+    }
+  },
+  "transductive": {}
+}

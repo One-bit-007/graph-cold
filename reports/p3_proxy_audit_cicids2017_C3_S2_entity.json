@@ -1,0 +1,7 @@
+{
+  "stage": "P3-P0-2-screening",
+  "dataset": "cicids2017",
+  "condition": "C3_S2_entity",
+  "status": "unsupported",
+  "reason": "local CICIDS-2017 CSVs are pre-stripped (79 cols, no Src/Dst IP); entity split requires the original MachineLearningCVE files - recorded as data limitation"
+}

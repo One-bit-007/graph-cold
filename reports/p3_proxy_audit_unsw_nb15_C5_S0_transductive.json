@@ -1,0 +1,45 @@
+{
+  "stage": "P3-P0-2-screening",
+  "dataset": "unsw_nb15",
+  "condition": "C5_S0_transductive",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "noise_rate": 0.6,
+  "noise_type": "tail_asymmetric",
+  "leaked_proxy_features_present": [
+    "is_sm_ips_ports"
+  ],
+  "n_features": 194,
+  "split_notes": {},
+  "headline": {
+    "dataset": "unsw_nb15",
+    "condition": "C5_S0_transductive",
+    "tail_f1_delta_soft_minus_hard": 0.018573956466697697,
+    "macro_f1_soft": 0.45236795677963487,
+    "macro_f1_hard": 0.44109513357999597,
+    "macro_f1_cold": 0.4262886482394659,
+    "exact_dup_rate": 0.038133333333333325,
+    "near_dup_rate": 0.23686666666666667
+  },
+  "per_method": {
+    "CoLD": {
+      "macro_f1_mean": 0.4262886482394659,
+      "tail_f1_mean": 0.09546611363348523
+    },
+    "Graph-CoLD-soft": {
+      "macro_f1_mean": 0.45236795677963487,
+      "tail_f1_mean": 0.14118274750173163
+    },
+    "ablation_hard": {
+      "macro_f1_mean": 0.44109513357999597,
+      "tail_f1_mean": 0.12260879103503393
+    }
+  },
+  "transductive": {
+    "transductive_lp_macro_f1": 0.3808539135814362,
+    "transductive_lp_tail_f1": 0.060169351217390844
+  }
+}
