@@ -494,7 +494,7 @@ comparator.
 \label{sec:exp}
 \subsection{Datasets and protocol}
 Table~\ref{tab:data} summarizes three benchmark datasets with different tasks.
-CICIDS-2017 and UNSW-NB15 are intrusion-detection datasets. CESNET-TLS-Year22
+CICIDS-2017 and UNSW-NB15 are intrusion-detection datasets. CESNET-TLS-Year22~\cite{hynek2024zenodo}
 is a TLS service-classification dataset whose SNI-derived application labels do
 not carry attack/benign semantics; we retain it only as a long-tail service-class
 stress test and do not use it to support attack-level claims. CICIDS-2017 is used under
@@ -561,8 +561,9 @@ rare-class analysis uses asymmetric noise concentrated on tail classes (training
 class count $\le$ window median) at rates $\{40,60,80\}\%$ with seeds $0$--$9$
 bound to the injection. Flip targets are the benign class for the two IDS
 datasets and the high-frequency service class \texttt{microsoft-diagnostic} for
-CESNET, which has no benign semantics. Symmetric and graph-consistency noise are
-reported as supplements. The complete mapping matrix ships with the reproduction
+CESNET, which has no benign semantics. Symmetric and graph-consistency noise
+were explored only under the legacy protocol and are not part of the formal
+result matrix. The complete mapping matrix ships with the reproduction
 package (\texttt{noise\_map.json}).
 
 \paragraph{Pre-registered statistical protocol.}
@@ -612,262 +613,206 @@ fixed per data contract), tail recall, and paired deltas with bootstrap 95\%
 CIs under the statistical protocol above.
 
 \section{Results}
-\subsection{RQ1: A label-space graph diagnostic modestly improves accuracy over CoLD}
+\label{sec:results}
+\subsection{RQ1: The frozen protocol reorders the headline comparison}
 \label{sec:res-aggregate}
-Table~\ref{tab:main} reports per-dataset means. Graph-CoLD improves aggregate
-Macro-F1 over CoLD on all three datasets, with the gain concentrated on CICIDS,
-where host/IP/temporal views are most informative, and small on CESNET/UNSW. The
-improvements over CoLD are Holm-significant per dataset (CICIDS $p=1.0\times10^{-3}$,
-CESNET $p=4.1\times10^{-2}$, UNSW $p=4.1\times10^{-2}$;
-source \texttt{tables/table\_p2d\_per\_dataset\_vs\_cold.csv}). Notably,
-\texttt{ablation\_hard} already captures most of this gain: the graph and the
-label-space diagnostic, not the weighting, drive aggregate accuracy.
+Table~\ref{tab:main} reports the full frozen-protocol grid. Two observations
+frame everything that follows. First, absolute numbers are far below the
+legacy stratified-window results that opened this project (CICIDS Macro-F1
+drops to $\approx$0.14): proxy masking and group-disjoint splits remove the
+duplicate memorization and label-construction shortcuts that inflated earlier
+figures (Section~\ref{sec:res-leak}). Second, every \emph{retention-style}
+configuration---soft weighting, frequency-floor, class-balanced CE, Confident
+Learning, and the CL{+}Graph combination---lands in one narrow band per
+dataset, while hard deletion falls off it on tail classes (CICIDS Tail-F1
+0.097 vs.\ 0.355--0.358 for the retention band; UNSW 0.161 vs.\
+0.200--0.263). No single method ``wins'' this table, and we draw no headline
+ranking from it; the meaningful contrasts are the three pre-registered
+hypothesis families below. FINE and Co-Teaching, which were run under the
+legacy stratified window, are reported separately in
+Table~\ref{tab:baselines-iid} and are not comparable to this grid.
 
-\begin{table}[t]
-\centering
-\caption{Per-dataset mean$\pm$std under high asymmetric tail noise (rates 40/60/80\%,
-seeds 0--9; 30 scenarios per dataset). Sources: \texttt{tables/table\_p2f\_summary.csv}
-(Graph-CoLD family) and \texttt{results/p5\_external\_baselines.csv} (external anchors,
-same protocol). Best value per dataset and metric in bold.}
-\label{tab:main}
-\small
-\begin{tabular}{llccc}
-\toprule
-Dataset & Method & Macro-F1 & Tail-F1 & Tail-recall \\
-\midrule
-\multirow{6}{*}{CICIDS-2017}
- & CoLD          & 0.534$\pm$0.039 & 0.047$\pm$0.070 & 0.043$\pm$0.065 \\
- & ablation\_hard & 0.688$\pm$0.087 & 0.361$\pm$0.193 & 0.277$\pm$0.173 \\
- & Graph-CoLD-soft & 0.721$\pm$0.086 & 0.434$\pm$0.191 & 0.328$\pm$0.180 \\
- & Graph-CoLD-semisup & 0.687$\pm$0.093 & 0.357$\pm$0.206 & 0.272$\pm$0.181 \\
- & Confident-Learning & \textbf{0.769$\pm$0.048} & \textbf{0.605$\pm$0.103} & \textbf{0.517$\pm$0.112} \\
- & Co-Teaching & 0.567$\pm$0.071 & 0.118$\pm$0.152 & 0.128$\pm$0.171 \\
-\midrule
-\multirow{6}{*}{CESNET-TLS-Year22}
- & CoLD          & 0.658$\pm$0.130 & 0.411$\pm$0.247 & 0.306$\pm$0.211 \\
- & ablation\_hard & 0.680$\pm$0.132 & 0.453$\pm$0.249 & 0.331$\pm$0.218 \\
- & Graph-CoLD-soft & 0.692$\pm$0.120 & 0.475$\pm$0.227 & 0.344$\pm$0.204 \\
- & Graph-CoLD-semisup & 0.679$\pm$0.129 & 0.450$\pm$0.243 & 0.327$\pm$0.212 \\
- & Confident-Learning & \textbf{0.805$\pm$0.076} & \textbf{0.708$\pm$0.136} & \textbf{0.628$\pm$0.159} \\
- & Co-Teaching & 0.488$\pm$0.152 & 0.179$\pm$0.258 & 0.181$\pm$0.262 \\
-\midrule
-\multirow{6}{*}{UNSW-NB15}
- & CoLD          & 0.456$\pm$0.032 & 0.096$\pm$0.068 & 0.187$\pm$0.146 \\
- & ablation\_hard & 0.471$\pm$0.035 & 0.132$\pm$0.077 & 0.205$\pm$0.128 \\
- & Graph-CoLD-soft & 0.485$\pm$0.033 & 0.173$\pm$0.078 & 0.229$\pm$0.120 \\
- & Graph-CoLD-semisup & 0.469$\pm$0.033 & 0.130$\pm$0.074 & 0.194$\pm$0.119 \\
- & Confident-Learning & \textbf{0.499$\pm$0.026} & \textbf{0.254$\pm$0.085} & \textbf{0.317$\pm$0.123} \\
- & Co-Teaching & 0.419$\pm$0.036 & 0.055$\pm$0.080 & 0.120$\pm$0.178 \\
-\bottomrule
-\end{tabular}
-\end{table}
+\input{tables_w5/tab_main}
+\input{tables_w5/tab_baselines_iid}
 
-\begin{table}[t]
-\centering
-\caption{Graph-CoLD vs.\ CoLD Macro-F1 by noise type (mean over noise rates,
-seeds 0--9). Source: \texttt{tables/table\_p4\_noise\_type\_breakdown.csv}.}
-\label{tab:noisetype}
-\small
-\begin{tabular}{llrrr}
-\toprule
-Dataset & Noise type & CoLD & Graph-CoLD-soft & $\Delta$ \\
-\midrule
-CICIDS-2017 & clean & 0.671150 & 0.778689 & 0.107539 \\
-CICIDS-2017 & symmetric & 0.553919 & 0.592429 & 0.038510 \\
-CICIDS-2017 & asymmetric & 0.322779 & 0.429941 & 0.107162 \\
-CICIDS-2017 & \texttt{graph\_consistency} & 0.496244 & 0.531555 & 0.035311 \\
-\midrule
-CESNET-TLS-Year22 & clean & 0.966321 & 0.968261 & 0.001941 \\
-CESNET-TLS-Year22 & symmetric & 0.898812 & 0.902585 & 0.003774 \\
-CESNET-TLS-Year22 & asymmetric & 0.698745 & 0.708302 & 0.009557 \\
-CESNET-TLS-Year22 & \texttt{graph\_consistency} & 0.846591 & 0.849355 & 0.002764 \\
-\midrule
-UNSW-NB15 & clean & 0.494282 & 0.501909 & 0.007627 \\
-UNSW-NB15 & symmetric & 0.445324 & 0.445923 & 0.000599 \\
-UNSW-NB15 & asymmetric & 0.296512 & 0.303933 & 0.007421 \\
-UNSW-NB15 & \texttt{graph\_consistency} & 0.434276 & 0.436233 & 0.001957 \\
-\bottomrule
-\end{tabular}
-\end{table}
-% <<P4-RESULTS-NOISETYPE>>
-% BLOCK C -> <<P4-RESULTS-NOISETYPE>>
-
-\subsection{Performance under Different Noise Types}
-
-To better understand when Graph-CoLD provides benefits, we analyze performance
-across different label-noise mechanisms. Table~\ref{tab:noisetype} summarizes
-Macro-F1 results under clean, symmetric, asymmetric, and graph-consistency
-noise.
-
-The results show that the benefit of Graph-CoLD is strongly dataset-dependent.
-On CICIDS-2017, where host, IP, and temporal relations provide richer structural
-signals, Graph-CoLD achieves consistent improvements over CoLD across all noise
-types. Under asymmetric noise, the improvement is 0.107 in Macro-F1. This
-observation is consistent with the hypothesis that graph context is more
-valuable when corruption is associated with non-uniform class behavior.
-
-For CESNET-TLS-Year22 \cite{hynek2024zenodo}, the improvement is smaller because
-the baseline already achieves high performance under the evaluated protocol.
-Under this near-ceiling condition, additional graph information provides only
-marginal gains. UNSW-NB15 \cite{moustafa2016unsw} shows a similar trend,
-indicating that graph denoising effectiveness depends on whether available views
-contain sufficient discriminative structure.
-
-Overall, the noise-type analysis supports a bounded conclusion: Graph-CoLD is
-not universally superior under all conditions, but provides the largest benefit
-when the available relational views contain informative structure and when
-label corruption disrupts class-consistent training signal.
-
-\subsection{RQ2: Signal-preserving weighting helps tail classes, not aggregate accuracy}
+\subsection{RQ2: Soft retention preserves tail signal; the specific weighting form does not matter}
 \label{sec:res-tail}
-The central finding concerns \emph{where} signal-preserving weighting matters.
-On aggregate Macro-F1, the current analysis detects no statistically significant
-difference between soft weighting and hard deletion; this absence of significance
-does not establish equivalence. On tail classes, soft weighting significantly
-outperforms hard deletion
-(Table~\ref{tab:tail}): $\Delta$Tail-F1 $=+0.073,+0.022,+0.040$ on
-CICIDS/CESNET/UNSW, all Holm-significant at $p<10^{-4}$ with large effect sizes
-($d_z=1.28,0.91,1.29$), with no significant aggregate-Macro-F1 regression detected.
-For CICIDS and UNSW these tail classes are attack categories; for CESNET they are
-low-frequency service classes. Figure~\ref{fig:tail} shows the effect is stable
-across noise rates. The mechanism-level interpretation is that hard deletion can
-remove clean rare-class training examples flagged as suspicious, whereas soft
-weighting keeps them at reduced influence.
+\paragraph{Family A (robust).}
+Table~\ref{tab:family-a} reports the pre-registered soft-vs.-hard comparison
+under the frozen protocol. All nine conditions pass: Holm-corrected $p<0.05$,
+effect sizes $d_z$ from 0.77 to 3.14, and bootstrap CI lower bounds above zero
+on every dataset and rate. The effect is large on CICIDS ($+0.21$ to $+0.31$
+Tail-F1) and small-to-moderate on CESNET/UNSW ($+0.03$ to $+0.05$). Aggregate
+cost is bounded on three sides: TOST non-inferiority at $\delta{=}0.01$ passes
+9/9, the per-class guard finds no class regression beyond $-0.036$
+(threshold $0.05$), and paired macro means are themselves positive
+($+0.014$ to $+0.062$)---so we state ``no detectable aggregate cost, with
+consistently positive macro means,'' not ``no cost.'' A seed random-intercept
+mixed-effects model confirms the result on each dataset (mean $\Delta$ Tail-F1
+$+0.044$/$+0.261$/$+0.039$ for CESNET/CICIDS/UNSW, one-sided $p<10^{-4}$).
+Mechanistically, hard deletion removes clean rare-class training rows flagged
+as suspicious; soft weighting keeps them at reduced influence.
 
-\begin{table}[t]
-\centering
-\caption{Powered tail-class comparison: Graph-CoLD-soft vs.\ hard deletion under
-asymmetric tail noise ($n=30$ scenarios/dataset). ``No'' denotes that no
-significant aggregate regression was detected; it is not an equivalence result. Source:
-\texttt{tables/table\_p2f\_powered\_tests.csv}.}
-\label{tab:tail}
-\small
-\begin{tabular}{lcccc}
-\toprule
-Dataset & $\Delta$Tail-F1 & Holm $p$ & Cohen's $d_z$ & Sig. agg. reg.? \\
-\midrule
-CICIDS-2017 & $+0.0731$ & $1.5\times10^{-7}$ & $1.28$ & no \\
-CESNET-TLS-Year22 & $+0.0218$ & $3.7\times10^{-5}$ & $0.91$ & no \\
-UNSW-NB15 & $+0.0405$ & $9.6\times10^{-8}$ & $1.29$ & no \\
-\bottomrule
-\end{tabular}
-\end{table}
+\input{tables_w5/tab_family_a}
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=0.98\linewidth]{fig_p2f_tail_powered.pdf}
-\caption{Tail-class Macro-F1 of signal-preserving soft weighting vs.\ hard
-deletion across asymmetric noise rates. The gain is small but consistent and
-significant on all three datasets.}
-\label{fig:tail}
-\end{figure}
+\paragraph{The direction survives real labelling errors and scale.}
+Replacing synthetic injection with the real labelling errors of CICIDS-2017
+(training on original released labels, evaluating against Engelen-corrected
+labels~\cite{liu2022error}; Section~\ref{sec:res-leak}) preserves the
+direction: soft $-$ hard Tail-F1 $=+0.284$ $[+0.089, +0.487]$
+(Table~\ref{tab:natural-noise}; descriptive, 10 paired seeds). A one-shot
+scale validation at train 100{,}000 / test 20{,}000 on CICIDS also preserves
+the direction at every rate ($+0.150$/$+0.056$/$+0.031$), while showing that
+window size itself dominates tail learnability (hard deletion reaches 0.698
+Tail-F1 at rate 0.4 in the 100k window vs.\ 0.093 in the 10k window).
 
-We stress an honesty point. An earlier ``rare-evidence recovery rate'' that counted
-a sample as recovered whenever it was \emph{retained} was tautological. We redefine
-recovery to require correct downstream classification; hard deletion is then no
-longer automatically zero. Because soft retention still scores near-ceiling on
-this diagnostic,\footnote{The secondary diagnostic values and its definition are
-reported in \texttt{tables/table\_p2f\_summary.csv} and
-\texttt{reports/p2f\_tighten.md}.} we rely solely on test-set tail-F1 for all
-headline comparisons.
+\input{tables_w5/tab_natural_noise}
 
-\paragraph{External anchors under the identical protocol.}
-Table~\ref{tab:external} places two external noisy-label methods, run under the
-identical P2f protocol (same audit windows, splits, seeds, and injected noise),
-against Graph-CoLD-soft with scenario-paired tests. The ordering is consistent
-across datasets. Confident Learning, a precise probabilistic pruner that removes
-only 7--24\% of training rows, significantly outperforms Graph-CoLD-soft on
-aggregate and tail metrics on all three datasets. The signal-preserving
-weighting in turn outperforms hard deletion (Table~\ref{tab:tail}). Full
-Co-Teaching collapses on tail classes (mean Tail-F1 $\approx 0$ at 60--80\%
-noise on every dataset; \texttt{tables/table\_p5\_tail\_by\_rate.csv}), because
-its small-loss forgetting systematically discards rare classes under this setup.
-This result is specific to the evaluated implementation and does not establish a
-general disadvantage of forgetting-based methods. Under the injected
-tail-to-majority noise model, precise
-pruning beats soft retention, because down-weighted flipped samples still teach
-the classifier that tail features indicate the majority target. We therefore
-scope the signal-retention claim to the mechanism level---within the shared
-pipeline, soft weighting recovers rare classes that hard deletion loses---and we
-identify Confident Learning as the performance bar that graph-based denoising
-must clear; combining confident-learning-precision pruning with
-graph-structured diagnostics is future work. Per-noise-rate tail-F1 breakdowns
-for all methods are reported in \texttt{tables/table\_p5\_tail\_by\_rate.csv}.
+\paragraph{Family C (null): the rescue form adds nothing over simple reweighting.}
+Table~\ref{tab:family-c} tests whether the specific evidence-rescue form---the
+design element that distinguishes our weighting from trivial baselines---beats
+a frequency floor or class-balanced CE. It does not: no condition survives
+Holm correction in the positive direction, and on UNSW the soft weight is
+significantly \emph{worse} than the frequency floor at rates 0.4/0.6 (CI upper
+bounds $-0.011$/$-0.013$). We therefore withdraw the claim that evidence-rescue
+weighting is superior to simple reweighting. The surviving mechanism claim is
+deliberately narrow: \emph{retention} beats \emph{deletion} (family A); among
+retention schemes, the weighting form is empirically interchangeable, and a
+practitioner can obtain the benefit with a frequency floor alone.
 
-\begin{table}[t]
-\centering
-\caption{External anchors vs.\ Graph-CoLD-soft under the identical P2f protocol:
-scenario-paired mean differences ($n=30$ per dataset; positive $=$ external
-method is better). All deltas shown are Holm-significant at $p<0.05$ in the
-stated direction (Confident Learning above, Co-Teaching below Graph-CoLD-soft).
-Source: \texttt{tables/table\_p5\_external\_tests.csv}.}
-\label{tab:external}
-\small
-\begin{tabular}{llccc}
-\toprule
-Dataset & Method & $\Delta$Macro-F1 & $\Delta$Tail-F1 & $\Delta$Tail-recall \\
-\midrule
-\multirow{2}{*}{CICIDS-2017}
- & Confident-Learning & $+0.048$ & $+0.171$ & $+0.189$ \\
- & Co-Teaching & $-0.155$ & $-0.316$ & $-0.201$ \\
-\midrule
-\multirow{2}{*}{CESNET-TLS-Year22}
- & Confident-Learning & $+0.114$ & $+0.234$ & $+0.283$ \\
- & Co-Teaching & $-0.204$ & $-0.296$ & $-0.163$ \\
-\midrule
-\multirow{2}{*}{UNSW-NB15}
- & Confident-Learning & $+0.014$ & $+0.081$ & $+0.089$ \\
- & Co-Teaching & $-0.066$ & $-0.118$ & $-0.109$ \\
-\bottomrule
-\end{tabular}
-\end{table}
+\input{tables_w5/tab_family_c}
 
-\subsection{RQ3: A leakage audit prevents inflated claims}
+We retain an honesty note from earlier drafts: a ``rare-evidence recovery''
+diagnostic that counted a sample as recovered whenever it was retained was
+tautological and near-ceiling by construction; it was removed from the
+hypothesis families, and all headline comparisons rely on held-out tail-F1
+only.
+
+\subsection{RQ3: When graph structure does not help}
+\label{sec:res-nohelp}
+This section collects the negative results as first-class findings.
+
+\paragraph{Family B (null): no detectable increment over Confident Learning.}
+The pre-registered decision gate for the graph diagnostic asked whether
+soft-reweighting the samples that Confident Learning retains adds anything over
+CL alone. Table~\ref{tab:family-b} reports the complete 18-test family: no
+test is significantly positive after Holm correction (all $p\ge0.608$), and the
+largest Tail-F1 CI upper bound is $+0.026$ (CESNET, rate 0.6)---an informative
+effect ceiling, not merely an absence of evidence. Mixed-effects robustness
+models agree (per-dataset mean $\Delta$ Tail-F1 $+0.004$/$-0.014$/$-0.007$,
+none supporting an increment). We accordingly withdraw the claim that
+Graph-CDM adds increment over precise probabilistic pruning and reposition it
+as an audit/diagnostic instrument.
+
+\input{tables_w5/tab_family_b}
+
+\paragraph{Saturation at scale.}
+In the 100k-window scale validation, CL alone is near ceiling (Tail-F1
+0.95--0.995); the combination has no headroom, and the rate-0.8 point estimate
+is negative ($-0.014$ $[-0.042, +0.001]$). Under real labelling errors the
+ordering is the same: CL reaches 0.910 Tail-F1 vs.\ 0.864 for
+Graph-CoLD-soft (Table~\ref{tab:natural-noise}).
+
+\paragraph{Transductive construction adds nothing.}
+A transductive control that builds graphs over test batches performs
+\emph{worse} than the inductive classifier on all three datasets in the audit
+screening (e.g.\ CICIDS 0.603 vs.\ 0.684 Macro-F1), ruling out---for this
+implementation---the concern that test-batch information drives the reported
+numbers. This is evidence about our pipeline, not a general claim about
+transductive methods.
+
+\paragraph{Boundary conditions as testable hypotheses.}
+Where might a graph diagnostic still add value? The informativeness pattern
+(Section~\ref{sec:res-info}) and the family-B ceiling suggest two registered
+hypotheses for future work rather than salvage claims: (i) graphs built from
+verified relational telemetry (host lineage, authenticated flows) rather than
+feature-space neighbourhoods; (ii) noise processes correlated with graph
+structure. Our real-noise experiment does not support the second hypothesis
+for CICIDS's actual labelling errors, where CL remains ahead.
+
+\subsection{RQ4: Where inflated numbers come from (leakage decomposition)}
 \label{sec:res-leak}
-Our initial pipeline reported a $\sim\!28$-point CICIDS advantage with a curve that
-barely degraded under $60\%$ noise—implausible for a denoiser. Auditing revealed
-that CICIDS-2017 contains $152{,}201/630{,}399$ ($\approx24\%$) exact-duplicate
-training rows, and that any clean-label signal leaking into the score/graph
-construction inflates results. We verified zero train/test edge crossings, removed
-exact and near-duplicate edges, and eliminated the clean-label paths (enforced by a
-regression test). The apparent advantage collapses to $+6.7$ points on CICIDS,
-$+0.3$ on CESNET, and a slight $-1.3$ on UNSW in the audited comparison
-(\texttt{reports/p2c\_leakage\_audit.md}). These audit deltas quantify the
-magnitude of the inflation and were measured under the earlier P2c audit protocol
-(a 3,000/8,000 stratified audit sample for CICIDS and the D5.5 frozen matrix for
-CESNET/UNSW); they aggregate differently from, and are not directly comparable to,
-the final P2f result matrix in Tables~\ref{tab:main}--\ref{tab:tail}
-(\texttt{reports/p2f\_tighten.md}). We report this because graph denoising
-in security is unusually susceptible to such inflation.
+\paragraph{Historical account.}
+Our initial pipeline reported a $\sim$28-point CICIDS advantage with a curve
+that barely degraded under 60\% noise---implausible for a denoiser. The first
+audit found $152{,}201/630{,}399$ ($\approx$24\%) exact-duplicate CICIDS
+training rows and clean-label paths in score/graph construction; removing them
+collapsed the apparent advantage (to $+6.7$ points on CICIDS under the interim
+audit protocol). Those interim numbers motivated the frozen protocol and are
+superseded by the systematic decomposition below.
 
-\subsection{RQ4: Graph informativeness is consistent with when the method helps}
+\paragraph{Four-factor decomposition under the final protocol.}
+Table~\ref{tab:leakage} flips one leakage factor at a time against the frozen
+protocol: duplicate records (DUP), cross-split entities (ENT),
+label-construction proxy fields (PRX), a clean-label oracle path in the
+diagnostic (ORA), and all at once (ALL). On CESNET, entity overlap and proxy
+fields contribute $+0.187$ and $+0.184$ Tail-F1 each, approximately additive
+(ALL $+0.249$ soft; $+0.359$ for the deletion-style proxy)---a 25--36 point
+inflation across methods and metrics, reproducing the historical ``+28-point''
+figure in controlled form. On UNSW the picture inverts: the official fixed
+partition already contains 38.4\% exact train--test feature collisions, so
+adding deduplication \emph{lowers} scores by 0.115 (duplicates inflate the
+frozen numbers from inside the official split), and unmasking \texttt{ct\_*}
+proxies is net negative because feature-space collisions dilute
+($-0.052$).
+
+\input{tables_w5/tab_leakage}
+
+\paragraph{Leakage flatters deletion, not retention.}
+The decomposition reverses a natural misreading of our earlier drafts. Leakage
+factors inflate \emph{deletion-style} methods most (CICIDS CoLD-aligned proxy:
+DUP $+0.467$, ALL $+0.389$; hard deletion $+0.375$/$+0.296$), because under
+the clean protocol they delete tail classes nearly to zero (proxy Tail-F1
+0.000 on CICIDS) and any leakage ``finds back'' those classes for free. Soft
+retention, having already banked its tail gains, has little headroom (CICIDS
+DUP $+0.244$ with CI crossing zero). Consequently, leaky protocols
+\emph{compress} the soft-vs.-hard gap (CICIDS: 0.256 under the frozen protocol
+vs.\ 0.125 under DUP)---they flatter deletion baselines and mask their true
+tail cost. The oracle path (ORA) likewise helps only deletion-style methods.
+
+\paragraph{Dataset-level findings.}
+Three findings are properties of the benchmarks themselves and transfer beyond
+this study: (i) CESNET's released features include \texttt{CATEGORY} one-hot
+columns that are parents of the label---a direct label proxy; (ii) UNSW's
+official partition ships with 38.4\% exact feature collisions after masking;
+(iii) CICIDS's flow graph collapses into one giant connected component
+(99.96\% of valid flows), making entity-disjoint splitting infeasible by
+construction (Section~\ref{sec:limits}).
+
+\paragraph{Real labelling errors corroborate the audit.}
+Applying the published Engelen relabelling rules~\cite{liu2022error} to the
+original CICIDS release yields $128{,}247$ corrected rows (4.53\% of valid
+flows): $65{,}634$ missed portscan rows and $31{,}339$ missed DDoS rows were
+released as BENIGN, while $95\%$ of the ``Web Attack -- Brute Force'' class
+(1{,}434 of 1{,}507 rows) are attack-orchestration artefacts, leaving only 74
+true positives. Rare-attack classes in this benchmark are, to a large extent,
+artefacts of the labelling pipeline---direct, dataset-native corroboration of
+the label-construction-proxy concern that motivates our audit protocol
+(cf.~\cite{engelen2021troubleshooting,lanvin2023errors}).
+
+\subsection{RQ5: Graph informativeness (descriptive, hypothesis-generating)}
 \label{sec:res-info}
-A per-dataset neighborhood-homophily / view-coverage diagnostic is directionally
-consistent with
-Graph-CoLD's margin: CICIDS (rich host/IP/temporal views) shows the largest gain,
-CESNET sits near a performance ceiling, and UNSW (temporal/behavioral only) shows the
-smallest—occasionally negative—margin
-(Figure~\ref{fig:info}, \url{tables/table_p2d_graph_informativeness.csv}).
-With only three datasets this pattern is descriptive, not inferential.
-This turns the UNSW result into an informative boundary condition rather than a
-failure: when views lack structural signal, the graph diagnostic adds little.
+A per-dataset neighborhood-homophily / view-coverage diagnostic, computed under
+the legacy protocol, is directionally consistent with where graph-based
+processing helped most in that era: CICIDS (rich host/IP/temporal views) showed
+the largest margins, CESNET sat near a performance ceiling, and UNSW
+(temporal/behavioral views only) the smallest
+(Figure~\ref{fig:info}). With only three datasets this pattern is descriptive
+and hypothesis-generating, not inferential, and under the frozen protocol the
+family-B result shows that whatever signal the views carry does not translate
+into an increment over precise pruning. We keep the diagnostic because it is
+cheap to compute and, as an \emph{audit} instrument, it flags upfront when a
+dataset's views are too weak for graph construction to be worth the cost.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.9\linewidth]{fig_p2c_informativeness_margin.pdf}
-\caption{Graph informativeness vs.\ Graph-CoLD margin over CoLD. Higher
-neighborhood homophily and view coverage are directionally consistent with
-larger gains (three datasets; descriptive pattern, not inferential).}
+\caption{Graph informativeness vs.\ margin of graph-based processing under the
+legacy protocol. Higher neighborhood homophily and view coverage are
+directionally consistent with larger margins (three datasets; descriptive,
+hypothesis-generating only).}
 \label{fig:info}
 \end{figure}
-
-\subsection{RQ5: Cost}
-Graph-CoLD's overhead is moderate: mean runtime is comparable to CoLD and memory
-is lower than the strong purification baselines (the runtime and memory figures
-are measured under the earlier D5.5-protocol runs recorded in
-\texttt{results/runtime.json}; the relative pattern, not the absolute numbers, is
-the claim). Signal preservation adds
-negligible cost over hard deletion because it changes only the training weights.
 
 \section{Discussion}
 \label{sec:discuss}
@@ -907,13 +852,14 @@ CoLD~\cite{yang2026cold}. An exact-alignment grid under the official protocol
 is registered as future work.
 
 A key methodological decision in this work is the avoidance of unfair
-state-of-the-art comparisons. Two external anchors---Confident Learning and a
-full Co-Teaching implementation---were therefore run under the identical
-leakage-audited protocol and are reported in Table~\ref{tab:external}, even
-though one of them outperforms our method on every dataset; that result is part
-of the empirical record, not an inconvenience. Other purification and robust-training
-variants (MCRe, MORSE, FINE, Decoupling) were not all
-reimplemented under the final leakage-audited protocol. Mixing results obtained
+state-of-the-art comparisons. Confident Learning was therefore run inside the
+frozen protocol itself (Tables~\ref{tab:main} and~\ref{tab:family-b}), even
+though it outperforms the graph-based combination wherever a difference is
+detectable; that result is part of the empirical record, not an inconvenience.
+Other purification and robust-training
+variants (MCRe, MORSE, Decoupling) were not
+reimplemented under the final leakage-audited protocol, and FINE/Co-Teaching ran
+only under the legacy window (Table~\ref{tab:baselines-iid}). Mixing results obtained
 under different data-cleaning, duplication-removal, and evaluation settings
 would create an unreliable comparison, so those methods remain excluded from
 the formal matrix. A comprehensive comparison with all previous methods
