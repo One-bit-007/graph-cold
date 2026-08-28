@@ -30,26 +30,46 @@ CICIDS-2017 修正标签文件。二者均为公开 GitHub 资源：
   （改进标签 + 重标注流）；
 - Lanvin et al. 2023, "Errors in the CICIDS2017 dataset and the significant differences in
   detection performances it makes"（修正标签 + 工具）。
-- **若你（Codex）有网络**：尝试克隆对应公开仓库，把修正标签放到
-  `E:/graphcold-data/cicids2017_corrected/`，记录来源 URL 与 commit/文件哈希；
-- **若无网络**：停下并产出一份「所需文件清单 + 官方仓库指引」，由人工获取后再触发本项
-  （其余 P1 项不受阻，先做 P1-3/P1-1）。
+**数据依赖（人工前置，协调者已核实来源，2026-08-28）**：
+- **源 1（主）Engelen/Liu CNS2022**——已核实。
+  - 修正标注**规则代码**（核心）：`https://github.com/GintsEngelen/CNS2022_Code`，
+    人工克隆到 `E:/graphcold-data/cicids2017_corrected/CNS2022_Code/`；
+  - 改进版数据集 CSV（交叉验证用）：下载页
+    `https://intrusion-detection.distrinet-research.be/CNS2022/Dataset_Download.html`
+    → 目录 `.../CNS2022/Datasets/`，放 `E:/graphcold-data/cicids2017_corrected/engelen_improved_csv/`。
+- **源 2（可选交叉验证）Lanvin CRiSIS2022**：`https://gitlab.inria.fr/mlanvin/crisis2022`
+  （原始流上只改标签，行级对齐；有反爬，需人工下载）。下不到不阻塞。
+- **就位判定**：`CNS2022_Code` 克隆完成即可启动本项；CSV/Lanvin 缺失只降级交叉验证，不阻塞。
+- 若数据未就位：跳过本项，先做 P1-3/P1-1/P1-2，并在报告标注「等待人工获取修正标签」。
+
+**关键设计（协调者裁定，避免流对齐陷阱）**：
+Engelen **用修复版 CICFlowMeter 重新生成了流**，流边界与原始不同，**不能**与原始 CICIDS
+做行级 1:1 匹配。因此主路径是「**规则派生**」而非「文件对齐」：
+- Engelen 的修正标注逻辑是一组确定性规则，键于 (Src IP, Dst IP, Dst/Src Port, 时间窗)——
+  这些列在 **WP-3 raw 副本**（`E:/graphcold-data/cicids2017_raw/`，已就位）上全部存在；
+- 把这组规则**实现/移植**并套用到我们冻结的 raw 流上 → 每条流得到「修正标签」，
+  与该流的「原始标签」逐行对齐，差集 = 真实标注错误集（行级、可复现、不依赖下载匹配）；
+- **「Attempted」处理纪律（源站强制）**：凡修正逻辑判为 Attempted（`Attempted Category != -1`，
+  即"意图攻击但无恶意行为"）的流一律**归为 Benign**；**绝不**把 Attempted 作为独立 ML 类别。
+  这条必须在实现里硬编码并加断言。
 
 **实验设计（就位后）**：
-1. 对齐：把修正标签按流键（Flow ID 或 (src,dst,port,timestamp) 组合）对齐到原始 CICIDS 记录；
-   原始标签 vs 修正标签的**差集 = 真实标注错误集**，报告其规模、类分布、是否集中于尾类；
+1. **规则派生 + 差集**：在 raw 副本上派生修正标签，原始 vs 修正差集 = 真实标注错误集；
+   报告其规模、类分布、是否集中于尾类；用 Engelen 改进版 CSV（若下到）在聚合计数层面
+   交叉验证差集规模合理（不做行级对齐，只比总量/类分布）；Lanvin（若下到）做二次印证；
 2. **真实噪声版主对比**：以原始（含真实错误）标签为训练噪声、修正标签为"干净"评估参照，
    在冻结协议口径下跑 {CoLD, ablation_hard, Graph-CoLD-soft, Confident-Learning}，
    报告软保留 vs 硬删除的尾类 Δ（族 A 语义的真实噪声版）、以及 CL 对比；
-   — 这是**描述性**验证（真实错误集不是我们注入的、无 seed 重复的对称设计），
+   — 这是**描述性**验证（真实错误集非注入、无对称 seed 设计），
    按 F-6 不新增 Holm 推断族，用 Δ + bootstrap CI 呈现；
-3. **审计结论的真实噪声复核**：检查合成噪声下的两个核心发现在真实噪声下方向是否一致
+3. **审计结论的真实噪声复核**：检查合成噪声下的核心发现在真实噪声下方向是否一致
    —— ① 软保留>硬删除方向；② 泄漏对删除式方法抬升更大（可选，若样本足够）；
-4. 文献重定位（P1-7 落地）：在相关工作/威胁有效性节引入 Engelen/Lanvin，把本文审计增量
-   相对其定位清楚（它们指出标签错误，本文量化标签构造代理泄漏 + 提供隔离协议与回归测试）。
+4. 文献重定位（P1-7 落地）：在相关工作/威胁有效性节引入 Engelen(CNS2022)/Lanvin，把本文审计
+   增量相对其定位清楚（它们指出/修正标签错误，本文量化标签构造代理泄漏 + 提供隔离协议与回归测试）。
 
-**交付**：`reports/p7_natural_noise.md`（对齐、真实错误集刻画、真实噪声 Δ 表、方向一致性、
-文献重定位段）；修正标签来源与哈希记录；相关守卫测试（对齐正确性、修正标签不泄漏进特征）。
+**交付**：`reports/p7_natural_noise.md`（规则派生说明、真实错误集刻画、真实噪声 Δ 表、
+方向一致性、文献重定位段）；修正规则来源 URL 与 commit 哈希记录；守卫测试
+（Attempted→Benign 断言、修正标签/派生用的实体列不泄漏进特征、差集规模对账）。
 
 ---
 
