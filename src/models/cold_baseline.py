@@ -1,7 +1,12 @@
-"""CoLD baseline re-implementation (no official code exists).
+"""Legacy CoLD-inspired re-implementation.
 
-Serves as (a) a comparison baseline and (b) the object of extension. Faithful to
-the NDSS'26 slides:
+The official CoLD source was released after this module was written
+(``kalendsyang/CoLD``, commit ``f0b940affe521662667562888d29468279d420a8``).
+This module is therefore not an official-code reproduction and is not the code
+path used by the frozen P2f rows labelled ``CoLD``.  See
+``reports/p7_cold_fidelity.md`` before making any baseline-fidelity claim.
+
+The implementation was originally designed from the NDSS'26 method description:
 
   1. Feature Reordering: correlation matrix -> Maximum Spanning Tree -> DFS order.
   2. Local Joint Learning: partition reordered features into M subsets, feature

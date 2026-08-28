@@ -703,13 +703,14 @@ def _weights_for_hard(cdm: np.ndarray, evidence: np.ndarray) -> np.ndarray:
 
 
 def _weights_for_cold(cdm: np.ndarray, evidence: np.ndarray) -> np.ndarray:
-    """Standalone CoLD-style hard purifier, independent of Graph-CDM evidence preservation.
+    """Legacy CoLD-aligned proxy retained for artifact compatibility.
 
-    The formal hard ablation applies the Graph-CDM diagnostic on top of the
-    multi-view graph context. CoLD is the non-graph baseline, so its retention
-    rule must not be numerically identical to that ablation. This proxy keeps
-    the same observed-label noise scenario but uses a stricter CDM-only hard
-    decision that is intentionally blind to the Graph-CDM evidence term.
+    This is not the official CoLD implementation released in June 2026.  It
+    consumes the repository's graph-neighborhood CDM, applies a hand-written
+    threshold and a 99th-percentile evidence exclusion, and is followed by an
+    ExtraTrees classifier. Existing result rows keep the historical ``CoLD``
+    label so old artifacts remain stable, but manuscripts must identify them as
+    ``CoLD-aligned proxy``. See ``reports/p7_cold_fidelity.md``.
     """
 
     cdm = np.asarray(cdm, dtype=np.float64)

@@ -1,0 +1,66 @@
+{
+  "stage": "P7-P1-1",
+  "completed": true,
+  "resolution_path": "b_protocol_difference_attribution",
+  "official_reproduction_completed": false,
+  "verdict": "The 0.534 versus 0.688 comparison is a method-identity mismatch inside the Graph-CoLD P2f table, not a failed reproduction of an official CoLD number.",
+  "sources": {
+    "paper": "https://www.ndss-symposium.org/wp-content/uploads/2026-s1950-paper.pdf",
+    "doi": "10.14722/ndss.2026.231950",
+    "official_code": "https://github.com/kalendsyang/CoLD",
+    "official_code_commit": "f0b940affe521662667562888d29468279d420a8"
+  },
+  "current_p2f_cicids": {
+    "scope": "10 seeds x tail-asymmetric rates 0.4, 0.6, 0.8; mean over 30 rows",
+    "historical_label_cold": {
+      "required_label": "CoLD-aligned proxy",
+      "macro_f1_mean": 0.5344923896467946,
+      "rate_means": {
+        "0.4": 0.585134,
+        "0.6": 0.519301,
+        "0.8": 0.499043
+      }
+    },
+    "ablation_hard": {
+      "macro_f1_mean": 0.6884972364833267,
+      "rate_means": {
+        "0.4": 0.785541,
+        "0.6": 0.696014,
+        "0.8": 0.583937
+      }
+    },
+    "difference_ablation_hard_minus_proxy": 0.1540048468365321
+  },
+  "official_paper_cicids_macro_f1": {
+    "clean": 0.9971,
+    "symmetric": {
+      "0.1": 0.9951,
+      "0.2": 0.9931,
+      "0.4": 0.9898,
+      "0.5": 0.9907,
+      "0.6": 0.9776,
+      "0.8": 0.9516
+    },
+    "asymmetric": {
+      "0.1": 0.9955,
+      "0.2": 0.9948,
+      "0.4": 0.9832,
+      "0.5": 0.9667,
+      "0.6": 0.9543,
+      "0.8": 0.9354
+    },
+    "note": "Table IV values are per setting on the paper's refined nine-class CICIDS subset and are not directly comparable to P2f."
+  },
+  "blocking_facts_for_exact_official_reproduction": [
+    "The official repository does not ship the paper's preprocessed CICIDS arrays.",
+    "The paper describes downsampling dominant classes and excluding classes below 1000 samples, but does not publish the exact arrays or a split manifest.",
+    "The released default config disables feature reordering and uses k-means, while the paper describes Feature Reordering and GMM-based denoising.",
+    "P2f uses an 11-class, 10000/5000, tail-only noise protocol rather than the paper's nine-class random 8:2 symmetric/asymmetric protocol."
+  ],
+  "required_manuscript_actions": [
+    "Rename existing P2f CoLD rows to CoLD-aligned proxy.",
+    "Do not describe 0.688 as an official CoLD result; it is the internal ablation_hard row.",
+    "Do not claim the current proxy uses the official CoLD encoder, clustering, purification, or downstream classifier.",
+    "Treat a future official-source adapter as a new additive experiment rather than overwriting P2f history."
+  ]
+}
