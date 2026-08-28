@@ -18,13 +18,13 @@ We thank both reviewers for reviews that fundamentally improved this work. Befor
 | A1 CESNET semantics | Service-class stress-test reframing; attack claims limited to CICIDS/UNSW; 178→25 filter table | §5.1, §9, App. B |
 | A2 label-construction proxy leakage | Masking tiers + group-disjoint splits as *primary* protocol; PRX factor quantified; regression tests | §5, §6.4 |
 | A3 undifferentiated ablation | Full factor grid; family A robust / family C null (claim withdrawn) | §6.2 |
-| A4 statistical interpretation | F-6 protocol: per-rate n=10, Holm families, TOST δ=0.01 + per-class guard, mixed effects | §5, Tables 3–5 |
+| A4 statistical interpretation | F-6 protocol: per-rate n=10, Holm families, TOST δ=0.01 + per-class guard, mixed effects | §5, Tables 4/6/7 |
 | A5 protocol inconsistency | Protocol frozen before final grid; deviations as amendments | §5, App. A |
 | A6 method underspecification | Frozen-configuration subsection (all hyperparameters, tuning discipline); D_chain removed | §4 |
 | A7 baselines / novelty | CL inside frozen protocol; FINE added; Co-Teaching de-oracled; proxy renaming | §5, §7.1 |
 | A8 evidence over-extrapolation | "Training-signal retention" wording; triage-proxy subsection deleted; bounded claims | §1, throughout |
 | A min. req. (splits / online inference) | S0–S3 on all datasets; inductive primary; transductive control; CICIDS entity finding | §5, §6.3 |
-| B M1 CL combination missing | Complete 18-test family; G2 = null with effect ceiling | §6.3, Table 4 |
+| B M1 CL combination missing | Complete 18-test family; G2 = null with effect ceiling | §6.3, Table 7 |
 | B M2 CoLD fidelity | Identity audit; proxy renaming; non-comparability statement | §7.1 |
 | B M3 scale / synthetic noise | 100k-window validation; real labelling errors via published corrected labels | §6.2, §6.4 |
 | B M4 pseudo-replication | Per-rate inference unit; no pooled n=30 | §5 |
@@ -45,7 +45,7 @@ This is the review's central critique and it reshaped the study. Actions:
 
 1. *Proxy-field audit on all three datasets* (not only CICIDS): we identified and masked label-construction fields and their proxies per dataset (CICIDS tier-1; CESNET/UNSW tier-2). This surfaced a finding beyond the review's examples: CESNET's released features include `CATEGORY` one-hot columns that are *parents of the label* (§6.4).
 2. *Group-disjoint splits as the primary protocol*: temporal-by-day for CICIDS, strict temporal∩entity for CESNET, official partition for UNSW, with train–test exact/near-duplicate intersection measured and reported for every split (§5).
-3. *Quantification rather than assertion*: the four-factor decomposition (§6.4, Table 6) isolates the proxy-field factor — +0.184 Tail-F1 on CESNET; net *negative* on UNSW, where unmasking dilutes the 38.4% feature-collision memorization in the official partition. The masked, group-disjoint numbers are the paper's primary results; all inflated configurations appear only inside the decomposition.
+3. *Quantification rather than assertion*: the four-factor decomposition (§6.4, Table 8) isolates the proxy-field factor — +0.184 Tail-F1 on CESNET; net *negative* on UNSW, where unmasking dilutes the 38.4% feature-collision memorization in the official partition. The masked, group-disjoint numbers are the paper's primary results; all inflated configurations appear only inside the decomposition.
 4. *Regression tests* now enforce that no label-construction field, clean label, or noise mask can enter features, graphs, or diagnostics; the tests ship with the reproduction package.
 5. On the reviewer's specific mechanism — the graph reconstructing the attack schedule — we additionally attempted entity-disjoint splitting on the raw CICIDS release (which retains IP columns). The flow graph collapses into one giant connected component covering 99.96% of valid flows: entity isolation is *infeasible by construction* on this benchmark. We report this honestly as a dataset-level finding (§9) rather than substituting a weaker entity definition that would appear to pass.
 
@@ -59,15 +59,15 @@ The revision replaces the entire statistical apparatus with a pre-registered pro
 
 **A5. Protocols differ across experiments.**
 
-Correct, and this had already invalidated some of our own early results. The revision freezes one protocol (windows, tail definition, noise mapping, splits, tuning discipline, statistical families) *before* the final experiment grid; every result table in the paper comes from inside that protocol, and the two deviations that occurred are disclosed as amendments with their remediations (Appendix A). Legacy-protocol artifacts appear only where explicitly labelled non-comparable (Table 2) or inside the leakage decomposition.
+Correct, and this had already invalidated some of our own early results. The revision freezes one protocol (windows, tail definition, noise mapping, splits, tuning discipline, statistical families) *before* the final experiment grid; every result table in the paper comes from inside that protocol, and the two deviations that occurred are disclosed as amendments with their remediations (Appendix A). Legacy-protocol artifacts appear only where explicitly labelled non-comparable (Table 3) or inside the leakage decomposition.
 
 **A6. The method is underspecified (edge rules, hyperparameters, thresholds).**
 
-Added §4 "Frozen configuration and tuning discipline": all diagnostic weights, weighting parameters (κ, θ, λ_r, γ, τ_ret), the hard-deletion threshold, per-view edge rules (k-NN parameters, temporal window), encoder architecture, and training budget, together with the tuning discipline (no clean validation set, no true injected noise rate, for any method at any point). The provenance-chain term D_chain is removed outright (frozen λ₄=0) rather than left as an undefined component. Per-dataset active views are specified in the data contract (Table 1).
+Added §4.6 "Frozen configuration and tuning discipline": all diagnostic weights, weighting parameters (κ, θ, λ_r, γ, τ_ret), the hard-deletion threshold, per-view edge rules (k-NN parameters, temporal window), encoder architecture, and training budget, together with the tuning discipline (no clean validation set, no true injected noise rate, for any method at any point). The provenance-chain term D_chain is removed outright (frozen λ₄=0) rather than left as an undefined component. Per-dataset active views are specified in the data contract (Table 1).
 
 **A7. Baselines are thin and novelty is overstated.**
 
-Three actions. (i) Confident Learning now runs *inside* the frozen protocol with full stratified out-of-fold probabilities, and it defines the performance bar — a result we highlight rather than hide (§6.1, §6.3). (ii) FINE was added; it ran under the legacy window and is reported as explicitly non-comparable (Table 2), which we state plainly. Co-Teaching's forget schedule was rebuilt to use an *estimated* noise rate after we found the previous version consumed the true injected rate — an unfairness we caught and disclose. (iii) The novelty claim is rescoped: the contribution is the audit protocol, the mechanism-level retention finding, and the boundary results — not an accuracy advance (§1).
+Three actions. (i) Confident Learning now runs *inside* the frozen protocol with full stratified out-of-fold probabilities, and it defines the performance bar — a result we highlight rather than hide (§6.1, §6.3). (ii) FINE was added; it ran under the legacy window and is reported as explicitly non-comparable (Table 3), which we state plainly. Co-Teaching's forget schedule was rebuilt to use an *estimated* noise rate after we found the previous version consumed the true injected rate — an unfairness we caught and disclose. (iii) The novelty claim is rescoped: the contribution is the audit protocol, the mechanism-level retention finding, and the boundary results — not an accuracy advance (§1).
 
 **A8. "Evidence" language over-extrapolates benchmark rows into operational/forensic meaning.**
 
@@ -85,7 +85,7 @@ Done as the primary protocol (see A2). Inductive per-sample inference is the pri
 
 **M1. The single biggest gap: no "CL + graph diagnostic" combination experiment despite CL winning everywhere.**
 
-Run at full power, exactly as requested. CL+Graph-CDM (soft reweighting of CL-retained rows; intersection/union fusions as exploratory variants) versus CL alone, 10 seeds × 3 rates × 3 datasets under each dataset's frozen primary protocol, pre-registered as an 18-test Holm family. Result: **null** — no test significantly positive (all Holm p ≥ 0.608), largest Tail-F1 CI upper bound +0.026, mixed-effects confirmation in agreement, and CL near-saturated in the 100k-window check (§6.3, Table 4). We disclose that the first pass ran full power on only one dataset after a screening stop that had not been pre-registered; the complete family was rerun and the stop is disclosed as amendment PA-1 (Appendix A). The manuscript repositions the graph diagnostic as an audit instrument, and the abstract states the null result with its effect ceiling.
+Run at full power, exactly as requested. CL+Graph-CDM (soft reweighting of CL-retained rows; intersection/union fusions as exploratory variants) versus CL alone, 10 seeds × 3 rates × 3 datasets under each dataset's frozen primary protocol, pre-registered as an 18-test Holm family. Result: **null** — no test significantly positive (all Holm p ≥ 0.608), largest Tail-F1 CI upper bound +0.026, mixed-effects confirmation in agreement, and CL near-saturated in the 100k-window check (§6.3, Table 7). We disclose that the first pass ran full power on only one dataset after a screening stop that had not been pre-registered; the complete family was rerun and the stop is disclosed as amendment PA-1 (Appendix A). The manuscript repositions the graph diagnostic as an audit instrument, and the abstract states the null result with its effect ceiling.
 
 **M2. CoLD fidelity: the reproduced number is far below the published one; baseline may be unfaithful.**
 

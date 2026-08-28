@@ -38,7 +38,7 @@ re-evaluated everything inside it on CICIDS-2017, UNSW-NB15, and the
 CESNET-TLS-Year22 service-classification stress test. Three findings survive.
 First (robust; 9/9 corrected tests): within a shared pipeline, soft retention
 improves tail-class F1 over hard deletion ($+0.21$ to $+0.31$ on CICIDS-2017;
-$+0.03$ to $+0.05$ elsewhere) at no detectable aggregate cost, and the
+$+0.025$ to $+0.052$ elsewhere) at no detectable aggregate cost, and the
 direction survives real labelling errors and a 100k-window scale check.
 Second (null; reported with effect ceilings): a multi-view label-space graph
 diagnostic adds no detectable increment over Confident Learning (18/18 tests;
@@ -577,7 +577,7 @@ Table~\ref{tab:family-a} reports the pre-registered soft-vs.-hard comparison
 under the frozen protocol. All nine conditions pass: Holm-corrected $p<0.05$,
 effect sizes $d_z$ from 0.77 to 3.14, and bootstrap CI lower bounds above zero
 on every dataset and rate. The effect is large on CICIDS ($+0.21$ to $+0.31$
-Tail-F1) and small-to-moderate on CESNET/UNSW ($+0.03$ to $+0.05$). Aggregate
+Tail-F1) and small-to-moderate on CESNET/UNSW ($+0.025$ to $+0.052$). Aggregate
 cost is bounded on three sides: TOST non-inferiority at $\delta{=}0.01$ passes
 9/9, the per-class guard finds no class regression beyond $-0.036$
 (threshold $0.05$), and paired macro means are themselves positive
