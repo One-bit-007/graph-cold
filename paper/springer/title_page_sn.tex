@@ -10,8 +10,8 @@
 
 \begin{document}
 
-\title[Evidence-Preserving Graph Denoising for Noisy-Label IDS]{Evidence-Preserving Graph Denoising for Noisy-Label Intrusion
-Detection: A Leakage-Audited Study of When Graph Structure Helps}
+\title[When Does Graph Structure Help Noisy-Label IDS?]{When Does Graph Structure Help Noisy-Label Intrusion Detection?
+A Leakage-Audited Study of Rare-Class Training-Signal Retention}
 
 \author*[1]{\fnm{Tianqi} \sur{Guo}}\email{guotianqi@mail.ustc.edu.cn}
 \author[2]{\fnm{Weiguo} \sur{Wang}}\email{wwg@h3c.com}
@@ -37,9 +37,14 @@ Not applicable.
 All three datasets are publicly available from their original providers:
 CIC-IDS-2017 from the Canadian Institute for Cybersecurity, University of New
 Brunswick; CESNET-TLS-Year22 from Zenodo (DOI: 10.5281/zenodo.10608607); and
-UNSW-NB15 from the University of New South Wales, Canberra. The derived
+UNSW-NB15 from the University of New South Wales, Canberra. The corrected
+CICIDS-2017 labels used in the real-noise experiment are derived by applying
+the publicly released labelling rules of Liu et al.\ (CNS 2022,
+\url{https://github.com/GintsEngelen/CNS2022_Code}) to the original release.
+The derived
 artifacts required to reproduce our results---code, configuration files, frozen
-data-split manifests with content hashes, result tables, and figure-generation
+data-split manifests with content hashes, the frozen noise-mapping matrix,
+result tables, guard/regression tests, and table- and figure-generation
 scripts---are released in a public repository,
 \url{https://github.com/One-bit-007/graph-cold}, and archived on Zenodo,
 \url{https://doi.org/10.5281/zenodo.21873516}.
