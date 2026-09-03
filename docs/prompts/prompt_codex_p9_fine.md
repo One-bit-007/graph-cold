@@ -23,9 +23,30 @@
 4. 禁 oracle 泄漏；相关回归测试保持全绿。已有产物只增不改，新产物新文件名。
 5. `submission_ready` 保持 false。发现预期外问题即停下报告。
 
-## 任务
+## 任务 0：统一 Tail-F1 口径（协调者已批准，先于 FINE）
 
-### 1. FINE 保真度核验（先做，出报告）
+**已核实的问题**：跨运行器 Tail-F1 定义不一致——
+- p5 `p3._tail_f1`：在**完整测试集**上算逐类 F1，再取尾类均值（假阳性扣分）；
+- p4 `_tail_macro_f1`：只在**真实尾类行**上算 macro-F1（更宽松）。
+- 后果：主表 Table 2 把 p5 的 soft/hard 与 p4 的 CL/CL+Graph 并列，Tail-F1 列混用两种定义。
+
+**已核实的可行性**：p4 的 `per_class_f1_json` 存的是
+`f1_score(y_test, pred, average=None)`（全集逐类 F1），因此 CL/CL+Graph 的 canonical
+Tail-F1 **可从已存逐类结果直接重汇总，无需重训**。
+
+**任务**：
+1. **canonical 定义 = p5 全集口径**（更保守、更标准）。写可复用 helper
+   `canonical_tail_f1_from_perclass(per_class_f1_json, tail_labels)`（放合适模块，
+   p9 与协调者共用）；
+2. **不重训、不改 A/B/C 的推断产物**：Family A/C 本就是全集口径（=canonical，无需动）；
+   Family B 的预注册 delta 保持 masked 口径（两臂一致，G2 null 不动）；
+3. **出主表影响报告** `reports/p9_tail_metric_unification.md`：从已存 p4 逐类结果重算
+   CL、CL+Graph 的 canonical Tail-F1，列出主表这两行 Tail-F1 masked→canonical 的变化，
+   并**附带**在 canonical 口径下重算 Family B 配对 delta，确认 G2 **仍 null**（稳健性佐证）；
+   产物写 `results/p9_canonical_tail_f1.csv`，**不改** w5_result_tables 生成器与正文
+   （协调者据此更新 tab_main、RQ1 叙事、数字审计、答复信）。
+
+## 任务 1：FINE 保真度核验（出报告）
 - 写 `reports/p9_fine_fidelity.md`：逐组件对照原论文 Algorithm 1 vs 本实现
   （表示、对齐分数、筛选准则、分类器头），如实列出每一处适配及理由。
 
@@ -43,9 +64,9 @@
 - 新建 `src/paper/p9_fine_final_protocol.py`，**复用 p4/p5 的冻结协议场景机制**
   （`p4._load_primary_dataset`、tier 屏蔽、最强划分、`p3._noise_target`），
   跑 FINE(tabular) 于 3 数据集 × 10 seeds × 3 rates = 90 场景，逐类结果落盘；
-- 同表并列输出 FINE / Confident-Learning / Graph-CoLD-soft 的 Macro-F1、Tail-F1
-  （CL/Graph 数值直接复用已冻结的 p4/p5 产物，不重跑；FINE 为新增列），
-  配对 Δ + bootstrap CI（描述性，无 Holm）；
+- **Tail-F1 统一用任务 0 的 canonical helper**（全集口径）；FINE / CL / Graph-CoLD-soft
+  三者同表并列的 Tail-F1 均为 canonical 口径（CL/Graph 数值从已冻结 p4/p5
+  逐类结果重汇总，不重跑；FINE 为新增），配对 Δ + bootstrap CI（描述性，无 Holm）；
 - 产物：`results/p9_fine_final_protocol.csv`、`reports/p9_fine_final_protocol.md`、
   新表 `tables/table_p9_fine_final.csv`。
 
