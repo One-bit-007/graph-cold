@@ -58,7 +58,7 @@ def run(
                 if (dataset, seed, rate) in done:
                     continue
                 t0 = time.time()
-                scenario = p5._prepare_scenario(ds, seed, rate)
+                scenario = p5._prepare_scenario(ds, dataset, seed, rate)
                 for cell in CELLS:
                     weights, train_labels, fit_mode = p5._cell_weights(cell, scenario)
                     y_pred = p5._fit_predict_cell(
@@ -67,6 +67,7 @@ def run(
                     y_test = scenario["y_test"]
                     rows.append({
                         "dataset": dataset, "cell": cell, "seed": seed, "tail_flip_rate": rate,
+                        "noise_target": int(scenario["noise_target"]),
                         "per_class_f1_json": json.dumps({
                             str(int(label)): float(score)
                             for label, score in zip(

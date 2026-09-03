@@ -209,6 +209,7 @@ def _cell_row(dataset: str, scenario: dict[str, Any], cell: str) -> dict[str, An
         "cell": cell,
         "seed": scenario["seed"],
         "tail_flip_rate": scenario["rate"],
+        "noise_target": int(scenario["noise_target"]),
         "macro_f1": p3._macro_f1(y_test, y_pred),
         "macro_f1_seen_classes": p3._macro_f1(y_test[seen_mask], y_pred[seen_mask]) if seen_mask.any() else float("nan"),
         "tail_macro_f1": p3._tail_f1(y_test, y_pred, scenario["tail"]),

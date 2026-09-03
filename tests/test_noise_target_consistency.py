@@ -45,3 +45,18 @@ def test_ids_target_matches_declared_benign() -> None:
     y = np.arange(11)
     target, _ = p3._noise_target("cicids2017", y, {"benign_class": 0, "class_names": [str(i) for i in range(11)]})
     assert target == 0
+
+
+def test_cell_row_persists_noise_target() -> None:
+    # noise_target must land in the output row so the frozen target is auditable in the CSV.
+    p5_src = inspect.getsource(p5._cell_row)
+    guard_src = inspect.getsource(p5)  # module-level; guard runner lives in p5_perclass_guard
+    assert '"noise_target"' in p5_src, "p5._cell_row must persist noise_target"
+    import src.paper.p5_perclass_guard as guard
+    assert '"noise_target"' in inspect.getsource(guard.run), "guard run() must persist noise_target"
+
+
+def test_guard_calls_prepare_scenario_with_dataset_name() -> None:
+    import src.paper.p5_perclass_guard as guard
+    src = inspect.getsource(guard.run)
+    assert "_prepare_scenario(ds, dataset," in src, "guard must pass dataset_name to _prepare_scenario"
