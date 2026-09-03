@@ -79,7 +79,7 @@ FAMILY_C_SIZE = len(DATASETS) * 2 * len(FULL_RATES)      # 18
 # Scenario preparation (shared across all cells of the same scenario)
 # ---------------------------------------------------------------------------
 
-def _prepare_scenario(ds, seed: int, rate: float) -> dict[str, Any]:
+def _prepare_scenario(ds, dataset_name: str, seed: int, rate: float) -> dict[str, Any]:
     """One (dataset, seed, rate) scenario. Every ablation cell of this
     scenario consumes exactly these arrays - the guard test asserts that
     repeated calls are bit-identical so inter-cell differences can only come
@@ -93,16 +93,16 @@ def _prepare_scenario(ds, seed: int, rate: float) -> dict[str, Any]:
     y_test = np.asarray(ds.y_test)[test_idx]
 
     graph = p2d._feature_graph(X_train, active_views=list(ds.meta.get("active_views", ["ip"])))
-    benign_class = ds.meta.get("benign_class") or 0
+    noise_target, _ = p3._noise_target(dataset_name, y_train, ds.meta)
     tail = p3._tail_labels(y_train)
-    noisy, flip = p2e._inject_tail_asymmetric(y_train, tail, benign_class, rate, seed=seed)
+    noisy, flip = p2e._inject_tail_asymmetric(y_train, tail, noise_target, rate, seed=seed)
     evidence = compute_evidence(noisy, {"evidence_preserving": {"freq_protect": "log", "gamma_anomaly": 1.0}}, anomaly=d5._unsupervised_feature_anomaly(X_train))
     cdm = d5._cdm_from_observed_labels(noisy, evidence, graph, ds.num_classes)
     return {
         "seed": int(seed), "rate": float(rate),
         "X_train": X_train, "y_train": y_train, "X_test": X_test, "y_test": y_test,
         "train_idx": train_idx, "test_idx": test_idx,
-        "num_classes": ds.num_classes, "benign_class": benign_class,
+        "num_classes": ds.num_classes, "noise_target": int(noise_target),
         "tail": tail, "noisy": noisy, "flip": flip,
         "evidence": evidence, "cdm": cdm, "graph": graph,
         "class_names": list(ds.meta.get("class_names", [])),
@@ -316,7 +316,7 @@ def run(
                 if (dataset, int(seed), float(rate)) in done:
                     continue
                 print(f"[p5] {tier} {dataset} seed={seed} rate={rate}", flush=True)
-                scenario = _prepare_scenario(ds, seed, rate)
+                scenario = _prepare_scenario(ds, dataset, seed, rate)
                 for cell in cells:
                     rows.append(_cell_row(dataset, scenario, cell))
                 pd.DataFrame(rows).to_csv(partial, index=False)

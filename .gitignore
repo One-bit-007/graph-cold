@@ -37,3 +37,11 @@ paper/**/*.aux
 paper/**/*.log
 paper/**/*.out
 paper/**/*.spl
+
+# manuscript-critical result artifacts (whitelisted despite *.csv ignore)
+!results/p5_factor_ablation_full.csv
+!results/p4_cl_graph_combo_full_family_b_complete.csv
+!results/p7_natural_noise.csv
+!results/p7_baseline_expansion.csv
+!results/p6_scale_validation_cicids.csv
+!results/p6_leakage_ablation_fixedtail_all.csv

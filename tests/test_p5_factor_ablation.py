@@ -42,8 +42,8 @@ def test_family_sizes_frozen():
 
 def test_prepare_scenario_bit_deterministic():
     ds = _synthetic_ds()
-    a = p5._prepare_scenario(ds, seed=3, rate=0.6)
-    b = p5._prepare_scenario(ds, seed=3, rate=0.6)
+    a = p5._prepare_scenario(ds, "cicids2017", seed=3, rate=0.6)
+    b = p5._prepare_scenario(ds, "cicids2017", seed=3, rate=0.6)
     for key in ("train_idx", "test_idx", "noisy", "flip", "evidence", "cdm"):
         np.testing.assert_array_equal(a[key], b[key], err_msg=f"scenario field {key} not deterministic")
     np.testing.assert_array_equal(np.asarray(a["tail"]), np.asarray(b["tail"]))
@@ -56,7 +56,7 @@ def test_cells_1_and_2_identical_by_construction():
     enters training only via the CDM diagnostic, so #1 (no graph) and #2
     (graph without CDM) must produce bit-identical predictions."""
     ds = _synthetic_ds()
-    scenario = p5._prepare_scenario(ds, seed=1, rate=0.6)
+    scenario = p5._prepare_scenario(ds, "cicids2017", seed=1, rate=0.6)
     w1, l1, m1 = p5._cell_weights("1_nograph_ce", scenario)
     w2, l2, m2 = p5._cell_weights("2_graph_no_cdm", scenario)
     np.testing.assert_array_equal(w1, w2)
@@ -88,7 +88,7 @@ def test_cbce_weights_favour_rare_classes():
 
 def test_cell_row_outputs_finite_metrics():
     ds = _synthetic_ds()
-    scenario = p5._prepare_scenario(ds, seed=2, rate=0.6)
+    scenario = p5._prepare_scenario(ds, "cicids2017", seed=2, rate=0.6)
     for cell in ("3_graph_cdm_hard", "4_graph_cdm_soft", "5_graph_cdm_freqfloor", "6_nograph_cbce"):
         row = p5._cell_row("synthetic", scenario, cell)
         assert np.isfinite(row["macro_f1"])

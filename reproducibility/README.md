@@ -8,7 +8,9 @@ experimental artifacts, and how to re-run the full grid from scratch.
 
 All headline results come from the **frozen final protocol**: proxy-masked
 features (tier-1 CICIDS / tier-2 CESNET+UNSW), strongest-available
-group-disjoint splits, deterministic audit windows (train 10,000 / test 5,000),
+leakage-controlled splits (strict entity-disjoint only on CESNET; CICIDS uses
+temporal-by-source-file, UNSW uses its official partition with the collision
+rate measured), deterministic audit windows (train 10,000 / test 5,000),
 asymmetric tail noise {0.4, 0.6, 0.8}, seeds 0–9, pre-registered Holm families
 A (9) / B (18) / C (18), TOST δ=0.01 with per-class guard, and mixed-effects
 robustness checks. Frozen constants live in the runners themselves and in
