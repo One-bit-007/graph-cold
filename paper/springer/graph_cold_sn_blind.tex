@@ -40,7 +40,7 @@ re-evaluated everything inside it on CICIDS-2017, UNSW-NB15, and the
 CESNET-TLS-Year22 service-classification stress test. Three findings survive.
 First (robust; 9/9 corrected tests): within a shared pipeline, soft retention
 improves tail-class F1 over hard deletion ($+0.21$ to $+0.31$ on CICIDS-2017;
-$+0.025$ to $+0.052$ elsewhere) at no detectable aggregate cost, and the
+$+0.025$ to $+0.056$ elsewhere) at no detectable aggregate cost, and the
 direction survives real labelling errors and a 100k-window scale check.
 Second (null; reported with effect ceilings): a multi-view label-space graph
 diagnostic adds no detectable increment over Confident Learning (18/18 tests;
@@ -584,16 +584,16 @@ Table~\ref{tab:baselines-iid} and are not comparable to this grid.
 \paragraph{Family A (robust).}
 Table~\ref{tab:family-a} reports the pre-registered soft-vs.-hard comparison
 under the frozen protocol. All nine conditions pass: Holm-corrected $p<0.05$,
-effect sizes $d_z$ from 0.77 to 3.14, and bootstrap CI lower bounds above zero
+effect sizes $d_z$ from 0.77 to 3.34, and bootstrap CI lower bounds above zero
 on every dataset and rate. The effect is large on CICIDS ($+0.21$ to $+0.31$
-Tail-F1) and small-to-moderate on CESNET/UNSW ($+0.025$ to $+0.052$). Aggregate
+Tail-F1) and small-to-moderate on CESNET/UNSW ($+0.025$ to $+0.056$). Aggregate
 cost is bounded on three sides: TOST non-inferiority at $\delta{=}0.01$ passes
-9/9, the per-class guard finds no class regression beyond $-0.036$
+9/9, the per-class guard finds no class regression beyond $-0.028$
 (threshold $0.05$), and paired macro means are themselves positive
 ($+0.014$ to $+0.062$)---so we state ``no detectable aggregate cost, with
 consistently positive macro means,'' not ``no cost.'' A seed random-intercept
 mixed-effects model confirms the result on each dataset (mean $\Delta$ Tail-F1
-$+0.044$/$+0.261$/$+0.039$ for CESNET/CICIDS/UNSW, one-sided $p<10^{-4}$).
+$+0.047$/$+0.261$/$+0.039$ for CESNET/CICIDS/UNSW, one-sided $p<10^{-4}$).
 Mechanistically, hard deletion removes clean rare-class training rows flagged
 as suspicious; soft weighting keeps them at reduced influence.
 
@@ -945,6 +945,19 @@ frozen primary protocol) was executed and the claim re-adjudicated under the
 pre-registered Holm family, TOST non-inferiority, per-class guard, and
 mixed-effects confirmation (Table~\ref{tab:family-a}); the verdict is
 \emph{robust} (3/3 datasets).
+
+\paragraph{PA-3: CESNET asymmetric-noise target correction (remediated).}
+A post-analysis code audit found that the family-A/C scenario builder selected
+the CESNET asymmetric-noise flip target through a benign-class fallback that
+resolved to label~0 rather than the frozen F-3 target (label~11,
+\texttt{microsoft-diagnostic}); the family-B runner already used the frozen
+target, so only the CESNET family-A/C cells were affected. As remediation, the
+noise target was unified to a single frozen function (guarded by a
+cross-runner consistency test), and the CESNET grid was re-run and families
+A/C fully recomputed; CICIDS and UNSW rows are numerically unchanged. No
+verdict changed: family~A remains \emph{robust} (the CESNET soft-vs.-hard
+Tail-F1 deltas move from $+0.034$/$+0.052$/$+0.047$ to
+$+0.041$/$+0.046$/$+0.056$) and both family~C comparisons remain \emph{null}.
 
 \section{CESNET-TLS-Year22 class-filter policy}
 \label{app:cesnet-policy}

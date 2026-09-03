@@ -36,10 +36,10 @@ def main() -> None:
     check("famA CICIDS range", r"\+0\.21\$? to \$?\+0\.31",
           round(cic.mean_delta.min(), 2) == 0.21 and round(cic.mean_delta.max(), 2) == 0.31)
     other = fa[fa.dataset != "cicids2017"]
-    check("famA other range", r"\+0\.025\$? to \$?\+0\.052",
-          round(other.mean_delta.min(), 3) == 0.025 and round(other.mean_delta.max(), 3) == 0.052)
-    check("famA dz range", r"0\.77 to 3\.14",
-          round(fa.cohens_dz.min(), 2) == 0.77 and round(fa.cohens_dz.max(), 2) == 3.14)
+    check("famA other range", r"\+0\.025\$? to \$?\+0\.056",
+          round(other.mean_delta.min(), 3) == 0.025 and round(other.mean_delta.max(), 3) == 0.056)
+    check("famA dz range", r"0\.77 to 3\.34",
+          round(fa.cohens_dz.min(), 2) == 0.77 and round(fa.cohens_dz.max(), 2) == 3.34)
 
     fb = json.load(open("reports/p4_cl_graph_combo_full_family_b_complete.json"))["summary"]["family_b_tests"]
     tail = [t for t in fb if t["metric"] == "tail_macro_f1"]
