@@ -38,6 +38,7 @@ from sklearn.neighbors import NearestNeighbors
 from sklearn.semi_supervised import LabelPropagation
 
 from src.data.loaders import load_dataset
+from src.metrics_canonical import canonical_tail_f1_from_perclass
 from src.experiments import d5
 from src.models import graph_cdm
 from src.models.evidence import compute as compute_evidence
@@ -68,6 +69,8 @@ PROXY_TIERS: dict[str, dict[str, list[str]]] = {
         "tier2": ["DST_ASN"],
     },
     "unsw_nb15": {
+        # P10: label/attack_cat are permanently excluded in loaders._feature_inputs,
+        # not reversible PRX tiers. Config also drops label in multiclass mode.
         # is_sm_ips_ports is derived from source/destination IP+port equality;
         # ct_* counters are computed over 5-tuple windows (IP/port proxies).
         "tier1": ["is_sm_ips_ports"],
@@ -194,10 +197,7 @@ def _macro_f1(y_true: np.ndarray, y_pred: np.ndarray) -> float:
 def _tail_f1(y_true: np.ndarray, y_pred: np.ndarray, tail: np.ndarray) -> float:
     per_class = f1_score(y_true, y_pred, average=None, labels=np.unique(y_true), zero_division=0)
     classes = np.unique(y_true)
-    mask = np.isin(classes, tail)
-    if not mask.any():
-        return float("nan")
-    return float(np.mean(per_class[mask]))
+    return canonical_tail_f1_from_perclass(dict(zip(classes, per_class)), tail)
 
 
 def _duplicate_intersection(X_train: np.ndarray, X_test: np.ndarray) -> dict[str, Any]:

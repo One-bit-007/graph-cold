@@ -154,7 +154,8 @@ def _scenario_rows(dataset_name: str, ds, seed: int, rate: float) -> list[dict[s
     soft = graph_cdm.soft_weights(cdm, evidence, p2e.SOFT_CFG)
     graph_issue = cdm > float(p2e.SOFT_CFG["evidence_preserving"]["theta"])
 
-    cl = ConfidentLearningBaseline(seed=seed, noise_rate=float(np.mean(flip)), n_estimators=24)
+    # P10: never pass the true injected rate, even to an unused fallback path.
+    cl = ConfidentLearningBaseline(seed=seed, n_estimators=24)
     cl_result = cl.fit_predict(sample.X_train, noisy, sample.X_test, sample.num_classes)
     cl_keep = np.asarray(cl_result.retained_mask, dtype=bool)
     cl_issue = ~cl_keep
@@ -196,7 +197,8 @@ def _scenario_rows(dataset_name: str, ds, seed: int, rate: float) -> list[dict[s
             "noise_target_name": sample.noise_target_name,
             "method": method,
             "macro_f1": macro_f1(sample.y_test, pred),
-            "tail_macro_f1": p2e._tail_macro_f1(sample.y_test, pred, sample.tail),
+            # P10 runs use canonical full-test-set F1; historical CSVs are immutable.
+            "tail_macro_f1": p3._tail_f1(sample.y_test, pred, sample.tail),
             "tail_recall": p2e._tail_recall(sample.y_test, pred, sample.tail),
             "per_class_f1_json": json.dumps({
                 str(int(label)): float(score)

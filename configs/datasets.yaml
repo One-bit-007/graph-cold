@@ -64,7 +64,8 @@ unsw_nb15:
   label_col: attack_cat
   label_mode: multiclass
   sample_rows: null
-  drop_cols: [id]
+  # P10: the binary target is never an input, even in PRX/ALL audit conditions.
+  drop_cols: [id, label]
 
 ustc_tfc2016:
   name: USTC-TFC2016

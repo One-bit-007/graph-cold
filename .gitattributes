@@ -7,3 +7,11 @@ results/p8_guard/p5_perclass_guard.csv -text whitespace=cr-at-eol
 # P9 runtime evidence is hashed byte-for-byte, including incomplete runs.
 results/p9_*.csv -text whitespace=cr-at-eol
 reports/p9_*.json -text whitespace=cr-at-eol
+
+# P10 preserves both old evidence snapshots and the new, separately named data.
+reproducibility/history/p10_before_unsw_label_20260903/** -text whitespace=cr-at-eol
+results/p10/** -text whitespace=cr-at-eol
+results/p10_*.csv -text whitespace=cr-at-eol
+reports/p10/** -text whitespace=cr-at-eol
+reports/p10_*.json -text whitespace=cr-at-eol
+tables/p10/** -text whitespace=cr-at-eol

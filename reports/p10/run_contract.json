@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "submission_ready": false,
+  "datasets_rerun": [
+    "unsw_nb15"
+  ],
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "rates": [
+    0.4,
+    0.6,
+    0.8
+  ],
+  "tail_metric": "canonical full-test per-class F1 averaged over frozen tail classes",
+  "label_exclusion": "permanent, including PRX/ALL",
+  "input_sha256": {
+    "configs/datasets.yaml": "64524ec78a8ad18ab506ef3f7fdbc3311712a65c5e234241563c5e2d221eef41",
+    "src/data/loaders.py": "b67f4850362611042f8967d28e16d4f84e1f936cb00bca403e1c069b4a0a012a",
+    "src/metrics_canonical.py": "9492c533cca370bca15a36db33e3b740b1cb96fa8e054053029dbbd8c847d1d7",
+    "src/paper/p3_proxy_audit.py": "58aa5102298bcbfd5f775d6e298f4f4b3e8d82cc2f3266ec9b8473ee94a054ea",
+    "src/paper/p4_cl_graph_combo.py": "60bc22d6ef9f4902eb78f9f56026c49a245eb1706aa2168ef623c929ca282cec",
+    "src/paper/p5_factor_ablation.py": "2f2453608571af9195e3eb3692112e5746f76d3788d89d392ca137a64b020a97",
+    "src/paper/p6_leakage_ablation.py": "44244d5a54a3cc0ae8eba067f1dfae50068f81c1927191b6f7d6d761c5a51546",
+    "src/paper/p10_unsw_rerun.py": "4fdb5898a86a773a2c06e2cd9fefc743568106c9ea2afaa737744eeb86551a12",
+    "src/paper/p10_support.py": "42871d3346d983d1e248a48f3172aabe3d0b066aae73c0b2c2e5c37b3b87d591",
+    "reports/p10_feature_audit.json": "0a535670fc8c58f6ac925dea48b563ae21c6aeeaa5f951af2337d5c4242aca08",
+    "reports/p9_tail_metric_unification.json": "c8460c6fa6d0585dc73deea4e7bb39e2b819832b151219f1302a0c3363b608cb"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "validation": "Share with caveats: P10 stopped before B/leakage",
+  "submission_ready": false,
+  "independently_recomputed_tests": 27,
+  "holm_families": [
+    9,
+    18
+  ],
+  "paired_n_per_test": 10,
+  "guard_main_max_abs_difference": 8.326672684688674e-17,
+  "guard_rows_checked": 60,
+  "old_ac_matches_frozen_report": true,
+  "other_dataset_raw_record_bytes_unchanged": true,
+  "historical_file_hashes_unchanged": true,
+  "new_artifact_sha256": {
+    "results/p10/p5_full_merged.csv": "3fdd1dd027d075af9e9a7df77d892d752abcfa70e048dbc4a847e623b70abf28",
+    "results/p10/p5_guard_full_merged.csv": "c667267512657e14e6378c02cc4e4f8486912ca8f2f4c83bb18d5df651ae6845",
+    "results/p10/p5_guard_unsw.csv": "ebd90a0da0a834450d02a3c7fba195cc34575e12a344f33482750c52e98f221a",
+    "results/p10/p5_guard_unsw.partial.csv": "ebd90a0da0a834450d02a3c7fba195cc34575e12a344f33482750c52e98f221a",
+    "results/p10/p5_unsw.csv": "201472b872650948afbaf170443c3b1b4facd232a8582358cf2282729c53e4fb",
+    "results/p10/p5_unsw.partial.csv": "201472b872650948afbaf170443c3b1b4facd232a8582358cf2282729c53e4fb"
+  }
+}

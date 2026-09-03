@@ -76,7 +76,8 @@ def load_dataset(name: str, cfg: dict) -> Dataset:
     if not label_col or label_col not in df.columns:
         raise ValueError(f"Dataset '{name}' requires label_col '{label_col}' in the input table.")
 
-    drop_cols = [col for col in ds_cfg.get("drop_cols", []) if col in df.columns]
+    drop_cols = [col for col in ds_cfg.get("drop_cols", []) if col in df.columns
+                 and not (key == "unsw_nb15" and col == label_col)]
     timestamp_cols = _timestamp_columns(df.columns)
     timestamps = _coalesce_timestamps(df, timestamp_cols)
     entity_col = next((col for col in ds_cfg.get("entity_cols", []) if col in df.columns), None)
@@ -135,7 +136,7 @@ def load_dataset(name: str, cfg: dict) -> Dataset:
     label_mapping = {label: idx for idx, label in enumerate(class_names)}
     y = np.array([label_mapping[label] for label in labels_raw], dtype=np.int64)
 
-    features = _build_feature_frame(work.drop(columns=[label_col]))
+    features = _build_feature_frame(_feature_inputs(work, label_col, key))
     feature_names = list(features.columns)
     X = features.to_numpy(dtype=np.float32)
 
@@ -314,7 +315,7 @@ def _load_unsw_partition_dataset(
     if timestamps is not None:
         timestamps = timestamps[valid]
 
-    drop_cols = [col for col in ds_cfg.get("drop_cols", []) if col in df.columns]
+    drop_cols = [col for col in ds_cfg.get("drop_cols", []) if col in df.columns and col != label_col]
     df.drop(columns=[*drop_cols, "__graphcold_split"], errors="ignore", inplace=True)
     df.drop(columns=[col for col in timestamp_cols if col in df.columns], errors="ignore", inplace=True)
     work = df.loc[valid].reset_index(drop=True)
@@ -349,7 +350,7 @@ def _load_unsw_partition_dataset(
     class_names = _ordered_class_names(labels_raw)
     label_mapping = {label: idx for idx, label in enumerate(class_names)}
     y = np.array([label_mapping[label] for label in labels_raw], dtype=np.int64)
-    features = _build_feature_frame(work.drop(columns=[label_col]))
+    features = _build_feature_frame(_feature_inputs(work, label_col, "unsw_nb15"))
     feature_names = list(features.columns)
     X = features.to_numpy(dtype=np.float32)
     train_idx = np.flatnonzero(split == "train")
@@ -399,6 +400,20 @@ def _load_unsw_partition_dataset(
         num_classes=len(class_names),
         meta=meta,
     )
+
+
+def _feature_inputs(frame: pd.DataFrame, label_col: str, dataset: str) -> pd.DataFrame:
+    """Never expose an alternate UNSW target as a feature, in either mode.
+
+    This is permanent label exclusion, not a proxy tier that PRX can undo.
+    Target values remain available for label encoding; only the feature view
+    drops both label and attack_cat, including case/space/underscore aliases.
+    """
+    excluded = {label_col}
+    if dataset == "unsw_nb15":
+        excluded.update(col for col in frame.columns
+                        if "".join(c for c in str(col).casefold() if c.isalnum()) in {"label", "attackcat"})
+    return frame.drop(columns=list(excluded), errors="ignore")
 
 
 def _resolve_loader_label_column(key: str, df: pd.DataFrame, ds_cfg: dict) -> str | None:
