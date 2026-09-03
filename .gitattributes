@@ -1,0 +1,5 @@
+# P8 evidence snapshots must survive checkout with their original byte hashes.
+reproducibility/history/p8_before_f3_20260903/** -text whitespace=cr-at-eol
+results/p5_factor_ablation_full*.csv -text whitespace=cr-at-eol
+results/p5_perclass_guard.csv -text whitespace=cr-at-eol
+results/p8_guard/p5_perclass_guard.csv -text whitespace=cr-at-eol

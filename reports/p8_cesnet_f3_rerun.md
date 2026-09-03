@@ -1,118 +1,137 @@
-# P8 CESNET F-3：前置核验与阻塞报告
+# P8 CESNET F-3 重跑与完整统计族重算交付报告
 
-日期：2026-09-03。状态：`BLOCKED_BEFORE_EXPERIMENTS`。
+日期：2026-09-03。**数据重算完成；A/C、逐类护栏裁决均未变化；正文数字同步与最终投稿门禁待协调者复核。**
 
-本报告不是重跑完成报告。遵照工作包“与预期不符处（如有则停下）”，在发现下列接口及续跑问题后，未启动 CESNET 正式模型实验，未删除、覆盖或合并任何历史实验产物，未改动论文、算法、配置或冻结协议。
+本报告替代先前的前置阻塞报告。旧报告及旧实验产物已保存于 `reproducibility/history/p8_before_f3_20260903/`。
 
-## 1. 授权范围及基线
+## 1. 本轮执行范围
 
-- 工作包：`docs/prompts/prompt_codex_p8_cesnet_f3.md`。
-- 检查基线：`508a4600c357f59e38a3745877f097ea65576056`。
-- 根因修复提交：`9cdb642`；P5 场景准备现调用 `p3._noise_target`。
-- 本轮目标原定为 CESNET 120 method-runs，以及合并后三数据集的完整 Family A=9 / C=18 检验、逐类护栏、混合效应分析和 PA-3 披露草稿。
-- 不运行 FINE，不 push，不发布 Zenodo，不授权投稿。
-- 已核对 `reports/d11/d11_final_audit.json`、`reports/d9/d9_submission_lock_audit.json` 等文件中 `submission_ready` 为 false；这些文件未修改。
+- 协调者代码提交 `3e86d10` 已在本地；未做多余 pull，未修改训练器、模型超参或冻结统计函数。
+- 一致性测试文件 6 项，加 P5 测试文件 6 项，合计 **12/12 通过**（不是单文件 12 项）。
+- 17 份旧结果、缓存、统计表及报告先复制归档并逐文件核对 SHA-256。
+- 删除活动 CESNET P5 final/partial 和旧护栏 partial；归档副本可恢复。未删除其他数据集分片。
+- CESNET P5 **120/120 method-runs**（4 cells × 10 seeds × 3 rates），逐类护栏另跑 **60/60**（2 cells × 10 × 3）。没有重训 CICIDS/UNSW。
+- 冻结参数保持 seeds 0–9、rates 0.4/0.6/0.8、train/test=10,000/5,000；CESNET tier2 屏蔽 + temporal/entity-disjoint。
+- 新 CESNET 主实验与护栏记录均有 `noise_target=11`。旧 IDS 记录没有该运行时字段，合并时留空，不伪造历史元数据。
+- 新增 `reproducibility/p8_recompute.py` 仅用于合并、调用既有统计函数和出具报告；不包含训练或调参。
 
-## 2. 已完成的前置核验
+## 2. 完整族裁决（非 CESNET 子族）
 
-| 检查 | 实际结果 |
+| 项目 | 重算范围与结果 | 原裁决是否变化 |
+| --- | --- | --- |
+| Family A | 合并 360 行，完整 9 项 Holm；9/9 条件通过，3/3 数据集，robust | 否 |
+| Family C | 同一合并帧，完整 18 项 Holm；无正向显著，vs freq-floor=null，vs CBCE=null | 否 |
+| Family A Macro 非劣性 | 逐噪声率 n=10，δ=0.01；9/9 通过 | 否 |
+| 逐类护栏 | 合并 180 行，9 个数据集×噪声率条件全部通过，阈值 0.05 | 否 |
+| Family B / G2 | 不在本次重跑范围，原产物未修改 | 未重新裁决 |
+
+重算调用 `_family_tests(size=9/18)`、`_family_verdict`、`_flatten_tests`；不仅比较总体裁决，也检查了各数据集、各噪声率的优效与非劣效通过状态，均未变化。单数据集 runner 输出的 narrow 不用于全文裁决。
+
+统计边界：沿用既有单侧 Macro 非劣性检验，不将其表述为双侧等效性已成立；未因本次重跑更改检验方法。混合效应模型显式建模 seed 随机截距与 rate 固定效应，不是把 30 行当作独立种子做配对检验。
+
+## 3. CESNET 新旧均值（每行 10 seeds）
+
+旧值：buggy target=0；新值：F-3 target=11。
+
+| Cell | Rate | Macro 旧 | Macro 新 | Tail 旧 | Tail 新 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 3_graph_cdm_hard | 0.4 | 0.476411 | 0.492407 | 0.342244 | 0.353825 |
+| 3_graph_cdm_hard | 0.6 | 0.409790 | 0.420872 | 0.208628 | 0.217612 |
+| 3_graph_cdm_hard | 0.8 | 0.335595 | 0.343399 | 0.064604 | 0.063524 |
+| 4_graph_cdm_soft | 0.4 | 0.500483 | 0.521785 | 0.376271 | 0.394421 |
+| 4_graph_cdm_soft | 0.6 | 0.441018 | 0.452144 | 0.260278 | 0.263537 |
+| 4_graph_cdm_soft | 0.8 | 0.366947 | 0.377593 | 0.111629 | 0.119201 |
+| 5_graph_cdm_freqfloor | 0.4 | 0.502331 | 0.523886 | 0.380284 | 0.398985 |
+| 5_graph_cdm_freqfloor | 0.6 | 0.437322 | 0.450112 | 0.253822 | 0.263560 |
+| 5_graph_cdm_freqfloor | 0.8 | 0.366559 | 0.376074 | 0.113291 | 0.115942 |
+| 6_nograph_cbce | 0.4 | 0.503647 | 0.519579 | 0.379674 | 0.391137 |
+| 6_nograph_cbce | 0.6 | 0.434426 | 0.454017 | 0.249827 | 0.263800 |
+| 6_nograph_cbce | 0.8 | 0.366285 | 0.377028 | 0.107596 | 0.117507 |
+
+## 4. CESNET Family A：soft − hard
+
+| Rate | Δ旧 | Δ新 | Holm p旧 | Holm p新 | 新 d_z | 新 95% CI |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| 0.4 | +0.034026 | +0.040596 | 0.01506097 | 0.00099449 | 1.7282 | [+0.027136, +0.055574] |
+| 0.6 | +0.051650 | +0.045926 | 0.00003690 | 0.00009211 | 2.4755 | [+0.036282, +0.057676] |
+| 0.8 | +0.047025 | +0.055677 | 0.00001698 | 0.00001027 | 3.3372 | [+0.045859, +0.065290] |
+
+## 5. CESNET Family C：无正向显著优势
+
+| Reference | Rate | Δ旧 | Δ新 | 新 Holm p | 新 95% CI |
+| --- | ---: | ---: | ---: | ---: | --- |
+| 5_graph_cdm_freqfloor | 0.4 | -0.004013 | -0.004563 | 1.000 | [-0.012063, +0.004941] |
+| 6_nograph_cbce | 0.4 | -0.003403 | +0.003284 | 1.000 | [-0.003160, +0.009925] |
+| 5_graph_cdm_freqfloor | 0.6 | +0.006456 | -0.000023 | 1.000 | [-0.008703, +0.008602] |
+| 6_nograph_cbce | 0.6 | +0.010452 | -0.000263 | 1.000 | [-0.010142, +0.009454] |
+| 5_graph_cdm_freqfloor | 0.8 | -0.001662 | +0.003259 | 1.000 | [-0.003314, +0.010219] |
+| 6_nograph_cbce | 0.8 | +0.004033 | +0.001694 | 1.000 | [-0.004310, +0.007246] |
+
+## 6. 逐类护栏与混合效应
+
+| CESNET Rate | 旧最差类 Δ | 新最差类 Δ | 新最差类标签 | 通过 |
+| --- | ---: | ---: | ---: | --- |
+| 0.4 | -0.028942 | -0.015363 | 1 | True |
+| 0.6 | -0.036460 | -0.027788 | 5 | True |
+| 0.8 | -0.007781 | -0.027261 | 14 | True |
+
+CESNET 混合效应平均 Δ 从 +0.044234 更新为 +0.047400，95% CI [+0.040320, +0.054479]，单侧 p=1.231e-39。模型收敛，但随机截距方差接近零，保留 MLE boundary 警告；不把该稳健性结果替代主检验。
+
+## 7. 不变性检查与历史源冲突
+
+- CICIDS/UNSW 分片 SHA-256 均与归档逐字节一致；两分片各 120 行，没有重写。
+- 合并主表中非 CESNET 的 **240 行、全部原有列的数值和原始 CSV 数字字符串完全一致**。CSV 新增 noise_target 列，旧行该列为空；因此不声称整个新主表字节不变。
+- 护栏中非 CESNET 的 **120 行完全保留**（原有列、逐类 JSON）；没有重训。
+- 合并前发现 UNSW 分片中 `5_graph_cdm_freqfloor / seed 8 / rate 0.8` 的 Macro-F1 与已入库主表相差约 0.0000423494（seen-class Macro 同样不同，Tail 相同）。这是重跑前已有差异，本轮没有推定其成因。
+- 为满足批复中非 CESNET 逐位不变的优先约束，以已入库全量表为这 240 行的权威来源，只替换 CESNET；没有静默引入该 UNSW 分片差异。精确两个字段值见 recompute JSON 的 historical_shard_discrepancies。
+- Holm 是完整族校正：CESNET p 值变化可以使未重训数据集的校正 p 改变，例如 UNSW rate 0.4 从约 0.00909 到 0.00727。这不代表原实验指标改变。
+
+| Protected shard | SHA-256 |
 | --- | --- |
-| `tests/test_noise_target_consistency.py` 与 `tests/test_p5_factor_ablation.py` | 合计 10 passed；前者包含工作包要求的 4 项 |
-| `tests/test_no_oracle_leakage.py` 与 `tests/test_proxy_field_regression.py` | 合计 15 passed |
-| 真实 CESNET 主协议数据加载 | 成功；tier2 屏蔽、`temporal_entity` 划分 |
-| seeds 0–9 的各个 10,000 行训练窗口 | 全部存在目标类；目标均为 `(11, microsoft-diagnostic)` |
-| 旧 P5 分片存在性 | CESNET、CICIDS、UNSW 的 final/partial 文件均存在 |
-| 历史产物状态 | 全部原样保留；本轮未产生新的实验指标 |
+| cicids2017 | `1cb6e8ef5b603b3d8c99ad1a997ea486f8302e46370e583fd11b9afc6135d30d` |
+| unsw_nb15 | `4360a44e66b6a85853d160128e85edd139ad6a857ca51af04d5651af834005d0` |
 
-上述 25 项为定向回归测试，不是全仓测试。测试可能使用小型合成样本；没有运行论文的真实数据训练网格。
+## 8. 门禁结果与协调者待办
 
-真实窗口检查通过 `p4._load_primary_dataset` 加载主协议数据，使用 `p2d._stratified_sample` 与冻结的 seeds 0–9 / TRAIN_WINDOW=10,000 取样，再逐窗调用 `p3._noise_target`；没有调用训练函数。
+- 全仓测试目录：**289 passed / 1 failed / 3 skipped / 0 errors**；原始记录 `reports/p8_pytest.xml`。
+- 声明门：24/25 通过；数字审计子测试随正文旧数字失败，未绕过。
+- 数字审计：17/19 通过，两项失败，exit=1；原始输出 `reports/p8_number_audit.json`。
+- `famA other range`：正文及审计期望仍是 +0.025 到 +0.052，新上界为 +0.056。
+- `famA dz range`：正文及审计期望仍是 0.77 到 3.14，新上界为 3.34。
+- 已重新生成 7 张 LaTeX 表，实际变动为 tab_main、tab_family_a、tab_family_c。
+- 协调者须据新数据同步正文、摘要、答复信与数字审计中的相应期望，并补充 PA-3，再完整复核。没有修改审计规则来制造全绿。
+- 本轮未更新论文 PDF、src_pkg、source.zip、EM 粘贴包或公开发布物；现有这些产物仍需协调者重建。历史 P5/P0-5 文字报告未重写，其 CESNET 数字已由本报告取代。
+- submission_ready 仍为 false；未 push、未发布 Zenodo、未执行投稿。
 
-## 3. 与工作包预期不符的三项问题
+## 9. PA-3 披露段草稿（待协调者写入稿件）
 
-### B1 — 逐类护栏未适配已修改的接口
+> **PA-3 — Correction of the CESNET asymmetric-noise implementation.** A post-analysis code audit identified a discrepancy between the frozen F-3 mapping and the P5 factor-ablation implementation: CESNET corruption was directed to label 0 (`apple-itunes`) instead of the prescribed label 11 (`microsoft-diagnostic`). We corrected the implementation to use the shared target-selection function, added target metadata to newly generated result rows, and invalidated the affected cached runs. We reran only the CESNET full-tier ablations (120 method-runs) and the accompanying per-class checks (60 method-runs), without changing the frozen seeds, noise rates, train/test windows, masking, splits, model settings, or statistical families. The CICIDS and UNSW entries in the committed full-table baseline were preserved exactly. Family A (9 hypotheses) and Family C (18 hypotheses) were recomputed on the complete three-dataset frame, including non-inferiority and mixed-effects checks. CESNET soft-minus-hard Tail-F1 differences changed from +0.0340/+0.0516/+0.0470 to +0.0406/+0.0459/+0.0557 at rates 0.4/0.6/0.8. Family A remains robust, with all nine rate-level superiority tests passing; neither Family C comparison supports a superiority claim, and all per-class regression guards remain satisfied. P4 Family B was outside the affected implementation path and was not rerun. Superseded artifacts and the before/after comparison are retained. This is a correction of a protocol implementation error discovered after analysis, not a newly preregistered experiment.
 
-`src/paper/p5_factor_ablation.py:82` 的签名为：
+## 10. 变更文件清单与复核入口
 
-```python
-def _prepare_scenario(ds, dataset_name: str, seed: int, rate: float):
+- 数据更新：`results/p5_factor_ablation_full.csv`、`results/p5_factor_ablation_full_cesnet_tls_year22.csv`、`results/p5_perclass_guard.csv`、`results/p8_guard/p5_perclass_guard.csv`。两个 IDS 分片仅补充纳入版本控制，字节未改。
+- 统计更新：三份 `tables/table_p5_{family_a,family_c,perclass_guard}.csv`，以及 `reports/p5_factor_ablation_full.json`、`reports/p5_family_a_mixed_effects.json`、`reports/p5_perclass_guard.json`。
+- 表格更新：`paper/springer/tables_w5/tab_main.tex`、`tab_family_a.tex`、`tab_family_c.tex`；其余生成表无内容变化。
+- 新增交接证据：本报告、`reports/p8_cesnet_f3_recompute.json`、`reports/p8_validation_summary.json`、`reports/p8_number_audit.json`、`reports/p8_pytest.xml`、`reports/p8_artifact_manifest.json`。
+- 复核工具：`reproducibility/p8_recompute.py`、`tests/test_p8_recompute.py`。新增 `.gitattributes` 仅对 P8 历史快照与相关结果 CSV 禁用换行转换，保护跨 checkout 的字节不变检查；不改模型或协议。
+- 历史归档：`reproducibility/history/p8_before_f3_20260903/` 中 17 个原始文件，逐文件列表及 SHA-256 见 manifest。活动 partial 缓存未作为新结果纳入提交。
+
+- 机器可读新旧对照和所有判据：`reports/p8_cesnet_f3_recompute.json`。
+- 重算/护栏原始结果：`results/p5_factor_ablation_full.csv`、`results/p5_perclass_guard.csv`。
+- 完整统计族与护栏：`tables/table_p5_family_a.csv`、`tables/table_p5_family_c.csv`、`tables/table_p5_perclass_guard.csv`。
+- 独立 SciPy / statsmodels 复核、原值不变测试：`tests/test_p8_recompute.py`。
+- 输入/输出哈希、环境与提交基线：`reports/p8_artifact_manifest.json`。
+- 代码提交哈希在会话最终交付中给出；无线上发布。
+
+```powershell
+# 清理/隔离缓存且保留归档后执行；不要删除已有归档。
+python -m src.paper.p5_factor_ablation --tier full --datasets cesnet_tls_year22 --reports reports/p8_staging --tables tables/p8_staging
+python -m reproducibility.p8_recompute family
+# 上一步 exit=2 必须停下，不得继续下面步骤。
+python -m src.paper.p5_perclass_guard --datasets cesnet_tls_year22 --out results/p8_guard --reports reports/p8_staging --tables tables/p8_staging
+python -m reproducibility.p8_recompute guard
+# 若护栏裁决变化，必须停下。
+python -m src.paper.w5_result_tables
+python -m src.paper.w5_number_audit
+python -m pytest -q tests --junitxml=reports/p8_pytest.xml
 ```
-
-但 `src/paper/p5_perclass_guard.py:61` 仍调用：
-
-```python
-scenario = p5._prepare_scenario(ds, seed, rate)
-```
-
-无需训练，用参数绑定即可复现：
-
-```python
-inspect.signature(p5._prepare_scenario).bind(None, 0, 0.6)
-# TypeError: missing a required argument: 'rate'
-```
-
-因此“逐类护栏已随根因修复”并不成立。清除旧缓存后会直接失败。建议最小修复为显式传入 `dataset`，并增加覆盖该调用路径的测试；本轮未擅自修改。
-
-### B2 — 噪声目标只在内存中，没有写入结果行
-
-`_prepare_scenario` 返回 `noise_target`，但 `_cell_row` 只写出：
-
-```text
-dataset, cell, seed, tail_flip_rate, macro_f1,
-macro_f1_seen_classes, tail_macro_f1, unseen_test_class_fraction,
-weight_min, weight_mean
-```
-
-AST 检查确认返回结果字典没有 `noise_target`，也没有 `per_class_f1_json`。原样执行工作包命令，不能满足“新 CESNET 行的 noise_target 记录为 11”；P5 主 runner 本身也不输出逐类结果，需要另行完成护栏路径。
-
-建议在训练前明确记录方案：每个 CESNET 场景至少持久化目标 id/name，并用回归测试检查；可用独立 provenance 文件保持历史主表 schema 和未受影响数据行不变。不得为旧数据补造未经核验的运行元数据。
-
-### B3 — 护栏历史缓存会静默复用错误 CESNET 结果
-
-`results/p5_perclass_guard.partial.csv` 当前有 180 行，每数据集 60 行。护栏 runner 仅按 `(dataset, seed, tail_flip_rate)` 下两种 cell 是否齐全判断完成。
-
-现有缓存使 CESNET 的 30 个场景全部进入 `done`。仅删除工作包列出的 P5 CESNET final/partial，**不会清除这个独立的护栏缓存**；护栏步骤会跳过全部 CESNET 训练，继续使用旧结果。
-
-因此须同时解决 B1 与缓存隔离。建议先归档旧护栏产物，在独立输出目录重跑 CESNET 护栏，再与旧 CICIDS/UNSW 护栏结果合并并校验；不要删除整个三数据集护栏历史或重跑不受影响的数据集。
-
-## 4. 历史产物指纹与保护范围
-
-SHA-256（本轮读取；未重写这些文件）：
-
-| 文件 | SHA-256 |
-| --- | --- |
-| `results/p5_factor_ablation_full.csv` | `7359f9006a35485af1d6a7b6daaa05d6a8b223dd72a834fd0398d527ece463bf` |
-| `results/p5_factor_ablation_full_cesnet_tls_year22.csv` | `f74edf8fedcb7268961c29cd803d636ef11863db63abac01fb64094838b486ce` |
-| `results/p5_factor_ablation_full_cesnet_tls_year22.partial.csv` | `f74edf8fedcb7268961c29cd803d636ef11863db63abac01fb64094838b486ce` |
-| `results/p5_factor_ablation_full_cicids2017.csv` | `1cb6e8ef5b603b3d8c99ad1a997ea486f8302e46370e583fd11b9afc6135d30d` |
-| `results/p5_factor_ablation_full_unsw_nb15.csv` | `4360a44e66b6a85853d160128e85edd139ad6a857ca51af04d5651af834005d0` |
-| `results/p5_perclass_guard.csv` | `6bdd06f7a679df09c1c2d94557a931080ef8b4e4fd1cedf5660e63d743a51007` |
-| `results/p5_perclass_guard.partial.csv` | `c7900429a899a56f6053b01411b40b7a1446086e3335930405ae06bb790498b8` |
-
-注意：`git ls-files results/p5*` 显示全量主表已跟踪，但逐数据集分片和护栏原始 CSV 未被跟踪；这些文件的 `git diff` 为空不能证明其字节未变，后续必须核对上述哈希。不能仅依赖 Git 保存这些分片的历史。
-
-## 5. 尚未完成的交付物
-
-| 工作项 | 本轮状态 |
-| --- | --- |
-| CESNET 新旧指标对照 | 新指标未生成，不能填数 |
-| 完整 Family A=9 / C=18、非劣性重算 | 未执行；不能确认或更新裁决 |
-| CESNET 逐类护栏重跑及三数据集合并 | B1/B3 阻塞 |
-| 混合效应分析重算 | 未执行 |
-| 自动生成 LaTeX 表格、数字审计 | 数据尚未重跑，未执行 |
-| 全仓测试与声明门 | 未执行；仅上述定向测试完成 |
-| 稿件、摘要、答复信、发布包 | 未改动，按工作包留给协调者 |
-
-历史 A/C 结果中的 CESNET 部分仍来自待纠正产物。本次检查不构成新的显著性、robust 或 null 裁决。Family B 未被本轮修改或重跑。
-
-## 6. PA-3 披露草稿（当前阶段，不能表述为已完成重跑）
-
-> **PA-3 — Correction of the CESNET asymmetric-noise implementation.** A post-analysis code audit identified an inconsistency between the frozen F-3 mapping and the P5 factor-ablation implementation. For CESNET, the earlier P5 implementation fell back to label 0 (`apple-itunes`), whereas F-3 specifies label 11 (`microsoft-diagnostic`). The target-selection code has been corrected to use the shared mapping function. The affected CESNET Family A/C estimates and per-class guard results remain pending recomputation and must not be treated as corrected evidence. Before the rerun, we additionally identified an outdated per-class-runner call, missing persisted target metadata, and a cache that would reuse the earlier CESNET results. These execution issues are being resolved without changing the frozen seeds, noise rates, sampling windows, masking, splits, model settings, or statistical families. After the corrected rerun, the complete three-dataset Family A and Family C families, non-inferiority results, per-class guards, and mixed-effects checks will be recomputed; the superseded artifacts and a before/after comparison will be retained. The P4 Family B runner used the prescribed target-selection path and is outside this correction.
-
-最终 PA-3 须等重跑、完整族重算与验收后按事实更新时态，并写明裁决是否变化；此段尚未写入稿件。
-
-## 7. 继续所需的最小裁定
-
-请协调者确认允许先补齐 B1 调用适配、B2 结果元数据与 B3 缓存隔离，再执行原 P8 重跑范围。不得通过绕过护栏、复用旧 CESNET 缓存或只计算 CESNET 子族来完成验收。
-
-本轮项目变更仅此报告；未改动进入任务时已有的无关未跟踪文件。报告提交哈希在会话交付中给出。

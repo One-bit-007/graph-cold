@@ -1,0 +1,7 @@
+{
+  "command": "python -m src.paper.w5_number_audit",
+  "returncode": 1,
+  "stdout": "ok  famA CICIDS range\nok  famB effect ceiling +0.026\nok  famB min Holm p >= 0.608\nok  famC UNSW reversal CIs\nok  natural-noise +0.284\nok  Engelen 128,247 rows / 4.53%\nok  leak CESNET ENT +0.187\nok  leak CESNET PRX +0.184\nok  leak CESNET ALL soft +0.249\nok  leak CESNET ALL proxy +0.359\nok  leak CICIDS proxy DUP +0.467\nok  leak CICIDS hard DUP +0.375\nok  leak UNSW dedup -0.115\nok  leak UNSW PRX -0.052\nok  gap compression 0.256->0.125\nok  scale famA +0.150/+0.056/+0.031\nok  scale G2 rate0.8 -0.014\n\nNUMBER AUDIT FAILED:\n - famA other range: frozen artifact does not support the stated value\n - famA dz range: frozen artifact does not support the stated value\n",
+  "stderr": "",
+  "recorded_at": "2026-09-03T07:36:42.158298+00:00"
+}

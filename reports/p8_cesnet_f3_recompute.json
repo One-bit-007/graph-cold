@@ -1,0 +1,2635 @@
+{
+  "status": "DATA_RECOMPUTATION_COMPLETE",
+  "decision_changes": [],
+  "old_decisions": {
+    "A": "robust",
+    "A/cesnet_tls_year22": true,
+    "A/cesnet_tls_year22/0.4/superiority": true,
+    "A/cesnet_tls_year22/0.4/macro_noninferiority": true,
+    "A/cesnet_tls_year22/0.6/superiority": true,
+    "A/cesnet_tls_year22/0.6/macro_noninferiority": true,
+    "A/cesnet_tls_year22/0.8/superiority": true,
+    "A/cesnet_tls_year22/0.8/macro_noninferiority": true,
+    "A/cicids2017": true,
+    "A/cicids2017/0.4/superiority": true,
+    "A/cicids2017/0.4/macro_noninferiority": true,
+    "A/cicids2017/0.6/superiority": true,
+    "A/cicids2017/0.6/macro_noninferiority": true,
+    "A/cicids2017/0.8/superiority": true,
+    "A/cicids2017/0.8/macro_noninferiority": true,
+    "A/unsw_nb15": true,
+    "A/unsw_nb15/0.4/superiority": true,
+    "A/unsw_nb15/0.4/macro_noninferiority": true,
+    "A/unsw_nb15/0.6/superiority": true,
+    "A/unsw_nb15/0.6/macro_noninferiority": true,
+    "A/unsw_nb15/0.8/superiority": true,
+    "A/unsw_nb15/0.8/macro_noninferiority": true,
+    "C_floor": "null",
+    "C_floor/cesnet_tls_year22": false,
+    "C_floor/cesnet_tls_year22/0.4/superiority": false,
+    "C_floor/cesnet_tls_year22/0.4/macro_noninferiority": true,
+    "C_floor/cesnet_tls_year22/0.6/superiority": false,
+    "C_floor/cesnet_tls_year22/0.6/macro_noninferiority": true,
+    "C_floor/cesnet_tls_year22/0.8/superiority": false,
+    "C_floor/cesnet_tls_year22/0.8/macro_noninferiority": true,
+    "C_floor/cicids2017": false,
+    "C_floor/cicids2017/0.4/superiority": false,
+    "C_floor/cicids2017/0.4/macro_noninferiority": false,
+    "C_floor/cicids2017/0.6/superiority": false,
+    "C_floor/cicids2017/0.6/macro_noninferiority": false,
+    "C_floor/cicids2017/0.8/superiority": false,
+    "C_floor/cicids2017/0.8/macro_noninferiority": true,
+    "C_floor/unsw_nb15": false,
+    "C_floor/unsw_nb15/0.4/superiority": false,
+    "C_floor/unsw_nb15/0.4/macro_noninferiority": false,
+    "C_floor/unsw_nb15/0.6/superiority": false,
+    "C_floor/unsw_nb15/0.6/macro_noninferiority": false,
+    "C_floor/unsw_nb15/0.8/superiority": false,
+    "C_floor/unsw_nb15/0.8/macro_noninferiority": false,
+    "C_cbce": "null",
+    "C_cbce/cesnet_tls_year22": false,
+    "C_cbce/cesnet_tls_year22/0.4/superiority": false,
+    "C_cbce/cesnet_tls_year22/0.4/macro_noninferiority": true,
+    "C_cbce/cesnet_tls_year22/0.6/superiority": false,
+    "C_cbce/cesnet_tls_year22/0.6/macro_noninferiority": true,
+    "C_cbce/cesnet_tls_year22/0.8/superiority": false,
+    "C_cbce/cesnet_tls_year22/0.8/macro_noninferiority": true,
+    "C_cbce/cicids2017": false,
+    "C_cbce/cicids2017/0.4/superiority": false,
+    "C_cbce/cicids2017/0.4/macro_noninferiority": false,
+    "C_cbce/cicids2017/0.6/superiority": false,
+    "C_cbce/cicids2017/0.6/macro_noninferiority": true,
+    "C_cbce/cicids2017/0.8/superiority": false,
+    "C_cbce/cicids2017/0.8/macro_noninferiority": true,
+    "C_cbce/unsw_nb15": false,
+    "C_cbce/unsw_nb15/0.4/superiority": false,
+    "C_cbce/unsw_nb15/0.4/macro_noninferiority": false,
+    "C_cbce/unsw_nb15/0.6/superiority": false,
+    "C_cbce/unsw_nb15/0.6/macro_noninferiority": false,
+    "C_cbce/unsw_nb15/0.8/superiority": false,
+    "C_cbce/unsw_nb15/0.8/macro_noninferiority": true
+  },
+  "new_decisions": {
+    "A": "robust",
+    "A/cesnet_tls_year22": true,
+    "A/cesnet_tls_year22/0.4/superiority": true,
+    "A/cesnet_tls_year22/0.4/macro_noninferiority": true,
+    "A/cesnet_tls_year22/0.6/superiority": true,
+    "A/cesnet_tls_year22/0.6/macro_noninferiority": true,
+    "A/cesnet_tls_year22/0.8/superiority": true,
+    "A/cesnet_tls_year22/0.8/macro_noninferiority": true,
+    "A/cicids2017": true,
+    "A/cicids2017/0.4/superiority": true,
+    "A/cicids2017/0.4/macro_noninferiority": true,
+    "A/cicids2017/0.6/superiority": true,
+    "A/cicids2017/0.6/macro_noninferiority": true,
+    "A/cicids2017/0.8/superiority": true,
+    "A/cicids2017/0.8/macro_noninferiority": true,
+    "A/unsw_nb15": true,
+    "A/unsw_nb15/0.4/superiority": true,
+    "A/unsw_nb15/0.4/macro_noninferiority": true,
+    "A/unsw_nb15/0.6/superiority": true,
+    "A/unsw_nb15/0.6/macro_noninferiority": true,
+    "A/unsw_nb15/0.8/superiority": true,
+    "A/unsw_nb15/0.8/macro_noninferiority": true,
+    "C_floor": "null",
+    "C_floor/cesnet_tls_year22": false,
+    "C_floor/cesnet_tls_year22/0.4/superiority": false,
+    "C_floor/cesnet_tls_year22/0.4/macro_noninferiority": true,
+    "C_floor/cesnet_tls_year22/0.6/superiority": false,
+    "C_floor/cesnet_tls_year22/0.6/macro_noninferiority": true,
+    "C_floor/cesnet_tls_year22/0.8/superiority": false,
+    "C_floor/cesnet_tls_year22/0.8/macro_noninferiority": true,
+    "C_floor/cicids2017": false,
+    "C_floor/cicids2017/0.4/superiority": false,
+    "C_floor/cicids2017/0.4/macro_noninferiority": false,
+    "C_floor/cicids2017/0.6/superiority": false,
+    "C_floor/cicids2017/0.6/macro_noninferiority": false,
+    "C_floor/cicids2017/0.8/superiority": false,
+    "C_floor/cicids2017/0.8/macro_noninferiority": true,
+    "C_floor/unsw_nb15": false,
+    "C_floor/unsw_nb15/0.4/superiority": false,
+    "C_floor/unsw_nb15/0.4/macro_noninferiority": false,
+    "C_floor/unsw_nb15/0.6/superiority": false,
+    "C_floor/unsw_nb15/0.6/macro_noninferiority": false,
+    "C_floor/unsw_nb15/0.8/superiority": false,
+    "C_floor/unsw_nb15/0.8/macro_noninferiority": false,
+    "C_cbce": "null",
+    "C_cbce/cesnet_tls_year22": false,
+    "C_cbce/cesnet_tls_year22/0.4/superiority": false,
+    "C_cbce/cesnet_tls_year22/0.4/macro_noninferiority": true,
+    "C_cbce/cesnet_tls_year22/0.6/superiority": false,
+    "C_cbce/cesnet_tls_year22/0.6/macro_noninferiority": true,
+    "C_cbce/cesnet_tls_year22/0.8/superiority": false,
+    "C_cbce/cesnet_tls_year22/0.8/macro_noninferiority": true,
+    "C_cbce/cicids2017": false,
+    "C_cbce/cicids2017/0.4/superiority": false,
+    "C_cbce/cicids2017/0.4/macro_noninferiority": false,
+    "C_cbce/cicids2017/0.6/superiority": false,
+    "C_cbce/cicids2017/0.6/macro_noninferiority": true,
+    "C_cbce/cicids2017/0.8/superiority": false,
+    "C_cbce/cicids2017/0.8/macro_noninferiority": true,
+    "C_cbce/unsw_nb15": false,
+    "C_cbce/unsw_nb15/0.4/superiority": false,
+    "C_cbce/unsw_nb15/0.4/macro_noninferiority": false,
+    "C_cbce/unsw_nb15/0.6/superiority": false,
+    "C_cbce/unsw_nb15/0.6/macro_noninferiority": false,
+    "C_cbce/unsw_nb15/0.8/superiority": false,
+    "C_cbce/unsw_nb15/0.8/macro_noninferiority": true
+  },
+  "row_count": 360,
+  "cesnet_new_rows": 120,
+  "cesnet_noise_target": 11,
+  "unaffected_rows_exact": 240,
+  "unaffected_numeric_tokens_exact": true,
+  "unaffected_shard_sha256": {
+    "cicids2017": "1cb6e8ef5b603b3d8c99ad1a997ea486f8302e46370e583fd11b9afc6135d30d",
+    "unsw_nb15": "4360a44e66b6a85853d160128e85edd139ad6a857ca51af04d5651af834005d0"
+  },
+  "historical_shard_discrepancies": [
+    {
+      "key": [
+        "unsw_nb15",
+        "5_graph_cdm_freqfloor",
+        8,
+        0.8
+      ],
+      "column": "macro_f1",
+      "committed_full": 0.45309173843349143,
+      "shard": 0.45313408785014647
+    },
+    {
+      "key": [
+        "unsw_nb15",
+        "5_graph_cdm_freqfloor",
+        8,
+        0.8
+      ],
+      "column": "macro_f1_seen_classes",
+      "committed_full": 0.45309173843349143,
+      "shard": 0.45313408785014647
+    }
+  ],
+  "source_precedence": "Committed full baseline for CICIDS/UNSW; new CESNET shard only replaces CESNET",
+  "comparison": [
+    {
+      "cell": "3_graph_cdm_hard",
+      "rate": 0.4,
+      "old_macro_f1": 0.47641107274325484,
+      "old_tail_macro_f1": 0.3422443631455157,
+      "new_macro_f1": 0.49240685599488543,
+      "new_tail_macro_f1": 0.3538250523429202
+    },
+    {
+      "cell": "3_graph_cdm_hard",
+      "rate": 0.6,
+      "old_macro_f1": 0.40979046256464724,
+      "old_tail_macro_f1": 0.20862817171823114,
+      "new_macro_f1": 0.4208724023057398,
+      "new_tail_macro_f1": 0.21761153189197358
+    },
+    {
+      "cell": "3_graph_cdm_hard",
+      "rate": 0.8,
+      "old_macro_f1": 0.33559487752831807,
+      "old_tail_macro_f1": 0.06460357332756358,
+      "new_macro_f1": 0.3433994461069188,
+      "new_tail_macro_f1": 0.06352415870815023
+    },
+    {
+      "cell": "4_graph_cdm_soft",
+      "rate": 0.4,
+      "old_macro_f1": 0.5004834485297025,
+      "old_tail_macro_f1": 0.3762707566515606,
+      "new_macro_f1": 0.5217850847866374,
+      "new_tail_macro_f1": 0.3944213057975604
+    },
+    {
+      "cell": "4_graph_cdm_soft",
+      "rate": 0.6,
+      "old_macro_f1": 0.441018142274405,
+      "old_tail_macro_f1": 0.2602781346153196,
+      "new_macro_f1": 0.4521440880581943,
+      "new_tail_macro_f1": 0.2635371929346307
+    },
+    {
+      "cell": "4_graph_cdm_soft",
+      "rate": 0.8,
+      "old_macro_f1": 0.3669468610336401,
+      "old_tail_macro_f1": 0.11162873181858343,
+      "new_macro_f1": 0.3775928207220944,
+      "new_tail_macro_f1": 0.11920104325251946
+    },
+    {
+      "cell": "5_graph_cdm_freqfloor",
+      "rate": 0.4,
+      "old_macro_f1": 0.5023314777751595,
+      "old_tail_macro_f1": 0.3802836314059292,
+      "new_macro_f1": 0.5238857810307851,
+      "new_tail_macro_f1": 0.39898470602824104
+    },
+    {
+      "cell": "5_graph_cdm_freqfloor",
+      "rate": 0.6,
+      "old_macro_f1": 0.43732188138189854,
+      "old_tail_macro_f1": 0.2538220575727803,
+      "new_macro_f1": 0.4501121966374799,
+      "new_tail_macro_f1": 0.26356044689372826
+    },
+    {
+      "cell": "5_graph_cdm_freqfloor",
+      "rate": 0.8,
+      "old_macro_f1": 0.36655924086489167,
+      "old_tail_macro_f1": 0.11329084497840489,
+      "new_macro_f1": 0.37607424078501034,
+      "new_tail_macro_f1": 0.1159415639741952
+    },
+    {
+      "cell": "6_nograph_cbce",
+      "rate": 0.4,
+      "old_macro_f1": 0.5036468012847912,
+      "old_tail_macro_f1": 0.37967422752379576,
+      "new_macro_f1": 0.5195789647014543,
+      "new_tail_macro_f1": 0.3911369281129661
+    },
+    {
+      "cell": "6_nograph_cbce",
+      "rate": 0.6,
+      "old_macro_f1": 0.43442586222001767,
+      "old_tail_macro_f1": 0.2498265611505674,
+      "new_macro_f1": 0.4540172419616752,
+      "new_tail_macro_f1": 0.2637999573307933
+    },
+    {
+      "cell": "6_nograph_cbce",
+      "rate": 0.8,
+      "old_macro_f1": 0.3662845997300402,
+      "old_tail_macro_f1": 0.10759601701361661,
+      "new_macro_f1": 0.3770283310976416,
+      "new_tail_macro_f1": 0.11750729014186852
+    }
+  ],
+  "before": {
+    "family_a": {
+      "tests": [
+        {
+          "paired_rows": 10,
+          "method_mean": 0.3762707566515606,
+          "baseline_mean": 0.3422443631455157,
+          "mean_delta": 0.034026393506044895,
+          "p_value_greater": 0.0037652421608340867,
+          "cohens_dz": 1.0840696346026493,
+          "bootstrap_ci95_low": 0.016908213016536444,
+          "bootstrap_ci95_high": 0.05267081830480793,
+          "dataset": "cesnet_tls_year22",
+          "tail_flip_rate": 0.4,
+          "method": "4_graph_cdm_soft",
+          "reference": "3_graph_cdm_hard",
+          "p_holm_greater": 0.015060968643336347
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.2602781346153196,
+          "baseline_mean": 0.20862817171823114,
+          "mean_delta": 0.05164996289708852,
+          "p_value_greater": 4.612669212589616e-06,
+          "cohens_dz": 2.819218978450048,
+          "bootstrap_ci95_low": 0.042114680373742795,
+          "bootstrap_ci95_high": 0.0631211222117965,
+          "dataset": "cesnet_tls_year22",
+          "tail_flip_rate": 0.6,
+          "method": "4_graph_cdm_soft",
+          "reference": "3_graph_cdm_hard",
+          "p_holm_greater": 3.690135370071693e-05
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.11162873181858343,
+          "baseline_mean": 0.06460357332756358,
+          "mean_delta": 0.04702515849101987,
+          "p_value_greater": 1.8866372622361682e-06,
+          "cohens_dz": 3.1421689658199883,
+          "bootstrap_ci95_low": 0.038621663250419214,
+          "bootstrap_ci95_high": 0.05609875404309942,
+          "dataset": "cesnet_tls_year22",
+          "tail_flip_rate": 0.8,
+          "method": "4_graph_cdm_soft",
+          "reference": "3_graph_cdm_hard",
+          "p_holm_greater": 1.6979735360125512e-05
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.5155540794450966,
+          "baseline_mean": 0.20127291400259856,
+          "mean_delta": 0.31428116544249807,
+          "p_value_greater": 0.005811100015308681,
+          "cohens_dz": 0.998058415348813,
+          "bootstrap_ci95_low": 0.1341640563918363,
+          "bootstrap_ci95_high": 0.49763214883802964,
+          "dataset": "cicids2017",
+          "tail_flip_rate": 0.4,
+          "method": "4_graph_cdm_soft",
+          "reference": "3_graph_cdm_hard",
+          "p_holm_greater": 0.017433300045926043
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.3495922426456194,
+          "baseline_mean": 0.09069192259630388,
+          "mean_delta": 0.2589003200493155,
+          "p_value_greater": 0.0121151264904272,
+          "cohens_dz": 0.855113155065941,
+          "bootstrap_ci95_low": 0.08059549185907774,
+          "bootstrap_ci95_high": 0.43268340540102224,
+          "dataset": "cicids2017",
+          "tail_flip_rate": 0.6,
+          "method": "4_graph_cdm_soft",
+          "reference": "3_graph_cdm_hard",
+          "p_holm_greater": 0.0242302529808544
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.2087720025340476,
+          "baseline_mean": 0.00019020446980504044,
+          "mean_delta": 0.20858179806424254,
+          "p_value_greater": 0.018449697346538497,
+          "cohens_dz": 0.7740112000742091,
+          "bootstrap_ci95_low": 0.04957367823209484,
+          "bootstrap_ci95_high": 0.37057178473638785,
+          "dataset": "cicids2017",
+          "tail_flip_rate": 0.8,
+          "method": "4_graph_cdm_soft",
+          "reference": "3_graph_cdm_hard",
+          "p_holm_greater": 0.0242302529808544
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.255047693759255,
+          "baseline_mean": 0.23006726244913756,
+          "mean_delta": 0.024980431310117433,
+          "p_value_greater": 0.0018185742473429485,
+          "cohens_dz": 1.2322729213122594,
+          "bootstrap_ci95_low": 0.011644667381296525,
+          "bootstrap_ci95_high": 0.03633694080094274,
+          "dataset": "unsw_nb15",
+          "tail_flip_rate": 0.4,
+          "method": "4_graph_cdm_soft",
+          "reference": "3_graph_cdm_hard",
+          "p_holm_greater": 0.009092871236714742
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.19645976060159004,
+          "baseline_mean": 0.15642074419702448,
+          "mean_delta": 0.04003901640456557,
+          "p_value_greater": 5.5015567920737545e-06,
+          "cohens_dz": 2.758914995629919,
+          "bootstrap_ci95_low": 0.032290341209066854,
+          "bootstrap_ci95_high": 0.048876606241634805,
+          "dataset": "unsw_nb15",
+          "tail_flip_rate": 0.6,
+          "method": "4_graph_cdm_soft",
+          "reference": "3_graph_cdm_hard",
+          "p_holm_greater": 3.8510897544516285e-05
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.14701804380711697,
+          "baseline_mean": 0.09667763766848907,
+          "mean_delta": 0.05034040613862791,
+          "p_value_greater": 2.2702262514213994e-05,
+          "cohens_dz": 2.310031394440113,
+          "bootstrap_ci95_low": 0.03786590808356344,
+          "bootstrap_ci95_high": 0.0635773521381793,
+          "dataset": "unsw_nb15",
+          "tail_flip_rate": 0.8,
+          "method": "4_graph_cdm_soft",
+          "reference": "3_graph_cdm_hard",
+          "p_holm_greater": 0.00013621357508528396
+        }
+      ],
+      "per_dataset": {
+        "cesnet_tls_year22": {
+          "rates": [
+            {
+              "tail_flip_rate": 0.4,
+              "test": {
+                "paired_rows": 10,
+                "method_mean": 0.3762707566515606,
+                "baseline_mean": 0.3422443631455157,
+                "mean_delta": 0.034026393506044895,
+                "p_value_greater": 0.0037652421608340867,
+                "cohens_dz": 1.0840696346026493,
+                "bootstrap_ci95_low": 0.016908213016536444,
+                "bootstrap_ci95_high": 0.05267081830480793,
+                "dataset": "cesnet_tls_year22",
+                "tail_flip_rate": 0.4,
+                "method": "4_graph_cdm_soft",
+                "reference": "3_graph_cdm_hard",
+                "p_holm_greater": 0.015060968643336347
+              },
+              "macro_noninferiority": {
+                "paired_rows": 10,
+                "mean_delta": 0.024072375786447615,
+                "delta": 0.01,
+                "p_noninferior": 8.17810157344889e-05,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "tail_flip_rate": 0.6,
+              "test": {
+                "paired_rows": 10,
+                "method_mean": 0.2602781346153196,
+                "baseline_mean": 0.20862817171823114,
+                "mean_delta": 0.05164996289708852,
+                "p_value_greater": 4.612669212589616e-06,
+                "cohens_dz": 2.819218978450048,
+                "bootstrap_ci95_low": 0.042114680373742795,
+                "bootstrap_ci95_high": 0.0631211222117965,
+                "dataset": "cesnet_tls_year22",
+                "tail_flip_rate": 0.6,
+                "method": "4_graph_cdm_soft",
+                "reference": "3_graph_cdm_hard",
+                "p_holm_greater": 3.690135370071693e-05
+              },
+              "macro_noninferiority": {
+                "paired_rows": 10,
+                "mean_delta": 0.031227679709757754,
+                "delta": 0.01,
+                "p_noninferior": 2.4348847739527476e-06,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "tail_flip_rate": 0.8,
+              "test": {
+                "paired_rows": 10,
+                "method_mean": 0.11162873181858343,
+                "baseline_mean": 0.06460357332756358,
+                "mean_delta": 0.04702515849101987,
+                "p_value_greater": 1.8866372622361682e-06,
+                "cohens_dz": 3.1421689658199883,
+                "bootstrap_ci95_low": 0.038621663250419214,
+                "bootstrap_ci95_high": 0.05609875404309942,
+                "dataset": "cesnet_tls_year22",
+                "tail_flip_rate": 0.8,
+                "method": "4_graph_cdm_soft",
+                "reference": "3_graph_cdm_hard",
+                "p_holm_greater": 1.6979735360125512e-05
+              },
+              "macro_noninferiority": {
+                "paired_rows": 10,
+                "mean_delta": 0.031351983505321986,
+                "delta": 0.01,
+                "p_noninferior": 4.0453098338542826e-07,
+                "passed": true
+              },
+              "passed": true
+            }
+          ],
+          "passed": true
+        },
+        "cicids2017": {
+          "rates": [
+            {
+              "tail_flip_rate": 0.4,
+              "test": {
+                "paired_rows": 10,
+                "method_mean": 0.5155540794450966,
+                "baseline_mean": 0.20127291400259856,
+                "mean_delta": 0.31428116544249807,
+                "p_value_greater": 0.005811100015308681,
+                "cohens_dz": 0.998058415348813,
+                "bootstrap_ci95_low": 0.1341640563918363,
+                "bootstrap_ci95_high": 0.49763214883802964,
+                "dataset": "cicids2017",
+                "tail_flip_rate": 0.4,
+                "method": "4_graph_cdm_soft",
+                "reference": "3_graph_cdm_hard",
+                "p_holm_greater": 0.017433300045926043
+              },
+              "macro_noninferiority": {
+                "paired_rows": 10,
+                "mean_delta": 0.0519876649638337,
+                "delta": 0.01,
+                "p_noninferior": 0.0068148655469210005,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "tail_flip_rate": 0.6,
+              "test": {
+                "paired_rows": 10,
+                "method_mean": 0.3495922426456194,
+                "baseline_mean": 0.09069192259630388,
+                "mean_delta": 0.2589003200493155,
+                "p_value_greater": 0.0121151264904272,
+                "cohens_dz": 0.855113155065941,
+                "bootstrap_ci95_low": 0.08059549185907774,
+                "bootstrap_ci95_high": 0.43268340540102224,
+                "dataset": "cicids2017",
+                "tail_flip_rate": 0.6,
+                "method": "4_graph_cdm_soft",
+                "reference": "3_graph_cdm_hard",
+                "p_holm_greater": 0.0242302529808544
+              },
+              "macro_noninferiority": {
+                "paired_rows": 10,
+                "mean_delta": 0.0619970812706437,
+                "delta": 0.01,
+                "p_noninferior": 0.011602410384846211,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "tail_flip_rate": 0.8,
+              "test": {
+                "paired_rows": 10,
+                "method_mean": 0.2087720025340476,
+                "baseline_mean": 0.00019020446980504044,
+                "mean_delta": 0.20858179806424254,
+                "p_value_greater": 0.018449697346538497,
+                "cohens_dz": 0.7740112000742091,
+                "bootstrap_ci95_low": 0.04957367823209484,
+                "bootstrap_ci95_high": 0.37057178473638785,
+                "dataset": "cicids2017",
+                "tail_flip_rate": 0.8,
+                "method": "4_graph_cdm_soft",
+                "reference": "3_graph_cdm_hard",
+                "p_holm_greater": 0.0242302529808544
+              },
+              "macro_noninferiority": {
+                "paired_rows": 10,
+                "mean_delta": 0.05508604918212966,
+                "delta": 0.01,
+                "p_noninferior": 0.010220061042349626,
+                "passed": true
+              },
+              "passed": true
+            }
+          ],
+          "passed": true
+        },
+        "unsw_nb15": {
+          "rates": [
+            {
+              "tail_flip_rate": 0.4,
+              "test": {
+                "paired_rows": 10,
+                "method_mean": 0.255047693759255,
+                "baseline_mean": 0.23006726244913756,
+                "mean_delta": 0.024980431310117433,
+                "p_value_greater": 0.0018185742473429485,
+                "cohens_dz": 1.2322729213122594,
+                "bootstrap_ci95_low": 0.011644667381296525,
+                "bootstrap_ci95_high": 0.03633694080094274,
+                "dataset": "unsw_nb15",
+                "tail_flip_rate": 0.4,
+                "method": "4_graph_cdm_soft",
+                "reference": "3_graph_cdm_hard",
+                "p_holm_greater": 0.009092871236714742
+              },
+              "macro_noninferiority": {
+                "paired_rows": 10,
+                "mean_delta": 0.013647470639834453,
+                "delta": 0.01,
+                "p_noninferior": 4.7933057758838555e-05,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "tail_flip_rate": 0.6,
+              "test": {
+                "paired_rows": 10,
+                "method_mean": 0.19645976060159004,
+                "baseline_mean": 0.15642074419702448,
+                "mean_delta": 0.04003901640456557,
+                "p_value_greater": 5.5015567920737545e-06,
+                "cohens_dz": 2.758914995629919,
+                "bootstrap_ci95_low": 0.032290341209066854,
+                "bootstrap_ci95_high": 0.048876606241634805,
+                "dataset": "unsw_nb15",
+                "tail_flip_rate": 0.6,
+                "method": "4_graph_cdm_soft",
+                "reference": "3_graph_cdm_hard",
+                "p_holm_greater": 3.8510897544516285e-05
+              },
+              "macro_noninferiority": {
+                "paired_rows": 10,
+                "mean_delta": 0.023223004906544126,
+                "delta": 0.01,
+                "p_noninferior": 1.315990100748802e-07,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "tail_flip_rate": 0.8,
+              "test": {
+                "paired_rows": 10,
+                "method_mean": 0.14701804380711697,
+                "baseline_mean": 0.09667763766848907,
+                "mean_delta": 0.05034040613862791,
+                "p_value_greater": 2.2702262514213994e-05,
+                "cohens_dz": 2.310031394440113,
+                "bootstrap_ci95_low": 0.03786590808356344,
+                "bootstrap_ci95_high": 0.0635773521381793,
+                "dataset": "unsw_nb15",
+                "tail_flip_rate": 0.8,
+                "method": "4_graph_cdm_soft",
+                "reference": "3_graph_cdm_hard",
+                "p_holm_greater": 0.00013621357508528396
+              },
+              "macro_noninferiority": {
+                "paired_rows": 10,
+                "mean_delta": 0.030299464671175717,
+                "delta": 0.01,
+                "p_noninferior": 1.769601685473215e-06,
+                "passed": true
+              },
+              "passed": true
+            }
+          ],
+          "passed": true
+        }
+      },
+      "pass_datasets": 3,
+      "verdict": "robust"
+    },
+    "family_c": {
+      "tests": [
+        {
+          "paired_rows": 10,
+          "method_mean": 0.3762707566515606,
+          "baseline_mean": 0.3802836314059292,
+          "mean_delta": -0.004012874754368595,
+          "p_value_greater": 0.8683921883525983,
+          "cohens_dz": -0.37739090044447193,
+          "bootstrap_ci95_low": -0.01025448776557838,
+          "bootstrap_ci95_high": 0.002086473869038053,
+          "dataset": "cesnet_tls_year22",
+          "tail_flip_rate": 0.4,
+          "method": "4_graph_cdm_soft",
+          "reference": "5_graph_cdm_freqfloor",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.3762707566515606,
+          "baseline_mean": 0.37967422752379576,
+          "mean_delta": -0.0034034708722351483,
+          "p_value_greater": 0.7616534862547846,
+          "cohens_dz": -0.234811485451953,
+          "bootstrap_ci95_low": -0.012292707865769146,
+          "bootstrap_ci95_high": 0.004654989488058496,
+          "dataset": "cesnet_tls_year22",
+          "tail_flip_rate": 0.4,
+          "method": "4_graph_cdm_soft",
+          "reference": "6_nograph_cbce",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.2602781346153196,
+          "baseline_mean": 0.2538220575727803,
+          "mean_delta": 0.006456077042539296,
+          "p_value_greater": 0.03631037874084021,
+          "cohens_dz": 0.6427858604333185,
+          "bootstrap_ci95_low": 0.0005863465223899968,
+          "bootstrap_ci95_high": 0.012180677038715376,
+          "dataset": "cesnet_tls_year22",
+          "tail_flip_rate": 0.6,
+          "method": "4_graph_cdm_soft",
+          "reference": "5_graph_cdm_freqfloor",
+          "p_holm_greater": 0.6172764385942836
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.2602781346153196,
+          "baseline_mean": 0.2498265611505674,
+          "mean_delta": 0.010451573464752225,
+          "p_value_greater": 0.006151488392959347,
+          "cohens_dz": 0.9868800231299686,
+          "bootstrap_ci95_low": 0.003987108241944321,
+          "bootstrap_ci95_high": 0.01604641023096054,
+          "dataset": "cesnet_tls_year22",
+          "tail_flip_rate": 0.6,
+          "method": "4_graph_cdm_soft",
+          "reference": "6_nograph_cbce",
+          "p_holm_greater": 0.11072679107326824
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.11162873181858343,
+          "baseline_mean": 0.11329084497840489,
+          "mean_delta": -0.0016621131598214254,
+          "p_value_greater": 0.7120155485194456,
+          "cohens_dz": -0.1834982237676987,
+          "bootstrap_ci95_low": -0.006706523709125388,
+          "bootstrap_ci95_high": 0.004027767954397673,
+          "dataset": "cesnet_tls_year22",
+          "tail_flip_rate": 0.8,
+          "method": "4_graph_cdm_soft",
+          "reference": "5_graph_cdm_freqfloor",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.11162873181858343,
+          "baseline_mean": 0.10759601701361661,
+          "mean_delta": 0.004032714804966848,
+          "p_value_greater": 0.11444407511459515,
+          "cohens_dz": 0.40823938355068223,
+          "bootstrap_ci95_low": -0.0013332288464873428,
+          "bootstrap_ci95_high": 0.01040893348771978,
+          "dataset": "cesnet_tls_year22",
+          "tail_flip_rate": 0.8,
+          "method": "4_graph_cdm_soft",
+          "reference": "6_nograph_cbce",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.5155540794450966,
+          "baseline_mean": 0.5091866294219882,
+          "mean_delta": 0.0063674500231083505,
+          "p_value_greater": 0.3568247958384344,
+          "cohens_dz": 0.11977311737980721,
+          "bootstrap_ci95_low": -0.024981258225754487,
+          "bootstrap_ci95_high": 0.03870947557120948,
+          "dataset": "cicids2017",
+          "tail_flip_rate": 0.4,
+          "method": "4_graph_cdm_soft",
+          "reference": "5_graph_cdm_freqfloor",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.5155540794450966,
+          "baseline_mean": 0.5065900257867764,
+          "mean_delta": 0.008964053658320228,
+          "p_value_greater": 0.21646746168630004,
+          "cohens_dz": 0.259575784307118,
+          "bootstrap_ci95_low": -0.009088152702307955,
+          "bootstrap_ci95_high": 0.0312779632197699,
+          "dataset": "cicids2017",
+          "tail_flip_rate": 0.4,
+          "method": "4_graph_cdm_soft",
+          "reference": "6_nograph_cbce",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.3495922426456194,
+          "baseline_mean": 0.3516966454390495,
+          "mean_delta": -0.0021044027934301332,
+          "p_value_greater": 0.7582081495581319,
+          "cohens_dz": -0.23104900018918964,
+          "bootstrap_ci95_low": -0.008265018746549913,
+          "bootstrap_ci95_high": 0.002243742750236492,
+          "dataset": "cicids2017",
+          "tail_flip_rate": 0.6,
+          "method": "4_graph_cdm_soft",
+          "reference": "5_graph_cdm_freqfloor",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.3495922426456194,
+          "baseline_mean": 0.3487397486212254,
+          "mean_delta": 0.0008524940243939516,
+          "p_value_greater": 0.4343661964451261,
+          "cohens_dz": 0.05377435449470926,
+          "bootstrap_ci95_low": -0.007115654782833711,
+          "bootstrap_ci95_high": 0.011116775830954797,
+          "dataset": "cicids2017",
+          "tail_flip_rate": 0.6,
+          "method": "4_graph_cdm_soft",
+          "reference": "6_nograph_cbce",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.2087720025340476,
+          "baseline_mean": 0.20550477616302323,
+          "mean_delta": 0.0032672263710243287,
+          "p_value_greater": 0.11321583709096275,
+          "cohens_dz": 0.4105905486105167,
+          "bootstrap_ci95_low": -0.000683849566928485,
+          "bootstrap_ci95_high": 0.008419827054401086,
+          "dataset": "cicids2017",
+          "tail_flip_rate": 0.8,
+          "method": "4_graph_cdm_soft",
+          "reference": "5_graph_cdm_freqfloor",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.2087720025340476,
+          "baseline_mean": 0.21186639774587768,
+          "mean_delta": -0.003094395211830101,
+          "p_value_greater": 0.9119505555130988,
+          "cohens_dz": -0.4642995812883347,
+          "bootstrap_ci95_low": -0.007838857931745763,
+          "bootstrap_ci95_high": 4.744947229682545e-05,
+          "dataset": "cicids2017",
+          "tail_flip_rate": 0.8,
+          "method": "4_graph_cdm_soft",
+          "reference": "6_nograph_cbce",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.255047693759255,
+          "baseline_mean": 0.2744901073279033,
+          "mean_delta": -0.019442413568648335,
+          "p_value_greater": 0.9994191932392377,
+          "cohens_dz": -1.4781243610685515,
+          "bootstrap_ci95_low": -0.026614444408501338,
+          "bootstrap_ci95_high": -0.010845001430843675,
+          "dataset": "unsw_nb15",
+          "tail_flip_rate": 0.4,
+          "method": "4_graph_cdm_soft",
+          "reference": "5_graph_cdm_freqfloor",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.255047693759255,
+          "baseline_mean": 0.2652727610582521,
+          "mean_delta": -0.010225067298997154,
+          "p_value_greater": 0.9454374460206545,
+          "cohens_dz": -0.5622440478381378,
+          "bootstrap_ci95_low": -0.022053008405060304,
+          "bootstrap_ci95_high": 7.997804644206397e-05,
+          "dataset": "unsw_nb15",
+          "tail_flip_rate": 0.4,
+          "method": "4_graph_cdm_soft",
+          "reference": "6_nograph_cbce",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.19645976060159004,
+          "baseline_mean": 0.218066173903206,
+          "mean_delta": -0.021606413301615963,
+          "p_value_greater": 0.9991212506977926,
+          "cohens_dz": -1.386756306368435,
+          "bootstrap_ci95_low": -0.031084255290250707,
+          "bootstrap_ci95_high": -0.012644150685962996,
+          "dataset": "unsw_nb15",
+          "tail_flip_rate": 0.6,
+          "method": "4_graph_cdm_soft",
+          "reference": "5_graph_cdm_freqfloor",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.19645976060159004,
+          "baseline_mean": 0.21037923726686727,
+          "mean_delta": -0.013919476665277205,
+          "p_value_greater": 0.9810266874504674,
+          "cohens_dz": -0.7686159437764012,
+          "bootstrap_ci95_low": -0.025177741168426342,
+          "bootstrap_ci95_high": -0.0034161685227487595,
+          "dataset": "unsw_nb15",
+          "tail_flip_rate": 0.6,
+          "method": "4_graph_cdm_soft",
+          "reference": "6_nograph_cbce",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.14701804380711697,
+          "baseline_mean": 0.1571955111575337,
+          "mean_delta": -0.010177467350416722,
+          "p_value_greater": 0.9484386329016503,
+          "cohens_dz": -0.5735531653388244,
+          "bootstrap_ci95_low": -0.020155711873946207,
+          "bootstrap_ci95_high": 0.0006294943388344462,
+          "dataset": "unsw_nb15",
+          "tail_flip_rate": 0.8,
+          "method": "4_graph_cdm_soft",
+          "reference": "5_graph_cdm_freqfloor",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.14701804380711697,
+          "baseline_mean": 0.1532475681690318,
+          "mean_delta": -0.00622952436191479,
+          "p_value_greater": 0.8408262536099413,
+          "cohens_dz": -0.33404013882454936,
+          "bootstrap_ci95_low": -0.018791282606277635,
+          "bootstrap_ci95_high": 0.002699490397711936,
+          "dataset": "unsw_nb15",
+          "tail_flip_rate": 0.8,
+          "method": "4_graph_cdm_soft",
+          "reference": "6_nograph_cbce",
+          "p_holm_greater": 1.0
+        }
+      ],
+      "vs_freqfloor": {
+        "per_dataset": {
+          "cesnet_tls_year22": {
+            "rates": [
+              {
+                "tail_flip_rate": 0.4,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.3762707566515606,
+                  "baseline_mean": 0.3802836314059292,
+                  "mean_delta": -0.004012874754368595,
+                  "p_value_greater": 0.8683921883525983,
+                  "cohens_dz": -0.37739090044447193,
+                  "bootstrap_ci95_low": -0.01025448776557838,
+                  "bootstrap_ci95_high": 0.002086473869038053,
+                  "dataset": "cesnet_tls_year22",
+                  "tail_flip_rate": 0.4,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "5_graph_cdm_freqfloor",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": -0.0018480292454571222,
+                  "delta": 0.01,
+                  "p_noninferior": 0.0005404005894113479,
+                  "passed": true
+                },
+                "passed": false
+              },
+              {
+                "tail_flip_rate": 0.6,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.2602781346153196,
+                  "baseline_mean": 0.2538220575727803,
+                  "mean_delta": 0.006456077042539296,
+                  "p_value_greater": 0.03631037874084021,
+                  "cohens_dz": 0.6427858604333185,
+                  "bootstrap_ci95_low": 0.0005863465223899968,
+                  "bootstrap_ci95_high": 0.012180677038715376,
+                  "dataset": "cesnet_tls_year22",
+                  "tail_flip_rate": 0.6,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "5_graph_cdm_freqfloor",
+                  "p_holm_greater": 0.6172764385942836
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": 0.0036962608925064254,
+                  "delta": 0.01,
+                  "p_noninferior": 0.00010438427353858643,
+                  "passed": true
+                },
+                "passed": false
+              },
+              {
+                "tail_flip_rate": 0.8,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.11162873181858343,
+                  "baseline_mean": 0.11329084497840489,
+                  "mean_delta": -0.0016621131598214254,
+                  "p_value_greater": 0.7120155485194456,
+                  "cohens_dz": -0.1834982237676987,
+                  "bootstrap_ci95_low": -0.006706523709125388,
+                  "bootstrap_ci95_high": 0.004027767954397673,
+                  "dataset": "cesnet_tls_year22",
+                  "tail_flip_rate": 0.8,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "5_graph_cdm_freqfloor",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": 0.0003876201687484537,
+                  "delta": 0.01,
+                  "p_noninferior": 0.0021712129811709228,
+                  "passed": true
+                },
+                "passed": false
+              }
+            ],
+            "passed": false
+          },
+          "cicids2017": {
+            "rates": [
+              {
+                "tail_flip_rate": 0.4,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.5155540794450966,
+                  "baseline_mean": 0.5091866294219882,
+                  "mean_delta": 0.0063674500231083505,
+                  "p_value_greater": 0.3568247958384344,
+                  "cohens_dz": 0.11977311737980721,
+                  "bootstrap_ci95_low": -0.024981258225754487,
+                  "bootstrap_ci95_high": 0.03870947557120948,
+                  "dataset": "cicids2017",
+                  "tail_flip_rate": 0.4,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "5_graph_cdm_freqfloor",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": -0.0046738344964390955,
+                  "delta": 0.01,
+                  "p_noninferior": 0.233712162990812,
+                  "passed": false
+                },
+                "passed": false
+              },
+              {
+                "tail_flip_rate": 0.6,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.3495922426456194,
+                  "baseline_mean": 0.3516966454390495,
+                  "mean_delta": -0.0021044027934301332,
+                  "p_value_greater": 0.7582081495581319,
+                  "cohens_dz": -0.23104900018918964,
+                  "bootstrap_ci95_low": -0.008265018746549913,
+                  "bootstrap_ci95_high": 0.002243742750236492,
+                  "dataset": "cicids2017",
+                  "tail_flip_rate": 0.6,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "5_graph_cdm_freqfloor",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": -0.011609908992581217,
+                  "delta": 0.01,
+                  "p_noninferior": 0.5598526572940712,
+                  "passed": false
+                },
+                "passed": false
+              },
+              {
+                "tail_flip_rate": 0.8,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.2087720025340476,
+                  "baseline_mean": 0.20550477616302323,
+                  "mean_delta": 0.0032672263710243287,
+                  "p_value_greater": 0.11321583709096275,
+                  "cohens_dz": 0.4105905486105167,
+                  "bootstrap_ci95_low": -0.000683849566928485,
+                  "bootstrap_ci95_high": 0.008419827054401086,
+                  "dataset": "cicids2017",
+                  "tail_flip_rate": 0.8,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "5_graph_cdm_freqfloor",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": 0.0043090601395196935,
+                  "delta": 0.01,
+                  "p_noninferior": 0.02067076243605771,
+                  "passed": true
+                },
+                "passed": false
+              }
+            ],
+            "passed": false
+          },
+          "unsw_nb15": {
+            "rates": [
+              {
+                "tail_flip_rate": 0.4,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.255047693759255,
+                  "baseline_mean": 0.2744901073279033,
+                  "mean_delta": -0.019442413568648335,
+                  "p_value_greater": 0.9994191932392377,
+                  "cohens_dz": -1.4781243610685515,
+                  "bootstrap_ci95_low": -0.026614444408501338,
+                  "bootstrap_ci95_high": -0.010845001430843675,
+                  "dataset": "unsw_nb15",
+                  "tail_flip_rate": 0.4,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "5_graph_cdm_freqfloor",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": -0.011888449632011832,
+                  "delta": 0.01,
+                  "p_noninferior": 0.7800380202508542,
+                  "passed": false
+                },
+                "passed": false
+              },
+              {
+                "tail_flip_rate": 0.6,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.19645976060159004,
+                  "baseline_mean": 0.218066173903206,
+                  "mean_delta": -0.021606413301615963,
+                  "p_value_greater": 0.9991212506977926,
+                  "cohens_dz": -1.386756306368435,
+                  "bootstrap_ci95_low": -0.031084255290250707,
+                  "bootstrap_ci95_high": -0.012644150685962996,
+                  "dataset": "unsw_nb15",
+                  "tail_flip_rate": 0.6,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "5_graph_cdm_freqfloor",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": -0.012244479737313773,
+                  "delta": 0.01,
+                  "p_noninferior": 0.8081184932871572,
+                  "passed": false
+                },
+                "passed": false
+              },
+              {
+                "tail_flip_rate": 0.8,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.14701804380711697,
+                  "baseline_mean": 0.1571955111575337,
+                  "mean_delta": -0.010177467350416722,
+                  "p_value_greater": 0.9484386329016503,
+                  "cohens_dz": -0.5735531653388244,
+                  "bootstrap_ci95_low": -0.020155711873946207,
+                  "bootstrap_ci95_high": 0.0006294943388344462,
+                  "dataset": "unsw_nb15",
+                  "tail_flip_rate": 0.8,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "5_graph_cdm_freqfloor",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": -0.004667289045510475,
+                  "delta": 0.01,
+                  "p_noninferior": 0.05218589060180193,
+                  "passed": false
+                },
+                "passed": false
+              }
+            ],
+            "passed": false
+          }
+        },
+        "pass_datasets": 0,
+        "verdict": "null"
+      },
+      "vs_cbce": {
+        "per_dataset": {
+          "cesnet_tls_year22": {
+            "rates": [
+              {
+                "tail_flip_rate": 0.4,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.3762707566515606,
+                  "baseline_mean": 0.37967422752379576,
+                  "mean_delta": -0.0034034708722351483,
+                  "p_value_greater": 0.7616534862547846,
+                  "cohens_dz": -0.234811485451953,
+                  "bootstrap_ci95_low": -0.012292707865769146,
+                  "bootstrap_ci95_high": 0.004654989488058496,
+                  "dataset": "cesnet_tls_year22",
+                  "tail_flip_rate": 0.4,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "6_nograph_cbce",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": -0.0031633527550887,
+                  "delta": 0.01,
+                  "p_noninferior": 0.010900907373196421,
+                  "passed": true
+                },
+                "passed": false
+              },
+              {
+                "tail_flip_rate": 0.6,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.2602781346153196,
+                  "baseline_mean": 0.2498265611505674,
+                  "mean_delta": 0.010451573464752225,
+                  "p_value_greater": 0.006151488392959347,
+                  "cohens_dz": 0.9868800231299686,
+                  "bootstrap_ci95_low": 0.003987108241944321,
+                  "bootstrap_ci95_high": 0.01604641023096054,
+                  "dataset": "cesnet_tls_year22",
+                  "tail_flip_rate": 0.6,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "6_nograph_cbce",
+                  "p_holm_greater": 0.11072679107326824
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": 0.006592280054387301,
+                  "delta": 0.01,
+                  "p_noninferior": 4.784942859947365e-05,
+                  "passed": true
+                },
+                "passed": false
+              },
+              {
+                "tail_flip_rate": 0.8,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.11162873181858343,
+                  "baseline_mean": 0.10759601701361661,
+                  "mean_delta": 0.004032714804966848,
+                  "p_value_greater": 0.11444407511459515,
+                  "cohens_dz": 0.40823938355068223,
+                  "bootstrap_ci95_low": -0.0013332288464873428,
+                  "bootstrap_ci95_high": 0.01040893348771978,
+                  "dataset": "cesnet_tls_year22",
+                  "tail_flip_rate": 0.8,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "6_nograph_cbce",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": 0.0006622613035999203,
+                  "delta": 0.01,
+                  "p_noninferior": 0.0008935891091719645,
+                  "passed": true
+                },
+                "passed": false
+              }
+            ],
+            "passed": false
+          },
+          "cicids2017": {
+            "rates": [
+              {
+                "tail_flip_rate": 0.4,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.5155540794450966,
+                  "baseline_mean": 0.5065900257867764,
+                  "mean_delta": 0.008964053658320228,
+                  "p_value_greater": 0.21646746168630004,
+                  "cohens_dz": 0.259575784307118,
+                  "bootstrap_ci95_low": -0.009088152702307955,
+                  "bootstrap_ci95_high": 0.0312779632197699,
+                  "dataset": "cicids2017",
+                  "tail_flip_rate": 0.4,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "6_nograph_cbce",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": 0.007358359711472277,
+                  "delta": 0.01,
+                  "p_noninferior": 0.062281057868722775,
+                  "passed": false
+                },
+                "passed": false
+              },
+              {
+                "tail_flip_rate": 0.6,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.3495922426456194,
+                  "baseline_mean": 0.3487397486212254,
+                  "mean_delta": 0.0008524940243939516,
+                  "p_value_greater": 0.4343661964451261,
+                  "cohens_dz": 0.05377435449470926,
+                  "bootstrap_ci95_low": -0.007115654782833711,
+                  "bootstrap_ci95_high": 0.011116775830954797,
+                  "dataset": "cicids2017",
+                  "tail_flip_rate": 0.6,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "6_nograph_cbce",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": 0.00639700812565972,
+                  "delta": 0.01,
+                  "p_noninferior": 0.02122995997995512,
+                  "passed": true
+                },
+                "passed": false
+              },
+              {
+                "tail_flip_rate": 0.8,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.2087720025340476,
+                  "baseline_mean": 0.21186639774587768,
+                  "mean_delta": -0.003094395211830101,
+                  "p_value_greater": 0.9119505555130988,
+                  "cohens_dz": -0.4642995812883347,
+                  "bootstrap_ci95_low": -0.007838857931745763,
+                  "bootstrap_ci95_high": 4.744947229682545e-05,
+                  "dataset": "cicids2017",
+                  "tail_flip_rate": 0.8,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "6_nograph_cbce",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": -0.0038555127377712392,
+                  "delta": 0.01,
+                  "p_noninferior": 0.03153457823244221,
+                  "passed": true
+                },
+                "passed": false
+              }
+            ],
+            "passed": false
+          },
+          "unsw_nb15": {
+            "rates": [
+              {
+                "tail_flip_rate": 0.4,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.255047693759255,
+                  "baseline_mean": 0.2652727610582521,
+                  "mean_delta": -0.010225067298997154,
+                  "p_value_greater": 0.9454374460206545,
+                  "cohens_dz": -0.5622440478381378,
+                  "bootstrap_ci95_low": -0.022053008405060304,
+                  "bootstrap_ci95_high": 7.997804644206397e-05,
+                  "dataset": "unsw_nb15",
+                  "tail_flip_rate": 0.4,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "6_nograph_cbce",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": -0.006396528781445499,
+                  "delta": 0.01,
+                  "p_noninferior": 0.14459412948379738,
+                  "passed": false
+                },
+                "passed": false
+              },
+              {
+                "tail_flip_rate": 0.6,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.19645976060159004,
+                  "baseline_mean": 0.21037923726686727,
+                  "mean_delta": -0.013919476665277205,
+                  "p_value_greater": 0.9810266874504674,
+                  "cohens_dz": -0.7686159437764012,
+                  "bootstrap_ci95_low": -0.025177741168426342,
+                  "bootstrap_ci95_high": -0.0034161685227487595,
+                  "dataset": "unsw_nb15",
+                  "tail_flip_rate": 0.6,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "6_nograph_cbce",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": -0.007625499426544474,
+                  "delta": 0.01,
+                  "p_noninferior": 0.2461441129967529,
+                  "passed": false
+                },
+                "passed": false
+              },
+              {
+                "tail_flip_rate": 0.8,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.14701804380711697,
+                  "baseline_mean": 0.1532475681690318,
+                  "mean_delta": -0.00622952436191479,
+                  "p_value_greater": 0.8408262536099413,
+                  "cohens_dz": -0.33404013882454936,
+                  "bootstrap_ci95_low": -0.018791282606277635,
+                  "bootstrap_ci95_high": 0.002699490397711936,
+                  "dataset": "unsw_nb15",
+                  "tail_flip_rate": 0.8,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "6_nograph_cbce",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": -0.003886559700246206,
+                  "delta": 0.01,
+                  "p_noninferior": 0.04592068299283694,
+                  "passed": true
+                },
+                "passed": false
+              }
+            ],
+            "passed": false
+          }
+        },
+        "pass_datasets": 0,
+        "verdict": "null"
+      }
+    }
+  },
+  "after": {
+    "family_a": {
+      "tests": [
+        {
+          "paired_rows": 10,
+          "method_mean": 0.3944213057975604,
+          "baseline_mean": 0.3538250523429202,
+          "mean_delta": 0.0405962534546402,
+          "p_value_greater": 0.00019889730626344187,
+          "cohens_dz": 1.7282086762752022,
+          "bootstrap_ci95_low": 0.02713558010371053,
+          "bootstrap_ci95_high": 0.05557441928146243,
+          "dataset": "cesnet_tls_year22",
+          "tail_flip_rate": 0.4,
+          "method": "4_graph_cdm_soft",
+          "reference": "3_graph_cdm_hard",
+          "p_holm_greater": 0.0009944865313172094
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.2635371929346307,
+          "baseline_mean": 0.21761153189197358,
+          "mean_delta": 0.04592566104265715,
+          "p_value_greater": 1.3158584097408268e-05,
+          "cohens_dz": 2.4754780844517783,
+          "bootstrap_ci95_low": 0.036282012119462796,
+          "bootstrap_ci95_high": 0.05767628092238063,
+          "dataset": "cesnet_tls_year22",
+          "tail_flip_rate": 0.6,
+          "method": "4_graph_cdm_soft",
+          "reference": "3_graph_cdm_hard",
+          "p_holm_greater": 9.211008868185787e-05
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.11920104325251946,
+          "baseline_mean": 0.06352415870815023,
+          "mean_delta": 0.05567688454436921,
+          "p_value_greater": 1.1408600689263615e-06,
+          "cohens_dz": 3.3372211387109645,
+          "bootstrap_ci95_low": 0.045859386244993666,
+          "bootstrap_ci95_high": 0.06528974591333585,
+          "dataset": "cesnet_tls_year22",
+          "tail_flip_rate": 0.8,
+          "method": "4_graph_cdm_soft",
+          "reference": "3_graph_cdm_hard",
+          "p_holm_greater": 1.0267740620337253e-05
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.5155540794450966,
+          "baseline_mean": 0.20127291400259856,
+          "mean_delta": 0.31428116544249807,
+          "p_value_greater": 0.005811100015308681,
+          "cohens_dz": 0.998058415348813,
+          "bootstrap_ci95_low": 0.1341640563918363,
+          "bootstrap_ci95_high": 0.49763214883802964,
+          "dataset": "cicids2017",
+          "tail_flip_rate": 0.4,
+          "method": "4_graph_cdm_soft",
+          "reference": "3_graph_cdm_hard",
+          "p_holm_greater": 0.017433300045926043
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.3495922426456194,
+          "baseline_mean": 0.09069192259630388,
+          "mean_delta": 0.2589003200493155,
+          "p_value_greater": 0.0121151264904272,
+          "cohens_dz": 0.855113155065941,
+          "bootstrap_ci95_low": 0.08059549185907774,
+          "bootstrap_ci95_high": 0.43268340540102224,
+          "dataset": "cicids2017",
+          "tail_flip_rate": 0.6,
+          "method": "4_graph_cdm_soft",
+          "reference": "3_graph_cdm_hard",
+          "p_holm_greater": 0.0242302529808544
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.2087720025340476,
+          "baseline_mean": 0.00019020446980504044,
+          "mean_delta": 0.20858179806424254,
+          "p_value_greater": 0.018449697346538497,
+          "cohens_dz": 0.7740112000742091,
+          "bootstrap_ci95_low": 0.04957367823209484,
+          "bootstrap_ci95_high": 0.37057178473638785,
+          "dataset": "cicids2017",
+          "tail_flip_rate": 0.8,
+          "method": "4_graph_cdm_soft",
+          "reference": "3_graph_cdm_hard",
+          "p_holm_greater": 0.0242302529808544
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.255047693759255,
+          "baseline_mean": 0.23006726244913756,
+          "mean_delta": 0.024980431310117433,
+          "p_value_greater": 0.0018185742473429485,
+          "cohens_dz": 1.2322729213122594,
+          "bootstrap_ci95_low": 0.011644667381296525,
+          "bootstrap_ci95_high": 0.03633694080094274,
+          "dataset": "unsw_nb15",
+          "tail_flip_rate": 0.4,
+          "method": "4_graph_cdm_soft",
+          "reference": "3_graph_cdm_hard",
+          "p_holm_greater": 0.007274296989371794
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.19645976060159004,
+          "baseline_mean": 0.15642074419702448,
+          "mean_delta": 0.04003901640456557,
+          "p_value_greater": 5.5015567920737545e-06,
+          "cohens_dz": 2.758914995629919,
+          "bootstrap_ci95_low": 0.032290341209066854,
+          "bootstrap_ci95_high": 0.048876606241634805,
+          "dataset": "unsw_nb15",
+          "tail_flip_rate": 0.6,
+          "method": "4_graph_cdm_soft",
+          "reference": "3_graph_cdm_hard",
+          "p_holm_greater": 4.4012454336590036e-05
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.14701804380711697,
+          "baseline_mean": 0.09667763766848907,
+          "mean_delta": 0.05034040613862791,
+          "p_value_greater": 2.2702262514213994e-05,
+          "cohens_dz": 2.310031394440113,
+          "bootstrap_ci95_low": 0.03786590808356344,
+          "bootstrap_ci95_high": 0.0635773521381793,
+          "dataset": "unsw_nb15",
+          "tail_flip_rate": 0.8,
+          "method": "4_graph_cdm_soft",
+          "reference": "3_graph_cdm_hard",
+          "p_holm_greater": 0.00013621357508528396
+        }
+      ],
+      "per_dataset": {
+        "cesnet_tls_year22": {
+          "rates": [
+            {
+              "tail_flip_rate": 0.4,
+              "test": {
+                "paired_rows": 10,
+                "method_mean": 0.3944213057975604,
+                "baseline_mean": 0.3538250523429202,
+                "mean_delta": 0.0405962534546402,
+                "p_value_greater": 0.00019889730626344187,
+                "cohens_dz": 1.7282086762752022,
+                "bootstrap_ci95_low": 0.02713558010371053,
+                "bootstrap_ci95_high": 0.05557441928146243,
+                "dataset": "cesnet_tls_year22",
+                "tail_flip_rate": 0.4,
+                "method": "4_graph_cdm_soft",
+                "reference": "3_graph_cdm_hard",
+                "p_holm_greater": 0.0009944865313172094
+              },
+              "macro_noninferiority": {
+                "paired_rows": 10,
+                "mean_delta": 0.029378228791752014,
+                "delta": 0.01,
+                "p_noninferior": 6.175857284693652e-06,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "tail_flip_rate": 0.6,
+              "test": {
+                "paired_rows": 10,
+                "method_mean": 0.2635371929346307,
+                "baseline_mean": 0.21761153189197358,
+                "mean_delta": 0.04592566104265715,
+                "p_value_greater": 1.3158584097408268e-05,
+                "cohens_dz": 2.4754780844517783,
+                "bootstrap_ci95_low": 0.036282012119462796,
+                "bootstrap_ci95_high": 0.05767628092238063,
+                "dataset": "cesnet_tls_year22",
+                "tail_flip_rate": 0.6,
+                "method": "4_graph_cdm_soft",
+                "reference": "3_graph_cdm_hard",
+                "p_holm_greater": 9.211008868185787e-05
+              },
+              "macro_noninferiority": {
+                "paired_rows": 10,
+                "mean_delta": 0.03127168575245455,
+                "delta": 0.01,
+                "p_noninferior": 2.4606456363678937e-07,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "tail_flip_rate": 0.8,
+              "test": {
+                "paired_rows": 10,
+                "method_mean": 0.11920104325251946,
+                "baseline_mean": 0.06352415870815023,
+                "mean_delta": 0.05567688454436921,
+                "p_value_greater": 1.1408600689263615e-06,
+                "cohens_dz": 3.3372211387109645,
+                "bootstrap_ci95_low": 0.045859386244993666,
+                "bootstrap_ci95_high": 0.06528974591333585,
+                "dataset": "cesnet_tls_year22",
+                "tail_flip_rate": 0.8,
+                "method": "4_graph_cdm_soft",
+                "reference": "3_graph_cdm_hard",
+                "p_holm_greater": 1.0267740620337253e-05
+              },
+              "macro_noninferiority": {
+                "paired_rows": 10,
+                "mean_delta": 0.03419337461517559,
+                "delta": 0.01,
+                "p_noninferior": 5.571324482042416e-08,
+                "passed": true
+              },
+              "passed": true
+            }
+          ],
+          "passed": true
+        },
+        "cicids2017": {
+          "rates": [
+            {
+              "tail_flip_rate": 0.4,
+              "test": {
+                "paired_rows": 10,
+                "method_mean": 0.5155540794450966,
+                "baseline_mean": 0.20127291400259856,
+                "mean_delta": 0.31428116544249807,
+                "p_value_greater": 0.005811100015308681,
+                "cohens_dz": 0.998058415348813,
+                "bootstrap_ci95_low": 0.1341640563918363,
+                "bootstrap_ci95_high": 0.49763214883802964,
+                "dataset": "cicids2017",
+                "tail_flip_rate": 0.4,
+                "method": "4_graph_cdm_soft",
+                "reference": "3_graph_cdm_hard",
+                "p_holm_greater": 0.017433300045926043
+              },
+              "macro_noninferiority": {
+                "paired_rows": 10,
+                "mean_delta": 0.0519876649638337,
+                "delta": 0.01,
+                "p_noninferior": 0.0068148655469210005,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "tail_flip_rate": 0.6,
+              "test": {
+                "paired_rows": 10,
+                "method_mean": 0.3495922426456194,
+                "baseline_mean": 0.09069192259630388,
+                "mean_delta": 0.2589003200493155,
+                "p_value_greater": 0.0121151264904272,
+                "cohens_dz": 0.855113155065941,
+                "bootstrap_ci95_low": 0.08059549185907774,
+                "bootstrap_ci95_high": 0.43268340540102224,
+                "dataset": "cicids2017",
+                "tail_flip_rate": 0.6,
+                "method": "4_graph_cdm_soft",
+                "reference": "3_graph_cdm_hard",
+                "p_holm_greater": 0.0242302529808544
+              },
+              "macro_noninferiority": {
+                "paired_rows": 10,
+                "mean_delta": 0.0619970812706437,
+                "delta": 0.01,
+                "p_noninferior": 0.011602410384846211,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "tail_flip_rate": 0.8,
+              "test": {
+                "paired_rows": 10,
+                "method_mean": 0.2087720025340476,
+                "baseline_mean": 0.00019020446980504044,
+                "mean_delta": 0.20858179806424254,
+                "p_value_greater": 0.018449697346538497,
+                "cohens_dz": 0.7740112000742091,
+                "bootstrap_ci95_low": 0.04957367823209484,
+                "bootstrap_ci95_high": 0.37057178473638785,
+                "dataset": "cicids2017",
+                "tail_flip_rate": 0.8,
+                "method": "4_graph_cdm_soft",
+                "reference": "3_graph_cdm_hard",
+                "p_holm_greater": 0.0242302529808544
+              },
+              "macro_noninferiority": {
+                "paired_rows": 10,
+                "mean_delta": 0.05508604918212966,
+                "delta": 0.01,
+                "p_noninferior": 0.010220061042349626,
+                "passed": true
+              },
+              "passed": true
+            }
+          ],
+          "passed": true
+        },
+        "unsw_nb15": {
+          "rates": [
+            {
+              "tail_flip_rate": 0.4,
+              "test": {
+                "paired_rows": 10,
+                "method_mean": 0.255047693759255,
+                "baseline_mean": 0.23006726244913756,
+                "mean_delta": 0.024980431310117433,
+                "p_value_greater": 0.0018185742473429485,
+                "cohens_dz": 1.2322729213122594,
+                "bootstrap_ci95_low": 0.011644667381296525,
+                "bootstrap_ci95_high": 0.03633694080094274,
+                "dataset": "unsw_nb15",
+                "tail_flip_rate": 0.4,
+                "method": "4_graph_cdm_soft",
+                "reference": "3_graph_cdm_hard",
+                "p_holm_greater": 0.007274296989371794
+              },
+              "macro_noninferiority": {
+                "paired_rows": 10,
+                "mean_delta": 0.013647470639834453,
+                "delta": 0.01,
+                "p_noninferior": 4.7933057758838555e-05,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "tail_flip_rate": 0.6,
+              "test": {
+                "paired_rows": 10,
+                "method_mean": 0.19645976060159004,
+                "baseline_mean": 0.15642074419702448,
+                "mean_delta": 0.04003901640456557,
+                "p_value_greater": 5.5015567920737545e-06,
+                "cohens_dz": 2.758914995629919,
+                "bootstrap_ci95_low": 0.032290341209066854,
+                "bootstrap_ci95_high": 0.048876606241634805,
+                "dataset": "unsw_nb15",
+                "tail_flip_rate": 0.6,
+                "method": "4_graph_cdm_soft",
+                "reference": "3_graph_cdm_hard",
+                "p_holm_greater": 4.4012454336590036e-05
+              },
+              "macro_noninferiority": {
+                "paired_rows": 10,
+                "mean_delta": 0.023223004906544126,
+                "delta": 0.01,
+                "p_noninferior": 1.315990100748802e-07,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "tail_flip_rate": 0.8,
+              "test": {
+                "paired_rows": 10,
+                "method_mean": 0.14701804380711697,
+                "baseline_mean": 0.09667763766848907,
+                "mean_delta": 0.05034040613862791,
+                "p_value_greater": 2.2702262514213994e-05,
+                "cohens_dz": 2.310031394440113,
+                "bootstrap_ci95_low": 0.03786590808356344,
+                "bootstrap_ci95_high": 0.0635773521381793,
+                "dataset": "unsw_nb15",
+                "tail_flip_rate": 0.8,
+                "method": "4_graph_cdm_soft",
+                "reference": "3_graph_cdm_hard",
+                "p_holm_greater": 0.00013621357508528396
+              },
+              "macro_noninferiority": {
+                "paired_rows": 10,
+                "mean_delta": 0.030299464671175717,
+                "delta": 0.01,
+                "p_noninferior": 1.769601685473215e-06,
+                "passed": true
+              },
+              "passed": true
+            }
+          ],
+          "passed": true
+        }
+      },
+      "pass_datasets": 3,
+      "verdict": "robust"
+    },
+    "family_c": {
+      "tests": [
+        {
+          "paired_rows": 10,
+          "method_mean": 0.3944213057975604,
+          "baseline_mean": 0.39898470602824104,
+          "mean_delta": -0.004563400230680609,
+          "p_value_greater": 0.8364851560018876,
+          "cohens_dz": -0.3277590641250091,
+          "bootstrap_ci95_low": -0.012063092018452957,
+          "bootstrap_ci95_high": 0.004940986381709654,
+          "dataset": "cesnet_tls_year22",
+          "tail_flip_rate": 0.4,
+          "method": "4_graph_cdm_soft",
+          "reference": "5_graph_cdm_freqfloor",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.3944213057975604,
+          "baseline_mean": 0.3911369281129661,
+          "mean_delta": 0.003284377684594347,
+          "p_value_greater": 0.190724144831615,
+          "cohens_dz": 0.291007300441411,
+          "bootstrap_ci95_low": -0.003160394768625594,
+          "bootstrap_ci95_high": 0.009925398881752924,
+          "dataset": "cesnet_tls_year22",
+          "tail_flip_rate": 0.4,
+          "method": "4_graph_cdm_soft",
+          "reference": "6_nograph_cbce",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.2635371929346307,
+          "baseline_mean": 0.26356044689372826,
+          "mean_delta": -2.3253959097571662e-05,
+          "p_value_greater": 0.5019252511879604,
+          "cohens_dz": -0.0015689842426616775,
+          "bootstrap_ci95_low": -0.008702602883485604,
+          "bootstrap_ci95_high": 0.008601864627093187,
+          "dataset": "cesnet_tls_year22",
+          "tail_flip_rate": 0.6,
+          "method": "4_graph_cdm_soft",
+          "reference": "5_graph_cdm_freqfloor",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.2635371929346307,
+          "baseline_mean": 0.2637999573307933,
+          "mean_delta": -0.0002627643961625986,
+          "p_value_greater": 0.5200699083316944,
+          "cohens_dz": -0.016364015857940933,
+          "bootstrap_ci95_low": -0.010141664349744398,
+          "bootstrap_ci95_high": 0.009453874392457713,
+          "dataset": "cesnet_tls_year22",
+          "tail_flip_rate": 0.6,
+          "method": "4_graph_cdm_soft",
+          "reference": "6_nograph_cbce",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.11920104325251946,
+          "baseline_mean": 0.1159415639741952,
+          "mean_delta": 0.0032594792783242565,
+          "p_value_greater": 0.19763723194021945,
+          "cohens_dz": 0.2822873377817535,
+          "bootstrap_ci95_low": -0.003314087282319102,
+          "bootstrap_ci95_high": 0.010219363731837747,
+          "dataset": "cesnet_tls_year22",
+          "tail_flip_rate": 0.8,
+          "method": "4_graph_cdm_soft",
+          "reference": "5_graph_cdm_freqfloor",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.11920104325251946,
+          "baseline_mean": 0.11750729014186852,
+          "mean_delta": 0.0016937531106509377,
+          "p_value_greater": 0.30568995478705924,
+          "cohens_dz": 0.16644101599855024,
+          "bootstrap_ci95_low": -0.0043100482803459066,
+          "bootstrap_ci95_high": 0.007245996501334112,
+          "dataset": "cesnet_tls_year22",
+          "tail_flip_rate": 0.8,
+          "method": "4_graph_cdm_soft",
+          "reference": "6_nograph_cbce",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.5155540794450966,
+          "baseline_mean": 0.5091866294219882,
+          "mean_delta": 0.0063674500231083505,
+          "p_value_greater": 0.3568247958384344,
+          "cohens_dz": 0.11977311737980721,
+          "bootstrap_ci95_low": -0.024981258225754487,
+          "bootstrap_ci95_high": 0.03870947557120948,
+          "dataset": "cicids2017",
+          "tail_flip_rate": 0.4,
+          "method": "4_graph_cdm_soft",
+          "reference": "5_graph_cdm_freqfloor",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.5155540794450966,
+          "baseline_mean": 0.5065900257867764,
+          "mean_delta": 0.008964053658320228,
+          "p_value_greater": 0.21646746168630004,
+          "cohens_dz": 0.259575784307118,
+          "bootstrap_ci95_low": -0.009088152702307955,
+          "bootstrap_ci95_high": 0.0312779632197699,
+          "dataset": "cicids2017",
+          "tail_flip_rate": 0.4,
+          "method": "4_graph_cdm_soft",
+          "reference": "6_nograph_cbce",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.3495922426456194,
+          "baseline_mean": 0.3516966454390495,
+          "mean_delta": -0.0021044027934301332,
+          "p_value_greater": 0.7582081495581319,
+          "cohens_dz": -0.23104900018918964,
+          "bootstrap_ci95_low": -0.008265018746549913,
+          "bootstrap_ci95_high": 0.002243742750236492,
+          "dataset": "cicids2017",
+          "tail_flip_rate": 0.6,
+          "method": "4_graph_cdm_soft",
+          "reference": "5_graph_cdm_freqfloor",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.3495922426456194,
+          "baseline_mean": 0.3487397486212254,
+          "mean_delta": 0.0008524940243939516,
+          "p_value_greater": 0.4343661964451261,
+          "cohens_dz": 0.05377435449470926,
+          "bootstrap_ci95_low": -0.007115654782833711,
+          "bootstrap_ci95_high": 0.011116775830954797,
+          "dataset": "cicids2017",
+          "tail_flip_rate": 0.6,
+          "method": "4_graph_cdm_soft",
+          "reference": "6_nograph_cbce",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.2087720025340476,
+          "baseline_mean": 0.20550477616302323,
+          "mean_delta": 0.0032672263710243287,
+          "p_value_greater": 0.11321583709096275,
+          "cohens_dz": 0.4105905486105167,
+          "bootstrap_ci95_low": -0.000683849566928485,
+          "bootstrap_ci95_high": 0.008419827054401086,
+          "dataset": "cicids2017",
+          "tail_flip_rate": 0.8,
+          "method": "4_graph_cdm_soft",
+          "reference": "5_graph_cdm_freqfloor",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.2087720025340476,
+          "baseline_mean": 0.21186639774587768,
+          "mean_delta": -0.003094395211830101,
+          "p_value_greater": 0.9119505555130988,
+          "cohens_dz": -0.4642995812883347,
+          "bootstrap_ci95_low": -0.007838857931745763,
+          "bootstrap_ci95_high": 4.744947229682545e-05,
+          "dataset": "cicids2017",
+          "tail_flip_rate": 0.8,
+          "method": "4_graph_cdm_soft",
+          "reference": "6_nograph_cbce",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.255047693759255,
+          "baseline_mean": 0.2744901073279033,
+          "mean_delta": -0.019442413568648335,
+          "p_value_greater": 0.9994191932392377,
+          "cohens_dz": -1.4781243610685515,
+          "bootstrap_ci95_low": -0.026614444408501338,
+          "bootstrap_ci95_high": -0.010845001430843675,
+          "dataset": "unsw_nb15",
+          "tail_flip_rate": 0.4,
+          "method": "4_graph_cdm_soft",
+          "reference": "5_graph_cdm_freqfloor",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.255047693759255,
+          "baseline_mean": 0.2652727610582521,
+          "mean_delta": -0.010225067298997154,
+          "p_value_greater": 0.9454374460206545,
+          "cohens_dz": -0.5622440478381378,
+          "bootstrap_ci95_low": -0.022053008405060304,
+          "bootstrap_ci95_high": 7.997804644206397e-05,
+          "dataset": "unsw_nb15",
+          "tail_flip_rate": 0.4,
+          "method": "4_graph_cdm_soft",
+          "reference": "6_nograph_cbce",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.19645976060159004,
+          "baseline_mean": 0.218066173903206,
+          "mean_delta": -0.021606413301615963,
+          "p_value_greater": 0.9991212506977926,
+          "cohens_dz": -1.386756306368435,
+          "bootstrap_ci95_low": -0.031084255290250707,
+          "bootstrap_ci95_high": -0.012644150685962996,
+          "dataset": "unsw_nb15",
+          "tail_flip_rate": 0.6,
+          "method": "4_graph_cdm_soft",
+          "reference": "5_graph_cdm_freqfloor",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.19645976060159004,
+          "baseline_mean": 0.21037923726686727,
+          "mean_delta": -0.013919476665277205,
+          "p_value_greater": 0.9810266874504674,
+          "cohens_dz": -0.7686159437764012,
+          "bootstrap_ci95_low": -0.025177741168426342,
+          "bootstrap_ci95_high": -0.0034161685227487595,
+          "dataset": "unsw_nb15",
+          "tail_flip_rate": 0.6,
+          "method": "4_graph_cdm_soft",
+          "reference": "6_nograph_cbce",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.14701804380711697,
+          "baseline_mean": 0.1571955111575337,
+          "mean_delta": -0.010177467350416722,
+          "p_value_greater": 0.9484386329016503,
+          "cohens_dz": -0.5735531653388244,
+          "bootstrap_ci95_low": -0.020155711873946207,
+          "bootstrap_ci95_high": 0.0006294943388344462,
+          "dataset": "unsw_nb15",
+          "tail_flip_rate": 0.8,
+          "method": "4_graph_cdm_soft",
+          "reference": "5_graph_cdm_freqfloor",
+          "p_holm_greater": 1.0
+        },
+        {
+          "paired_rows": 10,
+          "method_mean": 0.14701804380711697,
+          "baseline_mean": 0.1532475681690318,
+          "mean_delta": -0.00622952436191479,
+          "p_value_greater": 0.8408262536099413,
+          "cohens_dz": -0.33404013882454936,
+          "bootstrap_ci95_low": -0.018791282606277635,
+          "bootstrap_ci95_high": 0.002699490397711936,
+          "dataset": "unsw_nb15",
+          "tail_flip_rate": 0.8,
+          "method": "4_graph_cdm_soft",
+          "reference": "6_nograph_cbce",
+          "p_holm_greater": 1.0
+        }
+      ],
+      "vs_freqfloor": {
+        "per_dataset": {
+          "cesnet_tls_year22": {
+            "rates": [
+              {
+                "tail_flip_rate": 0.4,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.3944213057975604,
+                  "baseline_mean": 0.39898470602824104,
+                  "mean_delta": -0.004563400230680609,
+                  "p_value_greater": 0.8364851560018876,
+                  "cohens_dz": -0.3277590641250091,
+                  "bootstrap_ci95_low": -0.012063092018452957,
+                  "bootstrap_ci95_high": 0.004940986381709654,
+                  "dataset": "cesnet_tls_year22",
+                  "tail_flip_rate": 0.4,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "5_graph_cdm_freqfloor",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": -0.0021006962441475928,
+                  "delta": 0.01,
+                  "p_noninferior": 0.0428502952519594,
+                  "passed": true
+                },
+                "passed": false
+              },
+              {
+                "tail_flip_rate": 0.6,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.2635371929346307,
+                  "baseline_mean": 0.26356044689372826,
+                  "mean_delta": -2.3253959097571662e-05,
+                  "p_value_greater": 0.5019252511879604,
+                  "cohens_dz": -0.0015689842426616775,
+                  "bootstrap_ci95_low": -0.008702602883485604,
+                  "bootstrap_ci95_high": 0.008601864627093187,
+                  "dataset": "cesnet_tls_year22",
+                  "tail_flip_rate": 0.6,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "5_graph_cdm_freqfloor",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": 0.002031891420714399,
+                  "delta": 0.01,
+                  "p_noninferior": 0.00297354757865712,
+                  "passed": true
+                },
+                "passed": false
+              },
+              {
+                "tail_flip_rate": 0.8,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.11920104325251946,
+                  "baseline_mean": 0.1159415639741952,
+                  "mean_delta": 0.0032594792783242565,
+                  "p_value_greater": 0.19763723194021945,
+                  "cohens_dz": 0.2822873377817535,
+                  "bootstrap_ci95_low": -0.003314087282319102,
+                  "bootstrap_ci95_high": 0.010219363731837747,
+                  "dataset": "cesnet_tls_year22",
+                  "tail_flip_rate": 0.8,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "5_graph_cdm_freqfloor",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": 0.0015185799370840357,
+                  "delta": 0.01,
+                  "p_noninferior": 0.0006385198286528675,
+                  "passed": true
+                },
+                "passed": false
+              }
+            ],
+            "passed": false
+          },
+          "cicids2017": {
+            "rates": [
+              {
+                "tail_flip_rate": 0.4,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.5155540794450966,
+                  "baseline_mean": 0.5091866294219882,
+                  "mean_delta": 0.0063674500231083505,
+                  "p_value_greater": 0.3568247958384344,
+                  "cohens_dz": 0.11977311737980721,
+                  "bootstrap_ci95_low": -0.024981258225754487,
+                  "bootstrap_ci95_high": 0.03870947557120948,
+                  "dataset": "cicids2017",
+                  "tail_flip_rate": 0.4,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "5_graph_cdm_freqfloor",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": -0.0046738344964390955,
+                  "delta": 0.01,
+                  "p_noninferior": 0.233712162990812,
+                  "passed": false
+                },
+                "passed": false
+              },
+              {
+                "tail_flip_rate": 0.6,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.3495922426456194,
+                  "baseline_mean": 0.3516966454390495,
+                  "mean_delta": -0.0021044027934301332,
+                  "p_value_greater": 0.7582081495581319,
+                  "cohens_dz": -0.23104900018918964,
+                  "bootstrap_ci95_low": -0.008265018746549913,
+                  "bootstrap_ci95_high": 0.002243742750236492,
+                  "dataset": "cicids2017",
+                  "tail_flip_rate": 0.6,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "5_graph_cdm_freqfloor",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": -0.011609908992581217,
+                  "delta": 0.01,
+                  "p_noninferior": 0.5598526572940712,
+                  "passed": false
+                },
+                "passed": false
+              },
+              {
+                "tail_flip_rate": 0.8,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.2087720025340476,
+                  "baseline_mean": 0.20550477616302323,
+                  "mean_delta": 0.0032672263710243287,
+                  "p_value_greater": 0.11321583709096275,
+                  "cohens_dz": 0.4105905486105167,
+                  "bootstrap_ci95_low": -0.000683849566928485,
+                  "bootstrap_ci95_high": 0.008419827054401086,
+                  "dataset": "cicids2017",
+                  "tail_flip_rate": 0.8,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "5_graph_cdm_freqfloor",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": 0.0043090601395196935,
+                  "delta": 0.01,
+                  "p_noninferior": 0.02067076243605771,
+                  "passed": true
+                },
+                "passed": false
+              }
+            ],
+            "passed": false
+          },
+          "unsw_nb15": {
+            "rates": [
+              {
+                "tail_flip_rate": 0.4,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.255047693759255,
+                  "baseline_mean": 0.2744901073279033,
+                  "mean_delta": -0.019442413568648335,
+                  "p_value_greater": 0.9994191932392377,
+                  "cohens_dz": -1.4781243610685515,
+                  "bootstrap_ci95_low": -0.026614444408501338,
+                  "bootstrap_ci95_high": -0.010845001430843675,
+                  "dataset": "unsw_nb15",
+                  "tail_flip_rate": 0.4,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "5_graph_cdm_freqfloor",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": -0.011888449632011832,
+                  "delta": 0.01,
+                  "p_noninferior": 0.7800380202508542,
+                  "passed": false
+                },
+                "passed": false
+              },
+              {
+                "tail_flip_rate": 0.6,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.19645976060159004,
+                  "baseline_mean": 0.218066173903206,
+                  "mean_delta": -0.021606413301615963,
+                  "p_value_greater": 0.9991212506977926,
+                  "cohens_dz": -1.386756306368435,
+                  "bootstrap_ci95_low": -0.031084255290250707,
+                  "bootstrap_ci95_high": -0.012644150685962996,
+                  "dataset": "unsw_nb15",
+                  "tail_flip_rate": 0.6,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "5_graph_cdm_freqfloor",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": -0.012244479737313773,
+                  "delta": 0.01,
+                  "p_noninferior": 0.8081184932871572,
+                  "passed": false
+                },
+                "passed": false
+              },
+              {
+                "tail_flip_rate": 0.8,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.14701804380711697,
+                  "baseline_mean": 0.1571955111575337,
+                  "mean_delta": -0.010177467350416722,
+                  "p_value_greater": 0.9484386329016503,
+                  "cohens_dz": -0.5735531653388244,
+                  "bootstrap_ci95_low": -0.020155711873946207,
+                  "bootstrap_ci95_high": 0.0006294943388344462,
+                  "dataset": "unsw_nb15",
+                  "tail_flip_rate": 0.8,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "5_graph_cdm_freqfloor",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": -0.004667289045510475,
+                  "delta": 0.01,
+                  "p_noninferior": 0.05218589060180193,
+                  "passed": false
+                },
+                "passed": false
+              }
+            ],
+            "passed": false
+          }
+        },
+        "pass_datasets": 0,
+        "verdict": "null"
+      },
+      "vs_cbce": {
+        "per_dataset": {
+          "cesnet_tls_year22": {
+            "rates": [
+              {
+                "tail_flip_rate": 0.4,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.3944213057975604,
+                  "baseline_mean": 0.3911369281129661,
+                  "mean_delta": 0.003284377684594347,
+                  "p_value_greater": 0.190724144831615,
+                  "cohens_dz": 0.291007300441411,
+                  "bootstrap_ci95_low": -0.003160394768625594,
+                  "bootstrap_ci95_high": 0.009925398881752924,
+                  "dataset": "cesnet_tls_year22",
+                  "tail_flip_rate": 0.4,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "6_nograph_cbce",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": 0.002206120085183183,
+                  "delta": 0.01,
+                  "p_noninferior": 7.855817847738061e-05,
+                  "passed": true
+                },
+                "passed": false
+              },
+              {
+                "tail_flip_rate": 0.6,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.2635371929346307,
+                  "baseline_mean": 0.2637999573307933,
+                  "mean_delta": -0.0002627643961625986,
+                  "p_value_greater": 0.5200699083316944,
+                  "cohens_dz": -0.016364015857940933,
+                  "bootstrap_ci95_low": -0.010141664349744398,
+                  "bootstrap_ci95_high": 0.009453874392457713,
+                  "dataset": "cesnet_tls_year22",
+                  "tail_flip_rate": 0.6,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "6_nograph_cbce",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": -0.0018731539034808286,
+                  "delta": 0.01,
+                  "p_noninferior": 0.004519492114150842,
+                  "passed": true
+                },
+                "passed": false
+              },
+              {
+                "tail_flip_rate": 0.8,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.11920104325251946,
+                  "baseline_mean": 0.11750729014186852,
+                  "mean_delta": 0.0016937531106509377,
+                  "p_value_greater": 0.30568995478705924,
+                  "cohens_dz": 0.16644101599855024,
+                  "bootstrap_ci95_low": -0.0043100482803459066,
+                  "bootstrap_ci95_high": 0.007245996501334112,
+                  "dataset": "cesnet_tls_year22",
+                  "tail_flip_rate": 0.8,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "6_nograph_cbce",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": 0.0005644896244527908,
+                  "delta": 0.01,
+                  "p_noninferior": 0.0010386231322338521,
+                  "passed": true
+                },
+                "passed": false
+              }
+            ],
+            "passed": false
+          },
+          "cicids2017": {
+            "rates": [
+              {
+                "tail_flip_rate": 0.4,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.5155540794450966,
+                  "baseline_mean": 0.5065900257867764,
+                  "mean_delta": 0.008964053658320228,
+                  "p_value_greater": 0.21646746168630004,
+                  "cohens_dz": 0.259575784307118,
+                  "bootstrap_ci95_low": -0.009088152702307955,
+                  "bootstrap_ci95_high": 0.0312779632197699,
+                  "dataset": "cicids2017",
+                  "tail_flip_rate": 0.4,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "6_nograph_cbce",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": 0.007358359711472277,
+                  "delta": 0.01,
+                  "p_noninferior": 0.062281057868722775,
+                  "passed": false
+                },
+                "passed": false
+              },
+              {
+                "tail_flip_rate": 0.6,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.3495922426456194,
+                  "baseline_mean": 0.3487397486212254,
+                  "mean_delta": 0.0008524940243939516,
+                  "p_value_greater": 0.4343661964451261,
+                  "cohens_dz": 0.05377435449470926,
+                  "bootstrap_ci95_low": -0.007115654782833711,
+                  "bootstrap_ci95_high": 0.011116775830954797,
+                  "dataset": "cicids2017",
+                  "tail_flip_rate": 0.6,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "6_nograph_cbce",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": 0.00639700812565972,
+                  "delta": 0.01,
+                  "p_noninferior": 0.02122995997995512,
+                  "passed": true
+                },
+                "passed": false
+              },
+              {
+                "tail_flip_rate": 0.8,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.2087720025340476,
+                  "baseline_mean": 0.21186639774587768,
+                  "mean_delta": -0.003094395211830101,
+                  "p_value_greater": 0.9119505555130988,
+                  "cohens_dz": -0.4642995812883347,
+                  "bootstrap_ci95_low": -0.007838857931745763,
+                  "bootstrap_ci95_high": 4.744947229682545e-05,
+                  "dataset": "cicids2017",
+                  "tail_flip_rate": 0.8,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "6_nograph_cbce",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": -0.0038555127377712392,
+                  "delta": 0.01,
+                  "p_noninferior": 0.03153457823244221,
+                  "passed": true
+                },
+                "passed": false
+              }
+            ],
+            "passed": false
+          },
+          "unsw_nb15": {
+            "rates": [
+              {
+                "tail_flip_rate": 0.4,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.255047693759255,
+                  "baseline_mean": 0.2652727610582521,
+                  "mean_delta": -0.010225067298997154,
+                  "p_value_greater": 0.9454374460206545,
+                  "cohens_dz": -0.5622440478381378,
+                  "bootstrap_ci95_low": -0.022053008405060304,
+                  "bootstrap_ci95_high": 7.997804644206397e-05,
+                  "dataset": "unsw_nb15",
+                  "tail_flip_rate": 0.4,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "6_nograph_cbce",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": -0.006396528781445499,
+                  "delta": 0.01,
+                  "p_noninferior": 0.14459412948379738,
+                  "passed": false
+                },
+                "passed": false
+              },
+              {
+                "tail_flip_rate": 0.6,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.19645976060159004,
+                  "baseline_mean": 0.21037923726686727,
+                  "mean_delta": -0.013919476665277205,
+                  "p_value_greater": 0.9810266874504674,
+                  "cohens_dz": -0.7686159437764012,
+                  "bootstrap_ci95_low": -0.025177741168426342,
+                  "bootstrap_ci95_high": -0.0034161685227487595,
+                  "dataset": "unsw_nb15",
+                  "tail_flip_rate": 0.6,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "6_nograph_cbce",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": -0.007625499426544474,
+                  "delta": 0.01,
+                  "p_noninferior": 0.2461441129967529,
+                  "passed": false
+                },
+                "passed": false
+              },
+              {
+                "tail_flip_rate": 0.8,
+                "test": {
+                  "paired_rows": 10,
+                  "method_mean": 0.14701804380711697,
+                  "baseline_mean": 0.1532475681690318,
+                  "mean_delta": -0.00622952436191479,
+                  "p_value_greater": 0.8408262536099413,
+                  "cohens_dz": -0.33404013882454936,
+                  "bootstrap_ci95_low": -0.018791282606277635,
+                  "bootstrap_ci95_high": 0.002699490397711936,
+                  "dataset": "unsw_nb15",
+                  "tail_flip_rate": 0.8,
+                  "method": "4_graph_cdm_soft",
+                  "reference": "6_nograph_cbce",
+                  "p_holm_greater": 1.0
+                },
+                "macro_noninferiority": {
+                  "paired_rows": 10,
+                  "mean_delta": -0.003886559700246206,
+                  "delta": 0.01,
+                  "p_noninferior": 0.04592068299283694,
+                  "passed": true
+                },
+                "passed": false
+              }
+            ],
+            "passed": false
+          }
+        },
+        "pass_datasets": 0,
+        "verdict": "null"
+      }
+    }
+  },
+  "family_a_test_count": 9,
+  "family_c_test_count": 18,
+  "submission_ready": false,
+  "guard_decision_changes": [],
+  "guard_new_cesnet_rows": 60,
+  "unaffected_guard_rows_exact": 120,
+  "guard_all_pass": true
+}

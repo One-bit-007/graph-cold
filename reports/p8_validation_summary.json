@@ -1,0 +1,27 @@
+{
+  "pytest": {
+    "tests": 293,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 3,
+    "passed": 289
+  },
+  "failures": [
+    {
+      "name": "test_number_audit_passes",
+      "class": "tests.test_w5_claim_gates",
+      "message": "AssertionError: number audit failed:\n  ok  famA CICIDS range\n  ok  famB effect ceiling +0.026\n  ok  famB min Holm p >= 0.608\n  ok  famC UNSW reversal CIs\n  ok  natural-noise +0.284\n  ok  Engelen 128,247 rows / 4.53%\n  ok  leak CESNET ENT +0.187\n  ok  leak CESNET PRX +0.184\n  ok  leak CESNET ALL soft +0.249\n  ok  leak CESNET ALL proxy +0.359\n  ok  leak CICIDS proxy DUP +0.467\n  ok  leak CICIDS hard DUP +0.375\n  ok  leak UNSW dedup -0.115\n  ok  leak UNSW PRX -0.052\n  ok  gap compression 0.256->0.125\n  ok  scale famA +0.150/+0.056/+0.031\n  ok  scale G2 rate0.8 -0.014\n  \n  NUMBER AUDIT FAILED:\n   - famA other range: frozen artifact does not support the stated value\n   - famA dz range: frozen artifact does not support the stated value\n  \nassert 1 == 0\n +  where 1 = CompletedProcess(args=['C:\\\\Users\\\\g14370\\\\graph-cold\\\\.venv\\\\Scripts\\\\python.exe', '-m', 'src.paper.w5_number_audit']...t does not support the stated value\\n - famA dz range: frozen artifact does not support the stated value\\n', stderr='').returncode"
+    }
+  ],
+  "claim_gates": {
+    "tests": 25,
+    "failures": 1
+  },
+  "number_audit_returncode": 1,
+  "number_audit_failures": [
+    "famA other range: frozen artifact does not support the stated value",
+    "famA dz range: frozen artifact does not support the stated value"
+  ],
+  "manuscript_not_modified": true,
+  "submission_ready": false
+}
