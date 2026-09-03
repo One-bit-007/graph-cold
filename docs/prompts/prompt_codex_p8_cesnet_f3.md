@@ -29,19 +29,29 @@
   （若标签 11 不在窗口内会抛错——那是另一个需上报的问题，不得静默回退）。
 
 ### 2. 重跑 CESNET 的 P5 全量（只重跑 CESNET，不碰 CICIDS/UNSW）
-- `python -m src.paper.p5_factor_ablation --tier full`，但**仅 CESNET 分片**
-  （用 `--shard`/`--datasets` 机制，或临时限定 DATASETS）；
-- 网格：#3/#4/#5/#6 × 10 seeds × 3 rates = **120 method-runs**，保存逐类结果；
-- 续跑 partial CSV 机制照旧；产物合并回 `results/p5_factor_ablation_full.csv`
-  （CICIDS/UNSW 行原样保留，仅替换 CESNET 行）。
-- **自检**：重跑后 grep 确认新 CESNET 的 noise_target 记录为 11；CICIDS/UNSW 行与旧文件逐位一致。
+- **机制已核实**：per-dataset 分片文件已存在
+  （`results/p5_factor_ablation_full_{cicids2017,cesnet_tls_year22,unsw_nb15}.csv`）。
+  只需覆盖 CESNET 分片，CICIDS/UNSW 分片原样保留。
+- 先**删除**旧的 CESNET 分片与 partial（它们是 buggy 产物）：
+  `results/p5_factor_ablation_full_cesnet_tls_year22.csv` 和 `.partial.csv`；
+- 运行 `python -m src.paper.p5_factor_ablation --tier full --datasets cesnet_tls_year22`
+  → 重新生成正确的 CESNET 分片（#3/#4/#5/#6 × 10 seeds × 3 rates = 120 method-runs，逐类结果）；
+- **自检**：新 CESNET 行的 noise_target 记录为 11；CICIDS/UNSW 分片文件**逐字节未变**
+  （`git diff --stat` 对这两个分片应为空）。
 
-### 3. 重算完整 Family A / Family C（不要只换三行）
-- 用新 CESNET 数据 + 不变的 CICIDS/UNSW 数据，**重算完整 9 项 Family A 与 18 项 Family C**
-  的 Holm 校正、TOST 非劣效、逐类护栏、bootstrap CI、混合效应稳健性；
-- 逐类护栏运行器 `p5_perclass_guard.py` 复用 p5._prepare_scenario，随之自动纠正——一并重跑；
-- 更新 `tables/table_p5_family_a.csv`、`table_p5_family_c.csv`、`table_p5_perclass_guard.csv`
-  与相关 JSON。
+### 3. 合并回三数据集全量 + 重算完整 Family A / Family C（关键：不要只算 CESNET）
+- **警告**：`--datasets cesnet_tls_year22` 的 run() 只对 CESNET 子集算统计，**不是**完整族。
+  必须手动合并 + 在合并帧上重算：
+- 合并：`results/p5_factor_ablation_full.csv` = concat（CICIDS 分片 + CESNET 新分片 + UNSW 分片）；
+  断言 CICIDS/UNSW 行与已入库基线逐位一致，仅 CESNET 行变化；
+- 在**合并后的三数据集帧**上，用冻结族大小重算：
+  `_family_tests(frame, [(#4,#3)], size=9)` → Family A；
+  `_family_tests(frame, [(#4,#5),(#4,#6)], size=18)` → Family C；
+  以及 `_family_verdict`、`_flatten_tests`，写回
+  `tables/table_p5_family_a.csv`、`table_p5_family_c.csv`；
+- 逐类护栏 `p5_perclass_guard.py`（复用 `_prepare_scenario`，已随根因修复）一并重跑，
+  更新 `tables/table_p5_perclass_guard.csv`；
+- 混合效应稳健性（`reports/p5_family_a_mixed_effects.json`）在合并帧上重算。
 
 ### 4. 裁决与影响评估（如实，按 F-6 用语）
 - **Family A**：CICIDS/UNSW 不受影响且效应强（dz 0.77~3.14）——即便 CESNET 重算后方向或
