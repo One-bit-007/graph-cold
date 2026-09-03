@@ -32,8 +32,10 @@ rare-class rows that carry most of the learnable signal. We report a
 leakage-audited boundary study of when graph structure genuinely helps
 noisy-label network intrusion detection. Starting from a graph extension of
 collaborative label denoising (CoLD), we froze an audited protocol---
-label-construction proxy fields masked, strongest-available group-disjoint
-splits, pre-registered hypothesis families with Holm correction---and
+label-construction proxy fields masked, strongest-available leakage-controlled
+splits (strict entity-disjoint evaluation is feasible only for CESNET; the
+CICIDS and UNSW limitations are measured and characterized), pre-registered
+hypothesis families with Holm correction---and
 re-evaluated everything inside it on CICIDS-2017, UNSW-NB15, and the
 CESNET-TLS-Year22 service-classification stress test. Three findings survive.
 First (robust; 9/9 corrected tests): within a shared pipeline, soft retention
@@ -99,8 +101,9 @@ implementations produced spectacular gains that did not survive scrutiny: a
 leakage audit revealed 24\% exact-duplicate CICIDS-2017 records, clean-label
 paths in score and graph construction, label-construction proxy fields in the
 released features, and train--test entity overlap. We therefore froze an
-audited protocol---proxy-masked features, strongest-available group-disjoint
-splits, pre-registered hypothesis families with Holm correction---and re-ran
+audited protocol---proxy-masked features, strongest-available
+leakage-controlled splits, pre-registered hypothesis families with Holm
+correction---and re-ran
 everything inside it. Under that protocol the answers are: soft retention
 robustly preserves tail signal relative to deletion (RQ-A, positive); the graph
 diagnostic adds no detectable increment over Confident Learning, and the
@@ -469,12 +472,18 @@ strong proxies of it, are removed before any graph or model sees the data
 (CICIDS: tier-1 mask; CESNET and UNSW: tier-2, which additionally removes the
 \texttt{CATEGORY} one-hot columns---parents of the CESNET label---and the
 \texttt{ct\_*} generated features of UNSW). (ii)~\emph{Strongest-available
-group-disjoint split}: CICIDS uses a temporal split ordered by source-file day
+leakage-controlled split}: CICIDS uses a temporal split ordered by source-file day
 (with exact training-row deduplication); CESNET uses a strict temporal boundary
 with zero train--test entity overlap (S1$\cap$S2); UNSW uses its official fixed
 partition, whose released files lack timestamp and entity columns (a limitation
 we measure rather than hide: the official partition itself contains 38.4\%
-exact train--test feature collisions after masking).
+exact train--test feature collisions after masking). We emphasize the exact
+scope: strict \emph{entity-disjoint} evaluation is feasible only for CESNET;
+on CICIDS entity isolation is infeasible by construction
+(Section~\ref{sec:limits}), and on UNSW the required columns are absent. We
+therefore do not claim group-disjoint evaluation on all datasets; we claim the
+strongest split each dataset supports, with the residual leakage quantified in
+Section~\ref{sec:res-leak}.
 
 \paragraph{Split taxonomy and audit measurements.}
 The audit distinguishes S0 (iid stratified), S1 (temporal), S2 (entity-disjoint,
@@ -554,7 +563,7 @@ CIs under the statistical protocol above.
 Table~\ref{tab:main} reports the full frozen-protocol grid. Two observations
 frame everything that follows. First, absolute numbers are far below the
 legacy stratified-window results that opened this project (CICIDS Macro-F1
-drops to $\approx$0.14): proxy masking and group-disjoint splits remove the
+drops to $\approx$0.14): proxy masking and leakage-controlled splits remove the
 duplicate memorization and label-construction shortcuts that inflated earlier
 figures (Section~\ref{sec:res-leak}). Second, every \emph{retention-style}
 configuration---soft weighting, frequency-floor, class-balanced CE, Confident
@@ -779,7 +788,7 @@ release. It does not implement official CoLD's multi-subset feature encoding,
 clustering-consistency purification, or XGBoost pipeline. The official NDSS
 paper reports Macro-F1 in the 0.94--1.00 range on a nine-class refined
 CICIDS-2017 under random 8:2 splits---a protocol that differs from our
-11-class, tail-targeted, group-disjoint audit windows in labelling space,
+11-class, tail-targeted, leakage-controlled audit windows in labelling space,
 split design, and noise model, so the numbers are not comparable in either
 direction. We use the proxy solely as a deletion-style anchor inside our frozen
 protocol and make no claim of reproducing or outperforming official
@@ -886,7 +895,8 @@ future work.
 \label{sec:conclusion}
 We set out to extend collaborative label denoising with graph structure and
 ended up with a boundary study. Under a frozen, leakage-audited protocol---
-proxy-masked features, group-disjoint splits, pre-registered hypothesis
+proxy-masked features, strongest-available leakage-controlled splits,
+pre-registered hypothesis
 families---the surviving positive result is mechanism-level and robust: soft
 retention preserves rare-class training signal that hard deletion discards,
 across three datasets, three noise rates, real labelling errors, and a

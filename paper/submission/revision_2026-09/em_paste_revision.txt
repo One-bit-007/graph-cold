@@ -1,0 +1,20 @@
+EM paste fields for the REVISION of CYSE-D-26-01464
+(generated 2026-09-03 from the current blind manuscript; supersedes
+initial_submission_2026-08-21/em_abstract_350w.txt)
+
+=== TITLE ===
+When Does Graph Structure Help Noisy-Label Intrusion Detection? A Leakage-Audited Study of Rare-Class Training-Signal Retention
+
+=== ABSTRACT (approx. 240 words, matches manuscript) ===
+Machine-learning intrusion detection is trained on imperfect labels, and standard noisy-label pipelines delete suspicious samples---often the rare-class rows that carry most of the learnable signal. We report a leakage-audited boundary study of when graph structure genuinely helps noisy-label network intrusion detection. Starting from a graph extension of collaborative label denoising (CoLD), we froze an audited protocol---label-construction proxy fields masked, strongest-available leakage-controlled splits (strict entity-disjoint evaluation is feasible only for CESNET; the CICIDS and UNSW limitations are measured and characterized), pre-registered hypothesis families with Holm correction---and re-evaluated everything inside it on CICIDS-2017, UNSW-NB15, and the CESNET-TLS-Year22 service-classification stress test. Three findings survive. First (robust; 9/9 corrected tests): within a shared pipeline, soft retention improves tail-class F1 over hard deletion (+0.21 to +0.31 on CICIDS-2017; +0.025 to +0.052 elsewhere) at no detectable aggregate cost, and the direction survives real labelling errors and a 100k-window scale check. Second (null; reported with effect ceilings): a multi-view label-space graph diagnostic adds no detectable increment over Confident Learning (18/18 tests; Tail-F1 ceiling +0.026), and the specific rescue weighting adds nothing over a simple frequency floor. Third, a four-factor leakage decomposition attributes 25--36 points of Tail-F1 inflation to duplicates, cross-split entities, proxy fields, and clean-label oracle paths---factors that flatter deletion-style baselines and compress the apparent advantage of retention. The audit also yields dataset-level findings: CESNET's released features contain direct label parents; UNSW-NB15's official partition ships with 38.4% exact train--test feature collisions; and ~95% of CICIDS-2017's rare "Web Attack -- Brute Force" class are labelling artefacts. The protocol, regression tests, and reproduction package accompany the paper.
+
+=== KEYWORDS ===
+intrusion detection; noisy labels; graph learning; training-signal retention; leakage audit; rare-class robustness; negative results
+
+=== COVER NOTE (paste into "Response to Reviewers" or cover letter field) ===
+Dear Editor,
+
+We resubmit CYSE-D-26-01464 after a major revision. Both reviewers converged on an identifiability critique --- that our experiments could not distinguish genuine graph benefit from reconstruction of benchmark label-generation rules --- and every major change follows from accepting that critique: a frozen leakage-audited protocol, pre-registered hypothesis families, the reviewer-requested CL+graph combination experiment (null, reported with effect ceilings), a corrected comparator identity (CoLD-aligned proxy), and a four-factor leakage decomposition. Three disclosures are made proactively in the response letter: the requested combination experiment produced a null result; our earlier CoLD comparison was a false comparison, now corrected; and two protocol deviations occurred and are disclosed as amendments with remediations. The title and central claims changed accordingly; a full comment-to-change traceability matrix opens the point-by-point response. All numbers are generated from frozen artifacts by tracked scripts and verified by automated audits.
+
+Sincerely,
+The authors

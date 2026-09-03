@@ -81,16 +81,22 @@ Runners write resumable partial CSVs; interrupting and re-running is safe.
 
 ## Manuscript
 
-The submission manuscript is `paper/graph_cold_cas_final.tex`, compiled with
-two `pdflatex` passes from the `paper/` directory to
-`paper/graph_cold_cas_final.pdf`. Supporting statements for the submission
-system (cover letter, highlights, declarations, data availability, CRediT) live
-under `paper/submission/`.
+The revision manuscript is `paper/springer/graph_cold_sn_blind.tex`
+(double-anonymous; compile with two `pdflatex` passes from `paper/springer/`),
+with author metadata and declarations in `paper/springer/title_page_sn.tex`.
+The point-by-point response is `paper/springer/response_letter_cyse.md`;
+Editorial Manager paste fields are under `paper/submission/revision_2026-09/`.
+Initial-submission artifacts are archived under
+`paper/submission/initial_submission_2026-08-21/` and
+`paper/archive_do_not_submit/`; they describe superseded claims and must not
+be submitted.
 
 ## Traceability note
 
-All numeric claims in the manuscript are taken from `results/`, `tables/`, and
-the P2d/P2e/P2f/P5 audit reports under `reports/`. MALTLS-22 and OpTC are not
-part of the formal evaluation package. Raw datasets are not committed; see
-`README_realdata.md` for the expected dataset layout and the
-`GRAPHCOLD_DATA_ROOT` environment variable.
+All numeric claims in the manuscript are generated from `results/`, `tables/`,
+and the audit reports under `reports/` by `src/paper/w5_result_tables.py`, and
+verified by `src/paper/w5_number_audit.py` plus `tests/test_w5_claim_gates.py`.
+Raw datasets are not committed; configure dataset roots via
+`configs/datasets.yaml` (the `E:/graphcold-data/...` paths in this document are
+the authors' local example layout, not requirements) and see
+`README_realdata.md` / the `GRAPHCOLD_DATA_ROOT` environment variable.

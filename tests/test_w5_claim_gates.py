@@ -35,6 +35,9 @@ BANNED = {
     "stale proxy macro pair": r"0\.534.*?0\.688|0\.688.*?0\.534",
     # bare 'no improvement' instead of effect-ceiling language
     "bare no-improvement": r"no improvement\b",
+    # overclaimed split scope (only CESNET is entity-disjoint); the honest
+    # negation sentence is enforced separately in REQUIRED
+    "unqualified group-disjoint claim": r"group-disjoint (primary )?splits",
 }
 
 REQUIRED = {
@@ -48,6 +51,7 @@ REQUIRED = {
     "CESNET semantics scope": r"service-class(ification)? stress[- ]test",
     "entity infeasibility finding": r"infeasible by construction",
     "UNSW collision disclosure": r"38\.4\\%",
+    "split-scope honesty": r"do not claim group-disjoint evaluation on all datasets",
     "Attempted-to-benign discipline source": r"labelling artefacts",
     "tuning discipline": r"no clean validation set",
 }

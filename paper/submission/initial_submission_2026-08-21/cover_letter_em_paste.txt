@@ -1,0 +1,14 @@
+Dear Editors of Cybersecurity,
+
+We submit our manuscript "Evidence-Preserving Graph Denoising for Noisy-Label Intrusion Detection: A Leakage-Audited Study of When Graph Structure Helps" for consideration as a Research article.
+
+Intrusion-detection classifiers are routinely trained on delayed, rule-generated, or inconsistent labels. The standard remedy -- deleting suspicious samples -- risks discarding exactly the rare, boundary attack evidence analysts need most. We reframe noisy-label intrusion detection as evidence-preserving data curation and report a leakage-audited, fully reproducible study on CICIDS-2017, CESNET-TLS-Year22, and UNSW-NB15. Contributions: (i) a multi-view graph consistency diagnostic (Graph-CDM) giving a modest but statistically significant aggregate improvement over the CoLD baseline under a leakage-controlled protocol; (ii) evidence-preserving soft weighting that matches hard deletion on aggregate Macro-F1 while significantly improving rare/tail attack-class Macro-F1 under high asymmetric noise, benchmarked against Confident Learning and Co-Teaching under an identical protocol, honestly reporting where our approach does not lead; (iii) a leakage audit showing that naive graph denoising gains can be inflated by duplicate records and clean-label signal, together with the full reproducibility package.
+
+The work fits the journal's focus on data-driven security, intrusion detection, and applied machine learning for security operations.
+
+The manuscript is original, unpublished, and not under consideration elsewhere. All authors have read and approved the submission. The authors declare no competing interests; no specific funding was received. Per the double-anonymous policy, the main manuscript contains no identifying information; author details are provided in the separate title page. A declaration of generative AI use in the writing process is included, in line with Springer Nature policy.
+
+Sincerely,
+Tianqi Guo (on behalf of all authors)
+University of Science and Technology of China
+guotianqi@mail.ustc.edu.cn

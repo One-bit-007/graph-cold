@@ -16,14 +16,14 @@ We thank both reviewers for reviews that fundamentally improved this work. Befor
 | Review comment | Change in revision | Location |
 |---|---|---|
 | A1 CESNET semantics | Service-class stress-test reframing; attack claims limited to CICIDS/UNSW; 178→25 filter table | §5.1, §9, App. B |
-| A2 label-construction proxy leakage | Masking tiers + group-disjoint splits as *primary* protocol; PRX factor quantified; regression tests | §5, §6.4 |
+| A2 label-construction proxy leakage | Masking tiers + strongest-available leakage-controlled splits as *primary* protocol; PRX factor quantified; regression tests | §5, §6.4 |
 | A3 undifferentiated ablation | Full factor grid; family A robust / family C null (claim withdrawn) | §6.2 |
 | A4 statistical interpretation | F-6 protocol: per-rate n=10, Holm families, TOST δ=0.01 + per-class guard, mixed effects | §5, Tables 4/6/7 |
 | A5 protocol inconsistency | Protocol frozen before final grid; deviations as amendments | §5, App. A |
 | A6 method underspecification | Frozen-configuration subsection (all hyperparameters, tuning discipline); D_chain removed | §4 |
 | A7 baselines / novelty | CL inside frozen protocol; FINE added; Co-Teaching de-oracled; proxy renaming | §5, §7.1 |
 | A8 evidence over-extrapolation | "Training-signal retention" wording; triage-proxy subsection deleted; bounded claims | §1, throughout |
-| A min. req. (splits / online inference) | S0–S3 on all datasets; inductive primary; transductive control; CICIDS entity finding | §5, §6.3 |
+| A min. req. (splits / online inference) | S0–S3 *audit measured* on all datasets; strict entity-disjoint primary evaluation feasible only for CESNET (CICIDS/UNSW infeasibility characterized); inductive primary; transductive control | §5, §6.3, §9 |
 | B M1 CL combination missing | Complete 18-test family; G2 = null with effect ceiling | §6.3, Table 7 |
 | B M2 CoLD fidelity | Identity audit; proxy renaming; non-comparability statement | §7.1 |
 | B M3 scale / synthetic noise | 100k-window validation; real labelling errors via published corrected labels | §6.2, §6.4 |
@@ -44,7 +44,7 @@ Accepted in full; this was a factual error in the original manuscript, and fixin
 This is the review's central critique and it reshaped the study. Actions:
 
 1. *Proxy-field audit on all three datasets* (not only CICIDS): we identified and masked label-construction fields and their proxies per dataset (CICIDS tier-1; CESNET/UNSW tier-2). This surfaced a finding beyond the review's examples: CESNET's released features include `CATEGORY` one-hot columns that are *parents of the label* (§6.4).
-2. *Group-disjoint splits as the primary protocol*: temporal-by-day for CICIDS, strict temporal∩entity for CESNET, official partition for UNSW, with train–test exact/near-duplicate intersection measured and reported for every split (§5).
+2. *Strongest-available leakage-controlled splits as the primary protocol*: temporal-by-day for CICIDS, strict temporal∩entity for CESNET, official partition for UNSW, with train–test exact/near-duplicate intersection measured and reported for every split (§5). We state the scope precisely: strict entity-disjoint evaluation was feasible only for CESNET.
 3. *Quantification rather than assertion*: the four-factor decomposition (§6.4, Table 8) isolates the proxy-field factor — +0.184 Tail-F1 on CESNET; net *negative* on UNSW, where unmasking dilutes the 38.4% feature-collision memorization in the official partition. The masked, group-disjoint numbers are the paper's primary results; all inflated configurations appear only inside the decomposition.
 4. *Regression tests* now enforce that no label-construction field, clean label, or noise mask can enter features, graphs, or diagnostics; the tests ship with the reproduction package.
 5. On the reviewer's specific mechanism — the graph reconstructing the attack schedule — we additionally attempted entity-disjoint splitting on the raw CICIDS release (which retains IP columns). The flow graph collapses into one giant connected component covering 99.96% of valid flows: entity isolation is *infeasible by construction* on this benchmark. We report this honestly as a dataset-level finding (§9) rather than substituting a weaker entity definition that would appear to pass.
@@ -75,7 +75,7 @@ Accepted. The revision uses "training-signal retention" throughout; frequency pr
 
 **A. Minimum revision requirement: group-disjoint splits and online (inductive) inference on all datasets.**
 
-Done as the primary protocol (see A2). Inductive per-sample inference is the primary mode; a transductive variant is reported only as a control, and it performs *worse* on all three datasets — evidence against test-batch information driving our numbers (§6.3).
+**Partially completed, with the remainder proven infeasible rather than skipped — we state this plainly.** What is done on all three datasets: the S0–S3 split taxonomy is *implemented and audit-measured* everywhere (including per-split exact/near-duplicate intersections), and inductive per-sample inference is the primary mode, with a transductive control that performs *worse* on all three datasets — evidence against test-batch information driving our numbers (§6.3). What is not achievable as a primary protocol: strict entity-disjoint evaluation. It holds only for CESNET (zero train–test entity overlap). On CICIDS we went to the raw release (which retains IP columns) specifically to satisfy this requirement and found the flow graph collapses into one giant connected component covering 99.96% of valid flows — entity-disjoint splitting is infeasible by construction, which we document as a dataset-level finding rather than substituting a weaker entity definition that would appear to pass (§9). On UNSW the official files lack timestamp/entity columns; we keep the official partition and *measure* its 38.4% collision rate instead of hiding it (§5, §6.4). The manuscript claims only "the strongest split each dataset supports, with residual leakage quantified"; it does not claim group-disjoint evaluation on all datasets.
 
 **A. Minor issues** (aggregation inconsistencies; the 25-class filter; Fig. 3 status; §2 structure; the Cost section; stale citations): all addressed — a single frozen aggregation now generates every number via a table-generation script with a traceability manifest; the 25-class policy is Appendix B; the informativeness figure is explicitly descriptive/hypothesis-generating (§6.5); Related Work was merged with its redundant positioning subsection; the Cost section (legacy-protocol measurements) is deleted; the CoLD citation is updated to the NDSS 2026 official version.
 

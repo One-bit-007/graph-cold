@@ -1,0 +1,32 @@
+=== FULL TITLE ===
+Evidence-Preserving Graph Denoising for Noisy-Label Intrusion Detection: A Leakage-Audited Study of When Graph Structure Helps
+
+=== ABSTRACT ===
+Intrusion-detection classifiers are increasingly trained on labels that are delayed, rule-generated, or inconsistent across telemetry sources. A common remedy is dataset purification: detect suspicious labels and delete them before training. In security operations this is risky, because the deleted instances are frequently the rare, boundary attack samples that analysts most need. We argue that in security machine learning, suspicious does not mean useless: samples flagged as noisy may be operational evidence of rare or emerging threats, and we therefore recast label denoising as evidence-preserving data curation rather than purification. We revisit CoLD, a recent collaborative label-denoising framework, and ask whether lifting it to a multi-view graph and replacing hard deletion with evidence-preserving soft weighting improves noisy-label intrusion detection. Our study makes three contributions grounded in reproducible, real-data experiments on CICIDS-2017, CESNET-TLS-Year22, and UNSW-NB15. First, we show that a label-space graph consistency diagnostic (Graph-CDM) built over host, IP, temporal, and where-available behavioral views yields a modest but statistically significant aggregate Macro-F1 improvement over the CoLD baseline (Holm-corrected p<0.05 on all three datasets; up to +0.11 Macro-F1 on CICIDS-2017 but no more than +0.01 on the other two datasets under the final protocol), with the gain concentrated where graph views carry discriminative structure. Second, within a shared pipeline, we find that evidence-preserving soft weighting is statistically indistinguishable from hard deletion on aggregate Macro-F1, yet significantly improves rare/tail attack-class Macro-F1 under high asymmetric label noise (Delta Macro-F1 = +0.073, +0.022, +0.040 on CICIDS/CESNET/UNSW; Holm p<10^-4; Cohen's dz in [0.91, 1.29]), at no aggregate cost. Benchmarked under the identical protocol, an external Confident Learning anchor outperforms our weighting on aggregate and tail metrics on all three datasets, while full Co-Teaching collapses on tail classes -- confirming empirically that deletion- and forgetting-based mechanisms can sacrifice rare-attack evidence unless the noise diagnostic is precise. Third, we contribute a leakage audit showing that naive graph denoising can be dramatically inflated by duplicate records (24% exact duplicates in CICIDS-2017) and by any use of clean-label signal; removing these collapses an apparent +28 percentage-point advantage to a defensible +6.7 points. We release the audit, the graph-informativeness diagnostic whose scores are consistent with when the approach helps, and the full reproducibility package. The result is a bounded, honest claim: evidence-preserving retention is a mechanism-level remedy for rare-attack evidence loss within a shared pipeline, not a universal accuracy improvement; confident-learning-precision pruning is the performance bar that graph-based denoising must still clear.
+
+=== KEYWORDS (if asked) ===
+intrusion detection; noisy labels; graph learning; evidence preservation; security operations; rare-class robustness
+
+=== AUTHOR 2 ===
+Given: Weiguo | Family: Wang
+Affiliation: New H3C Technologies Co., Ltd.
+Email: wwg@h3c.com
+ORCID: 0009-0005-5690-7685
+Country: China
+
+=== AUTHOR 3 ===
+Given: Jian | Family: Wang
+Affiliation: New H3C Technologies Co., Ltd.
+Email: wang.jianE@h3c.com
+ORCID: 0009-0006-6489-6696
+Country: China
+
+=== AUTHOR 4 ===
+Given: Shiyin | Family: Zhu
+Affiliation: New H3C Technologies Co., Ltd.
+Email: zhushiyin@h3c.com
+ORCID: 0009-0008-5219-0885
+Country: China
+
+=== FUNDING ===
+Check: "Funding information is not applicable / No funding was received."
