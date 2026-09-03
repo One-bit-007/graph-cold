@@ -1,0 +1,195 @@
+{
+  "status": "BLOCKED_UNSW_BINARY_LABEL_FEATURE",
+  "completed": false,
+  "submission_ready": false,
+  "target_column": "attack_cat",
+  "banned_feature": "label",
+  "feature_index_zero_based": 30,
+  "n_features": 185,
+  "class_names": [
+    "Normal",
+    "Analysis",
+    "Backdoor",
+    "DoS",
+    "Exploits",
+    "Fuzzers",
+    "Generic",
+    "Reconnaissance",
+    "Shellcode"
+  ],
+  "benign_class": 0,
+  "partitions": {
+    "train": {
+      "n": 154644,
+      "scaled_feature_values": [
+        -1.8342316150665283,
+        0.5451874136924744
+      ],
+      "positive_feature_equals_non_benign": true,
+      "agreement": 1.0,
+      "class_cross_counts": [
+        {
+          "class_id": 0,
+          "class_name": "Normal",
+          "scaled_feature_value": -1.8342316150665283,
+          "n": 35433
+        },
+        {
+          "class_id": 1,
+          "class_name": "Analysis",
+          "scaled_feature_value": 0.5451874136924744,
+          "n": 2000
+        },
+        {
+          "class_id": 2,
+          "class_name": "Backdoor",
+          "scaled_feature_value": 0.5451874136924744,
+          "n": 1746
+        },
+        {
+          "class_id": 3,
+          "class_name": "DoS",
+          "scaled_feature_value": 0.5451874136924744,
+          "n": 12264
+        },
+        {
+          "class_id": 4,
+          "class_name": "Exploits",
+          "scaled_feature_value": 0.5451874136924744,
+          "n": 33393
+        },
+        {
+          "class_id": 5,
+          "class_name": "Fuzzers",
+          "scaled_feature_value": 0.5451874136924744,
+          "n": 18184
+        },
+        {
+          "class_id": 6,
+          "class_name": "Generic",
+          "scaled_feature_value": 0.5451874136924744,
+          "n": 40000
+        },
+        {
+          "class_id": 7,
+          "class_name": "Reconnaissance",
+          "scaled_feature_value": 0.5451874136924744,
+          "n": 10491
+        },
+        {
+          "class_id": 8,
+          "class_name": "Shellcode",
+          "scaled_feature_value": 0.5451874136924744,
+          "n": 1133
+        }
+      ]
+    },
+    "test": {
+      "n": 68726,
+      "scaled_feature_values": [
+        -1.8342316150665283,
+        0.5451874136924744
+      ],
+      "positive_feature_equals_non_benign": true,
+      "agreement": 1.0,
+      "class_cross_counts": [
+        {
+          "class_id": 0,
+          "class_name": "Normal",
+          "scaled_feature_value": -1.8342316150665283,
+          "n": 23438
+        },
+        {
+          "class_id": 1,
+          "class_name": "Analysis",
+          "scaled_feature_value": 0.5451874136924744,
+          "n": 677
+        },
+        {
+          "class_id": 2,
+          "class_name": "Backdoor",
+          "scaled_feature_value": 0.5451874136924744,
+          "n": 583
+        },
+        {
+          "class_id": 3,
+          "class_name": "DoS",
+          "scaled_feature_value": 0.5451874136924744,
+          "n": 4089
+        },
+        {
+          "class_id": 4,
+          "class_name": "Exploits",
+          "scaled_feature_value": 0.5451874136924744,
+          "n": 11132
+        },
+        {
+          "class_id": 5,
+          "class_name": "Fuzzers",
+          "scaled_feature_value": 0.5451874136924744,
+          "n": 6062
+        },
+        {
+          "class_id": 6,
+          "class_name": "Generic",
+          "scaled_feature_value": 0.5451874136924744,
+          "n": 18871
+        },
+        {
+          "class_id": 7,
+          "class_name": "Reconnaissance",
+          "scaled_feature_value": 0.5451874136924744,
+          "n": 3496
+        },
+        {
+          "class_id": 8,
+          "class_name": "Shellcode",
+          "scaled_feature_value": 0.5451874136924744,
+          "n": 378
+        }
+      ]
+    }
+  },
+  "guard_exception": "Attempted/oracle fields or classes present: ['label']",
+  "effective_drop_cols": [
+    "id",
+    "is_sm_ips_ports",
+    "ct_srv_src",
+    "ct_dst_ltm",
+    "ct_src_dport_ltm",
+    "ct_dst_sport_ltm",
+    "ct_dst_src_ltm",
+    "ct_src_ltm",
+    "ct_srv_dst",
+    "ct_state_ttl"
+  ],
+  "proxy_tiers": {
+    "tier1": [
+      "is_sm_ips_ports"
+    ],
+    "tier2": [
+      "ct_srv_src",
+      "ct_dst_ltm",
+      "ct_src_dport_ltm",
+      "ct_dst_sport_ltm",
+      "ct_dst_src_ltm",
+      "ct_src_ltm",
+      "ct_srv_dst",
+      "ct_state_ttl"
+    ]
+  },
+  "completed_fine_scenarios": 60,
+  "expected_fine_scenarios": 90,
+  "fine_rows_by_dataset": {
+    "cesnet_tls_year22": 30,
+    "cicids2017": 30
+  },
+  "source_sha256": {
+    "src/data/loaders.py": "fdb04ef6497e3c466230f196cdac3005ceb3c58914de51781d41ca539a82ed4a",
+    "configs/datasets.yaml": "b4b3321622dab164b108dd112c359c06e6e2d9c2d6105e06381251d4b668d97f",
+    "src/paper/p3_proxy_audit.py": "7e03256b6368828e423f51b59034b25b904cff60086abb55e2cf869fe26c5086",
+    "src/paper/p4_cl_graph_combo.py": "d6067d8e6f19164d859d3cc9394c0cbc81dea2fa6708444e62a93ba421fe5549",
+    "results\\p9_fine_final_protocol.partial.csv": "2b6a202f775c997315a2cc5ebea2bd4356d9f2d07084947c4ef46236618cbff0"
+  },
+  "canonical_sensitivity_qualification": "null on the existing frozen inputs, NOT evidence of label-proxy-free UNSW evaluation"
+}

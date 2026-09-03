@@ -62,3 +62,47 @@
 
 不可说：FINE 补跑已完成、保真实现测试已通过、A7 已降低、FINE 优于或不及 CL。
 这些均需新实现与可比较的实际数据。当前 `submission_ready=false`，稿件和答复信未改。
+
+## 6. 2026-09-03 批准恢复后的补充（保留上文历史暂停记录）
+
+协调者在 `b52ca17` 批准 canonical 指标派生，并扩展为主表影响和 G2 敏感性核验。
+任务 0 完成且未触发裁决停止条件后，才启动 FINE 训练。
+
+本轮已读取官方固定提交 `d5ab341dec5356d5f9a2a8ebc3ba8e846188af61` 的
+[svd_classifier.py](https://github.com/Kthyeon/FINE_official/blob/d5ab341dec5356d5f9a2a8ebc3ba8e846188af61/dynamic_selection/selection/svd_classifier.py)
+与 [gmm.py](https://github.com/Kthyeon/FINE_official/blob/d5ab341dec5356d5f9a2a8ebc3ba8e846188af61/dynamic_selection/selection/gmm.py)。
+官方 SVD 路径不做类内中心化；`get_score` 使用绝对内积，可对特征归一化；
+`fit_mixture` 为逐类两成分 GMM，取高均值成分，后验严格大于阈值时保留。
+它同时提供 KMeans 等可选路径。因此“符合论文 Algorithm 1”不能写成“所有官方代码路径逐项等价”。
+P9 依照工作包采用论文规定的平方分数与 GMM；平方虽保持分数排序，却不保证 GMM 后验与绝对值版本相同。
+
+### 6.1 基准训练前固定的适配配置
+
+- 表示：仅训练特征拟合 StandardScaler；TruncatedSVD 上限 32 维（受矩阵维数限制）；行 L2 归一化。
+  不按观测类中心化；Gram 在这个明确披露的静态表格表示上计算。
+- 类内 Gram：`Z_c.T @ Z_c`，最大特征值对应向量，分数为平方内积。
+- GMM：2 成分、full covariance、`tol=1e-6`、`max_iter=100`、`reg_covar=1e-6`、
+  `n_init=1`、kmeans 初始化、随机种子为场景 seed；clean 为高均值成分，后验 `>0.5`。
+- 小类：少于 4 个观测样本；退化分数：极差不超过 `1e-12`；
+  或数值异常、未收敛、成分均值无法区分、后验无法给出任何保留样本时，
+  **显式回退为保留该类全部样本**，记录原因、样本数、保留数和警告。
+  这是保守的工程适配，不来自原论文定理；不得隐藏回退率。
+- 分类头：保留样本的原始表格特征训练 ExtraTrees（24 棵，class_weight=balanced，
+  seed+7，单线程以固定运行顺序），与 p5 硬删除分支的分类器家族及容量一致。
+  表示仅用于筛选；没有深度 warmup、逐 epoch 重估或原论文的端到端表示学习。
+- 不接受真实/估计噪声率、干净训练标签、验证标签或测试标签；不调用噪声率估计器。
+- 这些参数在 FINE 基准评估前写定；不因 FINE 相对 CL 的结果而改动。
+
+此节是实施配置，不是已通过实现测试的声明。运行完成状态以本报告后续验收节为准。
+
+## 7. 本轮最终验收状态（优先于前述历史状态）
+
+- 新实现位于 `src/baselines/fine_tabular.py`，旧 FINE/P7 未改。
+- 核心机制、no-oracle/no-rate、canonical 计算及相关旧守卫 63 项通过；
+  registry 登记启用后再次核验，最终全仓 323 passed、3 skipped。
+- 已实际运行 CICIDS/CESNET 各 30 场景；UNSW 被标签字段守卫拦截，P9 仍未完成。
+- 实现级 F-5 合规不等于基准数据无泄漏；不得把 registry 的实现登记状态当作完整投稿验收。
+- 官方平方/绝对值路径差异、静态表格表示、单次检测与 GMM 回退仍是明确的适配边界。
+- 不给出完整网格 FINE 排名、优于/不及 CL 的总体声明或 A7 关闭声明。
+
+最新阻塞：[UNSW label 特征泄漏](p9_unsw_label_blocker.md)。

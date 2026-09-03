@@ -8,6 +8,7 @@ from src.baselines.confident_learning import ConfidentLearningBaseline
 from src.baselines.coteaching import CoTeachingBaseline
 from src.baselines.decoupling import DecouplingBaseline
 from src.baselines.fine_style import FINEBaseline
+from src.baselines.fine_tabular import FINETabularBaseline, METHOD as FINE_TABULAR_METHOD, FAITHFULNESS as FINE_TABULAR_FAITHFULNESS
 from src.baselines.mcre import MCReBaseline
 from src.baselines.morse import MORSEBaseline
 from src.baselines.noisy_supervised import NoisySupervisedBaseline
@@ -28,6 +29,20 @@ class BaselineRegistryEntry:
 
 
 REGISTRY: dict[str, BaselineRegistryEntry] = {
+    FINE_TABULAR_METHOD: BaselineRegistryEntry(
+        method=FINE_TABULAR_METHOD,
+        method_family="fine_tabular",
+        implementation_status="verified_tabular_adaptation",
+        faithfulness_level=FINE_TABULAR_FAITHFULNESS,
+        uses_noisy_y_train=True,
+        uses_clean_y_test_for_eval_only=True,
+        verified=True,
+        include_in_formal_results=True,
+        notes="P9 supplementary FINAL-protocol baseline; no noise-rate input. "
+              "Static tabular representation and ExtraTrees head, not full original deep FINE. "
+              "Legacy FINE/P7 is preserved separately; canonical Tail-F1 required.",
+        factory=FINETabularBaseline,
+    ),
     "Noisy-Supervised": BaselineRegistryEntry(
         method="Noisy-Supervised",
         method_family="noisy_supervised",

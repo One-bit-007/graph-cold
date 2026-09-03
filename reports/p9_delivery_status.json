@@ -1,0 +1,37 @@
+{
+  "stage": "P9",
+  "completed": false,
+  "submission_ready": false,
+  "status": "BLOCKED_UNSW_BINARY_LABEL_FEATURE",
+  "task0_completed": true,
+  "canonical_rows": 630,
+  "canonical_global_g2_sensitivity": "null",
+  "canonical_g2_qualification": "Same frozen inputs; not a claim about UNSW after binary-label removal",
+  "fine_completed_scenarios": 60,
+  "fine_expected_scenarios": 90,
+  "fine_by_dataset": {"cicids2017": 30, "cesnet_tls_year22": 30, "unsw_nb15": 0},
+  "tests": {"passed": 323, "skipped": 3, "warnings": 10},
+  "independent_confusion_matrix_checks": {
+    "rows": 60,
+    "max_metric_error": 1.1102230246251565e-16,
+    "duplicate_scenario_keys": 0
+  },
+  "fallback_events": {
+    "small_class_fewer_than_4": 25,
+    "indistinguishable_gmm_means": 4,
+    "empty_gmm_selection": 2,
+    "gmm_not_converged": 14
+  },
+  "protected_files_unchanged": 573,
+  "omitted_incomplete_deliverables": [
+    "results/p9_fine_final_protocol.csv",
+    "tables/table_p9_fine_final.csv",
+    "tables/table_p9_fine_paired_deltas.csv"
+  ],
+  "preserved_partial": "results/p9_fine_final_protocol.partial.csv",
+  "coordinator_action_required": "Authorize a separate UNSW label-feature remediation and affected-experiment rerun package before completing FINE; do not compare corrected FINE with old leaked references",
+  "manuscript_modified": false,
+  "w5_generator_modified": false,
+  "frozen_abc_modified": false,
+  "pushed": false
+}
